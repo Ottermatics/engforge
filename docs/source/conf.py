@@ -24,13 +24,13 @@ sys.path.insert(0, os.path.abspath("../.."))
 
 # -- Project information -----------------------------------------------------
 
-project = "OttermaticsLib"
+project = "engforgeLib"
 copyright = "2022, Kevin Russell"
 author = "Kevin Russell"
 
 
 # The full version, including alpha/beta/rc tags
-release = "0.8.3"
+release = "0.9.2"
 
 
 extensions = ["sphinx.ext.autodoc", "myst_parser"]
