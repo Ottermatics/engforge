@@ -21,6 +21,14 @@ from matplotlib.pyplot import *
 import attrs
 
 
+from engforge.analysis import Analysis
+from engforge.reporting import CSVReporter,DiskPlotReporter
+from engforge.properties import system_property
+from engforge import *
+import numpy as np
+import os,pathlib
+import attrs
+
 
 
 class TestFilterSystem(unittest.TestCase):
@@ -48,27 +56,31 @@ class TestAnalysis(unittest.TestCase):
         self.assertIsNotNone(ofig)
 
 
-# from engforge.logging import change_all_log_levels
-# from engforge.test.test_airfilter import *
+
+# #Run the system
 # from matplotlib.pylab import *
-#
+# 
+# 
+# 
 # fan = Fan()
 # filt = Filter()
-# af = Airfilter(fan=fan, filt=filt)
-#
-# af.run(throttle=list(np.arange(0.1, 1.1, 0.1)))
-#
+# af = Airfilter(fan=fan,filt=filt)
+# 
+# change_all_log_levels(af,20) #info
+# 
+# af.run(throttle=list(np.arange(0.1,1.1,0.1)),combos='*')
+# 
 # df = af.dataframe
-#
-# fig, (ax, ax2) = subplots(2, 1)
-# ax.plot(df.throttle * 100, df.w, "k--", label="flow")
-# ax2.plot(df.throttle * 100, filt.dataframe.dp_filter, label="filter")
-# ax2.plot(df.throttle * 100, df.dp_parasitic, label="parasitic")
-# ax2.plot(df.throttle * 100, fan.dataframe.dp_fan, label="fan")
-# ax.legend(loc="upper right")
-# ax.set_title("flow")
+# 
+# fig,(ax,ax2) = subplots(2,1)
+# ax.plot(df.throttle*100,df.w,'k--',label='flow')
+# ax2.plot(df.throttle*100,df.filt_dp_filter,label='filter')
+# ax2.plot(df.throttle*100,df.dp_parasitic,label='parasitic')
+# ax2.plot(df.throttle*100,df.fan_dp_fan,label='fan')
+# ax.legend(loc='upper right')
+# ax.set_title('flow')
 # ax.grid()
 # ax2.legend()
 # ax2.grid()
-# ax2.set_title(f"pressure")
-# ax2.set_xlabel(f"throttle%")
+# ax2.set_title(f'pressure')
+# ax2.set_xlabel(f'throttle%')

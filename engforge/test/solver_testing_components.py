@@ -348,10 +348,9 @@ class SpringMass(System):
     vtx = Time.integrate("v", "accl")
     xtx = Time.integrate("x", "v")
     xtx.add_var_constraint(0,kind="min")
-    #xtx.add_var_constraint(lambda s,p:0,kind="min")
 
-    #FIXME: implement trace testing
-    #pos = Trace.define(y="x", y2=["v", "a"])
+    FIXME: implement trace testing
+    pos = Trace.define(y="x", y2=["v", "a"])
 
     @system_property
     def dx(self) -> float:
@@ -386,48 +385,50 @@ class SpringMass(System):
         return self.sumF / self.m
     
 ##### Air Filter
-
 @forge
 class Fan(Component):
-    n: float = attrs.field(default=1)
-    dp_design:float = attrs.field(default=100)
-    w_design:float = attrs.field(default=2)
+
+    n_frac:float = field(default=1)
+    dp_design:float= field(default=100)
+    w_design:float = field(default=2)
+
 
     @system_property
     def dP_fan(self) -> float:
-        return self.dp_design * (self.n * self.w_design) ** 2.0
-
+        return self.dp_design*(self.n_frac*self.w_design)**2.0
 
 @forge
 class Filter(Component):
-    w: float = attrs.field(default=0)
-    k_loss: float = attrs.field(default=50)
+
+    w:float = field(default=0)
+    k_loss:float = field(default=50)
 
     @system_property
     def dP_filter(self) -> float:
-        return self.k_loss * self.w
-
+        return self.k_loss*self.w
 
 @forge
 class Airfilter(System):
-    throttle: float = attrs.field(default=1)
-    w: float = attrs.field(default=1)
-    k_parasitic: float = attrs.field(default=0.1)
 
-    fan: Fan = Slot.define(Fan, default_ok=True)
-    filt: Filter = Slot.define(Filter, default_ok=True)
+    throttle:float = field(default=1)
+    w:float = field(default=1)
+    k_parasitic:float = field(default=0.1)
 
-    set_fan_n = Signal.define("fan.n", "throttle", mode="both")
-    set_filter_w = Signal.define("filt.w", "w", mode="both")
+    fan: Fan = Slot.define(Fan)
+    filt: Filter = Slot.define(Filter)
 
-    var_w = Solver.declare_var('w')
-    var_w.add_var_constraint(0.0, kind="min")
-    pressure_balance = Solver.constraint_equality('sum_dP')
-    #flow_balance = Solver.objective('w',combos='flow_balance',kind='max')
+    set_fan_n = Signal.define('fan.n_frac','throttle',mode='both')
+    set_filter_w = Signal.define('filt.w','w',mode='both')
+
+    flow_var = Solver.declare_var('w',combos='flow')
+    flow_var.add_var_constraint(0,'min',combos='flow')
+    
+    pr_eq = Solver.constraint_equality('sum_dP',0,combos='flow')
+    
 
     flow_curve = Plot.define(
         "throttle", "w", kind="lineplot", title="Flow Curve"
-    )
+    )    
 
     @system_property
     def dP_parasitic(self) -> float:
@@ -437,9 +438,6 @@ class Airfilter(System):
     def sum_dP(self) -> float:
         return self.fan.dP_fan - self.dP_parasitic - self.filt.dP_filter
 
-    @system_property
-    def dp_positive(self) -> float:
-        return self.dP_parasitic - self.filt.dP_filter
 
 
 @forge
