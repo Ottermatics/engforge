@@ -158,7 +158,7 @@ class DataframeMixin:
     @property
     def dataframe_variants(self):
         o = self._split_dataframe[1:]
-        if isinstance(o, list):
+        if isinstance(o, (list,tuple)):
             if len(o) == 1:
                 return o[0]
         return o

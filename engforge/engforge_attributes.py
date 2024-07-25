@@ -204,15 +204,17 @@ class AttributedBaseMixin(LoggingMixin):
         return attr.fields_dict(cls)
 
     @classmethod
-    def input_fields(cls):
+    def input_fields(cls,add_ign_types:list=None):
         '''no attr base types, no tuples, no lists, no dicts'''
-        ignore_types = (
+        ignore_types = [
             ATTR_BASE,
             #tuple,
             #list,
             #dict,
-        )
-        return cls._get_init_attrs_data(ignore_types, exclude=True)
+        ]
+        if add_ign_types:
+            ignore_types.extend(add_ign_types)
+        return cls._get_init_attrs_data(tuple(ignore_types), exclude=True)
 
     @classmethod
     def numeric_fields(cls):

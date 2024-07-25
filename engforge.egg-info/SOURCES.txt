@@ -52,6 +52,9 @@ engforge/eng/solid_materials.py
 engforge/eng/structure.py
 engforge/eng/structure_beams.py
 engforge/eng/thermodynamics.py
+engforge/examples/__init__.py
+engforge/examples/air_filter.py
+engforge/examples/spring_mass.py
 engforge/test/__init__.py
 engforge/test/report_testing.py
 engforge/test/solver_testing_components.py

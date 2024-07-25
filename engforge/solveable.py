@@ -274,7 +274,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             for key in self.numeric_fields():
                 at[key] = Ref(self, key, False, True)
         else:
-            for key in self.input_fields():
+            for key in self.input_fields((list,tuple,dict)):
                 at[key] = Ref(self, key, False, True)
 
         return out

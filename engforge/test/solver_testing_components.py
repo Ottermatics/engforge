@@ -349,7 +349,7 @@ class SpringMass(System):
     xtx = Time.integrate("x", "v")
     xtx.add_var_constraint(0,kind="min")
 
-    FIXME: implement trace testing
+    #FIXME: implement trace testing
     pos = Trace.define(y="x", y2=["v", "a"])
 
     @system_property

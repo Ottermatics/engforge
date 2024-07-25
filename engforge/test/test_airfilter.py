@@ -36,10 +36,24 @@ class TestFilterSystem(unittest.TestCase):
         self.af = Airfilter()
 
     def test_plot(self):
-        self.af.run(throttle=np.linspace(0, 1, 10),combos='*',slv_vars='*')
+        N = 10
+        self.af.run(throttle=np.linspace(0, 1, N),combos='*',slv_vars='*')
         fig = self.af.flow_curve()
         self.assertIsNotNone(fig)
 
+        df = self.af.dataframe
+        self.assertEqual(df.shape[0],N)
+
+        dfv = self.af.dataframe_variants
+        self.assertEqual(dfv.shape[0],N)
+        self.assertContains('w',dfv.columns)
+        self.assertContains('throttle',dfv.columns)
+
+
+        dfc = self.af.dataframe_constants
+        self.assertIsInstance(dfc,dict)
+
+        self.assertEqual(df.shape[1],len(dfc)+dfv.shape[1])
 
 class TestAnalysis(unittest.TestCase):
     def setUp(self):
@@ -83,4 +97,5 @@ class TestAnalysis(unittest.TestCase):
 # ax2.legend()
 # ax2.grid()
 # ax2.set_title(f'pressure')
-# ax2.set_xlabel(f'throttle%')
+# ax2.set_xlabel(f'throttle%')        dfv = self.af.dataframe_variants
+        self.assertEqual(dfv.shape[0],N)
