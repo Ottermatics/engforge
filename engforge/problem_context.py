@@ -259,8 +259,12 @@ class ProblemExec:
     success_thresh = (
         1e6  # if system has `success_thresh` it will be assigned to the context
     )
-    post_callback: callable = None  # callback that will be called on the system each time it is reverted, it should take args(system,current_problem_exec)
-    run_solver: bool = False  # for transient #i would love this to be=true, but there's just too much possible variation in application to make it so without some kind of control / continuity strategy. Dynamics are natural responses anyways, so solver use should be an advanced case for now (MPC/Filtering/ect later)
+    post_callback: callable = (
+        None  # callback that will be called on the system each time it is reverted, it should take args(system,current_problem_exec)
+    )
+    run_solver: bool = (
+        False  # for transient #i would love this to be=true, but there's just too much possible variation in application to make it so without some kind of control / continuity strategy. Dynamics are natural responses anyways, so solver use should be an advanced case for now (MPC/Filtering/ect later)
+    )
 
     def __getattr__(self, name):
         """This is a special method that is called when an attribute is not found in the usual places, like when interior contexts (anything not the root (session_id=True)) are created that dont have the top level's attributes. some attributes will look to the parent session"""

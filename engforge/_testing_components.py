@@ -738,6 +738,7 @@ class SliderCrank(System, CostModel):
         accl_react = self.reaction_torque / self.Imain_gear
         return np.array([0, accl_input + accl_react])
 
+
 # COSTS Testing
 
 # COSTS Testing

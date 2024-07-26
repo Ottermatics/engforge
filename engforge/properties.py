@@ -7,6 +7,7 @@ Like typical python properties, normal functions are embelished with additional 
 
 `solver_cache` a property that is recalculated any time there is an update to any attrs variable.
 """
+
 import os
 from engforge.logging import LoggingMixin
 from engforge.typing import TABLE_TYPES

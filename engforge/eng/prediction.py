@@ -1,4 +1,5 @@
 """a module that defines PredictionMixin which uses sklearn to make predictions about results"""
+
 # core data
 import numpy
 import numpy as np
