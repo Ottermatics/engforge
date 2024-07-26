@@ -1,8 +1,7 @@
 import unittest
 from engforge.problem_context import *
 from engforge.system import System, forge
-from engforge.test.solver_testing_components import *
-from engforge.test.test_slider_crank import SliderCrank
+from engforge._testing_components import *
 import random
 
 
