@@ -11,10 +11,9 @@ on:
       - '**.md'
   push:
     branches:
-      - master
+      - main
     paths-ignore:
-      - '**.md'   
-  workflow_call:
+      - '**.md'
 
 jobs:
   test:
@@ -25,7 +24,7 @@ jobs:
         python-version: [ "3.9", "3.10" ]
 
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
 
     - name: Install Python
       uses: actions/setup-python@v1

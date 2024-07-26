@@ -1,6 +1,5 @@
 name: "Pull Request Docs Check"
 on:
-  pull_request:
   push:
     branches:
       - main
@@ -22,19 +21,19 @@ jobs:
         name: DocumentationHTML
         path: docs/build/html/
 
-    - uses: actions/checkout@v2
-    - name: Format code with black
-      run: |
-        pip install black
-        black -l 80 --include="\.py" .
-        
-    - name: Commit changes
-      uses: EndBug/add-and-commit@v4
-      with:
-        author_name: ${{ github.actor }}
-        author_email: ${{ github.actor }}@users.noreply.github.com
-        message: "Built Documentation / Format code with black"
-        add: "."       
+    # - uses: actions/checkout@v2
+    # - name: Format code with black
+    #   run: |
+    #     pip install black
+    #     black -l 80 --include="\.py" .
+    #     
+    # - name: Commit changes
+    #   uses: EndBug/add-and-commit@v4
+    #   with:
+    #     author_name: ${{ github.actor }}
+    #     author_email: ${{ github.actor }}@users.noreply.github.com
+    #     message: "Built Documentation / Format code with black"
+    #     add: "."       
 
     # Create an artifact out of the previously built pdf.
     # - uses: actions/upload-artifact@v1
