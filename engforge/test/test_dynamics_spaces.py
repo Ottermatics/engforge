@@ -5,7 +5,6 @@ import unittest
 
 
 class TestDynamics(unittest.TestCase):
-
     def test_dynamics(self, endtime=10, dt=0.01):
         dc = DynamicComponent()
         ds = DynamicSystem(comp=dc)

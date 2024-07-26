@@ -5,7 +5,6 @@ from engforge.test.solver_testing_components import *
 
 
 class TestSliderCrank(unittest.TestCase):
-
     def test_optimization(self):
         sc = SliderCrank()
 

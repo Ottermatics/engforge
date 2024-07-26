@@ -12,7 +12,6 @@ base_stat = {"avg": 0, "var": 0}
 
 
 class PredictionMixin:
-
     train_window: int = 5000  # number of data points to use for training
     prediction_goal_error: float = 0.02  # goal error for training 99%
     trained: bool = False
@@ -215,7 +214,12 @@ class PredictionMixin:
                 f"Prediction: {mod.__class__.__name__}| Score[{parm}] = {scr*100:3.5}% | Training Time: {dt}s"
             )
 
-            out[parm] = {"mod": mod, "train_time": dt, "N": N, "train_score": scr}
+            out[parm] = {
+                "mod": mod,
+                "train_time": dt,
+                "N": N,
+                "train_score": scr,
+            }
 
         self._running_error = {
             parm: {"err": 0.5, "N": 0} for parm in self._prediction_models

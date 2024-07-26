@@ -5,7 +5,6 @@ import numpy
 
 @forge(auto_attribs=True)
 class FourBar(System):
-
     # r1
     r1: float = 0.02
     gamma_zero: float = 10 * 3.1415 / 180  # radians

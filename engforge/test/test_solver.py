@@ -9,7 +9,6 @@ indep_l = indep.split(",")
 
 
 class SolverRefSelection(unittest.TestCase):
-
     def setUp(self) -> None:
         self.sc = CubeSystem()
 
@@ -152,7 +151,14 @@ class SolverRefSelection(unittest.TestCase):
         self.assertEqual(set(info["dynamics.state"]), ans)
         self.assertEqual(set(info["dynamics.rate"]), ans)
 
-        empt = ["solver.eq", "solver.ineq", "solver.obj", "time", "slot", "signal"]
+        empt = [
+            "solver.eq",
+            "solver.ineq",
+            "solver.obj",
+            "time",
+            "slot",
+            "signal",
+        ]
         for emp in empt:
             self.assertEqual(info[emp], {})
 

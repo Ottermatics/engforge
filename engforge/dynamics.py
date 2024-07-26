@@ -616,7 +616,6 @@ class GlobalDynamics(DynamicsMixin):
         # variables if failed
         pbx, system = None, self
         try:
-
             # Time Iteration Context
             data = []
             with ProblemExec(

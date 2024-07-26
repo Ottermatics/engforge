@@ -26,7 +26,6 @@ f = lambda x, t, y: (x[0] * np.sin(x[1] * t + x[3]) + x[2])
 
 
 class TestDynamics(unittest.TestCase):
-
     def test_sim(self):
         """tests free undamped motion"""
 

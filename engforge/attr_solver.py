@@ -59,8 +59,6 @@ class SolverInstance(AttributeInstance):
 
     def compile(self, **kwargs):
         """establishes the references for the solver to use directly"""
-        from engforge.solver import objectify, secondary_obj
-
         if self.solver.slvtype == "var":
             self.var = self.system.locate_ref(self.solver.var)
             self.system.debug(f"solving with indpendent: {self.var}")
@@ -145,7 +143,11 @@ class SolverInstance(AttributeInstance):
         else:
             # just me
             return [
-                {"type": self.slvtype, "var": self.solver.lhs, "value": self.const_f}
+                {
+                    "type": self.slvtype,
+                    "var": self.solver.lhs,
+                    "value": self.const_f,
+                }
             ]
 
     @property

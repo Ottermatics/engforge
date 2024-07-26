@@ -184,7 +184,6 @@ class ATTR_BASE(attrs.Attribute):
 
     @classmethod
     def _setup_cls(cls, name, new_dict, **kwargs):
-
         # randomize name for specifics reasons
         uid = str(uuid.uuid4())
         name = name + "_" + uid.replace("-", "")[0:16]
@@ -260,7 +259,6 @@ class ATTR_BASE(attrs.Attribute):
 
     @staticmethod
     def unpack_atrs(d, pre="", conv=None):
-
         if not conv:
             conv = lambda v: v
         if isinstance(d, dict):

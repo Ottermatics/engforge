@@ -91,7 +91,9 @@ class SolverMixin(SolveableMixin):
         from engforge.solver import combo_filter
 
         out = self.collect_solver_refs(
-            check_atr_f=combo_filter, check_kw=kwargs, check_dynamics=check_dynamics
+            check_atr_f=combo_filter,
+            check_kw=kwargs,
+            check_dynamics=check_dynamics,
         )
 
         base_const = {"min": 0, "max": None}  # positive only
@@ -100,7 +102,6 @@ class SolverMixin(SolveableMixin):
         if addable and (addvar := kwargs.get("add_vars", [])):
             matches = []
             if addvar:
-
                 # handle csv, listify string
                 if isinstance(addvar, str):
                     addvar = addvar.split(",")
@@ -215,6 +216,7 @@ class SolverMixin(SolveableMixin):
             Xnew=Xo,
         ) as pbx:
             out = self.execute(**kw)
+            pbx.save_data()  # context handles checking if anything changed
             pbx.exit_to_level(level="eval", revert=False)
 
         if self.log_level >= 20:
@@ -269,6 +271,7 @@ class SolverMixin(SolveableMixin):
         # use problem execution context
         self.debug(f"starting solver: {opts}")
 
+        # this should be the outer context
         with ProblemExec(
             self,
             opts,
@@ -276,7 +279,6 @@ class SolverMixin(SolveableMixin):
             enter_refresh=enter_refresh,
             save_on_exit=save_on_exit,
         ) as pbx:
-
             # Use Solver Context to Solve
             out = pbx.solve_min(**opts)
             has_ans = "ans" in out
@@ -294,7 +296,6 @@ class SolverMixin(SolveableMixin):
             else:
                 # handle failure options
                 if pbx.opt_fail:
-
                     # if log.log_level < 15:
                     pbx.warning(
                         f"Optimization Failed: {pbx.sys_refs} | {pbx.constraints}"

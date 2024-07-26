@@ -32,9 +32,7 @@ def eval_transient(endtime=10, dt=0.001, run_solver=False):
 
 
 class TestPerformance(unittest.TestCase):
-
     def test_steady_state(self):
-
         with Profile() as pr:
             start = time.time()
             eval_steady_state()

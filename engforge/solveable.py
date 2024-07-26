@@ -688,7 +688,6 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
 
         # Go through all components
         for key, lvl, conf in confobj.go_through_configurations(**kw):
-
             if conf is None:
                 continue
 
@@ -702,15 +701,12 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             comp_dict[key] = conf
             # Gather attribute heirarchy and make key.var the dictionary entry
             for atype, aval in atrs.items():
-
                 ck_type = rawattr[atype]
                 if atype not in cls_dict:
                     cls_dict[atype] = {}
 
                 if isinstance(aval, dict) and aval:
-
                     for k, pre, val in ATTR_BASE.unpack_atrs(aval, atype):
-
                         # No Room For Components (SLOTS feature)
                         if isinstance(val, (AttributedBaseMixin, ATTR_BASE)):
                             if conf.log_level <= 5:
@@ -800,11 +796,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
 
             # Check the dynamics for the system
             if check_atr_f or any([v for v in skipped.values()]):
-
                 skipd = set()
                 # check each group of dynamics
                 for pre, refs in dyn_refs.items():
-
                     if pre not in skipped:
                         skipped[pre] = []
 
@@ -813,7 +807,6 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
 
                     # eval each ref for inclusion
                     for var, ref in refs.items():
-
                         key_segs = var.split(".")
                         key = "" if len(key_segs) == 1 else ".".join(key_segs[:-1])
                         scoped_name = f"{var}"

@@ -55,7 +55,6 @@ cm = -0.01
 
 @forge(auto_attribs=True)
 class SpaceMixin(SolveableInterface):
-
     x: float = attrs.field(default=1.0)
     y: float = attrs.field(default=1.0)
     z: float = attrs.field(default=1.0)
@@ -162,7 +161,6 @@ class CubeComp(Component, SpaceMixin):
 
 @forge(auto_attribs=True)
 class CubeSystem(System, SpaceMixin):
-
     dynamic_state_vars: list = ["x", "y", "z"]
 
     comp = Slot.define(CubeComp)
@@ -192,13 +190,25 @@ class CubeSystem(System, SpaceMixin):
     y_lim = Solver.con_ineq("y", "comp.y", combos="tierd_top", active=False)
 
     sig_x_cst = Signal.define(
-        "comp.cost_x", "cost_x", mode="both", combos="mirror_costs", active=False
+        "comp.cost_x",
+        "cost_x",
+        mode="both",
+        combos="mirror_costs",
+        active=False,
     )
     sig_y_cst = Signal.define(
-        "comp.cost_y", "cost_y", mode="both", combos="mirror_costs", active=False
+        "comp.cost_y",
+        "cost_y",
+        mode="both",
+        combos="mirror_costs",
+        active=False,
     )
     sig_z_cst = Signal.define(
-        "comp.cost_z", "cost_z", mode="both", combos="mirror_costs", active=False
+        "comp.cost_z",
+        "cost_z",
+        mode="both",
+        combos="mirror_costs",
+        active=False,
     )
 
     @system_property
@@ -339,7 +349,6 @@ class DynamicSystem(System):
 
 @forge
 class SpringMass(System):
-
     k: float = attrs.field(default=50)
     m: float = attrs.field(default=1)
     g: float = attrs.field(default=9.81)
@@ -473,7 +482,6 @@ theta = np.concatenate((np.linspace(0, 2 * np.pi, 120), np.array([0])))
 
 @forge(auto_attribs=True)
 class SliderCrank(System, CostModel):
-
     success_thresh = 1000
     dynamic_state_vars: list = ["theta", "omega"]
     dynamic_input_vars: list = ["Tg"]
@@ -761,7 +769,6 @@ quarterly = lambda inst, term: True if (term + 1) % 3 == 0 else False
 
 @forge
 class TermCosts(Comp1, CostModel):
-
     @cost_property(category="capex")
     def cost_init(self):
         return 100
@@ -836,13 +843,11 @@ class Motor(Component, CostModel):
 
 @forge
 class MetalBase(Component, CostModel):
-
     cost_per_item = 1000
 
 
 @forge
 class SysEcon(Economics):
-
     terms_per_year = 12
 
     def calculate_production(self, parent, term):
@@ -851,7 +856,6 @@ class SysEcon(Economics):
 
 @forge
 class FanSystem(System, CostModel):
-
     base = Slot.define(Component)
     fan = Slot.define(Fan)
     motor = Slot.define(Motor)

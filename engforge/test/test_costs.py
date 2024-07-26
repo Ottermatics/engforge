@@ -9,13 +9,11 @@ from engforge.test.solver_testing_components import *
 
 
 class TestEconDefaults(unittest.TestCase):
-
     def tearDown(self) -> None:
         Comp1.reset_cls_costs()
         EconDefault.reset_cls_costs()
 
     def test_custom_costs(self):
-
         ed = EconDefault()
         self.assertNotIn("comp1", ed.internal_components())
 
@@ -31,7 +29,6 @@ class TestEconDefaults(unittest.TestCase):
 
 
 class TestCategoriesAndTerms(unittest.TestCase):
-
     def tearDown(self) -> None:
         Comp1.reset_cls_costs()
         Comp2.reset_cls_costs()
@@ -60,7 +57,6 @@ class TestCategoriesAndTerms(unittest.TestCase):
         self.assertEqual(ct["cost_wage_tax"], 15)
 
     def test_category_costs(self):
-
         tc = TermCosts()
         cc = tc.cost_categories_at_term(0)
         self.assertEqual(cc["capex"], 100)
@@ -74,7 +70,6 @@ class TestCategoriesAndTerms(unittest.TestCase):
         self.assertEqual(cc["tax"], 16)
 
     def test_econ(self):
-
         tc = TermCosts()
         Comp2.default_cost("comp1", 50)
         c2 = Comp2(cost_per_item=10)
@@ -107,7 +102,6 @@ class TestCategoriesAndTerms(unittest.TestCase):
 
 
 class TestEconomicsAccounting(unittest.TestCase):
-
     def setUp(self) -> None:
         pass
 
@@ -188,7 +182,6 @@ class TestEconomicsAccounting(unittest.TestCase):
 
 
 class TestCostModel(unittest.TestCase):
-
     def setUp(self):
         pass
 
@@ -263,7 +256,6 @@ class TestCostModel(unittest.TestCase):
 
 
 class TestFanSystemDataFrame(unittest.TestCase):
-
     def test_dataframe(self):
         # Create the FanSystem instance
         fs = FanSystem(fan=Fan(), motor=Motor(), base=MetalBase())
@@ -343,5 +335,4 @@ class TestFanSystemDataFrame(unittest.TestCase):
 
 
 if __name__ == "__main__":
-
     unittest.main()

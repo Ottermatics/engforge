@@ -114,7 +114,8 @@ class TestSession(unittest.TestCase):
         pbx = ProblemExec(sm, {"combos": "design,cost", "dxdt": None})
         atx = pbx.ref_attrs
         self.assertEqual(
-            chk(atx, "solver.var"), set(("Lo", "Rc", "Ro", "x_offset", "y_offset"))
+            chk(atx, "solver.var"),
+            set(("Lo", "Rc", "Ro", "x_offset", "y_offset")),
         )
         self.assertEqual(chk(atx, "solver.obj"), set(("cost_slv",)))
         self.assertEqual(
@@ -216,7 +217,8 @@ class TestSession(unittest.TestCase):
         )
         atx = pbx.ref_attrs
         self.assertEqual(
-            chk(atx, "solver.var"), set(("Lo", "Rc", "Ro", "x_offset", "y_offset"))
+            chk(atx, "solver.var"),
+            set(("Lo", "Rc", "Ro", "x_offset", "y_offset")),
         )
         self.assertEqual(chk(atx, "solver.obj"), set(("cost_slv", "sym_slv")))
         self.assertEqual(
@@ -247,7 +249,6 @@ class TestSession(unittest.TestCase):
 
 
 class TestContextExits(unittest.TestCase):
-
     def tearDown(self) -> None:
         self.assertFalse(
             hasattr(ProblemExec.class_cache, "session"), msg="not cleaned!"

@@ -38,7 +38,9 @@ def refset_get(refs, *args, **kw):
     out = {}
     for k in refs:
         try:
-            out[k] = refs[k].value(*args, **kw)
+            # print(k,refs[k])
+
+            out[k] = refs[k].value(refs[k].comp, **kw)
         except Exception as e:
             rf = refs[k]
             log.error(e, f"issue with ref: {rf}|{rf.key}|{rf.comp}")
@@ -144,7 +146,6 @@ class Ref:
         self.set(comp, key, use_call, allow_set, eval_f)
 
     def set(self, comp, key, use_call=True, allow_set=True, eval_f=None):
-
         # key can be a ref, in which case this ref will be identical to the other ref except for the component provided if it is not None
         if isinstance(key, Ref):
             self.__dict__.update(key.__dict__)
