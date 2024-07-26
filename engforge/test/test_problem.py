@@ -134,9 +134,7 @@ class TestSession(unittest.TestCase):
 
     def test_slide_crank_design_one_match(self):
         sm = SliderCrank(Tg=0)
-        pbx = ProblemExec(
-            sm, {"combos": "design", "dxdt": None, "both_match": False}
-        )
+        pbx = ProblemExec(sm, {"combos": "design", "dxdt": None, "both_match": False})
         atx = pbx.ref_attrs
         self.assertEqual(
             chk(atx, "solver.var"),
@@ -147,9 +145,7 @@ class TestSession(unittest.TestCase):
             chk(atx, "solver.ineq"),
             set(("crank_pos_slv", "gear_pos_slv", "motor_pos_slv", "size")),
         )
-        self.assertEqual(
-            chk(atx, "solver.eq"), set(("gear_speed_slv", "range_slv"))
-        )
+        self.assertEqual(chk(atx, "solver.eq"), set(("gear_speed_slv", "range_slv")))
         self.assertEqual(chk(atx, "dynamics.output"), set())
         self.assertEqual(chk(atx, "dynamics.rate"), set())
         self.assertEqual(chk(atx, "dynamics.state"), set())
@@ -161,9 +157,7 @@ class TestSession(unittest.TestCase):
 
     def test_slide_crank_design_slv_design(self):
         sm = SliderCrank(Tg=0)
-        pbx = ProblemExec(
-            sm, {"combos": "design", "slv_vars": "*slv", "dxdt": None}
-        )
+        pbx = ProblemExec(sm, {"combos": "design", "slv_vars": "*slv", "dxdt": None})
         atx = pbx.ref_attrs
         self.assertEqual(chk(atx, "solver.var"), set())
         self.assertEqual(chk(atx, "solver.obj"), set(()))
@@ -199,9 +193,7 @@ class TestSession(unittest.TestCase):
             chk(atx, "solver.ineq"),
             set(("crank_pos_slv", "gear_pos_slv", "motor_pos_slv")),
         )
-        self.assertEqual(
-            chk(atx, "solver.eq"), set(("gear_speed_slv", "range_slv"))
-        )
+        self.assertEqual(chk(atx, "solver.eq"), set(("gear_speed_slv", "range_slv")))
         self.assertEqual(chk(atx, "dynamics.output"), set())
         self.assertEqual(chk(atx, "dynamics.rate"), set())
         self.assertEqual(chk(atx, "dynamics.state"), set())
@@ -233,9 +225,7 @@ class TestSession(unittest.TestCase):
             chk(atx, "solver.ineq"),
             set(("crank_pos_slv", "gear_pos_slv", "motor_pos_slv")),
         )
-        self.assertEqual(
-            chk(atx, "solver.eq"), set(("gear_speed_slv", "range_slv"))
-        )
+        self.assertEqual(chk(atx, "solver.eq"), set(("gear_speed_slv", "range_slv")))
         self.assertEqual(chk(atx, "dynamics.output"), set())
         self.assertEqual(chk(atx, "dynamics.rate"), set())
         self.assertEqual(chk(atx, "dynamics.state"), set())

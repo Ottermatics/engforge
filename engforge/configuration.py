@@ -56,16 +56,21 @@ def name_generator(instance):
     """a name generator for the instance"""
     base = str(instance.__class__.__name__).lower() + "-"
     if instance.__class__._use_random_name:
-        out = base + randomname.get_name(
-            adj=NAME_ADJ.secret, noun=NAME_NOUN.secret
-        )
+        out = base + randomname.get_name(adj=NAME_ADJ.secret, noun=NAME_NOUN.secret)
     else:
         out = base
     log.debug(f"generated name: {out}")
     return out
 
 
-PROTECTED_NAMES = ["solver", "dataframe", "_anything_changed","time","run_id", "converged"]
+PROTECTED_NAMES = [
+    "solver",
+    "dataframe",
+    "_anything_changed",
+    "time",
+    "run_id",
+    "converged",
+]
 
 
 # Wraps Configuration with a decorator, similar to @attrs.define(**options)
@@ -159,16 +164,12 @@ def property_changed(instance, variable, value):
     if not session and instance._anything_changed:
         # Bypass Check since we've already flagged for an update
         if log.log_level <= 2:
-            log.debug(
-                f"already property changed {instance}{variable.name} {value}"
-            )
+            log.debug(f"already property changed {instance}{variable.name} {value}")
         return value
     # log.info(f'property changed {variable.name} {value}')
 
     if log.log_level <= 6:
-        log.debug(
-            f"checking property changed {instance}{variable.name} {value}"
-        )
+        log.debug(f"checking property changed {instance}{variable.name} {value}")
 
     # Check if should be updated
     cur = getattr(instance, variable.name)
@@ -210,9 +211,7 @@ def signals_slots_handler(
 
     for t in fields:
         if t.name in PROTECTED_NAMES:
-            raise Exception(
-                f"cannot use {t.name} as a field name, its protected"
-            )
+            raise Exception(f"cannot use {t.name} as a field name, its protected")
         if t.type is None:
             log.warning(f"{cls.__name__}.{t.name} has no type")
 
@@ -380,9 +379,7 @@ class Configuration(AttributedBaseMixin):
         if not use_dict:  # slots
             obj = {k: obj.get(k, None) for k in slots}
 
-        return {
-            k: v for k, v in obj.items() if chk(k, v) and not k.startswith("_")
-        }
+        return {k: v for k, v in obj.items() if chk(k, v) and not k.startswith("_")}
 
     def copy_config_at_state(
         self, level=None, levels_deep: int = -1, changed: dict = None, **kw
@@ -422,9 +419,7 @@ class Configuration(AttributedBaseMixin):
             if config in changed:
                 ccomp = changed[config]
             else:
-                ccomp = config.copy_config_at_state(
-                    level + 1, levels_deep, changed
-                )
+                ccomp = config.copy_config_at_state(level + 1, levels_deep, changed)
             kwcomps[key] = ccomp
 
         # Finally make the new system with changed internals
@@ -590,11 +585,7 @@ class Configuration(AttributedBaseMixin):
             .title()
         )
         filename = "".join(
-            [
-                c
-                for c in fil
-                if c.isalpha() or c.isdigit() or c == "_" or c == "-"
-            ]
+            [c for c in fil if c.isalpha() or c.isdigit() or c == "_" or c == "-"]
         ).rstrip()
         return filename
 

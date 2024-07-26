@@ -174,9 +174,7 @@ class CostModel(Configuration, TabulationMixin):
             for k, v in self._slot_costs.items():
                 # Check if the cost model will  be accessed
                 no_comp = k not in current_comps
-                is_cost = not no_comp and isinstance(
-                    current_comps[k], CostModel
-                )
+                is_cost = not no_comp and isinstance(current_comps[k], CostModel)
                 dflt_is_cost_comp = all(
                     [isinstance(v, CostModel), isinstance(v, Component)]
                 )
@@ -205,9 +203,7 @@ class CostModel(Configuration, TabulationMixin):
 
     @classmethod
     def subcls_compile(cls):
-        assert not issubclass(
-            cls, ComponentIter
-        ), "component iter not supported"
+        assert not issubclass(cls, ComponentIter), "component iter not supported"
         log.debug(f"compiling costs {cls}")
         cls.reset_cls_costs()
 
@@ -226,9 +222,7 @@ class CostModel(Configuration, TabulationMixin):
         assert not isinstance(
             cost, type
         ), f"insantiate classes before adding as a cost!"
-        assert (
-            slot_name in cls.slots_attributes()
-        ), f"slot {slot_name} doesnt exist"
+        assert slot_name in cls.slots_attributes(), f"slot {slot_name} doesnt exist"
         assert isinstance(cost, (float, int, dict)) or isinstance(
             cost, CostModel
         ), "only numeric types or CostModel instances supported"
@@ -238,9 +232,7 @@ class CostModel(Configuration, TabulationMixin):
         if warn_on_non_costmodel and not any(
             [issubclass(at, CostModel) for at in atypes]
         ):
-            log.warning(
-                f"assigning cost to non CostModel based slot {slot_name}"
-            )
+            log.warning(f"assigning cost to non CostModel based slot {slot_name}")
 
         cls._slot_costs[slot_name] = cost
 
@@ -256,9 +248,7 @@ class CostModel(Configuration, TabulationMixin):
         assert not isinstance(
             cost, type
         ), f"insantiate classes before adding as a cost!"
-        assert (
-            slot_name in self.slots_attributes()
-        ), f"slot {slot_name} doesnt exist"
+        assert slot_name in self.slots_attributes(), f"slot {slot_name} doesnt exist"
         assert isinstance(cost, (float, int, dict)) or isinstance(
             cost, CostModel
         ), "only numeric types or CostModel instances supported"
@@ -268,9 +258,7 @@ class CostModel(Configuration, TabulationMixin):
         if warn_on_non_costmodel and not any(
             [issubclass(at, CostModel) for at in atypes]
         ):
-            self.warning(
-                f"assigning cost to non CostModel based slot {slot_name}"
-            )
+            self.warning(f"assigning cost to non CostModel based slot {slot_name}")
 
         # convert from classinfo
         if self._slot_costs is self.__class__._slot_costs:
@@ -322,9 +310,7 @@ class CostModel(Configuration, TabulationMixin):
             saved = set((self,))  # item cost included!
         elif self not in saved:
             saved.add(self)
-        itemcst = list(
-            self.dict_itemized_costs(saved, categories, term).values()
-        )
+        itemcst = list(self.dict_itemized_costs(saved, categories, term).values())
         csts = [self.sub_costs(saved, categories, term), numpy.nansum(itemcst)]
         return numpy.nansum(csts)
 
@@ -333,9 +319,7 @@ class CostModel(Configuration, TabulationMixin):
     ) -> dict:
         ccp = self.class_cost_properties()
         costs = {
-            k: obj.__get__(self)
-            if obj.apply_at_term(self, term) == test_val
-            else 0
+            k: obj.__get__(self) if obj.apply_at_term(self, term) == test_val else 0
             for k, obj in ccp.items()
             if categories is None
             or any([cc in categories for cc in obj.cost_categories])
@@ -405,9 +389,7 @@ class CostModel(Configuration, TabulationMixin):
         function returns False at that term"""
         ccp = self.class_cost_properties()
         return {
-            k: obj.__get__(self)
-            if obj.apply_at_term(self, term) == test_val
-            else 0
+            k: obj.__get__(self) if obj.apply_at_term(self, term) == test_val else 0
             for k, obj in ccp.items()
         }
 
@@ -558,16 +540,10 @@ class Economics(Component):
     def term_fgen(self, comp, prop):
         if isinstance(comp, dict):
             return lambda term: comp[prop] if term == 0 else 0
-        return (
-            lambda term: prop.__get__(comp)
-            if prop.apply_at_term(comp, term)
-            else 0
-        )
+        return lambda term: prop.__get__(comp) if prop.apply_at_term(comp, term) else 0
 
     def sum_term_fgen(self, ref_group):
-        term_funs = [
-            self.term_fgen(ref.comp, self.get_prop(ref)) for ref in ref_group
-        ]
+        term_funs = [self.term_fgen(ref.comp, self.get_prop(ref)) for ref in ref_group]
         return lambda term: numpy.nansum([t(term) for t in term_funs])
 
     # Gather & Set References (the magic!)
@@ -667,9 +643,7 @@ class Economics(Component):
             )
             row["levalized_cost"] = tc * (1 + self.discount_rate) ** (-1 * t)
             row["output"] = output = self.calculate_production(self.parent, t)
-            row["levalized_output"] = output * (1 + self.discount_rate) ** (
-                -1 * t
-            )
+            row["levalized_output"] = output * (1 + self.discount_rate) ** (-1 * t)
 
         return pandas.DataFrame(out)
 
@@ -705,9 +679,7 @@ class Economics(Component):
         self._comp_categories = collections.defaultdict(list)
         self._comp_costs = dict()
 
-        for key, level, conf in parent.go_through_configurations(
-            check_config=False
-        ):
+        for key, level, conf in parent.go_through_configurations(check_config=False):
             # skip self
             if conf is self:
                 continue
@@ -746,9 +718,7 @@ class Economics(Component):
                     compcanidate = child._slot_costs[comp_key]
                     if isinstance(compcanidate, CostModel):
                         self.debug(f"dflt child costmodel {kbase}.{comp_key}")
-                        self._extract_cost_references(
-                            compcanidate, bse + "cost."
-                        )
+                        self._extract_cost_references(compcanidate, bse + "cost.")
                     else:
                         _key = bse + "cost.item_cost"
                         self.debug(f"dflt child cost for {kbase}.{comp_key}")
@@ -762,9 +732,7 @@ class Economics(Component):
                         cc = "unit"
                         self._comp_costs[_key] = ref
                         self._cost_categories["category." + cc].append(ref)
-                        self._comp_categories[bse + "category." + cc].append(
-                            ref
-                        )
+                        self._comp_categories[bse + "category." + cc].append(ref)
 
             # 2. try looking at the parent
             elif (
@@ -857,9 +825,7 @@ class Economics(Component):
                 self.debug(f"skipping key {_key}")
 
         # add base class slot values when comp was none
-        for compnm, comp in conf.internal_configurations(
-            False, none_ok=True
-        ).items():
+        for compnm, comp in conf.internal_configurations(False, none_ok=True).items():
             if comp is None:
                 if self.log_level < 5:
                     self.msg(
@@ -871,18 +837,12 @@ class Economics(Component):
                     if issubclass(cc, CostModel):
                         if cc._slot_costs:
                             if self.log_level < 5:
-                                self.msg(
-                                    f"{conf} looking up base slot cost for {cc}"
-                                )
+                                self.msg(f"{conf} looking up base slot cost for {cc}")
                             for k, v in cc._slot_costs.items():
-                                _key = (
-                                    bse + compnm + "." + k + ".cost.item_cost"
-                                )
+                                _key = bse + compnm + "." + k + ".cost.item_cost"
                                 if _key in CST:
                                     if self.log_level < 10:
-                                        self.debug(
-                                            f"{conf} skipping dflt key {_key}"
-                                        )
+                                        self.debug(f"{conf} skipping dflt key {_key}")
                                     # break #skip if already added
                                     continue
 
@@ -905,9 +865,7 @@ class Economics(Component):
 
                                     cc = "unit"
                                     self._comp_costs[_key] = ref
-                                    self._cost_categories[
-                                        "category." + cc
-                                    ].append(ref)
+                                    self._cost_categories["category." + cc].append(ref)
                                     self._comp_categories[
                                         bse + "category." + cc
                                     ].append(ref)

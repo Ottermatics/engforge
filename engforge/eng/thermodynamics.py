@@ -195,10 +195,7 @@ class SimpleTurbine(Component):
         return self.Tin * (
             1
             - self.efficiency
-            * (
-                1.0
-                - (1 / self.pressure_ratio) ** ((self.gamma - 1.0) / self.gamma)
-            )
+            * (1.0 - (1 / self.pressure_ratio) ** ((self.gamma - 1.0) / self.gamma))
         )
         # return self.Tin * self.pressure_ratio**((self.gamma-1.0)/self.gamma)/ self.efficiency
 

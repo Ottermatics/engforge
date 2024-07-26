@@ -6,21 +6,21 @@ import random
 
 
 def test_obj(sys, prob):
-    #print('obj',sys, prob)
+    # print('obj',sys, prob)
     comp = sys
     assert comp is not prob.system, f"{comp} is problems system, in sub comp"
     return comp.val - comp.comp_val
 
 
 def test_con(sys, prob):
-    #print('con',sys, prob)
+    # print('con',sys, prob)
     comp = sys
     assert comp is not prob.system, f"{comp} is problems system, in sub comp"
     return -1
 
 
 def test_zero(sys, prob):
-    #print('zero',sys, prob)
+    # print('zero',sys, prob)
     comp = sys
     assert comp is not prob.system, f"{comp} is problems system, in sub comp"
     return 0
@@ -61,9 +61,9 @@ class TestDeep(unittest.TestCase):
         sys.run(combos="default", slv_vars="*")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     comp = DeepComp(comp=None)
     sys = DeepSys(comp=comp)
-    #sys.change_all_log_lvl(1)
-    sys.run(combos="default", slv_vars="*")    
+    # sys.change_all_log_lvl(1)
+    sys.run(combos="default", slv_vars="*")

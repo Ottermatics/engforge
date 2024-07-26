@@ -369,9 +369,7 @@ class ShapelySection(Profile2D):
     # Mesh sizing
     coarse: bool = attrs.field(default=False)
     mesh_extent_decimation = attrs.field(default=100)
-    min_mesh_angle: float = attrs.field(
-        default=20
-    )  # below 20.7 garunteed to work
+    min_mesh_angle: float = attrs.field(default=20)  # below 20.7 garunteed to work
     min_mesh_size: float = attrs.field(default=1e-5)  # multiply by min
     goal_elements: float = attrs.field(default=1000)  # multiply by min
     _mesh_size: float = attrs.field(default=attrs.Factory(get_mesh_size, True))
@@ -497,9 +495,7 @@ class ShapelySection(Profile2D):
     def prediction_weights(self, df, window, initial_weight=10):
         weights = numpy.ones(min(len(df), window))
         weights[0] = initial_weight**2  # zero value is important!
-        weights[
-            : getattr(self, "N_base", 100)
-        ] = initial_weight  # then base values
+        weights[: getattr(self, "N_base", 100)] = initial_weight  # then base values
         if hasattr(self, "N_pareto"):
             weights[: getattr(self, "N_pareto")] = (
                 initial_weight**0.5
@@ -507,9 +503,7 @@ class ShapelySection(Profile2D):
         # Dont emphasise fit above max margin
         dm = (df.fail_frac - self.max_margin).to_numpy()
         penalize_inx = dm > 0
-        weights[penalize_inx] = np.maximum(
-            1.0 / ((1.0 + dm[penalize_inx])), 0.1
-        )
+        weights[penalize_inx] = np.maximum(1.0 / ((1.0 + dm[penalize_inx])), 0.1)
         return weights
 
     def _subsample_data(self, X, y, window, weights):
@@ -617,9 +611,7 @@ class ShapelySection(Profile2D):
 
         self._A = self._sec.get_area()
         if self.material:
-            self._Ixx, self._Iyy, self._Ixy = self._sec.get_eic(
-                e_ref=self.material
-            )
+            self._Ixx, self._Iyy, self._Ixy = self._sec.get_eic(e_ref=self.material)
             self._J = self._sec.get_ej()
         else:
             self._Ixx, self._Iyy, self._Ixy = self._sec.get_ic()
@@ -668,9 +660,7 @@ class ShapelySection(Profile2D):
     def plot_mesh(self):
         return self._sec.plot_centroids()
 
-    def calculate_stress(
-        self, n=0, vx=0, vy=0, mxx=0, myy=0, mzz=0, **kw
-    ) -> float:
+    def calculate_stress(self, n=0, vx=0, vy=0, mxx=0, myy=0, mzz=0, **kw) -> float:
         return calculate_stress(
             self, n=n, vx=vx, vy=vy, mxx=mxx, myy=myy, mzz=mzz, **kw
         )
@@ -702,9 +692,7 @@ class ShapelySection(Profile2D):
         do_calc = not self.prediction or not self._fitted or under_size
         if do_calc or force_calc:
             if self._do_print and self.prediction:
-                print(
-                    f"calc till {len(self.prediction_records)} <= {min_est_records}"
-                )
+                print(f"calc till {len(self.prediction_records)} <= {min_est_records}")
             stress = calculate_stress(
                 self, n=n, vx=vx, vy=vy, mxx=mxx, myy=myy, mzz=mzz, value=value
             )
@@ -729,9 +717,7 @@ class ShapelySection(Profile2D):
             # calculate stress if close to failure within saftey margin
             err = 1 - val
             mrg = self.fail_frac_criteria(calc_margin=calc_margin)
-            do_calc = abs(err) <= mrg or all(
-                [calc_every, (Nrec % calc_every) == 0]
-            )
+            do_calc = abs(err) <= mrg or all([calc_every, (Nrec % calc_every) == 0])
             oob = val <= self.max_margin and self.check_out_of_domain(data, 0.1)
             if self._do_print:
                 self.info(
@@ -876,9 +862,7 @@ class ShapelySection(Profile2D):
         return 1e6
 
     # Determine Outer Bound Of Failures
-    def determine_failure_front(
-        self, pareto_inx=[0.5, 0.1], pareto_front=False
-    ):
+    def determine_failure_front(self, pareto_inx=[0.5, 0.1], pareto_front=False):
         self.info(
             f"determining failure front for cross section, with pareto inx: {pareto_inx}"
         )
@@ -947,8 +931,7 @@ class ShapelySection(Profile2D):
                 q = max(wt, 1) if normalize else 1
                 inxs = [self._prediction_parms.index(p) for p in parms]
                 base_kw = {
-                    p: w * self._basis[i] / q
-                    for p, w, i in zip(parms, weight, inxs)
+                    p: w * self._basis[i] / q for p, w, i in zip(parms, weight, inxs)
                 }
 
                 # print(base_kw)
@@ -981,9 +964,7 @@ class ShapelySection(Profile2D):
                 self.calculate_stress(**inp)
 
             if i % print_interval == 0:
-                self.info(
-                    f"training... current error: {self._training_history[-1]}"
-                )
+                self.info(f"training... current error: {self._training_history[-1]}")
             i += 1
             if i >= max_iter:
                 self.info(f"training... max iterations reached")
@@ -1033,9 +1014,7 @@ class ShapelySection(Profile2D):
                 poss2 = int((poss + 1) % Imax)
                 x_ = np.array([r[poss], r[poss2]])
                 y_ = np.array([inx[poss], inx[poss2]])
-                itarget = (0 - x_[0]) * (y_[1] - y_[0]) / (x_[1] - x_[0]) + y_[
-                    0
-                ]
+                itarget = (0 - x_[0]) * (y_[1] - y_[0]) / (x_[1] - x_[0]) + y_[0]
                 r_ = np.interp(itarget, inx2, R)
                 out.add(round(r_, precision))
                 # print(itarget,r_)

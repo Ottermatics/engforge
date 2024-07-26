@@ -26,6 +26,7 @@ The solver uses the root or cobla scipy optimizer results on quick references to
 
 SignalS can be limited with constrains via `min or max` values on `NumericProperty` which can be numeric values (int or float) or functions taking one argument of the component it is defined on. Additionally signals may take arguments of `min` or `max` which are numeric values or callbacks which take the system instance as an argument.
 """
+
 import attrs
 
 from engforge.properties import *
@@ -68,7 +69,9 @@ class System(SolverMixin, SolveableInterface, PlottingMixin, GlobalDynamics):
     dynamic_output_vars: list = attrs.field(factory=list)
 
     _anything_changed_ = True
-    _solver_override: bool = False  # this comp will run with run_internal_systems when True, otherwise it resolves to global solver behavior, also prevents the solver from reaching into this system
+    _solver_override: bool = (
+        False  # this comp will run with run_internal_systems when True, otherwise it resolves to global solver behavior, also prevents the solver from reaching into this system
+    )
 
     # Properties!
     @system_property
@@ -82,7 +85,7 @@ class System(SolverMixin, SolveableInterface, PlottingMixin, GlobalDynamics):
         return self.last_context.converged
 
     @_converged.setter
-    def _converged(self,inpt):
+    def _converged(self, inpt):
         self.last_context._converged = inpt
 
     @system_property
@@ -124,9 +127,7 @@ class System(SolverMixin, SolveableInterface, PlottingMixin, GlobalDynamics):
         """looks at internal components as well as flag for anything chagned."""
         if self._anything_changed_:
             return True
-        elif any(
-            [c.anything_changed for k, c in self.comp_references().items()]
-        ):
+        elif any([c.anything_changed for k, c in self.comp_references().items()]):
             return True
         return False
 

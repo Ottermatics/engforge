@@ -66,6 +66,7 @@ import expiringdict
 import attr, attrs
 import datetime
 
+
 class ProbLog(LoggingMixin):
     pass
 
@@ -151,9 +152,7 @@ root_defined = dict(
 save_modes = ["vars", "nums", "all", "prob"]
 transfer_kw = ["system", "_dxdt"]
 
-root_possible = list(root_defined.keys()) + list(
-    "_" + k for k in root_defined.keys()
-)
+root_possible = list(root_defined.keys()) + list("_" + k for k in root_defined.keys())
 
 # TODO: output options extend_dataframe=True,return_dataframe=True,condensed_dataframe=True,return_system=True,return_problem=True,return_df=True,return_data=True
 # TODO: connect save_data() output to _data table.
@@ -260,8 +259,12 @@ class ProblemExec:
     success_thresh = (
         1e6  # if system has `success_thresh` it will be assigned to the context
     )
-    post_callback: callable = None  # callback that will be called on the system each time it is reverted, it should take args(system,current_problem_exec)
-    run_solver: bool = False  # for transient #i would love this to be=true, but there's just too much possible variation in application to make it so without some kind of control / continuity strategy. Dynamics are natural responses anyways, so solver use should be an advanced case for now (MPC/Filtering/ect later)
+    post_callback: callable = (
+        None  # callback that will be called on the system each time it is reverted, it should take args(system,current_problem_exec)
+    )
+    run_solver: bool = (
+        False  # for transient #i would love this to be=true, but there's just too much possible variation in application to make it so without some kind of control / continuity strategy. Dynamics are natural responses anyways, so solver use should be an advanced case for now (MPC/Filtering/ect later)
+    )
 
     def __getattr__(self, name):
         """This is a special method that is called when an attribute is not found in the usual places, like when interior contexts (anything not the root (session_id=True)) are created that dont have the top level's attributes. some attributes will look to the parent session"""
@@ -284,9 +287,7 @@ class ProblemExec:
         # Default behaviour
         return self.__getattribute__(name)
 
-    def __init__(
-        self, system, kw_dict=None, Xnew=None, ctx_fail_new=False, **opts
-    ):
+    def __init__(self, system, kw_dict=None, Xnew=None, ctx_fail_new=False, **opts):
         """
         Initializes the ProblemExec.
 
@@ -468,9 +469,7 @@ class ProblemExec:
             self.set_checkpoint()
 
         if log.log_level < 10:
-            self.info(
-                f"new execution context for {system}| {opts} | {self._slv_kw}"
-            )
+            self.info(f"new execution context for {system}| {opts} | {self._slv_kw}")
 
         elif log.log_level <= 3:
             self.msg(f"new execution context for {system}| {self._slv_kw}")
@@ -649,18 +648,14 @@ class ProblemExec:
             self.class_cache.level_number += 1
             self.class_cache.session._prob_levels[self.level_name] = self
 
-            return self.class_cache.session #appear as top
+            return self.class_cache.session  # appear as top
 
         # return New
         self.class_cache.session = self
         self.class_cache.level_number = 0
 
         if self.log_level < 10:
-            refs = {
-                k: v
-                for k, v in self.sesh._sys_refs.get("attrs", {}).items()
-                if v
-            }
+            refs = {k: v for k, v in self.sesh._sys_refs.get("attrs", {}).items() if v}
             self.debug(
                 f"creating execution context for {self.system}| {self._slv_kw}| {refs}"
             )
@@ -733,9 +728,7 @@ class ProblemExec:
                     if type(self.problems_dict) is not dict:
                         self.problems_dict.pop(self._problem_id, None)
                     del self.class_cache.session
-                    raise KeyError(
-                        f"cant exit to level! {exc_value.level} not found!!"
-                    )
+                    raise KeyError(f"cant exit to level! {exc_value.level} not found!!")
 
             else:
                 if self.log_level <= 18:
@@ -876,10 +869,7 @@ class ProblemExec:
             self.warning(f"no data saved, nothing changed")
 
     def clean_context(self):
-        if (
-            hasattr(self.class_cache, "session")
-            and self.class_cache.session is self
-        ):
+        if hasattr(self.class_cache, "session") and self.class_cache.session is self:
             if self.log_level <= 8:
                 self.debug(f"closing execution session")
             self.class_cache.level_number = 0
@@ -923,9 +913,7 @@ class ProblemExec:
             dt = max_step_dt
 
         if self.log_level < 15:
-            self.info(
-                f"simulating {system},{sesh}| int:{intl_refs} | refs: {refs}"
-            )
+            self.info(f"simulating {system},{sesh}| int:{intl_refs} | refs: {refs}")
 
         if not intl_refs:
             raise Exception(f"no transient parameters found")
@@ -1136,7 +1124,7 @@ class ProblemExec:
         # TODO: move exit condition handiling somewhere else, reduce cross over from process_ans
         sesh = self.sesh
         if self.log_level < 10:
-            self.info(f'handiling solution: {answer}')
+            self.info(f"handiling solution: {answer}")
         thresh = sesh.success_thresh
         vars = list(Xref)
 
@@ -1145,15 +1133,13 @@ class ProblemExec:
         output["Xans"] = Xa
         Ref.refset_input(Xref, Xa)
 
-        Yout = {p: yit.value(yit.comp, self) for p,yit in Yref.items()}
+        Yout = {p: yit.value(yit.comp, self) for p, yit in Yref.items()}
         output["Yobj"] = Yout
 
         Ycon = {}
         if sesh.constraints["constraints"]:
             x_in = answer.x
-            for c, k in zip(
-                sesh.constraints["constraints"], sesh.constraints["info"]
-            ):
+            for c, k in zip(sesh.constraints["constraints"], sesh.constraints["info"]):
                 cv = c["fun"](x_in, self, {})
                 Ycon[k] = cv
         output["Ycon"] = Ycon
@@ -1266,9 +1252,7 @@ class ProblemExec:
         )
 
         slv_inst = sys_refs.get("type", {}).get("solver", {})
-        trv_inst = {
-            v.var: v for v in sys_refs.get("type", {}).get("time", {}).values()
-        }
+        trv_inst = {v.var: v for v in sys_refs.get("type", {}).get("time", {}).values()}
         sys_refs = sys_refs.get("attrs", {})
 
         if add_con is None:
@@ -1343,22 +1327,12 @@ class ProblemExec:
                         combo_var = ctype["combo_var"]
                         active = ctype.get("active", True)
                         in_activate = (
-                            any(
-                                [
-                                    arg_var_compare(combo_var, v)
-                                    for v in activated
-                                ]
-                            )
+                            any([arg_var_compare(combo_var, v) for v in activated])
                             if activated
                             else False
                         )
                         in_deactivate = (
-                            any(
-                                [
-                                    arg_var_compare(combo_var, v)
-                                    for v in deactivated
-                                ]
-                            )
+                            any([arg_var_compare(combo_var, v) for v in deactivated])
                             if deactivated
                             else False
                         )
@@ -1369,16 +1343,12 @@ class ProblemExec:
                         # Check active or activated
                         if not active and not activated:
                             if log.log_level < 3:
-                                self.msg(
-                                    f"skip con: inactive {var} {slvr} {ctype}"
-                                )
+                                self.msg(f"skip con: inactive {var} {slvr} {ctype}")
                             continue
 
                         elif not active and not in_activate:
                             if log.log_level < 3:
-                                self.msg(
-                                    f"skip con: inactive {var} {slvr} {ctype}"
-                                )
+                                self.msg(f"skip con: inactive {var} {slvr} {ctype}")
                             continue
 
                         elif active and in_deactivate:
@@ -1396,9 +1366,7 @@ class ProblemExec:
                             continue
 
                     if log.log_level < 10:
-                        self.debug(
-                            f"adding var constraint {var,slvr,ctype,combos}"
-                        )
+                        self.debug(f"adding var constraint {var,slvr,ctype,combos}")
 
                     # get the index of the variable
                     x_inx = Xvars.index(slvr)
@@ -1462,9 +1430,7 @@ class ProblemExec:
                                 cval,
                                 **kw,
                             )
-                            con_info.append(
-                                f"val_{ref.comp.classname}_{kind}_{slvr}"
-                            )
+                            con_info.append(f"val_{ref.comp.classname}_{kind}_{slvr}")
                             con_list.append(ccst)
 
                         else:
@@ -1476,9 +1442,7 @@ class ProblemExec:
         for slvr, ref in self.problem_ineq.items():
             slv = slv_inst[slvr]
             slv_constraints = slv.constraints
-            parent = self.get_parent_key(
-                slvr, look_back_num=2
-            )  # get the parent comp
+            parent = self.get_parent_key(slvr, look_back_num=2)  # get the parent comp
             for ctype in slv_constraints:
                 cval = ctype["value"]
                 kind = ctype["type"]
@@ -1500,9 +1464,7 @@ class ProblemExec:
                     )
 
         for slvr, ref in self.problem_eq.items():
-            parent = self.get_parent_key(
-                slvr, look_back_num=2
-            )  # get the parent comp
+            parent = self.get_parent_key(slvr, look_back_num=2)  # get the parent comp
             if slvr in slv_inst and slvr in all_refz.get("solver.eq", {}):
                 slv = slv_inst[slvr]
                 slv_constraints = slv.constraints
@@ -1549,9 +1511,7 @@ class ProblemExec:
 
     # General method to distribute input to internal components
     @classmethod
-    def parse_default(
-        self, key, defaults, input_dict, rmv=False, empty_str=True
-    ):
+    def parse_default(self, key, defaults, input_dict, rmv=False, empty_str=True):
         """splits strings or lists and returns a list of options for the key, if nothing found returns None if fail set to True raises an exception, otherwise returns the default value"""
         if key in input_dict:
             # kwargs will no longer have key!
@@ -1639,9 +1599,7 @@ class ProblemExec:
         elif "prob" == sesh.save_mode:
             raise NotImplementedError(f"problem save mode not implemented")
         else:
-            raise KeyError(
-                f"unknown save mode {sesh.save_mode}, not in {save_modes}"
-            )
+            raise KeyError(f"unknown save mode {sesh.save_mode}, not in {save_modes}")
 
         out = Ref.refset_get(refs, sys=sesh.system, prob=self)
         # Integration
@@ -1691,9 +1649,7 @@ class ProblemExec:
         elif self.temp_state:
             if self.log_level < 3:
                 self.debug(f"act-state: {self.temp_state}")
-            Ref.refset_input(
-                sesh.all_comps_and_vars, self.temp_state, fail=False
-            )
+            Ref.refset_input(sesh.all_comps_and_vars, self.temp_state, fail=False)
         elif self.log_level < 3:
             self.debug(f"no-state: {new_state}")
 
@@ -2109,6 +2065,4 @@ class Problem(ProblemExec, DataframeMixin):
 
     @level_name.setter
     def level_name(self, value):
-        raise AttributeError(
-            f"cannot set level_name of top level problem context"
-        )
+        raise AttributeError(f"cannot set level_name of top level problem context")

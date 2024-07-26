@@ -1,4 +1,5 @@
 """This module defines the slot attrs attribute to define the update behavior of a component or between components in an analysis"""
+
 """Signals define data flow in the solver system. These updates can happen before or after a solver execution as defined in SolverMixin
 
 """
@@ -36,9 +37,7 @@ class SignalInstance(AttributeInstance):
         """sets `target` from `source`"""
         val = self.source.value()
         if self.system.log_level < 10:
-            self.system.msg(
-                f"Signal| applying {self.source}|{val} to {self.target}"
-            )
+            self.system.msg(f"Signal| applying {self.source}|{val} to {self.target}")
         self.target.set_value(val)
 
     @property

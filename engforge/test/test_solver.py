@@ -44,9 +44,7 @@ class SolverRefSelection(unittest.TestCase):
         for act in [True, False]:
             for cmb in [inv, inv.split(",")]:
                 actv = acts if act else aacts
-                extra = dict(
-                    combos=cmb, slv_vars="*", activate=actv, only_active=True
-                )
+                extra = dict(combos=cmb, slv_vars="*", activate=actv, only_active=True)
                 info = self.sc.solver_vars(**extra)["attrs"]
                 ans = {"x", "y", "z", "comp.x", "comp.y", "comp.z"}
                 self.assertEqual(set(info["solver.var"]), ans)
@@ -175,18 +173,14 @@ class SingleCompSolverTest(unittest.TestCase):
         self.sc = CubeSystem(comp=CubeComp())
 
     def test_exec_results(self):
-        extra = dict(
-            combos=indep_l, slv_vars=indep, activate=[], only_active=True
-        )
+        extra = dict(combos=indep_l, slv_vars=indep, activate=[], only_active=True)
         with ProblemExec(self.sc, extra) as pb:
             o = self.sc.execute(**extra)
             self.assertDictEqual(o["Xstart"], o["Xans"])
 
     def test_run_results(self):
         """test that inputs stay the same when no objecives present"""
-        extra = dict(
-            combos=indep, slv_vars=indep_l, activate=[], only_active=True
-        )
+        extra = dict(combos=indep, slv_vars=indep_l, activate=[], only_active=True)
 
         scx, scy, scz = self.sc.x, self.sc.y, self.sc.z
         sccx, sccy, sccz = self.sc.comp.x, self.sc.comp.y, self.sc.comp.z

@@ -4,6 +4,7 @@ Ref's are designed to create adhoc links between the systems & components of the
 
 Ref.component can be a Component,System or dictionary for referencing via keyword. Ref.key can be a string or a callable, if callable the ref will be evaluated as the result of the callable (allow_set=False), this renders the component unused, and disables the ability to set the value of the reference.
 """
+
 import attrs
 import inspect
 import numpy as np
@@ -37,8 +38,8 @@ def refset_get(refs, *args, **kw):
     out = {}
     for k in refs:
         try:
-            #print(k,refs[k])
-            
+            # print(k,refs[k])
+
             out[k] = refs[k].value(refs[k].comp, **kw)
         except Exception as e:
             rf = refs[k]

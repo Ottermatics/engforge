@@ -31,8 +31,9 @@ class TableLog(LoggingMixin):
 
 log = TableLog()
 
-#SKIP_REF = ["run_id", "converged", "name", "index"]
+# SKIP_REF = ["run_id", "converged", "name", "index"]
 SKIP_REF = ["name", "index"]
+
 
 class TabulationMixin(SolveableMixin, DataframeMixin):
     """In which we define a class that can enable tabulation"""
@@ -71,9 +72,7 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
 
     @solver_cached
     def dataframe(self):
-        if hasattr(self, "last_context") and hasattr(
-            self.last_context, "dataframe"
-        ):
+        if hasattr(self, "last_context") and hasattr(self.last_context, "dataframe"):
             return self.last_context.dataframe
         return pandas.DataFrame([])
 
@@ -168,9 +167,7 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
     @instance_cached
     def system_properties_keys(self) -> list:
         """Returns the table property keys"""
-        tabulated_properties = [
-            k for k, obj in self.system_properties_def.items()
-        ]
+        tabulated_properties = [k for k, obj in self.system_properties_def.items()]
         return tabulated_properties
 
     @instance_cached
@@ -184,9 +181,7 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
 
     @classmethod
     def cls_all_property_labels(cls):
-        return [
-            obj.label for k, obj in cls.system_properties_classdef().items()
-        ]
+        return [obj.label for k, obj in cls.system_properties_classdef().items()]
 
     @classmethod
     def cls_all_property_keys(cls):
@@ -240,9 +235,7 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
                         prop = getattr(cls, k, None)
                         if prop and isinstance(prop, system_property):
                             __system_properties[k] = prop
-                            log.msg(
-                                f"adding system property {mrv.__name__}.{k}"
-                            )
+                            log.msg(f"adding system property {mrv.__name__}.{k}")
 
         setattr(cls, "_{cls.__name__}_system_properties", __system_properties)
 
@@ -251,12 +244,7 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
     @classmethod
     def pre_compile(cls):
         cls._anything_changed = True  # set default on class
-        if any(
-            [
-                v.stochastic
-                for k, v in cls.system_properties_classdef(True).items()
-            ]
-        ):
+        if any([v.stochastic for k, v in cls.system_properties_classdef(True).items()]):
             log.info(f"setting always save on {cls.__name__}")
             cls._always_save_data = True
 

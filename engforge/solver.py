@@ -112,9 +112,7 @@ class SolverMixin(SolveableMixin):
                 for av in addvar:  # list/dict-keys
                     matches = set(fnmatch.filter(avars, av))
                     # Lookup Constraints if input is a dictionary
-                    if isinstance(addvar, dict) and isinstance(
-                        addvar[av], dict
-                    ):
+                    if isinstance(addvar, dict) and isinstance(addvar[av], dict):
                         const = base_const.copy()
                         const.update(addvar[av])
                     elif isinstance(addvar, dict):
@@ -163,9 +161,7 @@ class SolverMixin(SolveableMixin):
 
         with ProblemExec(self, kwargs, level_name="run") as pbx:
             # problem context removes slv/args from kwargs
-            return self._iterate_input_matrix(
-                self.eval, return_results=True, **kwargs
-            )
+            return self._iterate_input_matrix(self.eval, return_results=True, **kwargs)
 
     def run_internal_systems(self, sys_kw=None):
         """runs internal systems with potentially scoped kwargs"""
@@ -190,9 +186,7 @@ class SolverMixin(SolveableMixin):
                     comp.eval(**sys_kw_comp)
 
     # Single Point Flow
-    def eval(
-        self, Xo=None, eval_kw: dict = None, sys_kw: dict = None, cb=None, **kw
-    ):
+    def eval(self, Xo=None, eval_kw: dict = None, sys_kw: dict = None, cb=None, **kw):
         """Evaluates the system with pre/post execute methodology
         :param kw: kwargs come from `sys_kw` input in run ect.
         :param cb: an optional callback taking the system as an argument of the form (self,eval_kw,sys_kw,**kw)
@@ -222,9 +216,8 @@ class SolverMixin(SolveableMixin):
             Xnew=Xo,
         ) as pbx:
             out = self.execute(**kw)
-            pbx.save_data() #context handles checking if anything changed
+            pbx.save_data()  # context handles checking if anything changed
             pbx.exit_to_level(level="eval", revert=False)
-
 
         if self.log_level >= 20:
             sys.stdout.write(".")

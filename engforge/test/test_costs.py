@@ -3,7 +3,6 @@
 - emphasis on default / subclass adjustments
 """
 
-
 import unittest
 from engforge.components import Component
 from engforge.test.solver_testing_components import *
@@ -97,8 +96,7 @@ class TestCategoriesAndTerms(unittest.TestCase):
 
         df = er.dataframe
         tc = (
-            df["econ_summary_total_cost"]
-            == np.array([161.0, 220.0, 305.0, 390.0])
+            df["econ_summary_total_cost"] == np.array([161.0, 220.0, 305.0, 390.0])
         ).all()
         self.assertTrue(tc)
 

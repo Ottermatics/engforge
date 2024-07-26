@@ -141,9 +141,7 @@ class AttributedBaseMixin(LoggingMixin):
                 sub_clss = cls._extract_type(slts[fst].type)
                 out = []
                 for acpt in sub_clss:
-                    if isinstance(acpt, type) and issubclass(
-                        acpt, Configuration
-                    ):
+                    if isinstance(acpt, type) and issubclass(acpt, Configuration):
                         vals = acpt.check_ref_slot_type(".".join(rem))
                         # print(f'recursive find {acpt}.{rem} = {vals}')
                         if vals:

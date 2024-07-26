@@ -25,9 +25,7 @@ class AttributeInstance:
     # TODO: universal slots method
     # __slots__ = ["system", "class_attr"]
 
-    def __init__(
-        self, class_attr: "CLASS_ATTR", system: "System", **kwargs
-    ) -> None:
+    def __init__(self, class_attr: "CLASS_ATTR", system: "System", **kwargs) -> None:
         self.class_attr = class_attr
         self.system = system
         self.compile(**kwargs)
@@ -234,9 +232,7 @@ class ATTR_BASE(attrs.Attribute):
         """collects all the attributes for a system"""
         if not isinstance(system, type):
             system = system.__class__
-        return {
-            k: at.type for k, at in system._get_init_attrs_data(cls).items()
-        }
+        return {k: at.type for k, at in system._get_init_attrs_data(cls).items()}
 
     @classmethod
     def collect_attr_inst(cls, system, handle_inst=True) -> dict:
@@ -245,9 +241,7 @@ class ATTR_BASE(attrs.Attribute):
         out = {}
         for k, v in cattr.items():
             inst = getattr(system, k)
-            if (
-                inst is None and getattr(cls.instance_class, "none_ok", False)
-            ) or (
+            if (inst is None and getattr(cls.instance_class, "none_ok", False)) or (
                 cls.instance_class is not None
                 and not isinstance(inst, cls.instance_class)
             ):
