@@ -34,9 +34,7 @@ class engforge_prop:
         self.fset = fset
         self.fdel = fdel
 
-    def __call__(
-        self, fget=None, fset=None, fdel=None, doc=None, *args, **kwargs
-    ):
+    def __call__(self, fget=None, fset=None, fdel=None, doc=None, *args, **kwargs):
         """this will be called when input is provided before property is set"""
         if fget and self.fget is None:
             self.gname = fget.__name__
@@ -90,9 +88,7 @@ class engforge_prop:
 
 
 class cache_prop(engforge_prop):
-    allow_set: bool = (
-        False  # keep this flag false to maintain current persistent value
-    )
+    allow_set: bool = False  # keep this flag false to maintain current persistent value
 
     def __init__(self, *args, **kwargs):
         self.allow_set = True
@@ -228,7 +224,9 @@ class system_property(engforge_prop):
 
     def deleter(self, fdel):
         return type(self)(self.fget, self.fset, fdel, self.__doc__)
-#aliases
+
+
+# aliases
 sys_prop = system_property
 system_prop = system_property
 
@@ -277,9 +275,11 @@ class cached_system_property(system_property):
         setattr(instance, self.private_var, val)
         return val
 
-#aliases
+
+# aliases
 cached_sys_prop = system_property
 cached_system_prop = system_property
+
 
 # TODO: install solver reset / declarative instance cache+
 class solver_cached(cache_prop):

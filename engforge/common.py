@@ -1,4 +1,5 @@
 """A set of common values and functions that are globaly available."""
+
 import sys
 import functools
 
@@ -57,9 +58,7 @@ def get_size(obj, seen=None):
         size += sum([get_size(k, seen) for k in obj.keys()])
     elif hasattr(obj, "__dict__"):
         size += get_size(obj.__dict__, seen)
-    elif hasattr(obj, "__iter__") and not isinstance(
-        obj, (str, bytes, bytearray)
-    ):
+    elif hasattr(obj, "__iter__") and not isinstance(obj, (str, bytes, bytearray)):
         size += sum([get_size(i, seen) for i in obj])
     return size
 
