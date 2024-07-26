@@ -22,3 +22,4 @@ help:
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	@touch _build/html/.nojekyll
 	@cp _config.yml _build/html/
+	@cp -r ../media _build/html/media
