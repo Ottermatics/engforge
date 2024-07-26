@@ -19,7 +19,7 @@ jobs:
     - uses: actions/upload-artifact@v1
       with:
         name: DocumentationHTML
-        path: docs/build/html/
+        path: docs/_build/html/
 
     # - uses: actions/checkout@v2
     # - name: Format code with black
