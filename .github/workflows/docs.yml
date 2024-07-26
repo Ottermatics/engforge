@@ -1,14 +1,18 @@
 name: "Pull Request Docs Check"
-on: 
+on:
+  pull_request:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+
     - uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
@@ -29,9 +33,8 @@ jobs:
       with:
         author_name: ${{ github.actor }}
         author_email: ${{ github.actor }}@users.noreply.github.com
-        message: "Format code with black"
-        add: "."
-        branch: ${{ github.ref }}        
+        message: "Built Documentation / Format code with black"
+        add: "."       
 
     # Create an artifact out of the previously built pdf.
     # - uses: actions/upload-artifact@v1

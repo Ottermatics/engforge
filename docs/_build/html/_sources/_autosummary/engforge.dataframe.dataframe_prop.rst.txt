@@ -1,0 +1,34 @@
+engforge.dataframe.dataframe\_prop
+==================================
+
+.. currentmodule:: engforge.dataframe
+
+.. autoclass:: dataframe_prop
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~dataframe_prop.deleter
+      ~dataframe_prop.get_func_return
+      ~dataframe_prop.getter
+      ~dataframe_prop.setter
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~dataframe_prop.must_return
+   
+   

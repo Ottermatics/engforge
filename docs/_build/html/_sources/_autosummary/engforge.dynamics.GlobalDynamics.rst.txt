@@ -1,0 +1,159 @@
+engforge.dynamics.GlobalDynamics
+================================
+
+.. currentmodule:: engforge.dynamics
+
+.. autoclass:: GlobalDynamics
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~GlobalDynamics.add_fields
+      ~GlobalDynamics.change_all_log_lvl
+      ~GlobalDynamics.check_ref_slot_type
+      ~GlobalDynamics.cls_compile
+      ~GlobalDynamics.collect_all_attributes
+      ~GlobalDynamics.collect_comp_refs
+      ~GlobalDynamics.collect_dynamic_refs
+      ~GlobalDynamics.collect_inst_attributes
+      ~GlobalDynamics.collect_post_update_refs
+      ~GlobalDynamics.collect_solver_refs
+      ~GlobalDynamics.collect_update_refs
+      ~GlobalDynamics.comp_references
+      ~GlobalDynamics.compile_classes
+      ~GlobalDynamics.copy_config_at_state
+      ~GlobalDynamics.create_dynamic_matricies
+      ~GlobalDynamics.create_feedthrough_matrix
+      ~GlobalDynamics.create_input_matrix
+      ~GlobalDynamics.create_output_constants
+      ~GlobalDynamics.create_output_matrix
+      ~GlobalDynamics.create_state_constants
+      ~GlobalDynamics.create_state_matrix
+      ~GlobalDynamics.critical
+      ~GlobalDynamics.debug
+      ~GlobalDynamics.determine_nearest_stationary_state
+      ~GlobalDynamics.difference
+      ~GlobalDynamics.error
+      ~GlobalDynamics.extract_message
+      ~GlobalDynamics.filter
+      ~GlobalDynamics.get_system_input_refs
+      ~GlobalDynamics.go_through_configurations
+      ~GlobalDynamics.info
+      ~GlobalDynamics.input_attrs
+      ~GlobalDynamics.input_fields
+      ~GlobalDynamics.installSTDLogger
+      ~GlobalDynamics.internal_components
+      ~GlobalDynamics.internal_configurations
+      ~GlobalDynamics.internal_references
+      ~GlobalDynamics.internal_systems
+      ~GlobalDynamics.internal_tabulations
+      ~GlobalDynamics.linear_output
+      ~GlobalDynamics.linear_step
+      ~GlobalDynamics.locate
+      ~GlobalDynamics.locate_ref
+      ~GlobalDynamics.message_with_identiy
+      ~GlobalDynamics.msg
+      ~GlobalDynamics.nonlinear_output
+      ~GlobalDynamics.nonlinear_step
+      ~GlobalDynamics.numeric_fields
+      ~GlobalDynamics.parent_configurations_cls
+      ~GlobalDynamics.parse_run_kwargs
+      ~GlobalDynamics.parse_simulation_input
+      ~GlobalDynamics.plot_attributes
+      ~GlobalDynamics.post_update
+      ~GlobalDynamics.pre_compile
+      ~GlobalDynamics.rate
+      ~GlobalDynamics.rate_linear
+      ~GlobalDynamics.rate_nonlinear
+      ~GlobalDynamics.ref_dXdt
+      ~GlobalDynamics.resetLog
+      ~GlobalDynamics.resetSystemLogs
+      ~GlobalDynamics.set_time
+      ~GlobalDynamics.setattrs
+      ~GlobalDynamics.setup_global_dynamics
+      ~GlobalDynamics.signals_attributes
+      ~GlobalDynamics.sim_matrix
+      ~GlobalDynamics.simulate
+      ~GlobalDynamics.slack_notification
+      ~GlobalDynamics.slot_refs
+      ~GlobalDynamics.slots_attributes
+      ~GlobalDynamics.solvers_attributes
+      ~GlobalDynamics.step
+      ~GlobalDynamics.subclasses
+      ~GlobalDynamics.subcls_compile
+      ~GlobalDynamics.system_references
+      ~GlobalDynamics.table_fields
+      ~GlobalDynamics.trace_attributes
+      ~GlobalDynamics.transients_attributes
+      ~GlobalDynamics.update
+      ~GlobalDynamics.update_dynamics
+      ~GlobalDynamics.update_feedthrough
+      ~GlobalDynamics.update_input
+      ~GlobalDynamics.update_output_constants
+      ~GlobalDynamics.update_output_matrix
+      ~GlobalDynamics.update_state
+      ~GlobalDynamics.update_state_constants
+      ~GlobalDynamics.validate_class
+      ~GlobalDynamics.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GlobalDynamics.Ut_ref
+      ~GlobalDynamics.Xt_ref
+      ~GlobalDynamics.Yt_ref
+      ~GlobalDynamics.as_dict
+      ~GlobalDynamics.attrs_fields
+      ~GlobalDynamics.classname
+      ~GlobalDynamics.dXtdt_ref
+      ~GlobalDynamics.displayname
+      ~GlobalDynamics.dynamic_A
+      ~GlobalDynamics.dynamic_B
+      ~GlobalDynamics.dynamic_C
+      ~GlobalDynamics.dynamic_D
+      ~GlobalDynamics.dynamic_F
+      ~GlobalDynamics.dynamic_K
+      ~GlobalDynamics.dynamic_input
+      ~GlobalDynamics.dynamic_input_vars
+      ~GlobalDynamics.dynamic_output
+      ~GlobalDynamics.dynamic_output_vars
+      ~GlobalDynamics.dynamic_state
+      ~GlobalDynamics.dynamic_state_vars
+      ~GlobalDynamics.filename
+      ~GlobalDynamics.identity
+      ~GlobalDynamics.input_as_dict
+      ~GlobalDynamics.log_fmt
+      ~GlobalDynamics.log_level
+      ~GlobalDynamics.log_on
+      ~GlobalDynamics.log_silo
+      ~GlobalDynamics.logger
+      ~GlobalDynamics.nonlinear
+      ~GlobalDynamics.numeric_as_dict
+      ~GlobalDynamics.numeric_hash
+      ~GlobalDynamics.slack_webhook_url
+      ~GlobalDynamics.static_A
+      ~GlobalDynamics.static_B
+      ~GlobalDynamics.static_C
+      ~GlobalDynamics.static_D
+      ~GlobalDynamics.static_F
+      ~GlobalDynamics.static_K
+      ~GlobalDynamics.time
+      ~GlobalDynamics.unique_hash
+      ~GlobalDynamics.update_interval
+      ~GlobalDynamics.name
+      ~GlobalDynamics.parent
+   
+   

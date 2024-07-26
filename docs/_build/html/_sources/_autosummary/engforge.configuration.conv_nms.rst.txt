@@ -1,0 +1,6 @@
+engforge.configuration.conv\_nms
+================================
+
+.. currentmodule:: engforge.configuration
+
+.. autofunction:: conv_nms

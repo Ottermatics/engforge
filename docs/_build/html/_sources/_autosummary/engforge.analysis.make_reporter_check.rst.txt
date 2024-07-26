@@ -1,0 +1,6 @@
+engforge.analysis.make\_reporter\_check
+=======================================
+
+.. currentmodule:: engforge.analysis
+
+.. autofunction:: make_reporter_check

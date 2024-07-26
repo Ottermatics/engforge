@@ -824,7 +824,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
 
     #Dynamics info refs
     def collect_dynamic_refs(
-        self, conf: "ConfigurationMixin" = None, **kw
+        self, conf: "Configuration" = None, **kw
     ) -> dict:
         """collects the dynamics of the systems
         1. Time.integrate

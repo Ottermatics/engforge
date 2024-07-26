@@ -1,0 +1,177 @@
+engforge.eng.fluid\_material.IdealAir
+=====================================
+
+.. currentmodule:: engforge.eng.fluid_material
+
+.. autoclass:: IdealAir
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~IdealAir.add_fields
+      ~IdealAir.change_all_log_lvl
+      ~IdealAir.check_ref_slot_type
+      ~IdealAir.cls_all_attrs_fields
+      ~IdealAir.cls_all_property_keys
+      ~IdealAir.cls_all_property_labels
+      ~IdealAir.cls_compile
+      ~IdealAir.collect_all_attributes
+      ~IdealAir.collect_comp_refs
+      ~IdealAir.collect_dynamic_refs
+      ~IdealAir.collect_inst_attributes
+      ~IdealAir.collect_post_update_refs
+      ~IdealAir.collect_solver_refs
+      ~IdealAir.collect_update_refs
+      ~IdealAir.comp_references
+      ~IdealAir.compile_classes
+      ~IdealAir.copy_config_at_state
+      ~IdealAir.create_dynamic_matricies
+      ~IdealAir.create_feedthrough_matrix
+      ~IdealAir.create_input_matrix
+      ~IdealAir.create_output_constants
+      ~IdealAir.create_output_matrix
+      ~IdealAir.create_state_constants
+      ~IdealAir.create_state_matrix
+      ~IdealAir.critical
+      ~IdealAir.debug
+      ~IdealAir.determine_nearest_stationary_state
+      ~IdealAir.difference
+      ~IdealAir.error
+      ~IdealAir.extract_message
+      ~IdealAir.filter
+      ~IdealAir.format_columns
+      ~IdealAir.get_system_input_refs
+      ~IdealAir.go_through_configurations
+      ~IdealAir.info
+      ~IdealAir.input_attrs
+      ~IdealAir.input_fields
+      ~IdealAir.installSTDLogger
+      ~IdealAir.internal_components
+      ~IdealAir.internal_configurations
+      ~IdealAir.internal_references
+      ~IdealAir.internal_systems
+      ~IdealAir.internal_tabulations
+      ~IdealAir.linear_output
+      ~IdealAir.linear_step
+      ~IdealAir.locate
+      ~IdealAir.locate_ref
+      ~IdealAir.message_with_identiy
+      ~IdealAir.msg
+      ~IdealAir.nonlinear_output
+      ~IdealAir.nonlinear_step
+      ~IdealAir.numeric_fields
+      ~IdealAir.parent_configurations_cls
+      ~IdealAir.parse_run_kwargs
+      ~IdealAir.parse_simulation_input
+      ~IdealAir.plot_attributes
+      ~IdealAir.post_update
+      ~IdealAir.pre_compile
+      ~IdealAir.print_info
+      ~IdealAir.rate
+      ~IdealAir.rate_linear
+      ~IdealAir.rate_nonlinear
+      ~IdealAir.ref_dXdt
+      ~IdealAir.resetLog
+      ~IdealAir.resetSystemLogs
+      ~IdealAir.set_attr
+      ~IdealAir.set_time
+      ~IdealAir.setattrs
+      ~IdealAir.signals_attributes
+      ~IdealAir.slack_notification
+      ~IdealAir.slot_refs
+      ~IdealAir.slots_attributes
+      ~IdealAir.smart_split_dataframe
+      ~IdealAir.solvers_attributes
+      ~IdealAir.step
+      ~IdealAir.subclasses
+      ~IdealAir.subcls_compile
+      ~IdealAir.system_properties_classdef
+      ~IdealAir.system_references
+      ~IdealAir.table_fields
+      ~IdealAir.trace_attributes
+      ~IdealAir.transients_attributes
+      ~IdealAir.update
+      ~IdealAir.update_dynamics
+      ~IdealAir.update_feedthrough
+      ~IdealAir.update_input
+      ~IdealAir.update_output_constants
+      ~IdealAir.update_output_matrix
+      ~IdealAir.update_state
+      ~IdealAir.update_state_constants
+      ~IdealAir.validate_class
+      ~IdealAir.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~IdealAir.Ut_ref
+      ~IdealAir.Xt_ref
+      ~IdealAir.Yt_ref
+      ~IdealAir.anything_changed
+      ~IdealAir.as_dict
+      ~IdealAir.attrs_fields
+      ~IdealAir.classname
+      ~IdealAir.dXtdt_ref
+      ~IdealAir.data_dict
+      ~IdealAir.dataframe_constants
+      ~IdealAir.dataframe_variants
+      ~IdealAir.density
+      ~IdealAir.displayname
+      ~IdealAir.dynamic_A
+      ~IdealAir.dynamic_B
+      ~IdealAir.dynamic_C
+      ~IdealAir.dynamic_D
+      ~IdealAir.dynamic_F
+      ~IdealAir.dynamic_K
+      ~IdealAir.dynamic_input
+      ~IdealAir.dynamic_input_vars
+      ~IdealAir.dynamic_output
+      ~IdealAir.dynamic_output_vars
+      ~IdealAir.dynamic_state
+      ~IdealAir.dynamic_state_vars
+      ~IdealAir.filename
+      ~IdealAir.gas_constant
+      ~IdealAir.identity
+      ~IdealAir.input_as_dict
+      ~IdealAir.last_context
+      ~IdealAir.log_fmt
+      ~IdealAir.log_level
+      ~IdealAir.log_on
+      ~IdealAir.log_silo
+      ~IdealAir.logger
+      ~IdealAir.nonlinear
+      ~IdealAir.numeric_as_dict
+      ~IdealAir.numeric_hash
+      ~IdealAir.plotable_variables
+      ~IdealAir.skip_plot_vars
+      ~IdealAir.slack_webhook_url
+      ~IdealAir.static_A
+      ~IdealAir.static_B
+      ~IdealAir.static_C
+      ~IdealAir.static_D
+      ~IdealAir.static_F
+      ~IdealAir.static_K
+      ~IdealAir.surface_tension
+      ~IdealAir.system_id
+      ~IdealAir.time
+      ~IdealAir.unique_hash
+      ~IdealAir.update_interval
+      ~IdealAir.viscosity
+      ~IdealAir.parent
+      ~IdealAir.name
+      ~IdealAir.dataframe
+   
+   

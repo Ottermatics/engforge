@@ -1,0 +1,50 @@
+engforge.engforge\_attributes.EngAttr
+=====================================
+
+.. currentmodule:: engforge.engforge_attributes
+
+.. autoclass:: EngAttr
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~EngAttr.add_fields
+      ~EngAttr.change_all_log_lvl
+      ~EngAttr.critical
+      ~EngAttr.debug
+      ~EngAttr.error
+      ~EngAttr.extract_message
+      ~EngAttr.filter
+      ~EngAttr.info
+      ~EngAttr.installSTDLogger
+      ~EngAttr.message_with_identiy
+      ~EngAttr.msg
+      ~EngAttr.resetLog
+      ~EngAttr.resetSystemLogs
+      ~EngAttr.slack_notification
+      ~EngAttr.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~EngAttr.identity
+      ~EngAttr.log_fmt
+      ~EngAttr.log_level
+      ~EngAttr.log_on
+      ~EngAttr.logger
+      ~EngAttr.slack_webhook_url
+   
+   

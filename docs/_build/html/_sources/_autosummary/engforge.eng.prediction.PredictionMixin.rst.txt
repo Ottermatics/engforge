@@ -1,0 +1,43 @@
+engforge.eng.prediction.PredictionMixin
+=======================================
+
+.. currentmodule:: engforge.eng.prediction
+
+.. autoclass:: PredictionMixin
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~PredictionMixin.add_prediction_record
+      ~PredictionMixin.check_and_retrain
+      ~PredictionMixin.check_out_of_domain
+      ~PredictionMixin.observe_and_predict
+      ~PredictionMixin.prediction_dataframe
+      ~PredictionMixin.prediction_weights
+      ~PredictionMixin.score_data
+      ~PredictionMixin.train_compare
+      ~PredictionMixin.training_callback
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PredictionMixin.basis
+      ~PredictionMixin.prediction_goal_error
+      ~PredictionMixin.prediction_records
+      ~PredictionMixin.train_window
+      ~PredictionMixin.trained
+   
+   

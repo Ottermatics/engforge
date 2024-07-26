@@ -1,0 +1,38 @@
+engforge.properties.system\_prop
+================================
+
+.. currentmodule:: engforge.properties
+
+.. autoclass:: system_prop
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~system_prop.deleter
+      ~system_prop.get_func_return
+      ~system_prop.getter
+      ~system_prop.setter
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~system_prop.desc
+      ~system_prop.label
+      ~system_prop.must_return
+      ~system_prop.return_type
+      ~system_prop.stochastic
+   
+   

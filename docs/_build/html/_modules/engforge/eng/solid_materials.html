@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.eng.solid_materials &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/test.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.eng.solid_materials</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.eng.solid_materials</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">engforge.configuration</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">forge</span>
+<span class="kn">from</span> <span class="nn">engforge.properties</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">engforge.common</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">matplotlib</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">attr</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">json</span><span class="o">,</span><span class="nn">hashlib</span>
+
+<span class="c1"># One Material To Merge Them All</span>
+<span class="kn">from</span> <span class="nn">PyNite</span> <span class="kn">import</span> <span class="n">Material</span> <span class="k">as</span> <span class="n">PyNiteMat</span>
+<span class="kn">from</span> <span class="nn">sectionproperties.pre.pre</span> <span class="kn">import</span> <span class="n">Material</span> <span class="k">as</span> <span class="n">SecMat</span>
+
+<span class="n">SectionMaterial</span> <span class="o">=</span> <span class="n">SecMat</span><span class="o">.</span><span class="n">mro</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">ALL_MATERIALS</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">METALS</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">PLASTICS</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">CERAMICS</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+<span class="n">CMAP</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">&quot;viridis&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="random_color">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.random_color.html#engforge.eng.solid_materials.random_color">[docs]</a>
+<span class="k">def</span> <span class="nf">random_color</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">CMAP</span><span class="p">(</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="ih">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.ih.html#engforge.eng.solid_materials.ih">[docs]</a>
+<span class="k">def</span> <span class="nf">ih</span><span class="p">(</span><span class="n">val</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;ignore hash&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s1">&#39;&#39;</span></div>
+
+
+
+<div class="viewcode-block" id="SolidMaterial">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.SolidMaterial.html#engforge.eng.solid_materials.SolidMaterial">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SolidMaterial</span><span class="p">(</span><span class="n">SectionMaterial</span><span class="p">,</span> <span class="n">PyNiteMat</span><span class="o">.</span><span class="n">Material</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A class to hold physical properties of solid structural materials and act as both a section property material and a pynite material&quot;&quot;&quot;</span>
+
+    <span class="n">__metaclass__</span> <span class="o">=</span> <span class="n">SecMat</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;solid material&quot;</span><span class="p">)</span>
+    <span class="n">color</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">factory</span><span class="o">=</span><span class="n">random_color</span><span class="p">,</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span><span class="n">eq</span><span class="o">=</span><span class="n">ih</span><span class="p">)</span>
+
+    <span class="c1"># Structural Properties</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">elastic_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1e8</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">in_shear_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">yield_strength</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">tensile_strength_ultimate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">hardness</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># rockwell</span>
+    <span class="n">izod</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">poissons_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.30</span><span class="p">)</span>
+
+    <span class="c1"># Thermal Properties</span>
+    <span class="n">melting_point</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1000</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">maxium_service_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">500</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">thermal_conductivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>  <span class="c1"># W/mK</span>
+    <span class="n">specific_heat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>  <span class="c1"># J/kgK</span>
+    <span class="n">thermal_expansion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">10e-6</span><span class="p">)</span>  <span class="c1"># m/mK</span>
+
+    <span class="c1"># Electrical Properties</span>
+    <span class="n">electrical_resistitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1e-8</span><span class="p">)</span>  <span class="c1"># ohm-m</span>
+
+    <span class="c1"># Economic Properties</span>
+    <span class="n">cost_per_kg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># dollar per kg</span>
+
+    <span class="c1"># Saftey Properties</span>
+    <span class="n">factor_of_saftey</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+
+    <span class="n">_unique_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="SolidMaterial.pre_compile">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.SolidMaterial.html#engforge.eng.solid_materials.SolidMaterial.pre_compile">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">pre_compile</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">color</span> <span class="o">=</span> <span class="n">random_color</span><span class="p">()</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">E</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">elastic_modulus</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">G</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">shear_modulus</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nu</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">poissons_ratio</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rho</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">shear_modulus</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Shear Modulus&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_shear_modulus</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">in_shear_modulus</span>
+        <span class="c1"># hello defaults</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">E</span> <span class="o">/</span> <span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">poissons_ratio</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">yield_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">yield_strength</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">ultimate_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tensile_strength_ultimate</span>
+
+    <span class="nd">@inst_vectorize</span>
+    <span class="k">def</span> <span class="nf">von_mises_stress_max</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">normal_stress</span><span class="p">,</span> <span class="n">shear_stress</span><span class="p">):</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">normal_stress</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="o">**</span><span class="mf">2.0</span> <span class="o">+</span> <span class="n">shear_stress</span><span class="o">**</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+        <span class="n">vout</span> <span class="o">=</span> <span class="n">v1</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v2</span><span class="p">)</span> <span class="k">else</span> <span class="n">v2</span>
+        <span class="k">return</span> <span class="n">vout</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">allowable_stress</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">yield_stress</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">factor_of_saftey</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">unique_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">uid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_unique_id</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">uid</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_unique_id</span>
+
+    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;a stable hash that ignores name, color and unique id, ie only the material properties are the same if two hashes are the equal&quot;&quot;&quot;</span>
+        <span class="c1">#print(&#39;hashing...&#39;)</span>
+        <span class="n">ignore</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">,</span><span class="s1">&#39;_unique_id&#39;</span><span class="p">,</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+        <span class="n">ict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_as_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">}</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha1</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">ict</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span><span class="mi">16</span><span class="p">)</span>    </div>
+
+
+<div class="viewcode-block" id="SS_316">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.SS_316.html#engforge.eng.solid_materials.SS_316">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">SS_316</span><span class="p">(</span><span class="n">SolidMaterial</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;stainless steel 316&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Structural Properties</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">8000.0</span><span class="p">)</span>  <span class="c1"># kg/m3</span>
+    <span class="n">elastic_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">193e9</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">yield_strength</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">240e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">tensile_strength_ultimate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">550e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">poissons_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.30</span><span class="p">)</span>
+
+    <span class="c1"># Thermal Properties</span>
+    <span class="n">melting_point</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1370</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">maxium_service_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">870</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">thermal_conductivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">16.3</span><span class="p">)</span>  <span class="c1"># W/mK</span>
+    <span class="n">specific_heat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>  <span class="c1"># J/kgK</span>
+    <span class="n">thermal_expansion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">16e-6</span><span class="p">)</span>  <span class="c1"># m/mK</span>
+
+    <span class="c1"># Electrical Properties</span>
+    <span class="n">electrical_resistitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">7.4e-7</span><span class="p">)</span>  <span class="c1"># ohm-m</span>
+
+    <span class="c1"># Economic Properties</span>
+    <span class="n">cost_per_kg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">3.26</span><span class="p">)</span>  <span class="c1"># dollar per kg</span></div>
+
+
+
+<div class="viewcode-block" id="ANSI_4130">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.ANSI_4130.html#engforge.eng.solid_materials.ANSI_4130">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ANSI_4130</span><span class="p">(</span><span class="n">SolidMaterial</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;steel 4130&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Structural Properties</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">7872.0</span><span class="p">)</span>  <span class="c1"># kg/m3</span>
+    <span class="n">elastic_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">205e9</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">yield_strength</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">460e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">tensile_strength_ultimate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">560e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">poissons_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.28</span><span class="p">)</span>
+
+    <span class="c1"># Thermal Properties</span>
+    <span class="n">melting_point</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1432</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">maxium_service_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">870</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">thermal_conductivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">42.7</span><span class="p">)</span>  <span class="c1"># W/mK</span>
+    <span class="n">specific_heat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">477</span><span class="p">)</span>  <span class="c1"># J/kgK</span>
+    <span class="n">thermal_expansion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">11.2e-6</span><span class="p">)</span>  <span class="c1"># m/mK</span>
+
+    <span class="c1"># Electrical Properties</span>
+    <span class="n">electrical_resistitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2.23e-7</span><span class="p">)</span>  <span class="c1"># ohm-m</span>
+
+    <span class="c1"># Economic Properties</span>
+    <span class="n">cost_per_kg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2.92</span><span class="p">)</span>  <span class="c1"># dollar per kg</span></div>
+
+
+
+<div class="viewcode-block" id="ANSI_4340">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.ANSI_4340.html#engforge.eng.solid_materials.ANSI_4340">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">ANSI_4340</span><span class="p">(</span><span class="n">SolidMaterial</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;steel 4340&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Structural Properties</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">7872.0</span><span class="p">)</span>  <span class="c1"># kg/m3</span>
+    <span class="n">elastic_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">192e9</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">yield_strength</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">470e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">tensile_strength_ultimate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">745e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">poissons_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.28</span><span class="p">)</span>
+
+    <span class="c1"># Thermal Properties</span>
+    <span class="n">melting_point</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1427</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">maxium_service_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">830</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">thermal_conductivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">44.5</span><span class="p">)</span>  <span class="c1"># W/mK</span>
+    <span class="n">specific_heat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">475</span><span class="p">)</span>  <span class="c1"># J/kgK</span>
+    <span class="n">thermal_expansion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">13.7e-6</span><span class="p">)</span>  <span class="c1"># m/mK</span>
+
+    <span class="c1"># Electrical Properties</span>
+    <span class="n">electrical_resistitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2.48e-7</span><span class="p">)</span>  <span class="c1"># ohm-m</span>
+
+    <span class="c1"># Economic Properties</span>
+    <span class="n">cost_per_kg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2.23</span><span class="p">)</span>  <span class="c1"># dollar per kg</span></div>
+
+
+
+<div class="viewcode-block" id="Aluminum">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.Aluminum.html#engforge.eng.solid_materials.Aluminum">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Aluminum</span><span class="p">(</span><span class="n">SolidMaterial</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;aluminum generic&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Structural Properties</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2680.0</span><span class="p">)</span>  <span class="c1"># kg/m3</span>
+    <span class="n">elastic_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">70.3e9</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">yield_strength</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">240e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">tensile_strength_ultimate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">290e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">poissons_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.33</span><span class="p">)</span>
+
+    <span class="c1"># Thermal Properties</span>
+    <span class="n">melting_point</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">607</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">maxium_service_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">343</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">thermal_conductivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">138</span><span class="p">)</span>  <span class="c1"># W/mK</span>
+    <span class="n">specific_heat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">880</span><span class="p">)</span>  <span class="c1"># J/kgK</span>
+    <span class="n">thermal_expansion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">22.1e-6</span><span class="p">)</span>  <span class="c1"># m/mK</span>
+
+    <span class="c1"># Electrical Properties</span>
+    <span class="n">electrical_resistitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">4.99e-7</span><span class="p">)</span>  <span class="c1"># ohm-m</span>
+
+    <span class="c1"># Economic Properties</span>
+    <span class="n">cost_per_kg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.90</span><span class="p">)</span>  <span class="c1"># dollar per kg</span></div>
+
+
+
+<div class="viewcode-block" id="CarbonFiber">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.CarbonFiber.html#engforge.eng.solid_materials.CarbonFiber">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CarbonFiber</span><span class="p">(</span><span class="n">SolidMaterial</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;carbon fiber&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Structural Properties</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1600.0</span><span class="p">)</span>  <span class="c1"># kg/m3</span>
+    <span class="n">elastic_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">140e9</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">yield_strength</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">686e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">tensile_strength_ultimate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">919e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">poissons_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.33</span><span class="p">)</span>
+
+    <span class="c1"># Thermal Properties</span>
+    <span class="n">melting_point</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">300</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">maxium_service_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">150</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">thermal_conductivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>  <span class="c1"># W/mK</span>
+    <span class="n">specific_heat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1100</span><span class="p">)</span>  <span class="c1"># J/kgK</span>
+    <span class="n">thermal_expansion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">14.1e-6</span><span class="p">)</span>  <span class="c1"># m/mK</span>
+
+    <span class="c1"># Electrical Properties</span>
+    <span class="n">electrical_resistitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">10000</span><span class="p">)</span>  <span class="c1"># ohm-m</span>
+
+    <span class="c1"># Economic Properties</span>
+    <span class="n">cost_per_kg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.90</span><span class="p">)</span>  <span class="c1"># dollar per kg</span></div>
+
+
+
+<div class="viewcode-block" id="Concrete">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.Concrete.html#engforge.eng.solid_materials.Concrete">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Concrete</span><span class="p">(</span><span class="n">SolidMaterial</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;concrete&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Structural Properties</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2000.0</span><span class="p">)</span>  <span class="c1"># kg/m3</span>
+    <span class="n">elastic_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2.92e9</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">yield_strength</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">57.9e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">tensile_strength_ultimate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.910e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">poissons_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.26</span><span class="p">)</span>
+
+    <span class="c1"># Thermal Properties</span>
+    <span class="n">melting_point</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">3000</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">maxium_service_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">3000</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">thermal_conductivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># W/mK</span>
+    <span class="n">specific_heat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">736</span><span class="p">)</span>  <span class="c1"># J/kgK</span>
+    <span class="n">thermal_expansion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">16.41e-6</span><span class="p">)</span>  <span class="c1"># m/mK</span>
+
+    <span class="c1"># Electrical Properties</span>
+    <span class="n">electrical_resistitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>  <span class="c1"># ohm-m</span>
+
+    <span class="c1"># Economic Properties</span>
+    <span class="n">cost_per_kg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">95.44</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span>  <span class="c1"># dollar per kg</span></div>
+
+
+
+<div class="viewcode-block" id="DrySoil">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.DrySoil.html#engforge.eng.solid_materials.DrySoil">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">DrySoil</span><span class="p">(</span><span class="n">SolidMaterial</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;dry soil&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Structural Properties</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1600.0</span><span class="p">)</span>  <span class="c1"># kg/m3</span>
+    <span class="n">elastic_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">70.3e9</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">yield_strength</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">tensile_strength_ultimate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">poissons_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.33</span><span class="p">)</span>
+
+    <span class="c1"># Thermal Properties</span>
+    <span class="n">melting_point</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1550</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">maxium_service_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1450</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">thermal_conductivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>  <span class="c1"># W/mK</span>
+    <span class="n">specific_heat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">800</span><span class="p">)</span>  <span class="c1"># J/kgK</span>
+    <span class="n">thermal_expansion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">16.41e-6</span><span class="p">)</span>  <span class="c1"># m/mK</span>
+
+    <span class="c1"># Electrical Properties</span>
+    <span class="n">electrical_resistitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>  <span class="c1"># ohm-m</span>
+
+    <span class="c1"># Economic Properties</span>
+    <span class="n">cost_per_kg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">44.78</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span>  <span class="c1"># dollar per kg</span></div>
+
+
+
+<div class="viewcode-block" id="WetSoil">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.WetSoil.html#engforge.eng.solid_materials.WetSoil">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">WetSoil</span><span class="p">(</span><span class="n">SolidMaterial</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;wet soil&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Structural Properties</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2080.0</span><span class="p">)</span>  <span class="c1"># kg/m3</span>
+    <span class="n">elastic_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">70.3e9</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">yield_strength</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">tensile_strength_ultimate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">poissons_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.33</span><span class="p">)</span>
+
+    <span class="c1"># Thermal Properties</span>
+    <span class="n">melting_point</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1550</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">maxium_service_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1450</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">thermal_conductivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2.75</span><span class="p">)</span>  <span class="c1"># W/mK</span>
+    <span class="n">specific_heat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1632</span><span class="p">)</span>  <span class="c1"># J/kgK</span>
+    <span class="n">thermal_expansion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">16.41e-6</span><span class="p">)</span>  <span class="c1"># m/mK</span>
+
+    <span class="c1"># Electrical Properties</span>
+    <span class="n">electrical_resistitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">940.0</span><span class="p">)</span>  <span class="c1"># ohm-m</span>
+
+    <span class="c1"># Economic Properties</span>
+    <span class="n">cost_per_kg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">34.44</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span>  <span class="c1"># dollar per kg</span></div>
+
+
+
+<div class="viewcode-block" id="Rock">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.Rock.html#engforge.eng.solid_materials.Rock">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Rock</span><span class="p">(</span><span class="n">SolidMaterial</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;wet soil&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Structural Properties</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">2600.0</span><span class="p">)</span>  <span class="c1"># kg/m3</span>
+    <span class="n">elastic_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">67e9</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">yield_strength</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">13e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">tensile_strength_ultimate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">13e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">poissons_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.26</span><span class="p">)</span>
+
+    <span class="c1"># Thermal Properties</span>
+    <span class="n">melting_point</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">maxium_service_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">thermal_conductivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># W/mK</span>
+    <span class="n">specific_heat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>  <span class="c1"># J/kgK</span>
+    <span class="n">thermal_expansion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">16.41e-6</span><span class="p">)</span>  <span class="c1"># m/mK</span>
+
+    <span class="c1"># Electrical Properties</span>
+    <span class="n">electrical_resistitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1e6</span><span class="p">)</span>  <span class="c1"># ohm-m</span>
+
+    <span class="c1"># Economic Properties</span>
+    <span class="n">cost_per_kg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">50.44</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span>  <span class="c1"># dollar per kg</span></div>
+
+
+
+<div class="viewcode-block" id="Rubber">
+<a class="viewcode-back" href="../../../_autosummary/engforge.eng.solid_materials.Rubber.html#engforge.eng.solid_materials.Rubber">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="nb">hash</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">Rubber</span><span class="p">(</span><span class="n">SolidMaterial</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;rubber&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Structural Properties</span>
+    <span class="n">density</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1100.0</span><span class="p">)</span>  <span class="c1"># kg/m3</span>
+    <span class="n">elastic_modulus</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.1e9</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">yield_strength</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.248e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">tensile_strength_ultimate</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.5e6</span><span class="p">)</span>  <span class="c1"># Pa</span>
+    <span class="n">poissons_ratio</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.33</span><span class="p">)</span>
+
+    <span class="c1"># Thermal Properties</span>
+    <span class="n">melting_point</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">600</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">maxium_service_temp</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">300</span> <span class="o">+</span> <span class="mi">273</span><span class="p">)</span>  <span class="c1"># K</span>
+    <span class="n">thermal_conductivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">0.108</span><span class="p">)</span>  <span class="c1"># W/mK</span>
+    <span class="n">specific_heat</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">2005</span><span class="p">)</span>  <span class="c1"># J/kgK</span>
+    <span class="n">thermal_expansion</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">100e-6</span><span class="p">)</span>  <span class="c1"># m/mK</span>
+
+    <span class="c1"># Electrical Properties</span>
+    <span class="n">electrical_resistitivity</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">1e13</span><span class="p">)</span>  <span class="c1"># ohm-m</span>
+
+    <span class="c1"># Economic Properties</span>
+    <span class="n">cost_per_kg</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mf">40.0</span> <span class="o">/</span> <span class="mf">1000.0</span><span class="p">)</span>  <span class="c1"># dollar per kg</span></div>
+
+
+
+<span class="c1"># @attr.s</span>
+<span class="c1"># class AL_6063(SolidMaterial):</span>
+<span class="c1">#     name:str = attr.ib(default=&#39;aluminum 6063&#39;)</span>
+
+<span class="c1">#     #Structural Properties</span>
+<span class="c1">#     density:float = attr.ib(default=2700.0) #kg/m3</span>
+<span class="c1">#     elastic_modulus:float  = attr.ib(default=192E9) #Pa</span>
+<span class="c1">#     tensile_strength_yield = attr.ib(default=470E6) #Pa</span>
+<span class="c1">#     tensile_strength_ultimate:float = attr.ib(default=745E6) #Pa</span>
+<span class="c1">#     poissons_ratio:float = attr.ib(default=0.28)</span>
+
+<span class="c1">#     #Thermal Properties</span>
+<span class="c1">#     melting_point:float = attr.ib(default=1427+273) #K</span>
+<span class="c1">#     maxium_service_temp:float = attr.ib(default=830+273) #K</span>
+<span class="c1">#     thermal_conductivity:float = attr.ib(default=44.5) #W/mK</span>
+<span class="c1">#     specific_heat:float = attr.ib(default=475) #J/kgK</span>
+<span class="c1">#     thermal_expansion:float = attr.ib(default = 13.7E-6) #m/mK</span>
+
+<span class="c1">#     #Electrical Properties</span>
+<span class="c1">#     electrical_resistitivity:float = attr.ib(default=2.48E-7) #ohm-m</span>
+
+<span class="c1">#     #Economic Properties</span>
+<span class="c1">#     cost_per_kg:float = attr.ib(default=1.90) #dollar per kg</span>
+
+
+<span class="c1"># @attr.s</span>
+<span class="c1"># class AL_7075(SolidMaterial):</span>
+<span class="c1">#     name:str = attr.ib(default=&#39;aluminum 7075&#39;)</span>
+
+<span class="c1">#     #Structural Properties</span>
+<span class="c1">#     density:float = attr.ib(default=2700.0) #kg/m3</span>
+<span class="c1">#     elastic_modulus:float  = attr.ib(default=192E9) #Pa</span>
+<span class="c1">#     tensile_strength_yield = attr.ib(default=470E6) #Pa</span>
+<span class="c1">#     tensile_strength_ultimate:float = attr.ib(default=745E6) #Pa</span>
+<span class="c1">#     poissons_ratio:float = attr.ib(default=0.28)</span>
+
+<span class="c1">#     #Thermal Properties</span>
+<span class="c1">#     melting_point:float = attr.ib(default=1427+273) #K</span>
+<span class="c1">#     maxium_service_temp:float = attr.ib(default=830+273) #K</span>
+<span class="c1">#     thermal_conductivity:float = attr.ib(default=44.5) #W/mK</span>
+<span class="c1">#     specific_heat:float = attr.ib(default=475) #J/kgK</span>
+<span class="c1">#     thermal_expansion:float = attr.ib(default = 13.7E-6) #m/mK</span>
+
+<span class="c1">#     #Electrical Properties</span>
+<span class="c1">#     electrical_resistitivity:float = attr.ib(default=2.48E-7) #ohm-m</span>
+
+<span class="c1">#     #Economic Properties</span>
+<span class="c1">#     cost_per_kg:float = attr.ib(default=1.90) #dollar per kg</span>
+
+
+<span class="n">ALL_MATERIALS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">mat</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">mat</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">getmembers</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="vm">__name__</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">inspect</span><span class="o">.</span><span class="n">isclass</span><span class="p">(</span><span class="n">mat</span><span class="p">)</span>
+    <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">mat</span><span class="p">,</span> <span class="n">SolidMaterial</span><span class="p">)</span>
+    <span class="ow">and</span> <span class="n">mat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">SolidMaterial</span>
+<span class="p">]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

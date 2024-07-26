@@ -1,0 +1,183 @@
+engforge.eng.pipes.FlowInput
+============================
+
+.. currentmodule:: engforge.eng.pipes
+
+.. autoclass:: FlowInput
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~FlowInput.add_fields
+      ~FlowInput.add_segment
+      ~FlowInput.change_all_log_lvl
+      ~FlowInput.check_ref_slot_type
+      ~FlowInput.cls_all_attrs_fields
+      ~FlowInput.cls_all_property_keys
+      ~FlowInput.cls_all_property_labels
+      ~FlowInput.cls_compile
+      ~FlowInput.collect_all_attributes
+      ~FlowInput.collect_comp_refs
+      ~FlowInput.collect_dynamic_refs
+      ~FlowInput.collect_inst_attributes
+      ~FlowInput.collect_post_update_refs
+      ~FlowInput.collect_solver_refs
+      ~FlowInput.collect_update_refs
+      ~FlowInput.comp_references
+      ~FlowInput.compile_classes
+      ~FlowInput.copy_config_at_state
+      ~FlowInput.create_dynamic_matricies
+      ~FlowInput.create_feedthrough_matrix
+      ~FlowInput.create_input_matrix
+      ~FlowInput.create_output_constants
+      ~FlowInput.create_output_matrix
+      ~FlowInput.create_state_constants
+      ~FlowInput.create_state_matrix
+      ~FlowInput.critical
+      ~FlowInput.debug
+      ~FlowInput.determine_nearest_stationary_state
+      ~FlowInput.difference
+      ~FlowInput.error
+      ~FlowInput.extract_message
+      ~FlowInput.filter
+      ~FlowInput.format_columns
+      ~FlowInput.get_system_input_refs
+      ~FlowInput.go_through_configurations
+      ~FlowInput.info
+      ~FlowInput.input_attrs
+      ~FlowInput.input_fields
+      ~FlowInput.installSTDLogger
+      ~FlowInput.internal_components
+      ~FlowInput.internal_configurations
+      ~FlowInput.internal_references
+      ~FlowInput.internal_systems
+      ~FlowInput.internal_tabulations
+      ~FlowInput.linear_output
+      ~FlowInput.linear_step
+      ~FlowInput.locate
+      ~FlowInput.locate_ref
+      ~FlowInput.message_with_identiy
+      ~FlowInput.msg
+      ~FlowInput.nonlinear_output
+      ~FlowInput.nonlinear_step
+      ~FlowInput.numeric_fields
+      ~FlowInput.parent_configurations_cls
+      ~FlowInput.parse_run_kwargs
+      ~FlowInput.parse_simulation_input
+      ~FlowInput.plot_attributes
+      ~FlowInput.post_update
+      ~FlowInput.pre_compile
+      ~FlowInput.print_info
+      ~FlowInput.rate
+      ~FlowInput.rate_linear
+      ~FlowInput.rate_nonlinear
+      ~FlowInput.ref_dXdt
+      ~FlowInput.resetLog
+      ~FlowInput.resetSystemLogs
+      ~FlowInput.set_attr
+      ~FlowInput.set_time
+      ~FlowInput.setattrs
+      ~FlowInput.signals_attributes
+      ~FlowInput.slack_notification
+      ~FlowInput.slot_refs
+      ~FlowInput.slots_attributes
+      ~FlowInput.smart_split_dataframe
+      ~FlowInput.solvers_attributes
+      ~FlowInput.step
+      ~FlowInput.subclasses
+      ~FlowInput.subcls_compile
+      ~FlowInput.system_properties_classdef
+      ~FlowInput.system_references
+      ~FlowInput.table_fields
+      ~FlowInput.trace_attributes
+      ~FlowInput.transients_attributes
+      ~FlowInput.update
+      ~FlowInput.update_dynamics
+      ~FlowInput.update_feedthrough
+      ~FlowInput.update_input
+      ~FlowInput.update_output_constants
+      ~FlowInput.update_output_matrix
+      ~FlowInput.update_state
+      ~FlowInput.update_state_constants
+      ~FlowInput.validate_class
+      ~FlowInput.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FlowInput.Ut_ref
+      ~FlowInput.Xt_ref
+      ~FlowInput.Yt_ref
+      ~FlowInput.anything_changed
+      ~FlowInput.as_dict
+      ~FlowInput.attrs_fields
+      ~FlowInput.classname
+      ~FlowInput.dP_f
+      ~FlowInput.dP_p
+      ~FlowInput.dP_tot
+      ~FlowInput.dXtdt_ref
+      ~FlowInput.data_dict
+      ~FlowInput.dataframe_constants
+      ~FlowInput.dataframe_variants
+      ~FlowInput.displayname
+      ~FlowInput.dynamic_A
+      ~FlowInput.dynamic_B
+      ~FlowInput.dynamic_C
+      ~FlowInput.dynamic_D
+      ~FlowInput.dynamic_F
+      ~FlowInput.dynamic_K
+      ~FlowInput.dynamic_input
+      ~FlowInput.dynamic_input_vars
+      ~FlowInput.dynamic_output
+      ~FlowInput.dynamic_output_vars
+      ~FlowInput.dynamic_state
+      ~FlowInput.dynamic_state_vars
+      ~FlowInput.filename
+      ~FlowInput.identity
+      ~FlowInput.input_as_dict
+      ~FlowInput.last_context
+      ~FlowInput.log_fmt
+      ~FlowInput.log_level
+      ~FlowInput.log_on
+      ~FlowInput.log_silo
+      ~FlowInput.logger
+      ~FlowInput.nonlinear
+      ~FlowInput.numeric_as_dict
+      ~FlowInput.numeric_hash
+      ~FlowInput.plotable_variables
+      ~FlowInput.segments
+      ~FlowInput.skip_plot_vars
+      ~FlowInput.slack_webhook_url
+      ~FlowInput.static_A
+      ~FlowInput.static_B
+      ~FlowInput.static_C
+      ~FlowInput.static_D
+      ~FlowInput.static_F
+      ~FlowInput.static_K
+      ~FlowInput.sum_of_flows
+      ~FlowInput.system_id
+      ~FlowInput.time
+      ~FlowInput.unique_hash
+      ~FlowInput.update_interval
+      ~FlowInput.flow_in
+      ~FlowInput.x
+      ~FlowInput.y
+      ~FlowInput.z
+      ~FlowInput.parent
+      ~FlowInput.name
+      ~FlowInput.dataframe
+   
+   

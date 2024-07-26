@@ -1,0 +1,61 @@
+engforge.reporting.CSVReporter
+==============================
+
+.. currentmodule:: engforge.reporting
+
+.. autoclass:: CSVReporter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~CSVReporter.add_fields
+      ~CSVReporter.change_all_log_lvl
+      ~CSVReporter.check_config
+      ~CSVReporter.critical
+      ~CSVReporter.debug
+      ~CSVReporter.ensure_exists
+      ~CSVReporter.ensure_path
+      ~CSVReporter.error
+      ~CSVReporter.extract_message
+      ~CSVReporter.filter
+      ~CSVReporter.info
+      ~CSVReporter.installSTDLogger
+      ~CSVReporter.message_with_identiy
+      ~CSVReporter.msg
+      ~CSVReporter.resetLog
+      ~CSVReporter.resetSystemLogs
+      ~CSVReporter.slack_notification
+      ~CSVReporter.subclasses
+      ~CSVReporter.upload
+      ~CSVReporter.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CSVReporter.date_key
+      ~CSVReporter.identity
+      ~CSVReporter.log_fmt
+      ~CSVReporter.log_level
+      ~CSVReporter.log_on
+      ~CSVReporter.logger
+      ~CSVReporter.month_key
+      ~CSVReporter.name
+      ~CSVReporter.path
+      ~CSVReporter.report_mode
+      ~CSVReporter.report_root
+      ~CSVReporter.slack_webhook_url
+   
+   

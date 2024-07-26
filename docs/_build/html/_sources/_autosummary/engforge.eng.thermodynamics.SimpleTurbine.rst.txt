@@ -1,0 +1,176 @@
+engforge.eng.thermodynamics.SimpleTurbine
+=========================================
+
+.. currentmodule:: engforge.eng.thermodynamics
+
+.. autoclass:: SimpleTurbine
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~SimpleTurbine.add_fields
+      ~SimpleTurbine.change_all_log_lvl
+      ~SimpleTurbine.check_ref_slot_type
+      ~SimpleTurbine.cls_all_attrs_fields
+      ~SimpleTurbine.cls_all_property_keys
+      ~SimpleTurbine.cls_all_property_labels
+      ~SimpleTurbine.cls_compile
+      ~SimpleTurbine.collect_all_attributes
+      ~SimpleTurbine.collect_comp_refs
+      ~SimpleTurbine.collect_dynamic_refs
+      ~SimpleTurbine.collect_inst_attributes
+      ~SimpleTurbine.collect_post_update_refs
+      ~SimpleTurbine.collect_solver_refs
+      ~SimpleTurbine.collect_update_refs
+      ~SimpleTurbine.comp_references
+      ~SimpleTurbine.compile_classes
+      ~SimpleTurbine.copy_config_at_state
+      ~SimpleTurbine.create_dynamic_matricies
+      ~SimpleTurbine.create_feedthrough_matrix
+      ~SimpleTurbine.create_input_matrix
+      ~SimpleTurbine.create_output_constants
+      ~SimpleTurbine.create_output_matrix
+      ~SimpleTurbine.create_state_constants
+      ~SimpleTurbine.create_state_matrix
+      ~SimpleTurbine.critical
+      ~SimpleTurbine.debug
+      ~SimpleTurbine.determine_nearest_stationary_state
+      ~SimpleTurbine.difference
+      ~SimpleTurbine.error
+      ~SimpleTurbine.extract_message
+      ~SimpleTurbine.filter
+      ~SimpleTurbine.format_columns
+      ~SimpleTurbine.get_system_input_refs
+      ~SimpleTurbine.go_through_configurations
+      ~SimpleTurbine.info
+      ~SimpleTurbine.input_attrs
+      ~SimpleTurbine.input_fields
+      ~SimpleTurbine.installSTDLogger
+      ~SimpleTurbine.internal_components
+      ~SimpleTurbine.internal_configurations
+      ~SimpleTurbine.internal_references
+      ~SimpleTurbine.internal_systems
+      ~SimpleTurbine.internal_tabulations
+      ~SimpleTurbine.linear_output
+      ~SimpleTurbine.linear_step
+      ~SimpleTurbine.locate
+      ~SimpleTurbine.locate_ref
+      ~SimpleTurbine.message_with_identiy
+      ~SimpleTurbine.msg
+      ~SimpleTurbine.nonlinear_output
+      ~SimpleTurbine.nonlinear_step
+      ~SimpleTurbine.numeric_fields
+      ~SimpleTurbine.parent_configurations_cls
+      ~SimpleTurbine.parse_run_kwargs
+      ~SimpleTurbine.parse_simulation_input
+      ~SimpleTurbine.plot_attributes
+      ~SimpleTurbine.post_update
+      ~SimpleTurbine.pre_compile
+      ~SimpleTurbine.print_info
+      ~SimpleTurbine.rate
+      ~SimpleTurbine.rate_linear
+      ~SimpleTurbine.rate_nonlinear
+      ~SimpleTurbine.ref_dXdt
+      ~SimpleTurbine.resetLog
+      ~SimpleTurbine.resetSystemLogs
+      ~SimpleTurbine.set_attr
+      ~SimpleTurbine.set_time
+      ~SimpleTurbine.setattrs
+      ~SimpleTurbine.signals_attributes
+      ~SimpleTurbine.slack_notification
+      ~SimpleTurbine.slot_refs
+      ~SimpleTurbine.slots_attributes
+      ~SimpleTurbine.smart_split_dataframe
+      ~SimpleTurbine.solvers_attributes
+      ~SimpleTurbine.step
+      ~SimpleTurbine.subclasses
+      ~SimpleTurbine.subcls_compile
+      ~SimpleTurbine.system_properties_classdef
+      ~SimpleTurbine.system_references
+      ~SimpleTurbine.table_fields
+      ~SimpleTurbine.trace_attributes
+      ~SimpleTurbine.transients_attributes
+      ~SimpleTurbine.update
+      ~SimpleTurbine.update_dynamics
+      ~SimpleTurbine.update_feedthrough
+      ~SimpleTurbine.update_input
+      ~SimpleTurbine.update_output_constants
+      ~SimpleTurbine.update_output_matrix
+      ~SimpleTurbine.update_state
+      ~SimpleTurbine.update_state_constants
+      ~SimpleTurbine.validate_class
+      ~SimpleTurbine.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SimpleTurbine.Tout
+      ~SimpleTurbine.Ut_ref
+      ~SimpleTurbine.Xt_ref
+      ~SimpleTurbine.Yt_ref
+      ~SimpleTurbine.anything_changed
+      ~SimpleTurbine.as_dict
+      ~SimpleTurbine.attrs_fields
+      ~SimpleTurbine.classname
+      ~SimpleTurbine.dXtdt_ref
+      ~SimpleTurbine.data_dict
+      ~SimpleTurbine.dataframe_constants
+      ~SimpleTurbine.dataframe_variants
+      ~SimpleTurbine.displayname
+      ~SimpleTurbine.dynamic_A
+      ~SimpleTurbine.dynamic_B
+      ~SimpleTurbine.dynamic_C
+      ~SimpleTurbine.dynamic_D
+      ~SimpleTurbine.dynamic_F
+      ~SimpleTurbine.dynamic_K
+      ~SimpleTurbine.dynamic_input
+      ~SimpleTurbine.dynamic_input_vars
+      ~SimpleTurbine.dynamic_output
+      ~SimpleTurbine.dynamic_output_vars
+      ~SimpleTurbine.dynamic_state
+      ~SimpleTurbine.dynamic_state_vars
+      ~SimpleTurbine.filename
+      ~SimpleTurbine.identity
+      ~SimpleTurbine.input_as_dict
+      ~SimpleTurbine.last_context
+      ~SimpleTurbine.log_fmt
+      ~SimpleTurbine.log_level
+      ~SimpleTurbine.log_on
+      ~SimpleTurbine.log_silo
+      ~SimpleTurbine.logger
+      ~SimpleTurbine.nonlinear
+      ~SimpleTurbine.numeric_as_dict
+      ~SimpleTurbine.numeric_hash
+      ~SimpleTurbine.plotable_variables
+      ~SimpleTurbine.power_output
+      ~SimpleTurbine.pressure_ratio
+      ~SimpleTurbine.skip_plot_vars
+      ~SimpleTurbine.slack_webhook_url
+      ~SimpleTurbine.static_A
+      ~SimpleTurbine.static_B
+      ~SimpleTurbine.static_C
+      ~SimpleTurbine.static_D
+      ~SimpleTurbine.static_F
+      ~SimpleTurbine.static_K
+      ~SimpleTurbine.system_id
+      ~SimpleTurbine.time
+      ~SimpleTurbine.unique_hash
+      ~SimpleTurbine.update_interval
+      ~SimpleTurbine.parent
+      ~SimpleTurbine.name
+      ~SimpleTurbine.dataframe
+   
+   

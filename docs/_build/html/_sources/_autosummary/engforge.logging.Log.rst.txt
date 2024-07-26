@@ -1,0 +1,50 @@
+engforge.logging.Log
+====================
+
+.. currentmodule:: engforge.logging
+
+.. autoclass:: Log
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Log.add_fields
+      ~Log.change_all_log_lvl
+      ~Log.critical
+      ~Log.debug
+      ~Log.error
+      ~Log.extract_message
+      ~Log.filter
+      ~Log.info
+      ~Log.installSTDLogger
+      ~Log.message_with_identiy
+      ~Log.msg
+      ~Log.resetLog
+      ~Log.resetSystemLogs
+      ~Log.slack_notification
+      ~Log.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Log.identity
+      ~Log.log_fmt
+      ~Log.log_level
+      ~Log.log_on
+      ~Log.logger
+      ~Log.slack_webhook_url
+   
+   

@@ -1,0 +1,141 @@
+engforge.problem\_context.ProblemExec
+=====================================
+
+.. currentmodule:: engforge.problem_context
+
+.. autoclass:: ProblemExec
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ProblemExec.activate_temp_state
+      ~ProblemExec.apply_post_signals
+      ~ProblemExec.apply_pre_signals
+      ~ProblemExec.clean_context
+      ~ProblemExec.critical
+      ~ProblemExec.debug
+      ~ProblemExec.debug_levels
+      ~ProblemExec.discard_contexts
+      ~ProblemExec.error
+      ~ProblemExec.error_action
+      ~ProblemExec.establish_system
+      ~ProblemExec.exit_action
+      ~ProblemExec.exit_and_revert
+      ~ProblemExec.exit_to_level
+      ~ProblemExec.exit_with_state
+      ~ProblemExec.filter_vars
+      ~ProblemExec.get_extra_kws
+      ~ProblemExec.get_parent_key
+      ~ProblemExec.get_ref_values
+      ~ProblemExec.get_sesh
+      ~ProblemExec.handle_solution
+      ~ProblemExec.info
+      ~ProblemExec.integral_rate
+      ~ProblemExec.integrate
+      ~ProblemExec.min_refresh
+      ~ProblemExec.msg
+      ~ProblemExec.parse_default
+      ~ProblemExec.persist_contexts
+      ~ProblemExec.pos_obj
+      ~ProblemExec.post_execute
+      ~ProblemExec.post_update_system
+      ~ProblemExec.pre_execute
+      ~ProblemExec.refresh_references
+      ~ProblemExec.reset_contexts
+      ~ProblemExec.reset_data
+      ~ProblemExec.revert_to_start
+      ~ProblemExec.save_data
+      ~ProblemExec.set_checkpoint
+      ~ProblemExec.set_ref_values
+      ~ProblemExec.set_time
+      ~ProblemExec.solve_min
+      ~ProblemExec.sys_solver_constraints
+      ~ProblemExec.sys_solver_objectives
+      ~ProblemExec.update_dynamics
+      ~ProblemExec.update_methods
+      ~ProblemExec.update_system
+      ~ProblemExec.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ProblemExec.all_components
+      ~ProblemExec.all_comps
+      ~ProblemExec.all_comps_and_vars
+      ~ProblemExec.all_problem_vars
+      ~ProblemExec.all_system_references
+      ~ProblemExec.all_variable_refs
+      ~ProblemExec.all_variables
+      ~ProblemExec.attr_inst
+      ~ProblemExec.check_dynamics
+      ~ProblemExec.copy_system
+      ~ProblemExec.dataframe
+      ~ProblemExec.dynamic_comps
+      ~ProblemExec.dynamic_rate
+      ~ProblemExec.dynamic_rate_eq
+      ~ProblemExec.dynamic_solve
+      ~ProblemExec.dynamic_state
+      ~ProblemExec.enter_refresh
+      ~ProblemExec.entered
+      ~ProblemExec.exit_on_failure
+      ~ProblemExec.exited
+      ~ProblemExec.fail_revert
+      ~ProblemExec.final_objectives
+      ~ProblemExec.identity
+      ~ProblemExec.integrator_rate_refs
+      ~ProblemExec.integrator_rates
+      ~ProblemExec.integrator_var_refs
+      ~ProblemExec.integrator_vars
+      ~ProblemExec.integrators
+      ~ProblemExec.is_active
+      ~ProblemExec.kwargs
+      ~ProblemExec.level_name
+      ~ProblemExec.level_number
+      ~ProblemExec.log_level
+      ~ProblemExec.opt_fail
+      ~ProblemExec.output_state
+      ~ProblemExec.post_callback
+      ~ProblemExec.post_exec
+      ~ProblemExec.pre_exec
+      ~ProblemExec.problem_eq
+      ~ProblemExec.problem_id
+      ~ProblemExec.problem_ineq
+      ~ProblemExec.problem_input
+      ~ProblemExec.problem_objs
+      ~ProblemExec.problem_opt_vars
+      ~ProblemExec.problems_dict
+      ~ProblemExec.raise_on_unknown
+      ~ProblemExec.record_state
+      ~ProblemExec.ref_attrs
+      ~ProblemExec.revert_every
+      ~ProblemExec.revert_last
+      ~ProblemExec.run_solver
+      ~ProblemExec.save_mode
+      ~ProblemExec.save_on_exit
+      ~ProblemExec.sesh
+      ~ProblemExec.session_id
+      ~ProblemExec.signal_inst
+      ~ProblemExec.signals
+      ~ProblemExec.signals_source
+      ~ProblemExec.signals_target
+      ~ProblemExec.solveable
+      ~ProblemExec.solver_inst
+      ~ProblemExec.success_thresh
+      ~ProblemExec.system
+      ~ProblemExec.session
+      ~ProblemExec.x_start
+   
+   

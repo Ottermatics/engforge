@@ -1,0 +1,50 @@
+engforge.problem\_context.ProbLog
+=================================
+
+.. currentmodule:: engforge.problem_context
+
+.. autoclass:: ProbLog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ProbLog.add_fields
+      ~ProbLog.change_all_log_lvl
+      ~ProbLog.critical
+      ~ProbLog.debug
+      ~ProbLog.error
+      ~ProbLog.extract_message
+      ~ProbLog.filter
+      ~ProbLog.info
+      ~ProbLog.installSTDLogger
+      ~ProbLog.message_with_identiy
+      ~ProbLog.msg
+      ~ProbLog.resetLog
+      ~ProbLog.resetSystemLogs
+      ~ProbLog.slack_notification
+      ~ProbLog.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ProbLog.identity
+      ~ProbLog.log_fmt
+      ~ProbLog.log_level
+      ~ProbLog.log_on
+      ~ProbLog.logger
+      ~ProbLog.slack_webhook_url
+   
+   

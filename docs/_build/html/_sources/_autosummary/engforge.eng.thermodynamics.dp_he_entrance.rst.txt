@@ -1,0 +1,6 @@
+engforge.eng.thermodynamics.dp\_he\_entrance
+============================================
+
+.. currentmodule:: engforge.eng.thermodynamics
+
+.. autofunction:: dp_he_entrance

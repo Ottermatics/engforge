@@ -1,0 +1,77 @@
+engforge.attr\_slots.Slot
+=========================
+
+.. currentmodule:: engforge.attr_slots
+
+.. autoclass:: Slot
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Slot.class_validate
+      ~Slot.collect_attr_inst
+      ~Slot.collect_cls
+      ~Slot.configure_for_system
+      ~Slot.configure_instance
+      ~Slot.create_instance
+      ~Slot.define
+      ~Slot.define_iterator
+      ~Slot.define_validate
+      ~Slot.evolve
+      ~Slot.from_counting_attr
+      ~Slot.handle_instance
+      ~Slot.make_accepted
+      ~Slot.make_attribute
+      ~Slot.make_factory
+      ~Slot.process_combos
+      ~Slot.subclasses
+      ~Slot.unpack_atrs
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Slot.name
+      ~Slot.default
+      ~Slot.validator
+      ~Slot.repr
+      ~Slot.eq
+      ~Slot.eq_key
+      ~Slot.order
+      ~Slot.order_key
+      ~Slot.hash
+      ~Slot.init
+      ~Slot.metadata
+      ~Slot.type
+      ~Slot.converter
+      ~Slot.kw_only
+      ~Slot.inherited
+      ~Slot.on_setattr
+      ~Slot.alias
+      ~Slot.attr_prefix
+      ~Slot.default_ok
+      ~Slot.default_options
+      ~Slot.dflt_kw
+      ~Slot.instance_class
+      ~Slot.none_ok
+      ~Slot.template_class
+      ~Slot.accepted
+      ~Slot.config_cls
+      ~Slot.is_iter
+      ~Slot.wide
+      ~Slot.active
+      ~Slot.combos
+   
+   

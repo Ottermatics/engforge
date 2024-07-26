@@ -1,0 +1,6 @@
+engforge.eng.geometry.calculate\_stress
+=======================================
+
+.. currentmodule:: engforge.eng.geometry
+
+.. autofunction:: calculate_stress

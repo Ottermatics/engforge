@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.problem_context.ProblemExec &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="engforge.problem_context.IllegalArgument" href="engforge.problem_context.IllegalArgument.html" />
+    <link rel="prev" title="engforge.problem_context.Problem" href="engforge.problem_context.Problem.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">Tests</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="engforge.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="engforge.analysis.html">engforge.analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_dynamics.html">engforge.attr_dynamics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_plotting.html">engforge.attr_plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_signals.html">engforge.attr_signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_slots.html">engforge.attr_slots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_solver.html">engforge.attr_solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attributes.html">engforge.attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.common.html">engforge.common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.component_collections.html">engforge.component_collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.components.html">engforge.components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.configuration.html">engforge.configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.dataframe.html">engforge.dataframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.datastores.html">engforge.datastores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.dynamics.html">engforge.dynamics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.eng.html">engforge.eng</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.engforge_attributes.html">engforge.engforge_attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.env_var.html">engforge.env_var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.locations.html">engforge.locations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.logging.html">engforge.logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.patterns.html">engforge.patterns</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="engforge.problem_context.html">engforge.problem_context</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="engforge.problem_context.ProbLog.html">engforge.problem_context.ProbLog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.problem_context.Problem.html">engforge.problem_context.Problem</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">engforge.problem_context.ProblemExec</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#engforge.problem_context.ProblemExec"><code class="docutils literal notranslate"><span class="pre">ProblemExec</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.problem_context.IllegalArgument.html">engforge.problem_context.IllegalArgument</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.problem_context.ProblemExit.html">engforge.problem_context.ProblemExit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.problem_context.ProblemExitAtLevel.html">engforge.problem_context.ProblemExitAtLevel</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.properties.html">engforge.properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.reporting.html">engforge.reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solveable.html">engforge.solveable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solver.html">engforge.solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solver_utils.html">engforge.solver_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.system.html">engforge.system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.system_reference.html">engforge.system_reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.tabulation.html">engforge.tabulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.typing.html">engforge.typing</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="engforge.html">engforge</a></li>
+          <li class="breadcrumb-item"><a href="engforge.problem_context.html">engforge.problem_context</a></li>
+      <li class="breadcrumb-item active">engforge.problem_context.ProblemExec</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="engforge-problem-context-problemexec">
+<h1>engforge.problem_context.ProblemExec<a class="headerlink" href="#engforge-problem-context-problemexec" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ProblemExec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kw_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xnew</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ctx_fail_new</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">opts</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Represents the execution context for a problem in the system. The ProblemExec class provides a uniform set of options for managing the state of the system and its solvables, establishing the selection of combos or de/active attributes to Solvables. Once once created any further entracnces to ProblemExec will return the same instance until finally the last exit is called.</p>
+<p>## params:
+-  _problem_id: uuid for subproblems, or True for top level, None means uninitialized</p>
+<p>Initializes the ProblemExec.</p>
+<p>#TODO: exit system should abide by update / signals options</p>
+<p>#TODO: provide data storage options for dataframe / table storage history/ record keeping (ss vs transient data)</p>
+<p>#TODO: create an option to copy the system and run operations on it, and options for applying the state from the optimized copy to the original system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>system</strong> – The system to be executed.</p></li>
+<li><p><strong>Xnew</strong> – The new state of the system to set wrt. reversion, optional</p></li>
+<li><p><strong>ctx_fail_new</strong> – Whether to raise an error if no execution context is available, use in utility methods ect. Default is False.</p></li>
+<li><p><strong>kw_dict</strong> – A keyword argument dictionary to be parsed for solver options, and removed from the outer context. Changes are made to this dictionary, so they are removed automatically from the outer context, and thus no longer passed to interior vars.</p></li>
+<li><p><strong>dxdt</strong> – The dynamics integration method. Default is None meaning that dynamic vars are not considered for minimization unless otherwise specified. Steady State can be specified by dxdt=0 all dynamic vars are considered as solver variables, with the constraint that their rate of change is zero. If a dictionary is passed then the dynamic vars are considered as solver variables, with the constraint that their rate of change is equal to the value in the dictionary, and all other unspecified rates are zero (steady).</p></li>
+</ul>
+</dd>
+</dl>
+<p>#### Solver Selection Options
+:param combos: The selection of combos. Default is ‘*’ (select all).
+:param  ign_combos: The combos to be ignored.
+:param  only_combos: The combos to be selected.
+:param  add_obj: Whether to add an objective to the solver. Default is True.
+:param  slv_vars: The selection of solvables. Default is ‘*’ (select all).
+:param  add_vars: The solvables to be added to the solver.
+:param  ign_vars: The solvables to be ignored.
+:param  only_vars: The solvables to be selected.
+:param  only_active: Whether to select only active items. Default is True.
+:param  activate: The solvables to be activated.
+:param  deactivate: The solvables to be deactivated.
+:param  fail_revert: Whether to raise an error if no solvables are selected. Default is True.
+:param  revert_last: Whether to revert the last change. Default is True.
+:param  revert_every: Whether to revert every change. Default is True.
+:param  exit_on_failure: Whether to exit on failure, or continue on. Default is True.</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">activate_temp_state</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.apply_post_signals" title="engforge.problem_context.ProblemExec.apply_post_signals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_post_signals</span></code></a></p></td>
+<td><p>applies all post signals</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.apply_pre_signals" title="engforge.problem_context.ProblemExec.apply_pre_signals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">apply_pre_signals</span></code></a></p></td>
+<td><p>applies all pre signals</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">clean_context</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">critical</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.debug_levels" title="engforge.problem_context.ProblemExec.debug_levels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug_levels</span></code></a></p></td>
+<td><p>debug the levels of the context</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.discard_contexts" title="engforge.problem_context.ProblemExec.discard_contexts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">discard_contexts</span></code></a></p></td>
+<td><p>discard all contexts</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">error</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.error_action" title="engforge.problem_context.ProblemExec.error_action"><code class="xref py py-obj docutils literal notranslate"><span class="pre">error_action</span></code></a></p></td>
+<td><p>handles the error action wrt to the problem</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.establish_system" title="engforge.problem_context.ProblemExec.establish_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">establish_system</span></code></a></p></td>
+<td><p>caches the system references, and parses the system arguments</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.exit_action" title="engforge.problem_context.ProblemExec.exit_action"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exit_action</span></code></a></p></td>
+<td><p>handles the exit action wrt system</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">exit_and_revert</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">exit_to_level</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">exit_with_state</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.filter_vars" title="engforge.problem_context.ProblemExec.filter_vars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter_vars</span></code></a></p></td>
+<td><p>selects only settable refs</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.get_extra_kws" title="engforge.problem_context.ProblemExec.get_extra_kws"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_extra_kws</span></code></a></p></td>
+<td><p>extracts the combo input from the kwargs</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.get_parent_key" title="engforge.problem_context.ProblemExec.get_parent_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_parent_key</span></code></a></p></td>
+<td><p>returns the parent key of the key</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.get_ref_values" title="engforge.problem_context.ProblemExec.get_ref_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_ref_values</span></code></a></p></td>
+<td><p>returns the values of the refs</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.get_sesh" title="engforge.problem_context.ProblemExec.get_sesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_sesh</span></code></a></p></td>
+<td><p>get the session</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_solution</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.integral_rate" title="engforge.problem_context.ProblemExec.integral_rate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">integral_rate</span></code></a></p></td>
+<td><p>provides the dynamic rate of the system at time t, and state x</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">integrate</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">min_refresh</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">msg</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.parse_default" title="engforge.problem_context.ProblemExec.parse_default"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_default</span></code></a></p></td>
+<td><p>splits strings or lists and returns a list of options for the key, if nothing found returns None if fail set to True raises an exception, otherwise returns the default value</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.persist_contexts" title="engforge.problem_context.ProblemExec.persist_contexts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">persist_contexts</span></code></a></p></td>
+<td><p>convert all contexts to a new storage format</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.pos_obj" title="engforge.problem_context.ProblemExec.pos_obj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pos_obj</span></code></a></p></td>
+<td><p>converts an objective to a positive value</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.post_execute" title="engforge.problem_context.ProblemExec.post_execute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">post_execute</span></code></a></p></td>
+<td><p>Updates the post/both signals after the solver has been executed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.post_update_system" title="engforge.problem_context.ProblemExec.post_update_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">post_update_system</span></code></a></p></td>
+<td><p>updates the system</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.pre_execute" title="engforge.problem_context.ProblemExec.pre_execute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pre_execute</span></code></a></p></td>
+<td><p>Updates the pre/both signals after the solver has been executed.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.refresh_references" title="engforge.problem_context.ProblemExec.refresh_references"><code class="xref py py-obj docutils literal notranslate"><span class="pre">refresh_references</span></code></a></p></td>
+<td><p>refresh the system references</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.reset_contexts" title="engforge.problem_context.ProblemExec.reset_contexts"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_contexts</span></code></a></p></td>
+<td><p>reset all contexts to a new storage format</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.reset_data" title="engforge.problem_context.ProblemExec.reset_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">reset_data</span></code></a></p></td>
+<td><p>reset the data storage</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">revert_to_start</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.save_data" title="engforge.problem_context.ProblemExec.save_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_data</span></code></a></p></td>
+<td><p>save data to the context</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.set_checkpoint" title="engforge.problem_context.ProblemExec.set_checkpoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_checkpoint</span></code></a></p></td>
+<td><p>sets the checkpoint</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.set_ref_values" title="engforge.problem_context.ProblemExec.set_ref_values"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_ref_values</span></code></a></p></td>
+<td><p>returns the values of the refs</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_time</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.solve_min" title="engforge.problem_context.ProblemExec.solve_min"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solve_min</span></code></a></p></td>
+<td><p>Solve the minimization problem using the given vars and constraints.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.sys_solver_constraints" title="engforge.problem_context.ProblemExec.sys_solver_constraints"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sys_solver_constraints</span></code></a></p></td>
+<td><p>formatted as arguments for the solver</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.sys_solver_objectives" title="engforge.problem_context.ProblemExec.sys_solver_objectives"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sys_solver_objectives</span></code></a></p></td>
+<td><p>gathers variables from solver vars, and attempts to locate any input_vars to add as well.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_dynamics</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_methods</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.update_system" title="engforge.problem_context.ProblemExec.update_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_system</span></code></a></p></td>
+<td><p>updates the system</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">warning</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.all_components" title="engforge.problem_context.ProblemExec.all_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">all_components</span></code></a></p></td>
+<td><p>returns all variables in the system</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.all_comps" title="engforge.problem_context.ProblemExec.all_comps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">all_comps</span></code></a></p></td>
+<td><p>returns all variables in the system</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">all_comps_and_vars</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.all_problem_vars" title="engforge.problem_context.ProblemExec.all_problem_vars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">all_problem_vars</span></code></a></p></td>
+<td><p>solver variables + dynamics states when dynamic_solve is True</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">all_system_references</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">all_variable_refs</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.all_variables" title="engforge.problem_context.ProblemExec.all_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">all_variables</span></code></a></p></td>
+<td><p>returns all variables in the system</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">attr_inst</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_dynamics</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy_system</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.dataframe" title="engforge.problem_context.ProblemExec.dataframe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dataframe</span></code></a></p></td>
+<td><p>returns the dataframe of the system</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_comps</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_rate</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_rate_eq</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.dynamic_solve" title="engforge.problem_context.ProblemExec.dynamic_solve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_solve</span></code></a></p></td>
+<td><p>indicates if the system is dynamic</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_state</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">enter_refresh</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">entered</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">exit_on_failure</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">exited</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">fail_revert</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.final_objectives" title="engforge.problem_context.ProblemExec.final_objectives"><code class="xref py py-obj docutils literal notranslate"><span class="pre">final_objectives</span></code></a></p></td>
+<td><p>returns the final objective of the system</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">identity</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.integrator_rate_refs" title="engforge.problem_context.ProblemExec.integrator_rate_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">integrator_rate_refs</span></code></a></p></td>
+<td><p>combine the dynamic state and the integrator rates to get the transient state of the system, but convert their keys to the target var names</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">integrator_rates</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.integrator_var_refs" title="engforge.problem_context.ProblemExec.integrator_var_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">integrator_var_refs</span></code></a></p></td>
+<td><p>combine the dynamic state and the integrator rates to get the transient state of the system, but convert their keys to the target var names</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">integrator_vars</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">integrators</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.is_active" title="engforge.problem_context.ProblemExec.is_active"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_active</span></code></a></p></td>
+<td><p>checks if the context has been entered and not exited</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.kwargs" title="engforge.problem_context.ProblemExec.kwargs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">kwargs</span></code></a></p></td>
+<td><p>copy of slv_kw args</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">level_name</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">level_number</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_level</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">opt_fail</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.output_state" title="engforge.problem_context.ProblemExec.output_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">output_state</span></code></a></p></td>
+<td><p>records the state of the system</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">post_callback</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">post_exec</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pre_exec</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">problem_eq</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">problem_id</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">problem_ineq</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">problem_input</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">problem_objs</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.problem_opt_vars" title="engforge.problem_context.ProblemExec.problem_opt_vars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">problem_opt_vars</span></code></a></p></td>
+<td><p>solver variables</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">problems_dict</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">raise_on_unknown</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.record_state" title="engforge.problem_context.ProblemExec.record_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">record_state</span></code></a></p></td>
+<td><p>records the state of the system using session</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ref_attrs</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">revert_every</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">revert_last</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">run_solver</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_mode</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">save_on_exit</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.sesh" title="engforge.problem_context.ProblemExec.sesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sesh</span></code></a></p></td>
+<td><p>caches the property for the session</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">session_id</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">signal_inst</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">signals</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">signals_source</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">signals_target</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.problem_context.ProblemExec.solveable" title="engforge.problem_context.ProblemExec.solveable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solveable</span></code></a></p></td>
+<td><p>checks the system's references to determine if its solveabl</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">solver_inst</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">success_thresh</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">system</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">session</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">x_start</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.all_components">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_components</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#engforge.problem_context.ProblemExec.all_components" title="Link to this definition"></a></dt>
+<dd><p>returns all variables in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.all_comps">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_comps</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#engforge.problem_context.ProblemExec.all_comps" title="Link to this definition"></a></dt>
+<dd><p>returns all variables in the system</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.all_problem_vars">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_problem_vars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#engforge.problem_context.ProblemExec.all_problem_vars" title="Link to this definition"></a></dt>
+<dd><p>solver variables + dynamics states when dynamic_solve is True</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.all_variables">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_variables</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#engforge.problem_context.ProblemExec.all_variables" title="Link to this definition"></a></dt>
+<dd><p>returns all variables in the system</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.apply_post_signals">
+<span class="sig-name descname"><span class="pre">apply_post_signals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.apply_post_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.apply_post_signals" title="Link to this definition"></a></dt>
+<dd><p>applies all post signals</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.apply_pre_signals">
+<span class="sig-name descname"><span class="pre">apply_pre_signals</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.apply_pre_signals"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.apply_pre_signals" title="Link to this definition"></a></dt>
+<dd><p>applies all pre signals</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.class_cache">
+<span class="sig-name descname"><span class="pre">class_cache</span></span><a class="headerlink" href="#engforge.problem_context.ProblemExec.class_cache" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="#engforge.problem_context.ProblemExec" title="engforge.problem_context.ProblemExec"><code class="xref py py-class docutils literal notranslate"><span class="pre">ProblemExec</span></code></a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.dataframe">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dataframe</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DataFrame</span></em><a class="headerlink" href="#engforge.problem_context.ProblemExec.dataframe" title="Link to this definition"></a></dt>
+<dd><p>returns the dataframe of the system</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.debug_levels">
+<span class="sig-name descname"><span class="pre">debug_levels</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.debug_levels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.debug_levels" title="Link to this definition"></a></dt>
+<dd><p>debug the levels of the context</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.discard_contexts">
+<span class="sig-name descname"><span class="pre">discard_contexts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.discard_contexts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.discard_contexts" title="Link to this definition"></a></dt>
+<dd><p>discard all contexts</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.dynamic_solve">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dynamic_solve</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#engforge.problem_context.ProblemExec.dynamic_solve" title="Link to this definition"></a></dt>
+<dd><p>indicates if the system is dynamic</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.error_action">
+<span class="sig-name descname"><span class="pre">error_action</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.error_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.error_action" title="Link to this definition"></a></dt>
+<dd><p>handles the error action wrt to the problem</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.establish_system">
+<span class="sig-name descname"><span class="pre">establish_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kw_dict</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.establish_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.establish_system" title="Link to this definition"></a></dt>
+<dd><p>caches the system references, and parses the system arguments</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.exit_action">
+<span class="sig-name descname"><span class="pre">exit_action</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.exit_action"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.exit_action" title="Link to this definition"></a></dt>
+<dd><p>handles the exit action wrt system</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.filter_vars">
+<span class="sig-name descname"><span class="pre">filter_vars</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">refs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.filter_vars"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.filter_vars" title="Link to this definition"></a></dt>
+<dd><p>selects only settable refs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>refs</strong> (<em>list</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.final_objectives">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">final_objectives</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#engforge.problem_context.ProblemExec.final_objectives" title="Link to this definition"></a></dt>
+<dd><p>returns the final objective of the system</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.get_extra_kws">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_extra_kws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kwargs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_check_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'activate':</span> <span class="pre">None,</span> <span class="pre">'add_obj':</span> <span class="pre">True,</span> <span class="pre">'add_vars':</span> <span class="pre">None,</span> <span class="pre">'both_match':</span> <span class="pre">True,</span> <span class="pre">'combos':</span> <span class="pre">'default',</span> <span class="pre">'deactivate':</span> <span class="pre">None,</span> <span class="pre">'dxdt':</span> <span class="pre">None,</span> <span class="pre">'ign_combos':</span> <span class="pre">None,</span> <span class="pre">'ign_vars':</span> <span class="pre">None,</span> <span class="pre">'obj':</span> <span class="pre">None,</span> <span class="pre">'only_active':</span> <span class="pre">True,</span> <span class="pre">'only_combos':</span> <span class="pre">None,</span> <span class="pre">'only_vars':</span> <span class="pre">None,</span> <span class="pre">'slv_vars':</span> <span class="pre">'*',</span> <span class="pre">'weights':</span> <span class="pre">None}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_defaults</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.get_extra_kws"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.get_extra_kws" title="Link to this definition"></a></dt>
+<dd><p>extracts the combo input from the kwargs</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>_check_keys</strong> (<em>dict</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.get_parent_key">
+<span class="sig-name descname"><span class="pre">get_parent_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">look_back_num</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.get_parent_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.get_parent_key" title="Link to this definition"></a></dt>
+<dd><p>returns the parent key of the key</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.get_ref_values">
+<span class="sig-name descname"><span class="pre">get_ref_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">refs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.get_ref_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.get_ref_values" title="Link to this definition"></a></dt>
+<dd><p>returns the values of the refs</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.get_sesh">
+<span class="sig-name descname"><span class="pre">get_sesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.get_sesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.get_sesh" title="Link to this definition"></a></dt>
+<dd><p>get the session</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.integral_rate">
+<span class="sig-name descname"><span class="pre">integral_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Xss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Yobj</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.integral_rate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.integral_rate" title="Link to this definition"></a></dt>
+<dd><p>provides the dynamic rate of the system at time t, and state x</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.integrator_rate_refs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">integrator_rate_refs</span></span><a class="headerlink" href="#engforge.problem_context.ProblemExec.integrator_rate_refs" title="Link to this definition"></a></dt>
+<dd><p>combine the dynamic state and the integrator rates to get the transient state of the system, but convert their keys to the target var names</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.integrator_var_refs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">integrator_var_refs</span></span><a class="headerlink" href="#engforge.problem_context.ProblemExec.integrator_var_refs" title="Link to this definition"></a></dt>
+<dd><p>combine the dynamic state and the integrator rates to get the transient state of the system, but convert their keys to the target var names</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.is_active">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">is_active</span></span><a class="headerlink" href="#engforge.problem_context.ProblemExec.is_active" title="Link to this definition"></a></dt>
+<dd><p>checks if the context has been entered and not exited</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.kwargs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">kwargs</span></span><a class="headerlink" href="#engforge.problem_context.ProblemExec.kwargs" title="Link to this definition"></a></dt>
+<dd><p>copy of slv_kw args</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.output_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">output_state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#engforge.problem_context.ProblemExec.output_state" title="Link to this definition"></a></dt>
+<dd><p>records the state of the system</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.parse_default">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">defaults</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmv</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">empty_str</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.parse_default"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.parse_default" title="Link to this definition"></a></dt>
+<dd><p>splits strings or lists and returns a list of options for the key, if nothing found returns None if fail set to True raises an exception, otherwise returns the default value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.persist_contexts">
+<span class="sig-name descname"><span class="pre">persist_contexts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.persist_contexts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.persist_contexts" title="Link to this definition"></a></dt>
+<dd><p>convert all contexts to a new storage format</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.pos_obj">
+<span class="sig-name descname"><span class="pre">pos_obj</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ref</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.pos_obj"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.pos_obj" title="Link to this definition"></a></dt>
+<dd><p>converts an objective to a positive value</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.post_execute">
+<span class="sig-name descname"><span class="pre">post_execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.post_execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.post_execute" title="Link to this definition"></a></dt>
+<dd><p>Updates the post/both signals after the solver has been executed. This is useful for updating the system state after the solver has been executed.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.post_update_system">
+<span class="sig-name descname"><span class="pre">post_update_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.post_update_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.post_update_system" title="Link to this definition"></a></dt>
+<dd><p>updates the system</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.pre_execute">
+<span class="sig-name descname"><span class="pre">pre_execute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.pre_execute"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.pre_execute" title="Link to this definition"></a></dt>
+<dd><p>Updates the pre/both signals after the solver has been executed. This is useful for updating the system state after the solver has been executed.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.problem_opt_vars">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">problem_opt_vars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#engforge.problem_context.ProblemExec.problem_opt_vars" title="Link to this definition"></a></dt>
+<dd><p>solver variables</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.record_state">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">record_state</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span></em><a class="headerlink" href="#engforge.problem_context.ProblemExec.record_state" title="Link to this definition"></a></dt>
+<dd><p>records the state of the system using session</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.refresh_references">
+<span class="sig-name descname"><span class="pre">refresh_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sesh</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.refresh_references"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.refresh_references" title="Link to this definition"></a></dt>
+<dd><p>refresh the system references</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.reset_contexts">
+<span class="sig-name descname"><span class="pre">reset_contexts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fail_if_discardmode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.reset_contexts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.reset_contexts" title="Link to this definition"></a></dt>
+<dd><p>reset all contexts to a new storage format</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.reset_data">
+<span class="sig-name descname"><span class="pre">reset_data</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.reset_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.reset_data" title="Link to this definition"></a></dt>
+<dd><p>reset the data storage</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.save_data">
+<span class="sig-name descname"><span class="pre">save_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">force</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">add_data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.save_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.save_data" title="Link to this definition"></a></dt>
+<dd><p>save data to the context</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.sesh">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sesh</span></span><a class="headerlink" href="#engforge.problem_context.ProblemExec.sesh" title="Link to this definition"></a></dt>
+<dd><p>caches the property for the session</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.set_checkpoint">
+<span class="sig-name descname"><span class="pre">set_checkpoint</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.set_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.set_checkpoint" title="Link to this definition"></a></dt>
+<dd><p>sets the checkpoint</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.set_ref_values">
+<span class="sig-name descname"><span class="pre">set_ref_values</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">refs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.set_ref_values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.set_ref_values" title="Link to this definition"></a></dt>
+<dd><p>returns the values of the refs</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.solve_min">
+<span class="sig-name descname"><span class="pre">solve_min</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Xref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Yref</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.solve_min"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.solve_min" title="Link to this definition"></a></dt>
+<dd><p>Solve the minimization problem using the given vars and constraints. And sets the system state to the solution depending on input of the following:</p>
+<p>Solve the root problem using the given vars.
+:type Xref: 
+:param Xref: The reference input values.
+:type Yref: 
+:param Yref: The reference objective values to minimize.
+:type output: 
+:param output: The output dictionary to store the results. (default: None)
+:param fail: Flag indicating whether to raise an exception if the solver doesn’t converge. (default: True)
+:type kw: 
+:param kw: Additional keyword arguments.
+:return: The output dictionary containing the results.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.solveable">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">solveable</span></span><a class="headerlink" href="#engforge.problem_context.ProblemExec.solveable" title="Link to this definition"></a></dt>
+<dd><p>checks the system’s references to determine if its solveabl</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.sys_solver_constraints">
+<span class="sig-name descname"><span class="pre">sys_solver_constraints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">add_con</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">combo_filter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.sys_solver_constraints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.sys_solver_constraints" title="Link to this definition"></a></dt>
+<dd><p>formatted as arguments for the solver</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.sys_solver_objectives">
+<span class="sig-name descname"><span class="pre">sys_solver_objectives</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.sys_solver_objectives"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.sys_solver_objectives" title="Link to this definition"></a></dt>
+<dd><p>gathers variables from solver vars, and attempts to locate any input_vars to add as well. use exclude_vars to eliminate a variable from  the solver</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.problem_context.ProblemExec.update_system">
+<span class="sig-name descname"><span class="pre">update_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/problem_context.html#ProblemExec.update_system"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.problem_context.ProblemExec.update_system" title="Link to this definition"></a></dt>
+<dd><p>updates the system</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="engforge.problem_context.Problem.html" class="btn btn-neutral float-left" title="engforge.problem_context.Problem" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="engforge.problem_context.IllegalArgument.html" class="btn btn-neutral float-right" title="engforge.problem_context.IllegalArgument" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+engforge.dataframe.split\_dataframe
+===================================
+
+.. currentmodule:: engforge.dataframe
+
+.. autofunction:: split_dataframe

@@ -1,0 +1,33 @@
+engforge.attr\_signals
+======================
+
+.. automodule:: engforge.attr_signals
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      Signal
+      SignalInstance
+   
+   
+
+   
+   
+   
+
+
+

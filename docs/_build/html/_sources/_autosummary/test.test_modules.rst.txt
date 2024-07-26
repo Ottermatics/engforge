@@ -1,0 +1,12 @@
+test.test\_modules
+==================
+
+.. automodule:: test.test_modules
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ImportTest
+   

@@ -1,0 +1,114 @@
+engforge.eng.solid\_materials.Aluminum
+======================================
+
+.. currentmodule:: engforge.eng.solid_materials
+
+.. autoclass:: Aluminum
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Aluminum.add_fields
+      ~Aluminum.change_all_log_lvl
+      ~Aluminum.check_ref_slot_type
+      ~Aluminum.cls_compile
+      ~Aluminum.collect_all_attributes
+      ~Aluminum.collect_inst_attributes
+      ~Aluminum.compile_classes
+      ~Aluminum.copy_config_at_state
+      ~Aluminum.critical
+      ~Aluminum.debug
+      ~Aluminum.difference
+      ~Aluminum.error
+      ~Aluminum.extract_message
+      ~Aluminum.filter
+      ~Aluminum.go_through_configurations
+      ~Aluminum.info
+      ~Aluminum.input_attrs
+      ~Aluminum.input_fields
+      ~Aluminum.installSTDLogger
+      ~Aluminum.internal_configurations
+      ~Aluminum.message_with_identiy
+      ~Aluminum.msg
+      ~Aluminum.numeric_fields
+      ~Aluminum.parent_configurations_cls
+      ~Aluminum.plot_attributes
+      ~Aluminum.pre_compile
+      ~Aluminum.resetLog
+      ~Aluminum.resetSystemLogs
+      ~Aluminum.setattrs
+      ~Aluminum.signals_attributes
+      ~Aluminum.slack_notification
+      ~Aluminum.slot_refs
+      ~Aluminum.slots_attributes
+      ~Aluminum.solvers_attributes
+      ~Aluminum.subclasses
+      ~Aluminum.subcls_compile
+      ~Aluminum.table_fields
+      ~Aluminum.trace_attributes
+      ~Aluminum.transients_attributes
+      ~Aluminum.validate_class
+      ~Aluminum.von_mises_stress_max
+      ~Aluminum.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Aluminum.E
+      ~Aluminum.G
+      ~Aluminum.allowable_stress
+      ~Aluminum.as_dict
+      ~Aluminum.attrs_fields
+      ~Aluminum.classname
+      ~Aluminum.color
+      ~Aluminum.displayname
+      ~Aluminum.filename
+      ~Aluminum.identity
+      ~Aluminum.input_as_dict
+      ~Aluminum.log_fmt
+      ~Aluminum.log_level
+      ~Aluminum.log_on
+      ~Aluminum.log_silo
+      ~Aluminum.logger
+      ~Aluminum.nu
+      ~Aluminum.numeric_as_dict
+      ~Aluminum.numeric_hash
+      ~Aluminum.rho
+      ~Aluminum.shear_modulus
+      ~Aluminum.slack_webhook_url
+      ~Aluminum.ultimate_stress
+      ~Aluminum.unique_hash
+      ~Aluminum.unique_id
+      ~Aluminum.yield_stress
+      ~Aluminum.name
+      ~Aluminum.density
+      ~Aluminum.elastic_modulus
+      ~Aluminum.yield_strength
+      ~Aluminum.tensile_strength_ultimate
+      ~Aluminum.poissons_ratio
+      ~Aluminum.melting_point
+      ~Aluminum.maxium_service_temp
+      ~Aluminum.thermal_conductivity
+      ~Aluminum.specific_heat
+      ~Aluminum.thermal_expansion
+      ~Aluminum.electrical_resistitivity
+      ~Aluminum.cost_per_kg
+      ~Aluminum.in_shear_modulus
+      ~Aluminum.hardness
+      ~Aluminum.izod
+      ~Aluminum.factor_of_saftey
+   
+   

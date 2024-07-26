@@ -1,0 +1,54 @@
+engforge.reporting.Reporter
+===========================
+
+.. currentmodule:: engforge.reporting
+
+.. autoclass:: Reporter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Reporter.add_fields
+      ~Reporter.change_all_log_lvl
+      ~Reporter.check_config
+      ~Reporter.critical
+      ~Reporter.debug
+      ~Reporter.error
+      ~Reporter.extract_message
+      ~Reporter.filter
+      ~Reporter.info
+      ~Reporter.installSTDLogger
+      ~Reporter.message_with_identiy
+      ~Reporter.msg
+      ~Reporter.resetLog
+      ~Reporter.resetSystemLogs
+      ~Reporter.slack_notification
+      ~Reporter.subclasses
+      ~Reporter.upload
+      ~Reporter.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Reporter.name
+      ~Reporter.identity
+      ~Reporter.log_fmt
+      ~Reporter.log_level
+      ~Reporter.log_on
+      ~Reporter.logger
+      ~Reporter.slack_webhook_url
+   
+   

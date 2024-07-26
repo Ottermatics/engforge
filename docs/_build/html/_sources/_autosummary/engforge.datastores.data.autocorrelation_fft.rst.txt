@@ -1,0 +1,6 @@
+engforge.datastores.data.autocorrelation\_fft
+=============================================
+
+.. currentmodule:: engforge.datastores.data
+
+.. autofunction:: autocorrelation_fft

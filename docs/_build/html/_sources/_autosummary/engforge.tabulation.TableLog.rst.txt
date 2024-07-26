@@ -1,0 +1,50 @@
+engforge.tabulation.TableLog
+============================
+
+.. currentmodule:: engforge.tabulation
+
+.. autoclass:: TableLog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TableLog.add_fields
+      ~TableLog.change_all_log_lvl
+      ~TableLog.critical
+      ~TableLog.debug
+      ~TableLog.error
+      ~TableLog.extract_message
+      ~TableLog.filter
+      ~TableLog.info
+      ~TableLog.installSTDLogger
+      ~TableLog.message_with_identiy
+      ~TableLog.msg
+      ~TableLog.resetLog
+      ~TableLog.resetSystemLogs
+      ~TableLog.slack_notification
+      ~TableLog.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TableLog.identity
+      ~TableLog.log_fmt
+      ~TableLog.log_level
+      ~TableLog.log_on
+      ~TableLog.logger
+      ~TableLog.slack_webhook_url
+   
+   

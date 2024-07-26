@@ -1,0 +1,49 @@
+engforge.eng.geometry
+=====================
+
+.. automodule:: engforge.eng.geometry
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      calculate_stress
+      conver_np
+      get_mesh_size
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      Circle
+      GeometryLog
+      HollowCircle
+      ParametricSpline
+      Profile2D
+      Rectangle
+      ShapelySection
+      Triangle
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,21 @@
+test.test\_dynamics
+===================
+
+.. automodule:: test.test_dynamics
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      f
+      fit
+      jac
+      ls
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      TestDynamics
+   

@@ -1,0 +1,6 @@
+engforge.engforge\_attributes.get\_attributes\_of
+=================================================
+
+.. currentmodule:: engforge.engforge_attributes
+
+.. autofunction:: get_attributes_of

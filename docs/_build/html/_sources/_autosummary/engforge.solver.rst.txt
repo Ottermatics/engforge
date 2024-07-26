@@ -1,0 +1,33 @@
+engforge.solver
+===============
+
+.. automodule:: engforge.solver
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      SolverLog
+      SolverMixin
+   
+   
+
+   
+   
+   
+
+
+

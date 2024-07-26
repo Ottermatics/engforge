@@ -679,7 +679,7 @@ class Structure(System,CostModel,PredictionMixin):
             name,
             i_node=node1,
             j_node=node2,
-            material=uid,
+            material_name=uid,
             Iy=B.Iy,
             Iz=B.Ix,
             J=B.J,
@@ -718,7 +718,7 @@ class Structure(System,CostModel,PredictionMixin):
         B = beam = Beam(
             structure=self,
             name=name,
-            material=material,
+            material_name=material,
             in_Iy=Iy,
             in_Ix=Ix,
             in_J=J,

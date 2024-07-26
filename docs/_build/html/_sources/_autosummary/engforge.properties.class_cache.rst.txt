@@ -1,0 +1,38 @@
+engforge.properties.class\_cache
+================================
+
+.. currentmodule:: engforge.properties
+
+.. autoclass:: class_cache
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~class_cache.deleter
+      ~class_cache.get_func_return
+      ~class_cache.getter
+      ~class_cache.set_cache
+      ~class_cache.setter
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~class_cache.allow_set
+      ~class_cache.id_var
+      ~class_cache.must_return
+      ~class_cache.private_var
+   
+   

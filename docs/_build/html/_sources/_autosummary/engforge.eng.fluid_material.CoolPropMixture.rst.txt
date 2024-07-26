@@ -1,0 +1,189 @@
+engforge.eng.fluid\_material.CoolPropMixture
+============================================
+
+.. currentmodule:: engforge.eng.fluid_material
+
+.. autoclass:: CoolPropMixture
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~CoolPropMixture.add_fields
+      ~CoolPropMixture.change_all_log_lvl
+      ~CoolPropMixture.check_ref_slot_type
+      ~CoolPropMixture.cls_all_attrs_fields
+      ~CoolPropMixture.cls_all_property_keys
+      ~CoolPropMixture.cls_all_property_labels
+      ~CoolPropMixture.cls_compile
+      ~CoolPropMixture.collect_all_attributes
+      ~CoolPropMixture.collect_comp_refs
+      ~CoolPropMixture.collect_dynamic_refs
+      ~CoolPropMixture.collect_inst_attributes
+      ~CoolPropMixture.collect_post_update_refs
+      ~CoolPropMixture.collect_solver_refs
+      ~CoolPropMixture.collect_update_refs
+      ~CoolPropMixture.comp_references
+      ~CoolPropMixture.compile_classes
+      ~CoolPropMixture.copy_config_at_state
+      ~CoolPropMixture.create_dynamic_matricies
+      ~CoolPropMixture.create_feedthrough_matrix
+      ~CoolPropMixture.create_input_matrix
+      ~CoolPropMixture.create_output_constants
+      ~CoolPropMixture.create_output_matrix
+      ~CoolPropMixture.create_state_constants
+      ~CoolPropMixture.create_state_matrix
+      ~CoolPropMixture.critical
+      ~CoolPropMixture.debug
+      ~CoolPropMixture.determine_nearest_stationary_state
+      ~CoolPropMixture.difference
+      ~CoolPropMixture.error
+      ~CoolPropMixture.extract_message
+      ~CoolPropMixture.filter
+      ~CoolPropMixture.format_columns
+      ~CoolPropMixture.get_system_input_refs
+      ~CoolPropMixture.go_through_configurations
+      ~CoolPropMixture.info
+      ~CoolPropMixture.input_attrs
+      ~CoolPropMixture.input_fields
+      ~CoolPropMixture.installSTDLogger
+      ~CoolPropMixture.internal_components
+      ~CoolPropMixture.internal_configurations
+      ~CoolPropMixture.internal_references
+      ~CoolPropMixture.internal_systems
+      ~CoolPropMixture.internal_tabulations
+      ~CoolPropMixture.linear_output
+      ~CoolPropMixture.linear_step
+      ~CoolPropMixture.locate
+      ~CoolPropMixture.locate_ref
+      ~CoolPropMixture.message_with_identiy
+      ~CoolPropMixture.msg
+      ~CoolPropMixture.nonlinear_output
+      ~CoolPropMixture.nonlinear_step
+      ~CoolPropMixture.numeric_fields
+      ~CoolPropMixture.parent_configurations_cls
+      ~CoolPropMixture.parse_run_kwargs
+      ~CoolPropMixture.parse_simulation_input
+      ~CoolPropMixture.plot_attributes
+      ~CoolPropMixture.post_update
+      ~CoolPropMixture.pre_compile
+      ~CoolPropMixture.print_info
+      ~CoolPropMixture.rate
+      ~CoolPropMixture.rate_linear
+      ~CoolPropMixture.rate_nonlinear
+      ~CoolPropMixture.ref_dXdt
+      ~CoolPropMixture.resetLog
+      ~CoolPropMixture.resetSystemLogs
+      ~CoolPropMixture.set_attr
+      ~CoolPropMixture.set_time
+      ~CoolPropMixture.setattrs
+      ~CoolPropMixture.setup
+      ~CoolPropMixture.signals_attributes
+      ~CoolPropMixture.slack_notification
+      ~CoolPropMixture.slot_refs
+      ~CoolPropMixture.slots_attributes
+      ~CoolPropMixture.smart_split_dataframe
+      ~CoolPropMixture.solvers_attributes
+      ~CoolPropMixture.step
+      ~CoolPropMixture.subclasses
+      ~CoolPropMixture.subcls_compile
+      ~CoolPropMixture.system_properties_classdef
+      ~CoolPropMixture.system_references
+      ~CoolPropMixture.table_fields
+      ~CoolPropMixture.trace_attributes
+      ~CoolPropMixture.transients_attributes
+      ~CoolPropMixture.update
+      ~CoolPropMixture.update_dynamics
+      ~CoolPropMixture.update_feedthrough
+      ~CoolPropMixture.update_input
+      ~CoolPropMixture.update_mass_ratios
+      ~CoolPropMixture.update_output_constants
+      ~CoolPropMixture.update_output_matrix
+      ~CoolPropMixture.update_state
+      ~CoolPropMixture.update_state_constants
+      ~CoolPropMixture.validate_class
+      ~CoolPropMixture.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CoolPropMixture.Mmass1
+      ~CoolPropMixture.Mmass2
+      ~CoolPropMixture.Psat
+      ~CoolPropMixture.Tsat
+      ~CoolPropMixture.Ut_ref
+      ~CoolPropMixture.Xt_ref
+      ~CoolPropMixture.Yt_ref
+      ~CoolPropMixture.anything_changed
+      ~CoolPropMixture.as_dict
+      ~CoolPropMixture.attrs_fields
+      ~CoolPropMixture.classname
+      ~CoolPropMixture.dXtdt_ref
+      ~CoolPropMixture.data_dict
+      ~CoolPropMixture.dataframe_constants
+      ~CoolPropMixture.dataframe_variants
+      ~CoolPropMixture.density
+      ~CoolPropMixture.displayname
+      ~CoolPropMixture.dynamic_A
+      ~CoolPropMixture.dynamic_B
+      ~CoolPropMixture.dynamic_C
+      ~CoolPropMixture.dynamic_D
+      ~CoolPropMixture.dynamic_F
+      ~CoolPropMixture.dynamic_K
+      ~CoolPropMixture.dynamic_input
+      ~CoolPropMixture.dynamic_input_vars
+      ~CoolPropMixture.dynamic_output
+      ~CoolPropMixture.dynamic_output_vars
+      ~CoolPropMixture.dynamic_state
+      ~CoolPropMixture.dynamic_state_vars
+      ~CoolPropMixture.enthalpy
+      ~CoolPropMixture.filename
+      ~CoolPropMixture.identity
+      ~CoolPropMixture.input_as_dict
+      ~CoolPropMixture.last_context
+      ~CoolPropMixture.log_fmt
+      ~CoolPropMixture.log_level
+      ~CoolPropMixture.log_on
+      ~CoolPropMixture.log_silo
+      ~CoolPropMixture.logger
+      ~CoolPropMixture.materail2
+      ~CoolPropMixture.material
+      ~CoolPropMixture.material1
+      ~CoolPropMixture.nonlinear
+      ~CoolPropMixture.numeric_as_dict
+      ~CoolPropMixture.numeric_hash
+      ~CoolPropMixture.plotable_variables
+      ~CoolPropMixture.skip_plot_vars
+      ~CoolPropMixture.slack_webhook_url
+      ~CoolPropMixture.specific_heat
+      ~CoolPropMixture.state
+      ~CoolPropMixture.static_A
+      ~CoolPropMixture.static_B
+      ~CoolPropMixture.static_C
+      ~CoolPropMixture.static_D
+      ~CoolPropMixture.static_F
+      ~CoolPropMixture.static_K
+      ~CoolPropMixture.surface_tension
+      ~CoolPropMixture.system_id
+      ~CoolPropMixture.thermal_conductivity
+      ~CoolPropMixture.time
+      ~CoolPropMixture.unique_hash
+      ~CoolPropMixture.update_interval
+      ~CoolPropMixture.viscosity
+      ~CoolPropMixture.parent
+      ~CoolPropMixture.name
+      ~CoolPropMixture.dataframe
+   
+   

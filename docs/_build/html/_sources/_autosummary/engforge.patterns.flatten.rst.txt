@@ -1,0 +1,6 @@
+engforge.patterns.flatten
+=========================
+
+.. currentmodule:: engforge.patterns
+
+.. autofunction:: flatten

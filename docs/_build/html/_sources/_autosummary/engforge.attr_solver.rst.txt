@@ -1,0 +1,34 @@
+engforge.attr\_solver
+=====================
+
+.. automodule:: engforge.attr_solver
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      AttrSolverLog
+      Solver
+      SolverInstance
+   
+   
+
+   
+   
+   
+
+
+

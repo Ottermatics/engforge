@@ -1,0 +1,190 @@
+engforge.system.System
+======================
+
+.. currentmodule:: engforge.system
+
+.. autoclass:: System
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~System.add_fields
+      ~System.change_all_log_lvl
+      ~System.check_ref_slot_type
+      ~System.clone
+      ~System.cls_all_attrs_fields
+      ~System.cls_all_property_keys
+      ~System.cls_all_property_labels
+      ~System.cls_compile
+      ~System.collect_all_attributes
+      ~System.collect_comp_refs
+      ~System.collect_dynamic_refs
+      ~System.collect_inst_attributes
+      ~System.collect_post_update_refs
+      ~System.collect_solver_refs
+      ~System.collect_update_refs
+      ~System.comp_references
+      ~System.compile_classes
+      ~System.copy_config_at_state
+      ~System.create_dynamic_matricies
+      ~System.create_feedthrough_matrix
+      ~System.create_input_matrix
+      ~System.create_output_constants
+      ~System.create_output_matrix
+      ~System.create_state_constants
+      ~System.create_state_matrix
+      ~System.critical
+      ~System.debug
+      ~System.determine_nearest_stationary_state
+      ~System.difference
+      ~System.error
+      ~System.eval
+      ~System.execute
+      ~System.extract_message
+      ~System.filter
+      ~System.format_columns
+      ~System.get_system_input_refs
+      ~System.go_through_configurations
+      ~System.info
+      ~System.input_attrs
+      ~System.input_fields
+      ~System.installSTDLogger
+      ~System.internal_components
+      ~System.internal_configurations
+      ~System.internal_references
+      ~System.internal_systems
+      ~System.internal_tabulations
+      ~System.linear_output
+      ~System.linear_step
+      ~System.locate
+      ~System.locate_ref
+      ~System.make_plots
+      ~System.mark_all_comps_changed
+      ~System.message_with_identiy
+      ~System.msg
+      ~System.nonlinear_output
+      ~System.nonlinear_step
+      ~System.numeric_fields
+      ~System.parent_configurations_cls
+      ~System.parse_run_kwargs
+      ~System.parse_simulation_input
+      ~System.plot_attributes
+      ~System.post_run_callback
+      ~System.post_update
+      ~System.pre_compile
+      ~System.pre_run_callback
+      ~System.print_info
+      ~System.rate
+      ~System.rate_linear
+      ~System.rate_nonlinear
+      ~System.ref_dXdt
+      ~System.resetLog
+      ~System.resetSystemLogs
+      ~System.run
+      ~System.run_internal_systems
+      ~System.set_attr
+      ~System.set_time
+      ~System.setattrs
+      ~System.setup_global_dynamics
+      ~System.signals_attributes
+      ~System.sim_matrix
+      ~System.simulate
+      ~System.slack_notification
+      ~System.slot_refs
+      ~System.slots_attributes
+      ~System.smart_split_dataframe
+      ~System.solver
+      ~System.solver_vars
+      ~System.solvers_attributes
+      ~System.step
+      ~System.subclasses
+      ~System.subcls_compile
+      ~System.system_properties_classdef
+      ~System.system_references
+      ~System.table_fields
+      ~System.trace_attributes
+      ~System.transients_attributes
+      ~System.update
+      ~System.update_dynamics
+      ~System.update_feedthrough
+      ~System.update_input
+      ~System.update_output_constants
+      ~System.update_output_matrix
+      ~System.update_state
+      ~System.update_state_constants
+      ~System.validate_class
+      ~System.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~System.Ut_ref
+      ~System.Xt_ref
+      ~System.Yt_ref
+      ~System.anything_changed
+      ~System.as_dict
+      ~System.attrs_fields
+      ~System.classname
+      ~System.converged
+      ~System.dXtdt_ref
+      ~System.dataframe_constants
+      ~System.dataframe_variants
+      ~System.displayname
+      ~System.dynamic_A
+      ~System.dynamic_B
+      ~System.dynamic_C
+      ~System.dynamic_D
+      ~System.dynamic_F
+      ~System.dynamic_K
+      ~System.dynamic_input
+      ~System.dynamic_input_vars
+      ~System.dynamic_output
+      ~System.dynamic_output_vars
+      ~System.dynamic_state
+      ~System.dynamic_state_vars
+      ~System.filename
+      ~System.identity
+      ~System.input_as_dict
+      ~System.last_context
+      ~System.log_fmt
+      ~System.log_level
+      ~System.log_on
+      ~System.log_silo
+      ~System.logger
+      ~System.nonlinear
+      ~System.numeric_as_dict
+      ~System.numeric_hash
+      ~System.plotable_variables
+      ~System.run_id
+      ~System.skip_plot_vars
+      ~System.slack_webhook_url
+      ~System.solved
+      ~System.static_A
+      ~System.static_B
+      ~System.static_C
+      ~System.static_D
+      ~System.static_F
+      ~System.static_K
+      ~System.stored_plots
+      ~System.system_id
+      ~System.time
+      ~System.unique_hash
+      ~System.update_interval
+      ~System.parent
+      ~System.name
+      ~System.dataframe
+   
+   

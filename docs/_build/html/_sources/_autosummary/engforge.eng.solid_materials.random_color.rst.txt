@@ -1,0 +1,6 @@
+engforge.eng.solid\_materials.random\_color
+===========================================
+
+.. currentmodule:: engforge.eng.solid_materials
+
+.. autofunction:: random_color

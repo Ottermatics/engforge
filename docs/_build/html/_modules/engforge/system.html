@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.system &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/test.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.system</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.system</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;A System is a Configuration that orchestrates dataflow between components, as well as solving systems of equations in the presense of limits, as well as formatting results of each Component into reporting ready dataframe. System&#39;s solver behavior is inspired by NASA&#39;s numerical propulsion simulation system (NPSS) to solve systems of inequalities in complex systems.</span>
+
+<span class="sd">Component or other subsystems are added to a System class with `Slots`:</span>
+<span class="sd">    ```</span>
+<span class="sd">    class CustomSystem(System):</span>
+<span class="sd">        slot_name = Slot.define(Component,ComponentSubclass,System)</span>
+<span class="sd">    ```</span>
+
+<span class="sd">Component&#39;s data flow is established via `SignalS` that are defined:</span>
+<span class="sd">    ```</span>
+<span class="sd">    class CustomSystem(System):</span>
+<span class="sd">        signal_name = Signal.define(source_attr_or_property, target_attr)</span>
+<span class="sd">        control_signal = Signal.define(source_attr_or_property, target_attr,control_with=&#39;system.attr or slot.attr`)</span>
+<span class="sd">    ```</span>
+<span class="sd">    - source_attr: can reference a locally defined slot attribute (a la attr&#39;s fields) or any locally defined slot system property</span>
+<span class="sd">    - target_attr: must be a locally defined slot attribute or system attribute.</span>
+
+<span class="sd">update description to include solver</span>
+
+<span class="sd">A system calculates its state upon calling `System.run()`. This executes `pre_execute()` first which will directly update any attributes based on their `Signal` definition between `Slot` components. Once convergence is reached target_attr&#39;s are updated in `post_execute()` for cyclic SignalS.</span>
+
+<span class="sd">If the system encounters a subsystem in its solver routine, the subsystem is evald() and its results used as static in that iteration,ie it isn&#39;t included in the system level dependents if cyclic references are found.</span>
+
+
+<span class="sd">The solver uses the root or cobla scipy optimizer results on quick references to internal component references. Upon solving the system</span>
+
+<span class="sd">SignalS can be limited with constrains via `min or max` values on `NumericProperty` which can be numeric values (int or float) or functions taking one argument of the component it is defined on. Additionally signals may take arguments of `min` or `max` which are numeric values or callbacks which take the system instance as an argument.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">attrs</span>
+
+<span class="kn">from</span> <span class="nn">engforge.properties</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">engforge.logging</span> <span class="kn">import</span> <span class="n">LoggingMixin</span>
+<span class="kn">from</span> <span class="nn">engforge.configuration</span> <span class="kn">import</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">forge</span>
+<span class="kn">from</span> <span class="nn">engforge.components</span> <span class="kn">import</span> <span class="n">SolveableInterface</span>
+<span class="kn">from</span> <span class="nn">engforge.solver</span> <span class="kn">import</span> <span class="n">SolverMixin</span>
+<span class="kn">from</span> <span class="nn">engforge.attr_plotting</span> <span class="kn">import</span> <span class="n">PlottingMixin</span>
+<span class="kn">from</span> <span class="nn">engforge.dynamics</span> <span class="kn">import</span> <span class="n">GlobalDynamics</span>
+
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+
+
+<span class="c1"># make a module logger</span>
+<div class="viewcode-block" id="SystemsLog">
+<a class="viewcode-back" href="../../_autosummary/engforge.system.SystemsLog.html#engforge.system.SystemsLog">[docs]</a>
+<span class="k">class</span> <span class="nc">SystemsLog</span><span class="p">(</span><span class="n">LoggingMixin</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">SystemsLog</span><span class="p">()</span>
+
+<span class="c1">#NOTE: solver must come before solvable interface since it overrides certain methods</span>
+<div class="viewcode-block" id="System">
+<a class="viewcode-back" href="../../_autosummary/engforge.system.System.html#engforge.system.System">[docs]</a>
+<span class="nd">@forge</span>
+<span class="k">class</span> <span class="nc">System</span><span class="p">(</span><span class="n">SolverMixin</span><span class="p">,</span> <span class="n">SolveableInterface</span><span class="p">,</span> <span class="n">PlottingMixin</span><span class="p">,</span><span class="n">GlobalDynamics</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A system defines SlotS for Components, and data flow between them using SignalS</span>
+
+<span class="sd">    The system records all attribues to its subcomponents via system_references with scoped keys to references to set or get attributes, as well as observe system properties. These are cached upon first access in an instance.</span>
+
+<span class="sd">    The table is made up of these system references, allowing low overhead recording of systems with many variables.</span>
+
+<span class="sd">    When solving by default the run(revert=True) call will revert the system state to what it was before the system began.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="c1">#default to nothing</span>
+    <span class="n">dynamic_input_vars</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">dynamic_state_vars</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    <span class="n">dynamic_output_vars</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">factory</span><span class="o">=</span><span class="nb">list</span><span class="p">)</span>
+    
+
+    <span class="n">_anything_changed_</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">_solver_override</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#this comp will run with run_internal_systems when True, otherwise it resolves to global solver behavior, also prevents the solver from reaching into this system</span>
+
+
+    <span class="c1"># Properties!</span>
+    <span class="nd">@system_property</span>
+    <span class="k">def</span> <span class="nf">converged</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="kc">None</span>        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_context</span><span class="o">.</span><span class="n">converged</span>
+
+    <span class="nd">@system_property</span>
+    <span class="k">def</span> <span class="nf">run_id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_context</span><span class="o">.</span><span class="n">problem_id</span>
+
+<div class="viewcode-block" id="System.subclasses">
+<a class="viewcode-back" href="../../_autosummary/engforge.system.System.html#engforge.system.System.subclasses">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return all subclasses of components, including their subclasses</span>
+<span class="sd">        :param out: out is to pass when the middle of a recursive operation, do not use it!</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># init the set by default</span>
+        <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">subclasses</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="System.clone">
+<a class="viewcode-back" href="../../_autosummary/engforge.system.System.html#engforge.system.System.clone">[docs]</a>
+    <span class="k">def</span> <span class="nf">clone</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;returns a clone of this system, often used to iterate the system without affecting the input values at the last convergence step.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">identity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">run_id</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">run_id</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">_anything_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;looks at internal components as well as flag for anything chagned.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anything_changed_</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">elif</span> <span class="nb">any</span><span class="p">([</span><span class="n">c</span><span class="o">.</span><span class="n">anything_changed</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">comp_references</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()]):</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="nd">@_anything_changed</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">_anything_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">inpt</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;allows default functionality with new property system&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mark_all_comps_changed</span><span class="p">(</span><span class="n">inpt</span><span class="p">)</span>
+
+<div class="viewcode-block" id="System.mark_all_comps_changed">
+<a class="viewcode-back" href="../../_autosummary/engforge.system.System.html#engforge.system.System.mark_all_comps_changed">[docs]</a>
+    <span class="k">def</span> <span class="nf">mark_all_comps_changed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">inpt</span><span class="p">:</span><span class="nb">bool</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;mark all components as changed, useful for forcing a re-run of the system, or for marking data as saved&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_anything_changed_</span> <span class="o">=</span> <span class="n">inpt</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">comp_references</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">_anything_changed</span> <span class="o">=</span> <span class="n">inpt</span>       </div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

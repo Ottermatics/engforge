@@ -1,0 +1,69 @@
+engforge.attributes.ATTR\_BASE
+==============================
+
+.. currentmodule:: engforge.attributes
+
+.. autoclass:: ATTR_BASE
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ATTR_BASE.class_validate
+      ~ATTR_BASE.collect_attr_inst
+      ~ATTR_BASE.collect_cls
+      ~ATTR_BASE.configure_for_system
+      ~ATTR_BASE.configure_instance
+      ~ATTR_BASE.create_instance
+      ~ATTR_BASE.define
+      ~ATTR_BASE.define_validate
+      ~ATTR_BASE.evolve
+      ~ATTR_BASE.from_counting_attr
+      ~ATTR_BASE.handle_instance
+      ~ATTR_BASE.make_attribute
+      ~ATTR_BASE.make_factory
+      ~ATTR_BASE.process_combos
+      ~ATTR_BASE.subclasses
+      ~ATTR_BASE.unpack_atrs
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ATTR_BASE.name
+      ~ATTR_BASE.default
+      ~ATTR_BASE.validator
+      ~ATTR_BASE.repr
+      ~ATTR_BASE.eq
+      ~ATTR_BASE.eq_key
+      ~ATTR_BASE.order
+      ~ATTR_BASE.order_key
+      ~ATTR_BASE.hash
+      ~ATTR_BASE.init
+      ~ATTR_BASE.metadata
+      ~ATTR_BASE.type
+      ~ATTR_BASE.converter
+      ~ATTR_BASE.kw_only
+      ~ATTR_BASE.inherited
+      ~ATTR_BASE.on_setattr
+      ~ATTR_BASE.alias
+      ~ATTR_BASE.attr_prefix
+      ~ATTR_BASE.default_options
+      ~ATTR_BASE.none_ok
+      ~ATTR_BASE.template_class
+      ~ATTR_BASE.config_cls
+      ~ATTR_BASE.active
+      ~ATTR_BASE.combos
+   
+   

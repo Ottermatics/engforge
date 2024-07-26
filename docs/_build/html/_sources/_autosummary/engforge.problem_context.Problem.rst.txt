@@ -1,0 +1,146 @@
+engforge.problem\_context.Problem
+=================================
+
+.. currentmodule:: engforge.problem_context
+
+.. autoclass:: Problem
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Problem.activate_temp_state
+      ~Problem.apply_post_signals
+      ~Problem.apply_pre_signals
+      ~Problem.clean_context
+      ~Problem.critical
+      ~Problem.debug
+      ~Problem.debug_levels
+      ~Problem.discard_contexts
+      ~Problem.error
+      ~Problem.error_action
+      ~Problem.establish_system
+      ~Problem.exit_action
+      ~Problem.exit_and_revert
+      ~Problem.exit_to_level
+      ~Problem.exit_with_state
+      ~Problem.filter_vars
+      ~Problem.format_columns
+      ~Problem.get_extra_kws
+      ~Problem.get_parent_key
+      ~Problem.get_ref_values
+      ~Problem.get_sesh
+      ~Problem.handle_solution
+      ~Problem.info
+      ~Problem.integral_rate
+      ~Problem.integrate
+      ~Problem.min_refresh
+      ~Problem.msg
+      ~Problem.parse_default
+      ~Problem.persist_contexts
+      ~Problem.pos_obj
+      ~Problem.post_execute
+      ~Problem.post_update_system
+      ~Problem.pre_execute
+      ~Problem.refresh_references
+      ~Problem.reset_contexts
+      ~Problem.reset_data
+      ~Problem.revert_to_start
+      ~Problem.save_data
+      ~Problem.set_checkpoint
+      ~Problem.set_ref_values
+      ~Problem.set_time
+      ~Problem.smart_split_dataframe
+      ~Problem.solve_min
+      ~Problem.sys_solver_constraints
+      ~Problem.sys_solver_objectives
+      ~Problem.update_dynamics
+      ~Problem.update_methods
+      ~Problem.update_system
+      ~Problem.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Problem.all_components
+      ~Problem.all_comps
+      ~Problem.all_comps_and_vars
+      ~Problem.all_problem_vars
+      ~Problem.all_system_references
+      ~Problem.all_variable_refs
+      ~Problem.all_variables
+      ~Problem.attr_inst
+      ~Problem.check_dynamics
+      ~Problem.copy_system
+      ~Problem.dataframe
+      ~Problem.dataframe_constants
+      ~Problem.dataframe_variants
+      ~Problem.dynamic_comps
+      ~Problem.dynamic_rate
+      ~Problem.dynamic_rate_eq
+      ~Problem.dynamic_solve
+      ~Problem.dynamic_state
+      ~Problem.enter_refresh
+      ~Problem.entered
+      ~Problem.exit_on_failure
+      ~Problem.exited
+      ~Problem.fail_revert
+      ~Problem.final_objectives
+      ~Problem.identity
+      ~Problem.integrator_rate_refs
+      ~Problem.integrator_rates
+      ~Problem.integrator_var_refs
+      ~Problem.integrator_vars
+      ~Problem.integrators
+      ~Problem.is_active
+      ~Problem.kwargs
+      ~Problem.level_name
+      ~Problem.level_number
+      ~Problem.log_level
+      ~Problem.opt_fail
+      ~Problem.output_state
+      ~Problem.post_callback
+      ~Problem.post_exec
+      ~Problem.pre_exec
+      ~Problem.problem_eq
+      ~Problem.problem_id
+      ~Problem.problem_ineq
+      ~Problem.problem_input
+      ~Problem.problem_objs
+      ~Problem.problem_opt_vars
+      ~Problem.problems_dict
+      ~Problem.raise_on_unknown
+      ~Problem.record_state
+      ~Problem.ref_attrs
+      ~Problem.revert_every
+      ~Problem.revert_last
+      ~Problem.run_solver
+      ~Problem.save_mode
+      ~Problem.save_on_exit
+      ~Problem.sesh
+      ~Problem.session_id
+      ~Problem.signal_inst
+      ~Problem.signals
+      ~Problem.signals_source
+      ~Problem.signals_target
+      ~Problem.skip_plot_vars
+      ~Problem.solveable
+      ~Problem.solver_inst
+      ~Problem.success_thresh
+      ~Problem.system
+      ~Problem.session
+      ~Problem.x_start
+   
+   

@@ -1,0 +1,1544 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.eng.fluid_material.Water &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="engforge.eng.geometry" href="engforge.eng.geometry.html" />
+    <link rel="prev" title="engforge.eng.fluid_material.Steam" href="engforge.eng.fluid_material.Steam.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">Tests</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="engforge.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="engforge.analysis.html">engforge.analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_dynamics.html">engforge.attr_dynamics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_plotting.html">engforge.attr_plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_signals.html">engforge.attr_signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_slots.html">engforge.attr_slots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_solver.html">engforge.attr_solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attributes.html">engforge.attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.common.html">engforge.common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.component_collections.html">engforge.component_collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.components.html">engforge.components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.configuration.html">engforge.configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.dataframe.html">engforge.dataframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.datastores.html">engforge.datastores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.dynamics.html">engforge.dynamics</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="engforge.eng.html">engforge.eng</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.costs.html">engforge.eng.costs</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="engforge.eng.fluid_material.html">engforge.eng.fluid_material</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.Air.html">engforge.eng.fluid_material.Air</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.AirWaterMix.html">engforge.eng.fluid_material.AirWaterMix</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.CoolPropMaterial.html">engforge.eng.fluid_material.CoolPropMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.CoolPropMixture.html">engforge.eng.fluid_material.CoolPropMixture</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.FluidMaterial.html">engforge.eng.fluid_material.FluidMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.Hydrogen.html">engforge.eng.fluid_material.Hydrogen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.IdealAir.html">engforge.eng.fluid_material.IdealAir</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.IdealGas.html">engforge.eng.fluid_material.IdealGas</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.IdealH2.html">engforge.eng.fluid_material.IdealH2</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.IdealOxygen.html">engforge.eng.fluid_material.IdealOxygen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.IdealSteam.html">engforge.eng.fluid_material.IdealSteam</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.Oxygen.html">engforge.eng.fluid_material.Oxygen</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.SeaWater.html">engforge.eng.fluid_material.SeaWater</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.fluid_material.Steam.html">engforge.eng.fluid_material.Steam</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">engforge.eng.fluid_material.Water</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.geometry.html">engforge.eng.geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.pipes.html">engforge.eng.pipes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.prediction.html">engforge.eng.prediction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.solid_materials.html">engforge.eng.solid_materials</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.structure_beams.html">engforge.eng.structure_beams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.thermodynamics.html">engforge.eng.thermodynamics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.engforge_attributes.html">engforge.engforge_attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.env_var.html">engforge.env_var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.locations.html">engforge.locations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.logging.html">engforge.logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.patterns.html">engforge.patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.problem_context.html">engforge.problem_context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.properties.html">engforge.properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.reporting.html">engforge.reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solveable.html">engforge.solveable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solver.html">engforge.solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solver_utils.html">engforge.solver_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.system.html">engforge.system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.system_reference.html">engforge.system_reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.tabulation.html">engforge.tabulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.typing.html">engforge.typing</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="engforge.html">engforge</a></li>
+          <li class="breadcrumb-item"><a href="engforge.eng.html">engforge.eng</a></li>
+          <li class="breadcrumb-item"><a href="engforge.eng.fluid_material.html">engforge.eng.fluid_material</a></li>
+      <li class="breadcrumb-item active">engforge.eng.fluid_material.Water</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="engforge-eng-fluid-material-water">
+<h1>engforge.eng.fluid_material.Water<a class="headerlink" href="#engforge-eng-fluid-material-water" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Water</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">NOTHING</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">288</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="engforge.eng.fluid_material.CoolPropMaterial.html#engforge.eng.fluid_material.CoolPropMaterial" title="engforge.eng.fluid_material.CoolPropMaterial"><code class="xref py py-class docutils literal notranslate"><span class="pre">CoolPropMaterial</span></code></a></p>
+<p>Method generated by attrs for class CoolPropMaterial.</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.add_fields" title="engforge.eng.fluid_material.Water.add_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_fields</span></code></a></p></td>
+<td><p>Overwrite this to modify logging fields</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_all_log_lvl</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.check_ref_slot_type" title="engforge.eng.fluid_material.Water.check_ref_slot_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_ref_slot_type</span></code></a></p></td>
+<td><p>recursively checks class slots for the key, and returns the slot type</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cls_all_attrs_fields</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cls_all_property_keys</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cls_all_property_labels</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.cls_compile" title="engforge.eng.fluid_material.Water.cls_compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cls_compile</span></code></a></p></td>
+<td><p>compiles this class, override this to compile functionality for this class</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.collect_all_attributes" title="engforge.eng.fluid_material.Water.collect_all_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_all_attributes</span></code></a></p></td>
+<td><p>collects all the attributes for a system</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.collect_comp_refs" title="engforge.eng.fluid_material.Water.collect_comp_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_comp_refs</span></code></a></p></td>
+<td><p>collects all the references for the system grouped by component</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.collect_dynamic_refs" title="engforge.eng.fluid_material.Water.collect_dynamic_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_dynamic_refs</span></code></a></p></td>
+<td><p>collects the dynamics of the systems 1.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.collect_inst_attributes" title="engforge.eng.fluid_material.Water.collect_inst_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_inst_attributes</span></code></a></p></td>
+<td><p>collects all the attributes for a system</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.collect_post_update_refs" title="engforge.eng.fluid_material.Water.collect_post_update_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_post_update_refs</span></code></a></p></td>
+<td><p>checks all methods and creates ref's to execute them later</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.collect_solver_refs" title="engforge.eng.fluid_material.Water.collect_solver_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_solver_refs</span></code></a></p></td>
+<td><p>collects all the references for the system grouped by function and prepended with the system key</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.collect_update_refs" title="engforge.eng.fluid_material.Water.collect_update_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_update_refs</span></code></a></p></td>
+<td><p>checks all methods and creates ref's to execute them later</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.comp_references" title="engforge.eng.fluid_material.Water.comp_references"><code class="xref py py-obj docutils literal notranslate"><span class="pre">comp_references</span></code></a></p></td>
+<td><p>A cached set of recursive references to any slot component #FIXME: by instance recache on iterative component change or other signals</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.compile_classes" title="engforge.eng.fluid_material.Water.compile_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile_classes</span></code></a></p></td>
+<td><p>compiles all subclass functionality</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.copy_config_at_state" title="engforge.eng.fluid_material.Water.copy_config_at_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy_config_at_state</span></code></a></p></td>
+<td><p>copy the system at the current state recrusively to a certain level, by default copying everything :type levels_deep: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> :param levels_deep: how many levels deep to copy, -1 is all :type level:  :param level: the current level, defaults to 0 if not set</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.create_dynamic_matricies" title="engforge.eng.fluid_material.Water.create_dynamic_matricies"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_dynamic_matricies</span></code></a></p></td>
+<td><p>creates a dynamics object for the system</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.create_feedthrough_matrix" title="engforge.eng.fluid_material.Water.create_feedthrough_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_feedthrough_matrix</span></code></a></p></td>
+<td><p>creates the input matrix for the system, called D</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.create_input_matrix" title="engforge.eng.fluid_material.Water.create_input_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_input_matrix</span></code></a></p></td>
+<td><p>creates the input matrix for the system, called B</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.create_output_constants" title="engforge.eng.fluid_material.Water.create_output_constants"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_output_constants</span></code></a></p></td>
+<td><p>creates the input matrix for the system, called O</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.create_output_matrix" title="engforge.eng.fluid_material.Water.create_output_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_output_matrix</span></code></a></p></td>
+<td><p>creates the input matrix for the system, called C</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.create_state_constants" title="engforge.eng.fluid_material.Water.create_state_constants"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_state_constants</span></code></a></p></td>
+<td><p>creates the input matrix for the system, called F</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.create_state_matrix" title="engforge.eng.fluid_material.Water.create_state_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_state_matrix</span></code></a></p></td>
+<td><p>creates the state matrix for the system</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.critical" title="engforge.eng.fluid_material.Water.critical"><code class="xref py py-obj docutils literal notranslate"><span class="pre">critical</span></code></a></p></td>
+<td><p>A routine to communicate to the root of the server network that there is an issue</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.debug" title="engforge.eng.fluid_material.Water.debug"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug</span></code></a></p></td>
+<td><p>Writes at a low level to the log file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.determine_nearest_stationary_state" title="engforge.eng.fluid_material.Water.determine_nearest_stationary_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">determine_nearest_stationary_state</span></code></a></p></td>
+<td><p>determine the nearest stationary state</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.difference" title="engforge.eng.fluid_material.Water.difference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">difference</span></code></a></p></td>
+<td><p>a context manager that will allow you to dynamically change any information, then will change it back in a fail safe way.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.error" title="engforge.eng.fluid_material.Water.error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">error</span></code></a></p></td>
+<td><p>Writes to log as a error</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_message</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.filter" title="engforge.eng.fluid_material.Water.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter</span></code></a></p></td>
+<td><p>This acts as the interface for <cite>logging.Filter</cite> Don't overwrite this, use <cite>add_fields</cite> instead.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">format_columns</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.get_system_input_refs" title="engforge.eng.fluid_material.Water.get_system_input_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_system_input_refs</span></code></a></p></td>
+<td><p>Get the references to system input based on the specified criteria.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.go_through_configurations" title="engforge.eng.fluid_material.Water.go_through_configurations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">go_through_configurations</span></code></a></p></td>
+<td><p>A generator that will go through all internal configurations up to a certain level if levels_to_descend is less than 0 ie(-1) it will go down, if it 0, None, or False it will only go through this configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.info" title="engforge.eng.fluid_material.Water.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a></p></td>
+<td><p>Writes to log but with info category, these are important typically and inform about progress of process in general</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_attrs</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.input_fields" title="engforge.eng.fluid_material.Water.input_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_fields</span></code></a></p></td>
+<td><p>no attr base types, no tuples, no lists, no dicts</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.installSTDLogger" title="engforge.eng.fluid_material.Water.installSTDLogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">installSTDLogger</span></code></a></p></td>
+<td><p>We only want std logging to start</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.internal_components" title="engforge.eng.fluid_material.Water.internal_components"><code class="xref py py-obj docutils literal notranslate"><span class="pre">internal_components</span></code></a></p></td>
+<td><p>get all the internal components</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.internal_configurations" title="engforge.eng.fluid_material.Water.internal_configurations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">internal_configurations</span></code></a></p></td>
+<td><p>go through all attributes determining which are configuration objects additionally this skip any configuration that start with an underscore (private variable)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.internal_references" title="engforge.eng.fluid_material.Water.internal_references"><code class="xref py py-obj docutils literal notranslate"><span class="pre">internal_references</span></code></a></p></td>
+<td><p>get references to all internal attributes and values, only saving when complete cache info is requested (vs numeric only)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.internal_systems" title="engforge.eng.fluid_material.Water.internal_systems"><code class="xref py py-obj docutils literal notranslate"><span class="pre">internal_systems</span></code></a></p></td>
+<td><p>get all the internal components</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.internal_tabulations" title="engforge.eng.fluid_material.Water.internal_tabulations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">internal_tabulations</span></code></a></p></td>
+<td><p>get all the internal tabulations</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.linear_output" title="engforge.eng.fluid_material.Water.linear_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linear_output</span></code></a></p></td>
+<td><p>simulate the system over the course of time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.linear_step" title="engforge.eng.fluid_material.Water.linear_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">linear_step</span></code></a></p></td>
+<td><p>Optimal nonlinear steps</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.locate" title="engforge.eng.fluid_material.Water.locate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">locate</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.locate_ref" title="engforge.eng.fluid_material.Water.locate_ref"><code class="xref py py-obj docutils literal notranslate"><span class="pre">locate_ref</span></code></a></p></td>
+<td><p>Pass a string of a relative var or property on this system or pass a callable to get a reference to a function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.message_with_identiy" title="engforge.eng.fluid_material.Water.message_with_identiy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">message_with_identiy</span></code></a></p></td>
+<td><p>converts to color and string via the termcolor library :type message: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span> :param message: a string convertable entity :type color:  :param color: a color in [grey,red,green,yellow,blue,magenta,cyan,white]</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.msg" title="engforge.eng.fluid_material.Water.msg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msg</span></code></a></p></td>
+<td><p>Writes to log.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.nonlinear_output" title="engforge.eng.fluid_material.Water.nonlinear_output"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nonlinear_output</span></code></a></p></td>
+<td><p>simulate the system over the course of time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.nonlinear_step" title="engforge.eng.fluid_material.Water.nonlinear_step"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nonlinear_step</span></code></a></p></td>
+<td><p>Optimal nonlinear steps</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">numeric_fields</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.parent_configurations_cls" title="engforge.eng.fluid_material.Water.parent_configurations_cls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parent_configurations_cls</span></code></a></p></td>
+<td><p>returns all subclasses that are a Configuration</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.parse_run_kwargs" title="engforge.eng.fluid_material.Water.parse_run_kwargs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_run_kwargs</span></code></a></p></td>
+<td><p>ensures correct input for simulation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.parse_simulation_input" title="engforge.eng.fluid_material.Water.parse_simulation_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parse_simulation_input</span></code></a></p></td>
+<td><p>parses the simulation input</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.plot_attributes" title="engforge.eng.fluid_material.Water.plot_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_attributes</span></code></a></p></td>
+<td><p>Lists all plot attributes for class</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.post_update" title="engforge.eng.fluid_material.Water.post_update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">post_update</span></code></a></p></td>
+<td><p>Kwargs comes from eval_kw in solver</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.pre_compile" title="engforge.eng.fluid_material.Water.pre_compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pre_compile</span></code></a></p></td>
+<td><p>an overrideable classmethod that executes when compiled, however will not execute as a subclass</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">print_info</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.rate" title="engforge.eng.fluid_material.Water.rate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rate</span></code></a></p></td>
+<td><p>simulate the system over the course of time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.rate_linear" title="engforge.eng.fluid_material.Water.rate_linear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rate_linear</span></code></a></p></td>
+<td><p>simulate the system over the course of time.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.rate_nonlinear" title="engforge.eng.fluid_material.Water.rate_nonlinear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rate_nonlinear</span></code></a></p></td>
+<td><p>simulate the system over the course of time.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.ref_dXdt" title="engforge.eng.fluid_material.Water.ref_dXdt"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ref_dXdt</span></code></a></p></td>
+<td><p>returns the reference to the time differential of the state</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.resetLog" title="engforge.eng.fluid_material.Water.resetLog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetLog</span></code></a></p></td>
+<td><p>reset log</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.resetSystemLogs" title="engforge.eng.fluid_material.Water.resetSystemLogs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetSystemLogs</span></code></a></p></td>
+<td><p>resets log on all internal instance LoggingMixins</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_attr</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.set_time" title="engforge.eng.fluid_material.Water.set_time"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_time</span></code></a></p></td>
+<td><p>sets the time of the system and context</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.setattrs" title="engforge.eng.fluid_material.Water.setattrs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setattrs</span></code></a></p></td>
+<td><p>sets attributes from a dictionary</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.signals_attributes" title="engforge.eng.fluid_material.Water.signals_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signals_attributes</span></code></a></p></td>
+<td><p>Lists all signals attributes for class</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">slack_notification</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.slot_refs" title="engforge.eng.fluid_material.Water.slot_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slot_refs</span></code></a></p></td>
+<td><p>returns all slot references in this configuration</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.slots_attributes" title="engforge.eng.fluid_material.Water.slots_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slots_attributes</span></code></a></p></td>
+<td><p>Lists all slots attributes for class</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.smart_split_dataframe" title="engforge.eng.fluid_material.Water.smart_split_dataframe"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smart_split_dataframe</span></code></a></p></td>
+<td><p>splits dataframe between constant values and variants</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.solvers_attributes" title="engforge.eng.fluid_material.Water.solvers_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solvers_attributes</span></code></a></p></td>
+<td><p>Lists all signals attributes for class</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">step</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.subclasses" title="engforge.eng.fluid_material.Water.subclasses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subclasses</span></code></a></p></td>
+<td><p>return all subclasses of components, including their subclasses :type out:  :param out: out is to pass when the middle of a recursive operation, do not use it!</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.subcls_compile" title="engforge.eng.fluid_material.Water.subcls_compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subcls_compile</span></code></a></p></td>
+<td><p>reliably compiles this method even for subclasses, override this to compile functionality for subclass interfaces &amp; mixins</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.system_properties_classdef" title="engforge.eng.fluid_material.Water.system_properties_classdef"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_properties_classdef</span></code></a></p></td>
+<td><p>Combine other parent-classes table properties into this one, in the case of subclassed system_properties</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.system_references" title="engforge.eng.fluid_material.Water.system_references"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_references</span></code></a></p></td>
+<td><p>gather a list of references to attributes and</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">table_fields</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.trace_attributes" title="engforge.eng.fluid_material.Water.trace_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trace_attributes</span></code></a></p></td>
+<td><p>Lists all trace attributes for class</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.transients_attributes" title="engforge.eng.fluid_material.Water.transients_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transients_attributes</span></code></a></p></td>
+<td><p>Lists all signals attributes for class</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.update" title="engforge.eng.fluid_material.Water.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a></p></td>
+<td><p>Kwargs comes from eval_kw in solver</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.update_dynamics" title="engforge.eng.fluid_material.Water.update_dynamics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_dynamics</span></code></a></p></td>
+<td><p>Updates dynamics when nonlinear is enabled, otherwise it will do nothing</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.update_feedthrough" title="engforge.eng.fluid_material.Water.update_feedthrough"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_feedthrough</span></code></a></p></td>
+<td><p>override</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.update_input" title="engforge.eng.fluid_material.Water.update_input"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_input</span></code></a></p></td>
+<td><p>override</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.update_output_constants" title="engforge.eng.fluid_material.Water.update_output_constants"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_output_constants</span></code></a></p></td>
+<td><p>override</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.update_output_matrix" title="engforge.eng.fluid_material.Water.update_output_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_output_matrix</span></code></a></p></td>
+<td><p>override</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.update_state" title="engforge.eng.fluid_material.Water.update_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_state</span></code></a></p></td>
+<td><p>override</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.update_state_constants" title="engforge.eng.fluid_material.Water.update_state_constants"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_state_constants</span></code></a></p></td>
+<td><p>override</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.validate_class" title="engforge.eng.fluid_material.Water.validate_class"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_class</span></code></a></p></td>
+<td><p>A customizeable validator at the end of class creation in forge</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.warning" title="engforge.eng.fluid_material.Water.warning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warning</span></code></a></p></td>
+<td><p>Writes to log as a warning</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Psat</span></code>([fget, fset, fdel, doc])</p></td>
+<td><p>this property notifies the system this is a property to be tabulated in the dataframe output.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">Tsat</span></code>([fget, fset, fdel, doc])</p></td>
+<td><p>this property notifies the system this is a property to be tabulated in the dataframe output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.Ut_ref" title="engforge.eng.fluid_material.Water.Ut_ref"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Ut_ref</span></code></a></p></td>
+<td><p>alias for input values</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.Xt_ref" title="engforge.eng.fluid_material.Water.Xt_ref"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Xt_ref</span></code></a></p></td>
+<td><p>alias for state values</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.Yt_ref" title="engforge.eng.fluid_material.Water.Yt_ref"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Yt_ref</span></code></a></p></td>
+<td><p>alias for output values</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.anything_changed" title="engforge.eng.fluid_material.Water.anything_changed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">anything_changed</span></code></a></p></td>
+<td><p>use the on_setattr method to determine if anything changed, also assume that stat_tab could change without input changes</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.as_dict" title="engforge.eng.fluid_material.Water.as_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_dict</span></code></a></p></td>
+<td><p>returns values as they are in the class instance</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">attrs_fields</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.classname" title="engforge.eng.fluid_material.Water.classname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classname</span></code></a></p></td>
+<td><p>Shorthand for the classname</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.dXtdt_ref" title="engforge.eng.fluid_material.Water.dXtdt_ref"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dXtdt_ref</span></code></a></p></td>
+<td><p>a dictionary of state var rates</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.data_dict" title="engforge.eng.fluid_material.Water.data_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">data_dict</span></code></a></p></td>
+<td><p>this is what is captured and used in each row of the dataframe / table</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dataframe_constants</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dataframe_variants</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">density</span></code>([fget, fset, fdel, doc])</p></td>
+<td><p>this property notifies the system this is a property to be tabulated in the dataframe output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">displayname</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_A</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_B</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_C</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_D</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_F</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_K</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_input</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_input_vars</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_output</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_output_vars</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_state</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dynamic_state_vars</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">enthalpy</span></code>([fget, fset, fdel, doc])</p></td>
+<td><p>this property notifies the system this is a property to be tabulated in the dataframe output.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.filename" title="engforge.eng.fluid_material.Water.filename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filename</span></code></a></p></td>
+<td><p>A nice to have, good to override</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.identity" title="engforge.eng.fluid_material.Water.identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">identity</span></code></a></p></td>
+<td><p>A customizeable property that will be in the log by default</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.input_as_dict" title="engforge.eng.fluid_material.Water.input_as_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_as_dict</span></code></a></p></td>
+<td><p>returns values as they are in the class instance, but converts classes inputs to their input_as_dict</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.last_context" title="engforge.eng.fluid_material.Water.last_context"><code class="xref py py-obj docutils literal notranslate"><span class="pre">last_context</span></code></a></p></td>
+<td><p>get the last context run, or the parent's</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_fmt</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_level</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_on</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_silo</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">material</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">nonlinear</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">numeric_as_dict</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">numeric_hash</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.plotable_variables" title="engforge.eng.fluid_material.Water.plotable_variables"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plotable_variables</span></code></a></p></td>
+<td><p>Checks columns for ones that only contain numeric types or haven't been explicitly skipped</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.skip_plot_vars" title="engforge.eng.fluid_material.Water.skip_plot_vars"><code class="xref py py-obj docutils literal notranslate"><span class="pre">skip_plot_vars</span></code></a></p></td>
+<td><p>accesses '_skip_plot_vars' if it exists, otherwise returns empty list</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">slack_webhook_url</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">specific_heat</span></code>([fget, fset, fdel, doc])</p></td>
+<td><p>this property notifies the system this is a property to be tabulated in the dataframe output.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">state</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">static_A</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">static_B</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">static_C</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">static_D</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">static_F</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">static_K</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">surface_tension</span></code>([fget, fset, fdel, doc])</p></td>
+<td><p>this property notifies the system this is a property to be tabulated in the dataframe output.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.fluid_material.Water.system_id" title="engforge.eng.fluid_material.Water.system_id"><code class="xref py py-obj docutils literal notranslate"><span class="pre">system_id</span></code></a></p></td>
+<td><p>returns an instance unique id based on id(self)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">thermal_conductivity</span></code>([fget, fset, fdel, doc])</p></td>
+<td><p>this property notifies the system this is a property to be tabulated in the dataframe output.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">time</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique_hash</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_interval</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">viscosity</span></code>([fget, fset, fdel, doc])</p></td>
+<td><p>this property notifies the system this is a property to be tabulated in the dataframe output.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">parent</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dataframe</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>)</p></li>
+<li><p><strong>parent</strong> (<a class="reference internal" href="engforge.components.Component.html#engforge.components.Component" title="engforge.components.Component"><em>Component</em></a><em> | </em><a class="reference internal" href="engforge.system.System.html#engforge.system.System" title="engforge.system.System"><em>System</em></a>)</p></li>
+<li><p><strong>P</strong> (<em>float</em>)</p></li>
+<li><p><strong>T</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.Ut_ref">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Ut_ref</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.Ut_ref" title="Link to this definition"></a></dt>
+<dd><p>alias for input values</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.Xt_ref">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Xt_ref</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.Xt_ref" title="Link to this definition"></a></dt>
+<dd><p>alias for state values</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.Yt_ref">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Yt_ref</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.Yt_ref" title="Link to this definition"></a></dt>
+<dd><p>alias for output values</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.__call__" title="Link to this definition"></a></dt>
+<dd><p>calls coolprop module with args adding the material</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.add_fields">
+<span class="sig-name descname"><span class="pre">add_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.add_fields" title="Link to this definition"></a></dt>
+<dd><p>Overwrite this to modify logging fields</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.anything_changed">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">anything_changed</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.anything_changed" title="Link to this definition"></a></dt>
+<dd><p>use the on_setattr method to determine if anything changed,
+also assume that stat_tab could change without input changes</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.as_dict">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">as_dict</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.as_dict" title="Link to this definition"></a></dt>
+<dd><p>returns values as they are in the class instance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.check_ref_slot_type">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_ref_slot_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sys_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.check_ref_slot_type" title="Link to this definition"></a></dt>
+<dd><p>recursively checks class slots for the key, and returns the slot type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>sys_key</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.classname">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classname</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.classname" title="Link to this definition"></a></dt>
+<dd><p>Shorthand for the classname</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.cls_compile">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cls_compile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.cls_compile" title="Link to this definition"></a></dt>
+<dd><p>compiles this class, override this to compile functionality for this class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.collect_all_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">collect_all_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.collect_all_attributes" title="Link to this definition"></a></dt>
+<dd><p>collects all the attributes for a system</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.collect_comp_refs">
+<span class="sig-name descname"><span class="pre">collect_comp_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.collect_comp_refs" title="Link to this definition"></a></dt>
+<dd><p>collects all the references for the system grouped by component</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>conf</strong> (<a class="reference internal" href="engforge.configuration.Configuration.html#engforge.configuration.Configuration" title="engforge.configuration.Configuration"><em>Configuration</em></a><em> | </em><em>None</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.collect_dynamic_refs">
+<span class="sig-name descname"><span class="pre">collect_dynamic_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.collect_dynamic_refs" title="Link to this definition"></a></dt>
+<dd><p>collects the dynamics of the systems
+1. Time.integrate
+2. Dynamic Instances</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>conf</strong> (<a class="reference internal" href="engforge.configuration.Configuration.html#engforge.configuration.Configuration" title="engforge.configuration.Configuration"><em>Configuration</em></a><em> | </em><em>None</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.collect_inst_attributes">
+<span class="sig-name descname"><span class="pre">collect_inst_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.collect_inst_attributes" title="Link to this definition"></a></dt>
+<dd><p>collects all the attributes for a system</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.collect_post_update_refs">
+<span class="sig-name descname"><span class="pre">collect_post_update_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eval_kw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.collect_post_update_refs" title="Link to this definition"></a></dt>
+<dd><p>checks all methods and creates ref’s to execute them later</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.collect_solver_refs">
+<span class="sig-name descname"><span class="pre">collect_solver_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_atr_f</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_kw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_dynamics</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.collect_solver_refs" title="Link to this definition"></a></dt>
+<dd><p>collects all the references for the system grouped by function and prepended with the system key</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>conf</strong> (<a class="reference internal" href="engforge.configuration.Configuration.html#engforge.configuration.Configuration" title="engforge.configuration.Configuration"><em>Configuration</em></a><em> | </em><em>None</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.collect_update_refs">
+<span class="sig-name descname"><span class="pre">collect_update_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">eval_kw</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.collect_update_refs" title="Link to this definition"></a></dt>
+<dd><p>checks all methods and creates ref’s to execute them later</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.comp_references">
+<span class="sig-name descname"><span class="pre">comp_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ignore_none_comp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.comp_references" title="Link to this definition"></a></dt>
+<dd><p>A cached set of recursive references to any slot component
+#FIXME: by instance recache on iterative component change or other signals</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.compile_classes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compile_classes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.compile_classes" title="Link to this definition"></a></dt>
+<dd><p>compiles all subclass functionality</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.copy_config_at_state">
+<span class="sig-name descname"><span class="pre">copy_config_at_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels_deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">changed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.copy_config_at_state" title="Link to this definition"></a></dt>
+<dd><p>copy the system at the current state recrusively to a certain level, by default copying everything
+:type levels_deep: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>
+:param levels_deep: how many levels deep to copy, -1 is all
+:type level: 
+:param level: the current level, defaults to 0 if not set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>levels_deep</strong> (<em>int</em>)</p></li>
+<li><p><strong>changed</strong> (<em>dict</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.create_dynamic_matricies">
+<span class="sig-name descname"><span class="pre">create_dynamic_matricies</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.create_dynamic_matricies" title="Link to this definition"></a></dt>
+<dd><p>creates a dynamics object for the system</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.create_feedthrough_matrix">
+<span class="sig-name descname"><span class="pre">create_feedthrough_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.create_feedthrough_matrix" title="Link to this definition"></a></dt>
+<dd><p>creates the input matrix for the system, called D</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.create_input_matrix">
+<span class="sig-name descname"><span class="pre">create_input_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.create_input_matrix" title="Link to this definition"></a></dt>
+<dd><p>creates the input matrix for the system, called B</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.create_output_constants">
+<span class="sig-name descname"><span class="pre">create_output_constants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.create_output_constants" title="Link to this definition"></a></dt>
+<dd><p>creates the input matrix for the system, called O</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.create_output_matrix">
+<span class="sig-name descname"><span class="pre">create_output_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.create_output_matrix" title="Link to this definition"></a></dt>
+<dd><p>creates the input matrix for the system, called C</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.create_state_constants">
+<span class="sig-name descname"><span class="pre">create_state_constants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.create_state_constants" title="Link to this definition"></a></dt>
+<dd><p>creates the input matrix for the system, called F</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.create_state_matrix">
+<span class="sig-name descname"><span class="pre">create_state_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.create_state_matrix" title="Link to this definition"></a></dt>
+<dd><p>creates the state matrix for the system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.critical">
+<span class="sig-name descname"><span class="pre">critical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.critical" title="Link to this definition"></a></dt>
+<dd><p>A routine to communicate to the root of the server network that there is an issue</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.dXtdt_ref">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dXtdt_ref</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.dXtdt_ref" title="Link to this definition"></a></dt>
+<dd><p>a dictionary of state var rates</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.data_dict">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_dict</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.data_dict" title="Link to this definition"></a></dt>
+<dd><p>this is what is captured and used in each row of the dataframe / table</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.debug">
+<span class="sig-name descname"><span class="pre">debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.debug" title="Link to this definition"></a></dt>
+<dd><p>Writes at a low level to the log file… usually this should
+be detailed messages about what exactly is going on</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.determine_nearest_stationary_state">
+<span class="sig-name descname"><span class="pre">determine_nearest_stationary_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.determine_nearest_stationary_state" title="Link to this definition"></a></dt>
+<dd><p>determine the nearest stationary state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.difference">
+<span class="sig-name descname"><span class="pre">difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.difference" title="Link to this definition"></a></dt>
+<dd><p>a context manager that will allow you to dynamically change any information, then will change it back in a fail safe way.</p>
+<dl class="simple">
+<dt>with self.difference(name=’new_name’, value = new_value) as new_config:</dt><dd><p>#do stuff with config, ok to fail</p>
+</dd>
+</dl>
+<p>you may not access any “private” variable that starts with an <cite>_</cite> as in _whatever</p>
+<p>difference is useful for saving slight differences in configuration in conjunction with solve
+you might create wrappers for eval, or implement a strategy pattern.</p>
+<p>only attributes may be changed.</p>
+<p>#TODO: allow recursive operation with sub comps or systems.
+#TODO: make a full system copy so the system can be reverted later</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.error">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.error" title="Link to this definition"></a></dt>
+<dd><p>Writes to log as a error</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.filename">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filename</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.filename" title="Link to this definition"></a></dt>
+<dd><p>A nice to have, good to override</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.filter" title="Link to this definition"></a></dt>
+<dd><p>This acts as the interface for <cite>logging.Filter</cite>
+Don’t overwrite this, use <cite>add_fields</cite> instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.get_system_input_refs">
+<span class="sig-name descname"><span class="pre">get_system_input_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strings</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">misc</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">all</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boolean</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.get_system_input_refs" title="Link to this definition"></a></dt>
+<dd><p>Get the references to system input based on the specified criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>strings</strong> – Include system properties of string type.</p></li>
+<li><p><strong>numeric</strong> – Include system properties of numeric type (float, int).</p></li>
+<li><p><strong>misc</strong> – Include system properties of miscellaneous type.</p></li>
+<li><p><strong>all</strong> – Include all system properties regardless of type.</p></li>
+<li><p><strong>boolean</strong> – Include system properties of boolean type.</p></li>
+<li><p><strong>kw</strong> – Additional keyword arguments passed to recursive config loop</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary of system property references.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.go_through_configurations">
+<span class="sig-name descname"><span class="pre">go_through_configurations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels_to_descend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_inst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.go_through_configurations" title="Link to this definition"></a></dt>
+<dd><p>A generator that will go through all internal configurations up to a certain level
+if levels_to_descend is less than 0 ie(-1) it will go down, if it 0, None, or False it will
+only go through this configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>level,config</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.identity">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">identity</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.identity" title="Link to this definition"></a></dt>
+<dd><p>A customizeable property that will be in the log by default</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.info" title="Link to this definition"></a></dt>
+<dd><p>Writes to log but with info category, these are important typically
+and inform about progress of process in general</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.input_as_dict">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_as_dict</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.input_as_dict" title="Link to this definition"></a></dt>
+<dd><p>returns values as they are in the class instance, but converts classes inputs to their input_as_dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.input_fields">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">add_ign_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.input_fields" title="Link to this definition"></a></dt>
+<dd><p>no attr base types, no tuples, no lists, no dicts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>add_ign_types</strong> (<em>list</em><em> | </em><em>None</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.installSTDLogger">
+<span class="sig-name descname"><span class="pre">installSTDLogger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.installSTDLogger" title="Link to this definition"></a></dt>
+<dd><p>We only want std logging to start</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.internal_components">
+<span class="sig-name descname"><span class="pre">internal_components</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.internal_components" title="Link to this definition"></a></dt>
+<dd><p>get all the internal components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.internal_configurations">
+<span class="sig-name descname"><span class="pre">internal_configurations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">none_ok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.internal_configurations" title="Link to this definition"></a></dt>
+<dd><p>go through all attributes determining which are configuration objects
+additionally this skip any configuration that start with an underscore (private variable)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.internal_references">
+<span class="sig-name descname"><span class="pre">internal_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.internal_references" title="Link to this definition"></a></dt>
+<dd><p>get references to all internal attributes and values, only saving when complete cache info is requested (vs numeric only)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.internal_systems">
+<span class="sig-name descname"><span class="pre">internal_systems</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.internal_systems" title="Link to this definition"></a></dt>
+<dd><p>get all the internal components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.internal_tabulations">
+<span class="sig-name descname"><span class="pre">internal_tabulations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.internal_tabulations" title="Link to this definition"></a></dt>
+<dd><p>get all the internal tabulations</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.last_context">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">last_context</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.last_context" title="Link to this definition"></a></dt>
+<dd><p>get the last context run, or the parent’s</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.linear_output">
+<span class="sig-name descname"><span class="pre">linear_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.linear_output" title="Link to this definition"></a></dt>
+<dd><p>simulate the system over the course of time. Return time differential of the state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – interval to integrate over in time</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – state input</p></li>
+<li><p><strong>U</strong> (<em>np.ndarray</em>) – control input</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>time differential of the state</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.linear_step">
+<span class="sig-name descname"><span class="pre">linear_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.linear_step" title="Link to this definition"></a></dt>
+<dd><p>Optimal nonlinear steps</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.locate">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">locate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fail</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.locate" title="Link to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">type</span></code></span></p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the class or attribute by key if its in this system class or a subcomponent. If nothing is found raise an error</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.locate_ref">
+<span class="sig-name descname"><span class="pre">locate_ref</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fail</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.locate_ref" title="Link to this definition"></a></dt>
+<dd><p>Pass a string of a relative var or property on this system or pass a callable to get a reference to a function. If the key has a <cite>.</cite> in it the comp the lowest level component will be returned, unless a callable is passed in which case this component will be used or the <cite>comp</cite> passed in the kw will be used.
+:type key: 
+:param key: the key to locate, or a callable to be used as a reference
+:param comp: the component to use if a callable is passed
+:returns: the instance assigned to this system. If the key has a <cite>.</cite> in it the comp the lowest level component will be returned</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.message_with_identiy">
+<span class="sig-name descname"><span class="pre">message_with_identiy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.message_with_identiy" title="Link to this definition"></a></dt>
+<dd><p>converts to color and string via the termcolor library
+:type message: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>
+:param message: a string convertable entity
+:type color: 
+:param color: a color in [grey,red,green,yellow,blue,magenta,cyan,white]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.msg">
+<span class="sig-name descname"><span class="pre">msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lvl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.msg" title="Link to this definition"></a></dt>
+<dd><p>Writes to log… this should be for raw data or something… least priorty</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.nonlinear_output">
+<span class="sig-name descname"><span class="pre">nonlinear_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.nonlinear_output" title="Link to this definition"></a></dt>
+<dd><p>simulate the system over the course of time. Return time differential of the state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – interval to integrate over in time</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – state input</p></li>
+<li><p><strong>U</strong> (<em>np.ndarray</em>) – control input</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>time differential of the state</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.nonlinear_step">
+<span class="sig-name descname"><span class="pre">nonlinear_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">set_Y</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.nonlinear_step" title="Link to this definition"></a></dt>
+<dd><p>Optimal nonlinear steps</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.parent_configurations_cls">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parent_configurations_cls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.parent_configurations_cls" title="Link to this definition"></a></dt>
+<dd><p>returns all subclasses that are a Configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.parse_run_kwargs">
+<span class="sig-name descname"><span class="pre">parse_run_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.parse_run_kwargs" title="Link to this definition"></a></dt>
+<dd><p>ensures correct input for simulation.
+:returns: first set of input for initalization, and all input dictionaries as tuple.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.parse_simulation_input">
+<span class="sig-name descname"><span class="pre">parse_simulation_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.parse_simulation_input" title="Link to this definition"></a></dt>
+<dd><p>parses the simulation input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> – timestep in s, required for transients</p></li>
+<li><p><strong>endtime</strong> – when to end the simulation</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.plot_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plot_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.plot_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all plot attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.plotable_variables">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plotable_variables</span></span><a class="headerlink" href="#engforge.eng.fluid_material.Water.plotable_variables" title="Link to this definition"></a></dt>
+<dd><p>Checks columns for ones that only contain numeric types or haven’t been explicitly skipped</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.post_update">
+<span class="sig-name descname"><span class="pre">post_update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.post_update" title="Link to this definition"></a></dt>
+<dd><p>Kwargs comes from eval_kw in solver</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.pre_compile">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pre_compile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.pre_compile" title="Link to this definition"></a></dt>
+<dd><p>an overrideable classmethod that executes when compiled, however will not execute as a subclass</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.rate">
+<span class="sig-name descname"><span class="pre">rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.rate" title="Link to this definition"></a></dt>
+<dd><p>simulate the system over the course of time.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dt</strong> (<em>float</em>) – interval to integrate over in time</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – state input</p></li>
+<li><p><strong>U</strong> (<em>np.ndarray</em>) – control input</p></li>
+<li><p><strong>subsystems</strong> (<em>bool</em><em>, </em><em>optional</em>) – simulate subsystems. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>tabulated data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dataframe</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.rate_linear">
+<span class="sig-name descname"><span class="pre">rate_linear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.rate_linear" title="Link to this definition"></a></dt>
+<dd><p>simulate the system over the course of time. Return time differential of the state.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.rate_nonlinear">
+<span class="sig-name descname"><span class="pre">rate_nonlinear</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">update</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.rate_nonlinear" title="Link to this definition"></a></dt>
+<dd><p>simulate the system over the course of time. Return time differential of the state.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>t</strong> (<em>float</em>) – time</p></li>
+<li><p><strong>dt</strong> (<em>float</em>) – interval to integrate over in time</p></li>
+<li><p><strong>X</strong> (<em>np.ndarray</em>) – state input</p></li>
+<li><p><strong>U</strong> (<em>np.ndarray</em>) – control input</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>time differential of the state</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.ref_dXdt">
+<span class="sig-name descname"><span class="pre">ref_dXdt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.ref_dXdt" title="Link to this definition"></a></dt>
+<dd><p>returns the reference to the time differential of the state</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.resetLog">
+<span class="sig-name descname"><span class="pre">resetLog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.resetLog" title="Link to this definition"></a></dt>
+<dd><p>reset log</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.resetSystemLogs">
+<span class="sig-name descname"><span class="pre">resetSystemLogs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reseted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.resetSystemLogs" title="Link to this definition"></a></dt>
+<dd><p>resets log on all internal instance LoggingMixins</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.set_time">
+<span class="sig-name descname"><span class="pre">set_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">system</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subcomponents</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.set_time" title="Link to this definition"></a></dt>
+<dd><p>sets the time of the system and context</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.setattrs">
+<span class="sig-name descname"><span class="pre">setattrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.setattrs" title="Link to this definition"></a></dt>
+<dd><p>sets attributes from a dictionary</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.signals_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signals_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.signals_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all signals attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.skip_plot_vars">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">skip_plot_vars</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span></em><a class="headerlink" href="#engforge.eng.fluid_material.Water.skip_plot_vars" title="Link to this definition"></a></dt>
+<dd><p>accesses ‘_skip_plot_vars’ if it exists, otherwise returns empty list</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.slot_refs">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">slot_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.slot_refs" title="Link to this definition"></a></dt>
+<dd><p>returns all slot references in this configuration</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.slots_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">slots_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.slots_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all slots attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.smart_split_dataframe">
+<span class="sig-name descname"><span class="pre">smart_split_dataframe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_groups=0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key_f=&lt;function</span> <span class="pre">&lt;lambda&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.smart_split_dataframe" title="Link to this definition"></a></dt>
+<dd><p>splits dataframe between constant values and variants</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.solvers_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">solvers_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.solvers_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all signals attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.subclasses">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">subclasses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.subclasses" title="Link to this definition"></a></dt>
+<dd><p>return all subclasses of components, including their subclasses
+:type out: 
+:param out: out is to pass when the middle of a recursive operation, do not use it!</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.subcls_compile">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">subcls_compile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.subcls_compile" title="Link to this definition"></a></dt>
+<dd><p>reliably compiles this method even for subclasses, override this to compile functionality for subclass interfaces &amp; mixins</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.system_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">system_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#engforge.eng.fluid_material.Water.system_id" title="Link to this definition"></a></dt>
+<dd><p>returns an instance unique id based on id(self)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.system_properties_classdef">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">system_properties_classdef</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.system_properties_classdef" title="Link to this definition"></a></dt>
+<dd><p>Combine other parent-classes table properties into this one, in the case of subclassed system_properties</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.system_references">
+<span class="sig-name descname"><span class="pre">system_references</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">numeric_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.system_references" title="Link to this definition"></a></dt>
+<dd><p>gather a list of references to attributes and</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.trace_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trace_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.trace_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all trace attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.transients_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transients_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.transients_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all signals attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.update" title="Link to this definition"></a></dt>
+<dd><p>Kwargs comes from eval_kw in solver</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.update_dynamics">
+<span class="sig-name descname"><span class="pre">update_dynamics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.update_dynamics" title="Link to this definition"></a></dt>
+<dd><p>Updates dynamics when nonlinear is enabled, otherwise it will do nothing</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.update_feedthrough">
+<span class="sig-name descname"><span class="pre">update_feedthrough</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.update_feedthrough" title="Link to this definition"></a></dt>
+<dd><p>override</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.update_input">
+<span class="sig-name descname"><span class="pre">update_input</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">B</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">U</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.update_input" title="Link to this definition"></a></dt>
+<dd><p>override</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.update_output_constants">
+<span class="sig-name descname"><span class="pre">update_output_constants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">O</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.update_output_constants" title="Link to this definition"></a></dt>
+<dd><p>override</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.update_output_matrix">
+<span class="sig-name descname"><span class="pre">update_output_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">C</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.update_output_matrix" title="Link to this definition"></a></dt>
+<dd><p>override</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.update_state">
+<span class="sig-name descname"><span class="pre">update_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">A</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.update_state" title="Link to this definition"></a></dt>
+<dd><p>override</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.update_state_constants">
+<span class="sig-name descname"><span class="pre">update_state_constants</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">F</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.update_state_constants" title="Link to this definition"></a></dt>
+<dd><p>override</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.validate_class">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.validate_class" title="Link to this definition"></a></dt>
+<dd><p>A customizeable validator at the end of class creation in forge</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.fluid_material.Water.warning">
+<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.fluid_material.Water.warning" title="Link to this definition"></a></dt>
+<dd><p>Writes to log as a warning</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="engforge.eng.fluid_material.Steam.html" class="btn btn-neutral float-left" title="engforge.eng.fluid_material.Steam" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="engforge.eng.geometry.html" class="btn btn-neutral float-right" title="engforge.eng.geometry" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

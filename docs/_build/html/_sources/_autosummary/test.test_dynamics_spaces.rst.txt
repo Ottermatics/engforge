@@ -1,0 +1,12 @@
+test.test\_dynamics\_spaces
+===========================
+
+.. automodule:: test.test_dynamics_spaces
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      TestDynamics
+   

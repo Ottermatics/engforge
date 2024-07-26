@@ -1,0 +1,114 @@
+engforge.eng.solid\_materials.ANSI\_4130
+========================================
+
+.. currentmodule:: engforge.eng.solid_materials
+
+.. autoclass:: ANSI_4130
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ANSI_4130.add_fields
+      ~ANSI_4130.change_all_log_lvl
+      ~ANSI_4130.check_ref_slot_type
+      ~ANSI_4130.cls_compile
+      ~ANSI_4130.collect_all_attributes
+      ~ANSI_4130.collect_inst_attributes
+      ~ANSI_4130.compile_classes
+      ~ANSI_4130.copy_config_at_state
+      ~ANSI_4130.critical
+      ~ANSI_4130.debug
+      ~ANSI_4130.difference
+      ~ANSI_4130.error
+      ~ANSI_4130.extract_message
+      ~ANSI_4130.filter
+      ~ANSI_4130.go_through_configurations
+      ~ANSI_4130.info
+      ~ANSI_4130.input_attrs
+      ~ANSI_4130.input_fields
+      ~ANSI_4130.installSTDLogger
+      ~ANSI_4130.internal_configurations
+      ~ANSI_4130.message_with_identiy
+      ~ANSI_4130.msg
+      ~ANSI_4130.numeric_fields
+      ~ANSI_4130.parent_configurations_cls
+      ~ANSI_4130.plot_attributes
+      ~ANSI_4130.pre_compile
+      ~ANSI_4130.resetLog
+      ~ANSI_4130.resetSystemLogs
+      ~ANSI_4130.setattrs
+      ~ANSI_4130.signals_attributes
+      ~ANSI_4130.slack_notification
+      ~ANSI_4130.slot_refs
+      ~ANSI_4130.slots_attributes
+      ~ANSI_4130.solvers_attributes
+      ~ANSI_4130.subclasses
+      ~ANSI_4130.subcls_compile
+      ~ANSI_4130.table_fields
+      ~ANSI_4130.trace_attributes
+      ~ANSI_4130.transients_attributes
+      ~ANSI_4130.validate_class
+      ~ANSI_4130.von_mises_stress_max
+      ~ANSI_4130.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ANSI_4130.E
+      ~ANSI_4130.G
+      ~ANSI_4130.allowable_stress
+      ~ANSI_4130.as_dict
+      ~ANSI_4130.attrs_fields
+      ~ANSI_4130.classname
+      ~ANSI_4130.color
+      ~ANSI_4130.displayname
+      ~ANSI_4130.filename
+      ~ANSI_4130.identity
+      ~ANSI_4130.input_as_dict
+      ~ANSI_4130.log_fmt
+      ~ANSI_4130.log_level
+      ~ANSI_4130.log_on
+      ~ANSI_4130.log_silo
+      ~ANSI_4130.logger
+      ~ANSI_4130.nu
+      ~ANSI_4130.numeric_as_dict
+      ~ANSI_4130.numeric_hash
+      ~ANSI_4130.rho
+      ~ANSI_4130.shear_modulus
+      ~ANSI_4130.slack_webhook_url
+      ~ANSI_4130.ultimate_stress
+      ~ANSI_4130.unique_hash
+      ~ANSI_4130.unique_id
+      ~ANSI_4130.yield_stress
+      ~ANSI_4130.name
+      ~ANSI_4130.density
+      ~ANSI_4130.elastic_modulus
+      ~ANSI_4130.yield_strength
+      ~ANSI_4130.tensile_strength_ultimate
+      ~ANSI_4130.poissons_ratio
+      ~ANSI_4130.melting_point
+      ~ANSI_4130.maxium_service_temp
+      ~ANSI_4130.thermal_conductivity
+      ~ANSI_4130.specific_heat
+      ~ANSI_4130.thermal_expansion
+      ~ANSI_4130.electrical_resistitivity
+      ~ANSI_4130.cost_per_kg
+      ~ANSI_4130.in_shear_modulus
+      ~ANSI_4130.hardness
+      ~ANSI_4130.izod
+      ~ANSI_4130.factor_of_saftey
+   
+   

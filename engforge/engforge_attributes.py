@@ -15,6 +15,8 @@ import datetime
 
 import attr, attrs
 
+from  attrs import Attribute
+
 
 class EngAttr(LoggingMixin):
     pass

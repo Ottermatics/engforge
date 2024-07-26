@@ -1,0 +1,44 @@
+engforge.system\_reference.Ref
+==============================
+
+.. currentmodule:: engforge.system_reference
+
+.. autoclass:: Ref
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Ref.copy
+      ~Ref.refset_get
+      ~Ref.refset_input
+      ~Ref.set
+      ~Ref.set_value
+      ~Ref.setup_calls
+      ~Ref.value
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Ref.comp
+      ~Ref.key
+      ~Ref.use_call
+      ~Ref.use_dict
+      ~Ref.allow_set
+      ~Ref.eval_f
+      ~Ref.key_override
+      ~Ref.hxd
+   
+   

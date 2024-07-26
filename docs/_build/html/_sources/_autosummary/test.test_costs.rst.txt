@@ -1,0 +1,16 @@
+test.test\_costs
+================
+
+.. automodule:: test.test_costs
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      TestCategoriesAndTerms
+      TestCostModel
+      TestEconDefaults
+      TestEconomicsAccounting
+      TestFanSystemDataFrame
+   

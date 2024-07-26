@@ -1,0 +1,6 @@
+engforge.patterns.flat2gen
+==========================
+
+.. currentmodule:: engforge.patterns
+
+.. autofunction:: flat2gen

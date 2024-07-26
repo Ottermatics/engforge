@@ -37,7 +37,7 @@ from ray.runtime_context import get_runtime_context
 
 log = logging.getLogger("engforge-gdocs")
 
-GoogleAuth.DEFAULT_SETTINGS["client_config_file"] = google_api_token()
+#TODO: GoogleAuth.DEFAULT_SETTINGS["client_config_file"] = google_api_token()
 
 # Filed will be None until assigned an folder id
 STANDARD_FOLDERS = {

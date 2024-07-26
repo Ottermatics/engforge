@@ -1,0 +1,183 @@
+engforge.eng.fluid\_material.CoolPropMaterial
+=============================================
+
+.. currentmodule:: engforge.eng.fluid_material
+
+.. autoclass:: CoolPropMaterial
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~CoolPropMaterial.add_fields
+      ~CoolPropMaterial.change_all_log_lvl
+      ~CoolPropMaterial.check_ref_slot_type
+      ~CoolPropMaterial.cls_all_attrs_fields
+      ~CoolPropMaterial.cls_all_property_keys
+      ~CoolPropMaterial.cls_all_property_labels
+      ~CoolPropMaterial.cls_compile
+      ~CoolPropMaterial.collect_all_attributes
+      ~CoolPropMaterial.collect_comp_refs
+      ~CoolPropMaterial.collect_dynamic_refs
+      ~CoolPropMaterial.collect_inst_attributes
+      ~CoolPropMaterial.collect_post_update_refs
+      ~CoolPropMaterial.collect_solver_refs
+      ~CoolPropMaterial.collect_update_refs
+      ~CoolPropMaterial.comp_references
+      ~CoolPropMaterial.compile_classes
+      ~CoolPropMaterial.copy_config_at_state
+      ~CoolPropMaterial.create_dynamic_matricies
+      ~CoolPropMaterial.create_feedthrough_matrix
+      ~CoolPropMaterial.create_input_matrix
+      ~CoolPropMaterial.create_output_constants
+      ~CoolPropMaterial.create_output_matrix
+      ~CoolPropMaterial.create_state_constants
+      ~CoolPropMaterial.create_state_matrix
+      ~CoolPropMaterial.critical
+      ~CoolPropMaterial.debug
+      ~CoolPropMaterial.determine_nearest_stationary_state
+      ~CoolPropMaterial.difference
+      ~CoolPropMaterial.error
+      ~CoolPropMaterial.extract_message
+      ~CoolPropMaterial.filter
+      ~CoolPropMaterial.format_columns
+      ~CoolPropMaterial.get_system_input_refs
+      ~CoolPropMaterial.go_through_configurations
+      ~CoolPropMaterial.info
+      ~CoolPropMaterial.input_attrs
+      ~CoolPropMaterial.input_fields
+      ~CoolPropMaterial.installSTDLogger
+      ~CoolPropMaterial.internal_components
+      ~CoolPropMaterial.internal_configurations
+      ~CoolPropMaterial.internal_references
+      ~CoolPropMaterial.internal_systems
+      ~CoolPropMaterial.internal_tabulations
+      ~CoolPropMaterial.linear_output
+      ~CoolPropMaterial.linear_step
+      ~CoolPropMaterial.locate
+      ~CoolPropMaterial.locate_ref
+      ~CoolPropMaterial.message_with_identiy
+      ~CoolPropMaterial.msg
+      ~CoolPropMaterial.nonlinear_output
+      ~CoolPropMaterial.nonlinear_step
+      ~CoolPropMaterial.numeric_fields
+      ~CoolPropMaterial.parent_configurations_cls
+      ~CoolPropMaterial.parse_run_kwargs
+      ~CoolPropMaterial.parse_simulation_input
+      ~CoolPropMaterial.plot_attributes
+      ~CoolPropMaterial.post_update
+      ~CoolPropMaterial.pre_compile
+      ~CoolPropMaterial.print_info
+      ~CoolPropMaterial.rate
+      ~CoolPropMaterial.rate_linear
+      ~CoolPropMaterial.rate_nonlinear
+      ~CoolPropMaterial.ref_dXdt
+      ~CoolPropMaterial.resetLog
+      ~CoolPropMaterial.resetSystemLogs
+      ~CoolPropMaterial.set_attr
+      ~CoolPropMaterial.set_time
+      ~CoolPropMaterial.setattrs
+      ~CoolPropMaterial.signals_attributes
+      ~CoolPropMaterial.slack_notification
+      ~CoolPropMaterial.slot_refs
+      ~CoolPropMaterial.slots_attributes
+      ~CoolPropMaterial.smart_split_dataframe
+      ~CoolPropMaterial.solvers_attributes
+      ~CoolPropMaterial.step
+      ~CoolPropMaterial.subclasses
+      ~CoolPropMaterial.subcls_compile
+      ~CoolPropMaterial.system_properties_classdef
+      ~CoolPropMaterial.system_references
+      ~CoolPropMaterial.table_fields
+      ~CoolPropMaterial.trace_attributes
+      ~CoolPropMaterial.transients_attributes
+      ~CoolPropMaterial.update
+      ~CoolPropMaterial.update_dynamics
+      ~CoolPropMaterial.update_feedthrough
+      ~CoolPropMaterial.update_input
+      ~CoolPropMaterial.update_output_constants
+      ~CoolPropMaterial.update_output_matrix
+      ~CoolPropMaterial.update_state
+      ~CoolPropMaterial.update_state_constants
+      ~CoolPropMaterial.validate_class
+      ~CoolPropMaterial.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CoolPropMaterial.Psat
+      ~CoolPropMaterial.Tsat
+      ~CoolPropMaterial.Ut_ref
+      ~CoolPropMaterial.Xt_ref
+      ~CoolPropMaterial.Yt_ref
+      ~CoolPropMaterial.anything_changed
+      ~CoolPropMaterial.as_dict
+      ~CoolPropMaterial.attrs_fields
+      ~CoolPropMaterial.classname
+      ~CoolPropMaterial.dXtdt_ref
+      ~CoolPropMaterial.data_dict
+      ~CoolPropMaterial.dataframe_constants
+      ~CoolPropMaterial.dataframe_variants
+      ~CoolPropMaterial.density
+      ~CoolPropMaterial.displayname
+      ~CoolPropMaterial.dynamic_A
+      ~CoolPropMaterial.dynamic_B
+      ~CoolPropMaterial.dynamic_C
+      ~CoolPropMaterial.dynamic_D
+      ~CoolPropMaterial.dynamic_F
+      ~CoolPropMaterial.dynamic_K
+      ~CoolPropMaterial.dynamic_input
+      ~CoolPropMaterial.dynamic_input_vars
+      ~CoolPropMaterial.dynamic_output
+      ~CoolPropMaterial.dynamic_output_vars
+      ~CoolPropMaterial.dynamic_state
+      ~CoolPropMaterial.dynamic_state_vars
+      ~CoolPropMaterial.enthalpy
+      ~CoolPropMaterial.filename
+      ~CoolPropMaterial.identity
+      ~CoolPropMaterial.input_as_dict
+      ~CoolPropMaterial.last_context
+      ~CoolPropMaterial.log_fmt
+      ~CoolPropMaterial.log_level
+      ~CoolPropMaterial.log_on
+      ~CoolPropMaterial.log_silo
+      ~CoolPropMaterial.logger
+      ~CoolPropMaterial.nonlinear
+      ~CoolPropMaterial.numeric_as_dict
+      ~CoolPropMaterial.numeric_hash
+      ~CoolPropMaterial.plotable_variables
+      ~CoolPropMaterial.skip_plot_vars
+      ~CoolPropMaterial.slack_webhook_url
+      ~CoolPropMaterial.specific_heat
+      ~CoolPropMaterial.state
+      ~CoolPropMaterial.static_A
+      ~CoolPropMaterial.static_B
+      ~CoolPropMaterial.static_C
+      ~CoolPropMaterial.static_D
+      ~CoolPropMaterial.static_F
+      ~CoolPropMaterial.static_K
+      ~CoolPropMaterial.surface_tension
+      ~CoolPropMaterial.system_id
+      ~CoolPropMaterial.thermal_conductivity
+      ~CoolPropMaterial.time
+      ~CoolPropMaterial.unique_hash
+      ~CoolPropMaterial.update_interval
+      ~CoolPropMaterial.viscosity
+      ~CoolPropMaterial.material
+      ~CoolPropMaterial.parent
+      ~CoolPropMaterial.name
+      ~CoolPropMaterial.dataframe
+   
+   

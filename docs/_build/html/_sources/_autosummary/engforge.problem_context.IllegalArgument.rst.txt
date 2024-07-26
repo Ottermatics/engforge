@@ -1,0 +1,6 @@
+engforge.problem\_context.IllegalArgument
+=========================================
+
+.. currentmodule:: engforge.problem_context
+
+.. autoexception:: IllegalArgument

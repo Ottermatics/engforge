@@ -1,0 +1,189 @@
+engforge.eng.fluid\_material.AirWaterMix
+========================================
+
+.. currentmodule:: engforge.eng.fluid_material
+
+.. autoclass:: AirWaterMix
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~AirWaterMix.add_fields
+      ~AirWaterMix.change_all_log_lvl
+      ~AirWaterMix.check_ref_slot_type
+      ~AirWaterMix.cls_all_attrs_fields
+      ~AirWaterMix.cls_all_property_keys
+      ~AirWaterMix.cls_all_property_labels
+      ~AirWaterMix.cls_compile
+      ~AirWaterMix.collect_all_attributes
+      ~AirWaterMix.collect_comp_refs
+      ~AirWaterMix.collect_dynamic_refs
+      ~AirWaterMix.collect_inst_attributes
+      ~AirWaterMix.collect_post_update_refs
+      ~AirWaterMix.collect_solver_refs
+      ~AirWaterMix.collect_update_refs
+      ~AirWaterMix.comp_references
+      ~AirWaterMix.compile_classes
+      ~AirWaterMix.copy_config_at_state
+      ~AirWaterMix.create_dynamic_matricies
+      ~AirWaterMix.create_feedthrough_matrix
+      ~AirWaterMix.create_input_matrix
+      ~AirWaterMix.create_output_constants
+      ~AirWaterMix.create_output_matrix
+      ~AirWaterMix.create_state_constants
+      ~AirWaterMix.create_state_matrix
+      ~AirWaterMix.critical
+      ~AirWaterMix.debug
+      ~AirWaterMix.determine_nearest_stationary_state
+      ~AirWaterMix.difference
+      ~AirWaterMix.error
+      ~AirWaterMix.extract_message
+      ~AirWaterMix.filter
+      ~AirWaterMix.format_columns
+      ~AirWaterMix.get_system_input_refs
+      ~AirWaterMix.go_through_configurations
+      ~AirWaterMix.info
+      ~AirWaterMix.input_attrs
+      ~AirWaterMix.input_fields
+      ~AirWaterMix.installSTDLogger
+      ~AirWaterMix.internal_components
+      ~AirWaterMix.internal_configurations
+      ~AirWaterMix.internal_references
+      ~AirWaterMix.internal_systems
+      ~AirWaterMix.internal_tabulations
+      ~AirWaterMix.linear_output
+      ~AirWaterMix.linear_step
+      ~AirWaterMix.locate
+      ~AirWaterMix.locate_ref
+      ~AirWaterMix.message_with_identiy
+      ~AirWaterMix.msg
+      ~AirWaterMix.nonlinear_output
+      ~AirWaterMix.nonlinear_step
+      ~AirWaterMix.numeric_fields
+      ~AirWaterMix.parent_configurations_cls
+      ~AirWaterMix.parse_run_kwargs
+      ~AirWaterMix.parse_simulation_input
+      ~AirWaterMix.plot_attributes
+      ~AirWaterMix.post_update
+      ~AirWaterMix.pre_compile
+      ~AirWaterMix.print_info
+      ~AirWaterMix.rate
+      ~AirWaterMix.rate_linear
+      ~AirWaterMix.rate_nonlinear
+      ~AirWaterMix.ref_dXdt
+      ~AirWaterMix.resetLog
+      ~AirWaterMix.resetSystemLogs
+      ~AirWaterMix.set_attr
+      ~AirWaterMix.set_time
+      ~AirWaterMix.setattrs
+      ~AirWaterMix.setup
+      ~AirWaterMix.signals_attributes
+      ~AirWaterMix.slack_notification
+      ~AirWaterMix.slot_refs
+      ~AirWaterMix.slots_attributes
+      ~AirWaterMix.smart_split_dataframe
+      ~AirWaterMix.solvers_attributes
+      ~AirWaterMix.step
+      ~AirWaterMix.subclasses
+      ~AirWaterMix.subcls_compile
+      ~AirWaterMix.system_properties_classdef
+      ~AirWaterMix.system_references
+      ~AirWaterMix.table_fields
+      ~AirWaterMix.trace_attributes
+      ~AirWaterMix.transients_attributes
+      ~AirWaterMix.update
+      ~AirWaterMix.update_dynamics
+      ~AirWaterMix.update_feedthrough
+      ~AirWaterMix.update_input
+      ~AirWaterMix.update_mass_ratios
+      ~AirWaterMix.update_output_constants
+      ~AirWaterMix.update_output_matrix
+      ~AirWaterMix.update_state
+      ~AirWaterMix.update_state_constants
+      ~AirWaterMix.validate_class
+      ~AirWaterMix.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AirWaterMix.Mmass1
+      ~AirWaterMix.Mmass2
+      ~AirWaterMix.Psat
+      ~AirWaterMix.Tsat
+      ~AirWaterMix.Ut_ref
+      ~AirWaterMix.Xt_ref
+      ~AirWaterMix.Yt_ref
+      ~AirWaterMix.anything_changed
+      ~AirWaterMix.as_dict
+      ~AirWaterMix.attrs_fields
+      ~AirWaterMix.classname
+      ~AirWaterMix.dXtdt_ref
+      ~AirWaterMix.data_dict
+      ~AirWaterMix.dataframe_constants
+      ~AirWaterMix.dataframe_variants
+      ~AirWaterMix.density
+      ~AirWaterMix.displayname
+      ~AirWaterMix.dynamic_A
+      ~AirWaterMix.dynamic_B
+      ~AirWaterMix.dynamic_C
+      ~AirWaterMix.dynamic_D
+      ~AirWaterMix.dynamic_F
+      ~AirWaterMix.dynamic_K
+      ~AirWaterMix.dynamic_input
+      ~AirWaterMix.dynamic_input_vars
+      ~AirWaterMix.dynamic_output
+      ~AirWaterMix.dynamic_output_vars
+      ~AirWaterMix.dynamic_state
+      ~AirWaterMix.dynamic_state_vars
+      ~AirWaterMix.enthalpy
+      ~AirWaterMix.filename
+      ~AirWaterMix.identity
+      ~AirWaterMix.input_as_dict
+      ~AirWaterMix.last_context
+      ~AirWaterMix.log_fmt
+      ~AirWaterMix.log_level
+      ~AirWaterMix.log_on
+      ~AirWaterMix.log_silo
+      ~AirWaterMix.logger
+      ~AirWaterMix.materail2
+      ~AirWaterMix.material
+      ~AirWaterMix.material1
+      ~AirWaterMix.nonlinear
+      ~AirWaterMix.numeric_as_dict
+      ~AirWaterMix.numeric_hash
+      ~AirWaterMix.plotable_variables
+      ~AirWaterMix.skip_plot_vars
+      ~AirWaterMix.slack_webhook_url
+      ~AirWaterMix.specific_heat
+      ~AirWaterMix.state
+      ~AirWaterMix.static_A
+      ~AirWaterMix.static_B
+      ~AirWaterMix.static_C
+      ~AirWaterMix.static_D
+      ~AirWaterMix.static_F
+      ~AirWaterMix.static_K
+      ~AirWaterMix.surface_tension
+      ~AirWaterMix.system_id
+      ~AirWaterMix.thermal_conductivity
+      ~AirWaterMix.time
+      ~AirWaterMix.unique_hash
+      ~AirWaterMix.update_interval
+      ~AirWaterMix.viscosity
+      ~AirWaterMix.parent
+      ~AirWaterMix.name
+      ~AirWaterMix.dataframe
+   
+   

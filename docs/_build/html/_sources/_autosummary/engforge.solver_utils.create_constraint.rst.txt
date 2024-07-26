@@ -1,0 +1,6 @@
+engforge.solver\_utils.create\_constraint
+=========================================
+
+.. currentmodule:: engforge.solver_utils
+
+.. autofunction:: create_constraint

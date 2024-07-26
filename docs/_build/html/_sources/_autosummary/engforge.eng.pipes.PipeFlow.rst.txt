@@ -1,0 +1,190 @@
+engforge.eng.pipes.PipeFlow
+===========================
+
+.. currentmodule:: engforge.eng.pipes
+
+.. autoclass:: PipeFlow
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~PipeFlow.add_fields
+      ~PipeFlow.change_all_log_lvl
+      ~PipeFlow.check_ref_slot_type
+      ~PipeFlow.cls_all_attrs_fields
+      ~PipeFlow.cls_all_property_keys
+      ~PipeFlow.cls_all_property_labels
+      ~PipeFlow.cls_compile
+      ~PipeFlow.collect_all_attributes
+      ~PipeFlow.collect_comp_refs
+      ~PipeFlow.collect_dynamic_refs
+      ~PipeFlow.collect_inst_attributes
+      ~PipeFlow.collect_post_update_refs
+      ~PipeFlow.collect_solver_refs
+      ~PipeFlow.collect_update_refs
+      ~PipeFlow.comp_references
+      ~PipeFlow.compile_classes
+      ~PipeFlow.copy_config_at_state
+      ~PipeFlow.create_dynamic_matricies
+      ~PipeFlow.create_feedthrough_matrix
+      ~PipeFlow.create_input_matrix
+      ~PipeFlow.create_output_constants
+      ~PipeFlow.create_output_matrix
+      ~PipeFlow.create_state_constants
+      ~PipeFlow.create_state_matrix
+      ~PipeFlow.critical
+      ~PipeFlow.debug
+      ~PipeFlow.determine_nearest_stationary_state
+      ~PipeFlow.difference
+      ~PipeFlow.error
+      ~PipeFlow.extract_message
+      ~PipeFlow.filter
+      ~PipeFlow.format_columns
+      ~PipeFlow.get_system_input_refs
+      ~PipeFlow.go_through_configurations
+      ~PipeFlow.info
+      ~PipeFlow.input_attrs
+      ~PipeFlow.input_fields
+      ~PipeFlow.installSTDLogger
+      ~PipeFlow.internal_components
+      ~PipeFlow.internal_configurations
+      ~PipeFlow.internal_references
+      ~PipeFlow.internal_systems
+      ~PipeFlow.internal_tabulations
+      ~PipeFlow.linear_output
+      ~PipeFlow.linear_step
+      ~PipeFlow.locate
+      ~PipeFlow.locate_ref
+      ~PipeFlow.message_with_identiy
+      ~PipeFlow.msg
+      ~PipeFlow.nonlinear_output
+      ~PipeFlow.nonlinear_step
+      ~PipeFlow.numeric_fields
+      ~PipeFlow.parent_configurations_cls
+      ~PipeFlow.parse_run_kwargs
+      ~PipeFlow.parse_simulation_input
+      ~PipeFlow.plot_attributes
+      ~PipeFlow.post_update
+      ~PipeFlow.pre_compile
+      ~PipeFlow.print_info
+      ~PipeFlow.rate
+      ~PipeFlow.rate_linear
+      ~PipeFlow.rate_nonlinear
+      ~PipeFlow.ref_dXdt
+      ~PipeFlow.resetLog
+      ~PipeFlow.resetSystemLogs
+      ~PipeFlow.set_attr
+      ~PipeFlow.set_flow
+      ~PipeFlow.set_time
+      ~PipeFlow.setattrs
+      ~PipeFlow.signals_attributes
+      ~PipeFlow.slack_notification
+      ~PipeFlow.slot_refs
+      ~PipeFlow.slots_attributes
+      ~PipeFlow.smart_split_dataframe
+      ~PipeFlow.solvers_attributes
+      ~PipeFlow.step
+      ~PipeFlow.subclasses
+      ~PipeFlow.subcls_compile
+      ~PipeFlow.system_properties_classdef
+      ~PipeFlow.system_references
+      ~PipeFlow.table_fields
+      ~PipeFlow.trace_attributes
+      ~PipeFlow.transients_attributes
+      ~PipeFlow.update
+      ~PipeFlow.update_dynamics
+      ~PipeFlow.update_feedthrough
+      ~PipeFlow.update_input
+      ~PipeFlow.update_output_constants
+      ~PipeFlow.update_output_matrix
+      ~PipeFlow.update_state
+      ~PipeFlow.update_state_constants
+      ~PipeFlow.validate_class
+      ~PipeFlow.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PipeFlow.A
+      ~PipeFlow.C
+      ~PipeFlow.Fvec
+      ~PipeFlow.Mf
+      ~PipeFlow.P
+      ~PipeFlow.Q
+      ~PipeFlow.T
+      ~PipeFlow.Ut_ref
+      ~PipeFlow.Xt_ref
+      ~PipeFlow.Yt_ref
+      ~PipeFlow.anything_changed
+      ~PipeFlow.as_dict
+      ~PipeFlow.attrs_fields
+      ~PipeFlow.classname
+      ~PipeFlow.dP_f
+      ~PipeFlow.dP_p
+      ~PipeFlow.dP_tot
+      ~PipeFlow.dXtdt_ref
+      ~PipeFlow.data_dict
+      ~PipeFlow.dataframe_constants
+      ~PipeFlow.dataframe_variants
+      ~PipeFlow.density
+      ~PipeFlow.displayname
+      ~PipeFlow.dynamic_A
+      ~PipeFlow.dynamic_B
+      ~PipeFlow.dynamic_C
+      ~PipeFlow.dynamic_D
+      ~PipeFlow.dynamic_F
+      ~PipeFlow.dynamic_K
+      ~PipeFlow.dynamic_input
+      ~PipeFlow.dynamic_input_vars
+      ~PipeFlow.dynamic_output
+      ~PipeFlow.dynamic_output_vars
+      ~PipeFlow.dynamic_state
+      ~PipeFlow.dynamic_state_vars
+      ~PipeFlow.enthalpy
+      ~PipeFlow.filename
+      ~PipeFlow.identity
+      ~PipeFlow.input_as_dict
+      ~PipeFlow.last_context
+      ~PipeFlow.log_fmt
+      ~PipeFlow.log_level
+      ~PipeFlow.log_on
+      ~PipeFlow.log_silo
+      ~PipeFlow.logger
+      ~PipeFlow.nonlinear
+      ~PipeFlow.numeric_as_dict
+      ~PipeFlow.numeric_hash
+      ~PipeFlow.plotable_variables
+      ~PipeFlow.reynoldsNumber
+      ~PipeFlow.skip_plot_vars
+      ~PipeFlow.slack_webhook_url
+      ~PipeFlow.static_A
+      ~PipeFlow.static_B
+      ~PipeFlow.static_C
+      ~PipeFlow.static_D
+      ~PipeFlow.static_F
+      ~PipeFlow.static_K
+      ~PipeFlow.system_id
+      ~PipeFlow.time
+      ~PipeFlow.unique_hash
+      ~PipeFlow.update_interval
+      ~PipeFlow.viscosity
+      ~PipeFlow.D
+      ~PipeFlow.v
+      ~PipeFlow.parent
+      ~PipeFlow.name
+      ~PipeFlow.dataframe
+   
+   

@@ -1,0 +1,179 @@
+engforge.eng.pipes.PipeNode
+===========================
+
+.. currentmodule:: engforge.eng.pipes
+
+.. autoclass:: PipeNode
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~PipeNode.add_fields
+      ~PipeNode.add_segment
+      ~PipeNode.change_all_log_lvl
+      ~PipeNode.check_ref_slot_type
+      ~PipeNode.cls_all_attrs_fields
+      ~PipeNode.cls_all_property_keys
+      ~PipeNode.cls_all_property_labels
+      ~PipeNode.cls_compile
+      ~PipeNode.collect_all_attributes
+      ~PipeNode.collect_comp_refs
+      ~PipeNode.collect_dynamic_refs
+      ~PipeNode.collect_inst_attributes
+      ~PipeNode.collect_post_update_refs
+      ~PipeNode.collect_solver_refs
+      ~PipeNode.collect_update_refs
+      ~PipeNode.comp_references
+      ~PipeNode.compile_classes
+      ~PipeNode.copy_config_at_state
+      ~PipeNode.create_dynamic_matricies
+      ~PipeNode.create_feedthrough_matrix
+      ~PipeNode.create_input_matrix
+      ~PipeNode.create_output_constants
+      ~PipeNode.create_output_matrix
+      ~PipeNode.create_state_constants
+      ~PipeNode.create_state_matrix
+      ~PipeNode.critical
+      ~PipeNode.debug
+      ~PipeNode.determine_nearest_stationary_state
+      ~PipeNode.difference
+      ~PipeNode.error
+      ~PipeNode.extract_message
+      ~PipeNode.filter
+      ~PipeNode.format_columns
+      ~PipeNode.get_system_input_refs
+      ~PipeNode.go_through_configurations
+      ~PipeNode.info
+      ~PipeNode.input_attrs
+      ~PipeNode.input_fields
+      ~PipeNode.installSTDLogger
+      ~PipeNode.internal_components
+      ~PipeNode.internal_configurations
+      ~PipeNode.internal_references
+      ~PipeNode.internal_systems
+      ~PipeNode.internal_tabulations
+      ~PipeNode.linear_output
+      ~PipeNode.linear_step
+      ~PipeNode.locate
+      ~PipeNode.locate_ref
+      ~PipeNode.message_with_identiy
+      ~PipeNode.msg
+      ~PipeNode.nonlinear_output
+      ~PipeNode.nonlinear_step
+      ~PipeNode.numeric_fields
+      ~PipeNode.parent_configurations_cls
+      ~PipeNode.parse_run_kwargs
+      ~PipeNode.parse_simulation_input
+      ~PipeNode.plot_attributes
+      ~PipeNode.post_update
+      ~PipeNode.pre_compile
+      ~PipeNode.print_info
+      ~PipeNode.rate
+      ~PipeNode.rate_linear
+      ~PipeNode.rate_nonlinear
+      ~PipeNode.ref_dXdt
+      ~PipeNode.resetLog
+      ~PipeNode.resetSystemLogs
+      ~PipeNode.set_attr
+      ~PipeNode.set_time
+      ~PipeNode.setattrs
+      ~PipeNode.signals_attributes
+      ~PipeNode.slack_notification
+      ~PipeNode.slot_refs
+      ~PipeNode.slots_attributes
+      ~PipeNode.smart_split_dataframe
+      ~PipeNode.solvers_attributes
+      ~PipeNode.step
+      ~PipeNode.subclasses
+      ~PipeNode.subcls_compile
+      ~PipeNode.system_properties_classdef
+      ~PipeNode.system_references
+      ~PipeNode.table_fields
+      ~PipeNode.trace_attributes
+      ~PipeNode.transients_attributes
+      ~PipeNode.update
+      ~PipeNode.update_dynamics
+      ~PipeNode.update_feedthrough
+      ~PipeNode.update_input
+      ~PipeNode.update_output_constants
+      ~PipeNode.update_output_matrix
+      ~PipeNode.update_state
+      ~PipeNode.update_state_constants
+      ~PipeNode.validate_class
+      ~PipeNode.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PipeNode.Ut_ref
+      ~PipeNode.Xt_ref
+      ~PipeNode.Yt_ref
+      ~PipeNode.anything_changed
+      ~PipeNode.as_dict
+      ~PipeNode.attrs_fields
+      ~PipeNode.classname
+      ~PipeNode.dXtdt_ref
+      ~PipeNode.data_dict
+      ~PipeNode.dataframe_constants
+      ~PipeNode.dataframe_variants
+      ~PipeNode.displayname
+      ~PipeNode.dynamic_A
+      ~PipeNode.dynamic_B
+      ~PipeNode.dynamic_C
+      ~PipeNode.dynamic_D
+      ~PipeNode.dynamic_F
+      ~PipeNode.dynamic_K
+      ~PipeNode.dynamic_input
+      ~PipeNode.dynamic_input_vars
+      ~PipeNode.dynamic_output
+      ~PipeNode.dynamic_output_vars
+      ~PipeNode.dynamic_state
+      ~PipeNode.dynamic_state_vars
+      ~PipeNode.filename
+      ~PipeNode.identity
+      ~PipeNode.input_as_dict
+      ~PipeNode.last_context
+      ~PipeNode.log_fmt
+      ~PipeNode.log_level
+      ~PipeNode.log_on
+      ~PipeNode.log_silo
+      ~PipeNode.logger
+      ~PipeNode.nonlinear
+      ~PipeNode.numeric_as_dict
+      ~PipeNode.numeric_hash
+      ~PipeNode.plotable_variables
+      ~PipeNode.segments
+      ~PipeNode.skip_plot_vars
+      ~PipeNode.slack_webhook_url
+      ~PipeNode.static_A
+      ~PipeNode.static_B
+      ~PipeNode.static_C
+      ~PipeNode.static_D
+      ~PipeNode.static_F
+      ~PipeNode.static_K
+      ~PipeNode.sum_of_flows
+      ~PipeNode.system_id
+      ~PipeNode.time
+      ~PipeNode.unique_hash
+      ~PipeNode.update_interval
+      ~PipeNode.x
+      ~PipeNode.y
+      ~PipeNode.z
+      ~PipeNode.parent
+      ~PipeNode.name
+      ~PipeNode.dataframe
+   
+   

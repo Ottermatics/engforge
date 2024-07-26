@@ -1,0 +1,6 @@
+engforge.solver\_utils.ext\_str\_list
+=====================================
+
+.. currentmodule:: engforge.solver_utils
+
+.. autofunction:: ext_str_list

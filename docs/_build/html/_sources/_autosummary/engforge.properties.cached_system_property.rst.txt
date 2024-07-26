@@ -1,0 +1,41 @@
+engforge.properties.cached\_system\_property
+============================================
+
+.. currentmodule:: engforge.properties
+
+.. autoclass:: cached_system_property
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~cached_system_property.deleter
+      ~cached_system_property.get_func_return
+      ~cached_system_property.getter
+      ~cached_system_property.set_cache
+      ~cached_system_property.setter
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~cached_system_property.desc
+      ~cached_system_property.label
+      ~cached_system_property.must_return
+      ~cached_system_property.private_var
+      ~cached_system_property.return_type
+      ~cached_system_property.stochastic
+      ~cached_system_property.gname
+   
+   

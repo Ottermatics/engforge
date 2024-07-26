@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.properties &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/test.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.properties</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.properties</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Like typical python properties, normal functions are embelished with additional functionality.</span>
+
+<span class="sd">`system_properties` is a core function that adds meta information to a normal python property to include its output in the results. It is the &quot;y&quot; in y=f(x).</span>
+
+<span class="sd">`class_cache` a subclassing safe property that stores the result at runtime</span>
+
+<span class="sd">`solver_cache` a property that is recalculated any time there is an update to any attrs variable.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">engforge.logging</span> <span class="kn">import</span> <span class="n">LoggingMixin</span>
+<span class="kn">from</span> <span class="nn">engforge.typing</span> <span class="kn">import</span> <span class="n">TABLE_TYPES</span>
+
+<span class="n">IS_BUILD</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;SPHINX_BUILD&#39;</span><span class="p">,</span><span class="s1">&#39;false&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;true&#39;</span>
+
+
+<div class="viewcode-block" id="PropertyLog">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.PropertyLog.html#engforge.properties.PropertyLog">[docs]</a>
+<span class="k">class</span> <span class="nc">PropertyLog</span><span class="p">(</span><span class="n">LoggingMixin</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">PropertyLog</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="engforge_prop">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.engforge_prop.html#engforge.properties.engforge_prop">[docs]</a>
+<span class="k">class</span> <span class="nc">engforge_prop</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;an interface for extension and identification and class return support&quot;&quot;&quot;</span>
+
+    <span class="n">must_return</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fdel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="o">=</span> <span class="n">fget</span>
+        <span class="k">if</span> <span class="n">fget</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gname</span> <span class="o">=</span> <span class="n">fget</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_func_return</span><span class="p">(</span><span class="n">fget</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="o">=</span> <span class="n">fset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span> <span class="o">=</span> <span class="n">fdel</span>
+
+<div class="viewcode-block" id="engforge_prop.__call__">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.engforge_prop.html#engforge.properties.engforge_prop.__call__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">fget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fdel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;this will be called when input is provided before property is set&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fget</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">gname</span> <span class="o">=</span> <span class="n">fget</span><span class="o">.</span><span class="vm">__name__</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_func_return</span><span class="p">(</span><span class="n">fget</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="o">=</span> <span class="n">fget</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="o">=</span> <span class="n">fset</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span> <span class="o">=</span> <span class="n">fdel</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="engforge_prop.get_func_return">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.engforge_prop.html#engforge.properties.engforge_prop.get_func_return">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_func_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ensures that the function has a return annotation, and that return annotation is in valid sort types&quot;&quot;&quot;</span>
+        <span class="n">anno</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__annotations__</span>
+        <span class="n">typ</span> <span class="o">=</span> <span class="n">anno</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">typ</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">must_return</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;system_property input: function </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must have valid return annotation of type: </span><span class="si">{</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">return_type</span> <span class="o">=</span> <span class="n">typ</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">objtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>  <span class="c1"># class support</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;unreadable attribute&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;can&#39;t set attribute&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fset</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__delete__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;can&#39;t delete attribute&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fget</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">fget</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fset</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">,</span> <span class="n">fset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">deleter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fdel</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span><span class="p">,</span> <span class="n">fdel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="cache_prop">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.cache_prop.html#engforge.properties.cache_prop">[docs]</a>
+<span class="k">class</span> <span class="nc">cache_prop</span><span class="p">(</span><span class="n">engforge_prop</span><span class="p">):</span>
+    <span class="n">allow_set</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="kc">False</span>  <span class="c1"># keep this flag false to maintain current persistent value</span>
+    <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">allow_set</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">allow_set</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_cache</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;change&quot;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">value</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cannot set </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span>
+            <span class="s2">&quot;cache_prop must be subclassed and set_cache method defined&quot;</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="system_property">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.system_property.html#engforge.properties.system_property">[docs]</a>
+<span class="k">class</span> <span class="nc">system_property</span><span class="p">(</span><span class="n">engforge_prop</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    this property notifies the system this is a property to be tabulated in the dataframe output.</span>
+
+<span class="sd">    @system_property</span>
+<span class="sd">    def function(...): &lt; this uses __init__ to assign function</span>
+
+<span class="sd">    @system_property(desc=&#39;really nice&#39;,label=&#39;funky function&#39;)</span>
+<span class="sd">    def function(...):    &lt; this uses __call__ to assign function</span>
+
+<span class="sd">    When the underlying data has some random element, set stochastic=True and this will flag the component to always save data.</span>
+
+<span class="sd">    Functions wrapped with table type must have an return annotion of (int,float,str)... ex def func() -&gt; int:</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">desc</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">label</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">stochastic</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">get_func_return</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">return_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">must_return</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">fget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">fdel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">desc</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">stochastic</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;You can initalize just the functions, or precreate the object but with meta</span>
+<span class="sd">        @system_property</span>
+<span class="sd">        def function(...): &lt; this uses __init__ to assign function</span>
+
+<span class="sd">        @system_property(desc=&#39;really nice&#39;,label=&#39;funky function&#39;)</span>
+<span class="sd">        def function(...):    &lt; this uses __call__ to assign function</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="o">=</span> <span class="n">fget</span>
+        <span class="k">if</span> <span class="n">fget</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_func_return</span><span class="p">(</span><span class="n">fget</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="o">=</span> <span class="n">fset</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span> <span class="o">=</span> <span class="n">fdel</span>
+        <span class="k">if</span> <span class="n">doc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">doc</span> <span class="o">=</span> <span class="n">fget</span><span class="o">.</span><span class="vm">__doc__</span>
+        <span class="k">elif</span> <span class="n">doc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">doc</span>
+
+        <span class="k">if</span> <span class="n">desc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">desc</span> <span class="o">=</span> <span class="n">desc</span>
+
+        <span class="k">if</span> <span class="n">label</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">label</span>
+        <span class="k">elif</span> <span class="n">fget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">fget</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="c1"># Set random flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stochastic</span> <span class="o">=</span> <span class="n">stochastic</span>
+
+<div class="viewcode-block" id="system_property.__call__">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.system_property.html#engforge.properties.system_property.__call__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fget</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fset</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fdel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;this will be called when input is provided before property is set&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">fget</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">get_func_return</span><span class="p">(</span><span class="n">fget</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="o">=</span> <span class="n">fget</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="o">=</span> <span class="n">fset</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span> <span class="o">=</span> <span class="n">fdel</span>
+
+        <span class="k">if</span> <span class="n">doc</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">doc</span> <span class="o">=</span> <span class="n">fget</span><span class="o">.</span><span class="vm">__doc__</span>
+        <span class="k">elif</span> <span class="n">doc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span> <span class="o">=</span> <span class="n">doc</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">fget</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">label</span> <span class="o">=</span> <span class="n">fget</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="system_property.get_func_return">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.system_property.html#engforge.properties.system_property.get_func_return">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_func_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ensures that the function has a return annotation, and that return annotation is in valid sort types&quot;&quot;&quot;</span>
+        <span class="n">anno</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__annotations__</span>
+        <span class="n">typ</span> <span class="o">=</span> <span class="n">anno</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">typ</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;system_property input: function </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must have valid return annotation of type: </span><span class="si">{</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">return_type</span> <span class="o">=</span> <span class="n">typ</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">objtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">obj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>  <span class="c1"># class support</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;unreadable attribute&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__set__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;can&#39;t set attribute&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fset</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__delete__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="s2">&quot;can&#39;t delete attribute&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">getter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fget</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="n">fget</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">setter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fset</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">,</span> <span class="n">fset</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fdel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">deleter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fdel</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)(</span><span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fset</span><span class="p">,</span> <span class="n">fdel</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__doc__</span><span class="p">)</span></div>
+
+<span class="c1">#aliases</span>
+<span class="n">sys_prop</span> <span class="o">=</span> <span class="n">system_property</span>
+<span class="n">system_prop</span> <span class="o">=</span> <span class="n">system_property</span>
+
+
+<div class="viewcode-block" id="cached_system_property">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.cached_system_property.html#engforge.properties.cached_system_property">[docs]</a>
+<span class="k">class</span> <span class="nc">cached_system_property</span><span class="p">(</span><span class="n">system_property</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A system property that caches the result when nothing changes. Use for expensive functions since the checking adds some overhead&quot;&quot;&quot;</span>
+
+    <span class="n">gname</span><span class="p">:</span> <span class="nb">str</span>
+
+<div class="viewcode-block" id="cached_system_property.get_func_return">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.cached_system_property.html#engforge.properties.cached_system_property.get_func_return">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_func_return</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;ensures that the function has a return annotation, and that return annotation is in valid sort types&quot;&quot;&quot;</span>
+        <span class="n">anno</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="vm">__annotations__</span>
+        <span class="n">typ</span> <span class="o">=</span> <span class="n">anno</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;return&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">typ</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;system_property input: function </span><span class="si">{</span><span class="n">func</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> must have valid return annotation of type: </span><span class="si">{</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="nb">str</span><span class="p">,</span><span class="nb">float</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">return_type</span> <span class="o">=</span> <span class="n">typ</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">private_var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="s2">&quot;TabulationMixin&quot;</span><span class="p">,</span> <span class="n">objtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">instance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">IS_BUILD</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">engforge.tabulation</span> <span class="kn">import</span> <span class="n">TabulationMixin</span>
+
+            <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span>
+                <span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">TabulationMixin</span>
+            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;incorrect class: </span><span class="si">{</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_cache</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">instance</span><span class="o">.</span><span class="n">anything_changed</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_cache</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">log</span><span class="o">.</span><span class="n">log_level</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;solver cache for </span><span class="si">{</span><span class="n">instance</span><span class="o">.</span><span class="n">identity</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="si">}</span><span class="s2">| </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">val</span></div>
+
+
+<span class="c1">#aliases</span>
+<span class="n">cached_sys_prop</span> <span class="o">=</span> <span class="n">system_property</span>
+<span class="n">cached_system_prop</span> <span class="o">=</span> <span class="n">system_property</span>
+
+<span class="c1"># TODO: install solver reset / declarative instance cache+</span>
+<div class="viewcode-block" id="solver_cached">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.solver_cached.html#engforge.properties.solver_cached">[docs]</a>
+<span class="k">class</span> <span class="nc">solver_cached</span><span class="p">(</span><span class="n">cache_prop</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A property that updates a first time and then anytime time the input data changed, as signaled by attrs.on_setattr callback</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">private_var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="s2">&quot;TabulationMixin&quot;</span><span class="p">,</span> <span class="n">objtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">IS_BUILD</span><span class="p">:</span>
+            <span class="kn">from</span> <span class="nn">engforge.tabulation</span> <span class="kn">import</span> <span class="n">TabulationMixin</span>
+
+            <span class="k">assert</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">issubclass</span><span class="p">(</span>
+                <span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">TabulationMixin</span>
+            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;incorrect class: </span><span class="si">{</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_cache</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="n">instance</span><span class="o">.</span><span class="n">anything_changed</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_cache</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">log</span><span class="o">.</span><span class="n">log_level</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;caching attr for </span><span class="si">{</span><span class="n">instance</span><span class="o">.</span><span class="n">identity</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="si">}</span><span class="s2">| </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>  <span class="c1"># default!</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">val</span></div>
+
+
+
+<span class="c1"># TODO: install solver reset / declarative instance cache+</span>
+<div class="viewcode-block" id="instance_cached">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.instance_cached.html#engforge.properties.instance_cached">[docs]</a>
+<span class="k">class</span> <span class="nc">instance_cached</span><span class="p">(</span><span class="n">cache_prop</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A property that caches a result to an instance the first call then returns that each successive call</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">private_var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="s2">&quot;TabulationMixin&quot;</span><span class="p">,</span> <span class="n">objtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">):</span>
+            <span class="kn">from</span> <span class="nn">engforge.tabulation</span> <span class="kn">import</span> <span class="n">TabulationMixin</span>
+
+            <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">IS_BUILD</span><span class="p">:</span>  <span class="c1"># its an instance</span>
+                <span class="k">assert</span> <span class="nb">issubclass</span><span class="p">(</span>
+                    <span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="p">,</span> <span class="n">TabulationMixin</span>
+                <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;incorrect class: </span><span class="si">{</span><span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_cache</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;set&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="s2">&quot;update&quot;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">log</span><span class="o">.</span><span class="n">log_level</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;caching instance for </span><span class="si">{</span><span class="n">instance</span><span class="o">.</span><span class="n">identity</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="si">}</span><span class="s2">| </span><span class="si">{</span><span class="n">reason</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="n">val</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>  <span class="c1"># default!</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">val</span></div>
+
+
+
+<div class="viewcode-block" id="class_cache">
+<a class="viewcode-back" href="../../_autosummary/engforge.properties.class_cache.html#engforge.properties.class_cache">[docs]</a>
+<span class="k">class</span> <span class="nc">class_cache</span><span class="p">(</span><span class="n">cache_prop</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;a property that caches a value on the class at runtime, and then maintains that value for the duration of the program. A flag with the class name ensures the class is correct. Intended for instance methods&quot;&quot;&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">private_var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id_var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;__</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">gname</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__get__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="s2">&quot;Any&quot;</span><span class="p">,</span> <span class="n">objtype</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="vm">__class__</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">):</span>
+            <span class="c1"># check and gtfo</span>
+            <span class="c1"># print(f&#39;getting private var {self.private_var}&#39;)</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_var</span><span class="p">):</span>
+                <span class="c1"># initial cache</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_cache</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">!=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_var</span><span class="p">):</span>
+                <span class="c1"># recache the system if name doesn&#39;t match</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">set_cache</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
+        <span class="c1"># print(f&#39;getting private def {self.private_var}&#39;)</span>
+
+        <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">set_cache</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;cls caching for </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fget</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">private_var</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id_var</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">val</span></div>
+
+
+
+<span class="c1"># #TODO: make a `solver_context` that exposes a ray python remote funciton with wait &amp; other provisions... add to a call graph and optimize later</span>
+<span class="c1"># NOTE: challenge to handle class/instance/functions with same code</span>
+<span class="c1"># from engforge.properties import engforge_prop</span>
+<span class="c1"># class solver_context(engforge_prop):</span>
+<span class="c1">#</span>
+<span class="c1">#     fget = None</span>
+<span class="c1">#</span>
+<span class="c1">#     def __init__(</span>
+<span class="c1">#         self,</span>
+<span class="c1">#         fget=None,</span>
+<span class="c1">#         **kwargs,</span>
+<span class="c1">#     ):</span>
+<span class="c1">#         if fget:</span>
+<span class="c1">#             self.fget = remote_func_ret(fget)</span>
+<span class="c1">#         self.ray_kw = kwargs</span>
+<span class="c1">#</span>
+<span class="c1">#     def __call__(self, fget=None, fset=None, fdel=None, doc=None):</span>
+<span class="c1">#         &quot;&quot;&quot;this will be called when input is provided before property is set&quot;&quot;&quot;</span>
+<span class="c1">#         if fget and self.fget is None:</span>
+<span class="c1">#             self.fget = remote_func_ret(fget,**self.ray_kw)</span>
+<span class="c1">#</span>
+<span class="c1">#         return self</span>
+<span class="c1">#</span>
+<span class="c1">#     def __get__(self, obj, objtype=None):</span>
+<span class="c1">#         if obj is None:</span>
+<span class="c1">#             return self</span>
+<span class="c1">#         if self.fget is None:</span>
+<span class="c1">#             raise AttributeError(&quot;unreadable attribute&quot;)</span>
+<span class="c1">#         return self.fget(obj)</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># class remote_func_ret:</span>
+<span class="c1">#     fget = None</span>
+<span class="c1">#     remote_fget = None</span>
+<span class="c1">#     def __init__(self,func=None,**kwargs):</span>
+<span class="c1">#         self.ray_kwargs = kwargs</span>
+<span class="c1">#         if func:</span>
+<span class="c1">#             self.setup_func(func)</span>
+<span class="c1">#</span>
+<span class="c1">#     def setup_func(self,func):</span>
+<span class="c1">#         self.fget = func</span>
+<span class="c1">#         if self.ray_kwargs:</span>
+<span class="c1">#             d = ray.remote(**self.ray_kwargs)</span>
+<span class="c1">#             self.remote_fget = d(func)</span>
+<span class="c1">#         else:</span>
+<span class="c1">#             self.remote_fget = ray.remote(func)</span>
+<span class="c1">#</span>
+<span class="c1">#     def __call__(self,*args,**kwargs):</span>
+<span class="c1">#         return self.fget(*args,**kwargs)</span>
+<span class="c1">#</span>
+<span class="c1">#     def remote(self,wait=False,getret=False,*args,**kwargs):</span>
+<span class="c1">#         res = self.remote_fget.remote(*args,**kwargs)</span>
+<span class="c1">#</span>
+<span class="c1">#         if wait:</span>
+<span class="c1">#             ray.wait([res])</span>
+<span class="c1">#             return res</span>
+<span class="c1">#         if getret:</span>
+<span class="c1">#             return ray.get([res])</span>
+<span class="c1">#         return res</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># @solver_context</span>
+<span class="c1"># def test_deck(a,b,c):</span>
+<span class="c1">#     print(a,b,c)</span>
+<span class="c1">#</span>
+<span class="c1">#     return a * b * c</span>
+<span class="c1">#</span>
+<span class="c1"># @solver_context(num_cpus=2)</span>
+<span class="c1"># def super_test(a,b,c):</span>
+<span class="c1">#     print(a,b,c)</span>
+<span class="c1">#</span>
+<span class="c1">#     return a * b * c</span>
+<span class="c1">#</span>
+<span class="c1">#</span>
+<span class="c1"># class nonactor:</span>
+<span class="c1">#</span>
+<span class="c1">#     def __init__(self,c):</span>
+<span class="c1">#         self.c = c</span>
+<span class="c1">#</span>
+<span class="c1">#     @solver_context</span>
+<span class="c1">#     def test_inst(self,a,b):</span>
+<span class="c1">#         print(a,b)</span>
+<span class="c1">#</span>
+<span class="c1">#         return a * b  * self.c</span>
+<span class="c1">#</span>
+<span class="c1">#     @solver_context(num_cpus=2)</span>
+<span class="c1">#     def inst_test(self,a,b):</span>
+<span class="c1">#         print(a,b)</span>
+<span class="c1">#</span>
+<span class="c1">#         return a * b  * self.c</span>
+<span class="c1">#</span>
+<span class="c1"># print(test_deck)</span>
+<span class="c1"># print(super_test)</span>
+<span class="c1"># print(nonactor.test_inst)</span>
+<span class="c1"># print(nonactor.inst_test)</span>
+<span class="c1">#</span>
+<span class="c1"># ac = nonactor(1)</span>
+<span class="c1"># print(ac.test_inst)</span>
+<span class="c1"># print(ac.inst_test)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

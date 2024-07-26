@@ -1,0 +1,37 @@
+engforge.properties.instance\_cached
+====================================
+
+.. currentmodule:: engforge.properties
+
+.. autoclass:: instance_cached
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~instance_cached.deleter
+      ~instance_cached.get_func_return
+      ~instance_cached.getter
+      ~instance_cached.set_cache
+      ~instance_cached.setter
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~instance_cached.allow_set
+      ~instance_cached.must_return
+      ~instance_cached.private_var
+   
+   
