@@ -20,3 +20,4 @@ help:
 	@-/bin/true && ([ $$? -eq 0 ] && rm -rf _build) || echo "clean build failed"
 	@-/bin/true && ([ $$? -eq 0 ] && rm -rf _autosummary) || echo "clean summary failed"
 	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+	@touch /_build/html/.nojekyll
