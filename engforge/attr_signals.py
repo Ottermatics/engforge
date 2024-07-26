@@ -1,4 +1,5 @@
 """This module defines the slot attrs attribute to define the update behavior of a component or between components in an analysis"""
+
 """Signals define data flow in the solver system. These updates can happen before or after a solver execution as defined in SolverMixin
 
 """
@@ -36,24 +37,22 @@ class SignalInstance(AttributeInstance):
         """sets `target` from `source`"""
         val = self.source.value()
         if self.system.log_level < 10:
-            self.system.msg(
-                f"Signal| applying {self.source}|{val} to {self.target}"
-            )
+            self.system.msg(f"Signal| applying {self.source}|{val} to {self.target}")
         self.target.set_value(val)
 
     @property
     def mode(self) -> str:
         return self.signal.mode
-    
-    def as_ref_dict(self)->dict:
+
+    def as_ref_dict(self) -> dict:
         return dict(
             target=self.target,
             source=self.source,
             signal=self,
         )
-    
-    def get_alias(self,path):
-        return path.split('.')[-1]    
+
+    def get_alias(self, path):
+        return path.split(".")[-1]
 
 
 class Signal(ATTR_BASE):
@@ -68,13 +67,13 @@ class Signal(ATTR_BASE):
     instance_class = SignalInstance
 
     @classmethod
-    def define(cls, target: str, source: str, mode="pre",**kw):
+    def define(cls, target: str, source: str, mode="pre", **kw):
         """taking a component or system class as possible input valid input is later validated as an instance of that class or subclass"""
         assert mode in VALID_MODES, f"invalid mode: {mode}"
 
         active = kw.get("active", True)
-        combo_dflt = 'default,signals'
-        combos = kw.get("combos",None)
+        combo_dflt = "default,signals"
+        combos = kw.get("combos", None)
 
         # Create A New Signals Class
         new_name = f"Signal_{mode}_{source}_to_{target}".replace(".", "_")
@@ -85,7 +84,7 @@ class Signal(ATTR_BASE):
             target=target,
             source=source,
             active=active,
-            combos=cls.process_combos(combos,combo_dflt,combo_dflt),
+            combos=cls.process_combos(combos, combo_dflt, combo_dflt),
             default_options=cls.default_options.copy(),
         )
         new_slot = type(new_name, (Signal,), new_dict)

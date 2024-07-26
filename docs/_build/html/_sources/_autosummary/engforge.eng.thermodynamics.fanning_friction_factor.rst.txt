@@ -1,0 +1,6 @@
+engforge.eng.thermodynamics.fanning\_friction\_factor
+=====================================================
+
+.. currentmodule:: engforge.eng.thermodynamics
+
+.. autofunction:: fanning_friction_factor

@@ -1,0 +1,50 @@
+engforge.properties.PropertyLog
+===============================
+
+.. currentmodule:: engforge.properties
+
+.. autoclass:: PropertyLog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~PropertyLog.add_fields
+      ~PropertyLog.change_all_log_lvl
+      ~PropertyLog.critical
+      ~PropertyLog.debug
+      ~PropertyLog.error
+      ~PropertyLog.extract_message
+      ~PropertyLog.filter
+      ~PropertyLog.info
+      ~PropertyLog.installSTDLogger
+      ~PropertyLog.message_with_identiy
+      ~PropertyLog.msg
+      ~PropertyLog.resetLog
+      ~PropertyLog.resetSystemLogs
+      ~PropertyLog.slack_notification
+      ~PropertyLog.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PropertyLog.identity
+      ~PropertyLog.log_fmt
+      ~PropertyLog.log_level
+      ~PropertyLog.log_on
+      ~PropertyLog.logger
+      ~PropertyLog.slack_webhook_url
+   
+   

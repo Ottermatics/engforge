@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.attributes &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/test.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.attributes</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.attributes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Defines a customizeable attrs attribute that is handled in configuration,</span>
+
+<span class="sd">on init an instance of `Instance` type for any ATTR_BASE subclass is created &quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">attrs</span><span class="o">,</span> <span class="nn">attr</span><span class="o">,</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">engforge.logging</span> <span class="kn">import</span> <span class="n">LoggingMixin</span><span class="p">,</span> <span class="n">log</span>
+
+
+<div class="viewcode-block" id="ATTRLog">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTRLog.html#engforge.attributes.ATTRLog">[docs]</a>
+<span class="k">class</span> <span class="nc">ATTRLog</span><span class="p">(</span><span class="n">LoggingMixin</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">ATTRLog</span><span class="p">()</span>
+
+
+<span class="n">DEFAULT_COMBO</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span>
+
+<div class="viewcode-block" id="AttributeInstance">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.AttributeInstance.html#engforge.attributes.AttributeInstance">[docs]</a>
+<span class="k">class</span> <span class="nc">AttributeInstance</span><span class="p">:</span>
+    <span class="n">class_attr</span><span class="p">:</span> <span class="s2">&quot;ATTR_BASE&quot;</span>
+    <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span>
+    <span class="n">classname</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;attribute&quot;</span> <span class="c1">#for ref compatability</span>
+    <span class="n">backref</span><span class="p">:</span> <span class="s2">&quot;ATTR_BASE&quot;</span>
+
+    <span class="c1"># TODO: universal slots method</span>
+    <span class="c1"># __slots__ = [&quot;system&quot;, &quot;class_attr&quot;]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">class_attr</span><span class="p">:</span> <span class="s2">&quot;CLASS_ATTR&quot;</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_attr</span> <span class="o">=</span> <span class="n">class_attr</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1"># raise NotImplementedError(&quot;Override Me!&quot;)</span>
+        <span class="k">pass</span>
+
+    <span class="k">def</span> <span class="nf">as_ref_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">dict</span><span class="p">:</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;pass - as ref </span><span class="si">{</span><span class="bp">self</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="k">def</span> <span class="nf">get_alias</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    
+    <span class="k">def</span> <span class="nf">is_active</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">value</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">mthd</span> <span class="o">=</span> <span class="s1">&#39;dflt&#39;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s1">&#39;_active&#39;</span><span class="p">):</span>
+            <span class="n">mthd</span> <span class="o">=</span> <span class="s1">&#39;instance&#39;</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active</span>
+
+        <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">class_attr</span><span class="p">,</span><span class="s1">&#39;active&#39;</span><span class="p">):</span>
+            <span class="n">mthd</span> <span class="o">=</span> <span class="s1">&#39;class&#39;</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_attr</span><span class="o">.</span><span class="n">active</span>
+        
+        <span class="c1">#print(f&#39;{self}| {mthd} is_active: {value}&#39;)</span>
+        <span class="c1">#the default</span>
+        <span class="k">return</span> <span class="n">value</span>       
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">combos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_attr</span><span class="o">.</span><span class="n">combos</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">class_attr</span><span class="o">.</span><span class="n">active</span>    </div>
+
+
+<span class="c1">#TODO: add a concept of queries of ATTR_BASE subclasses, where multiple types may be selected or filtered, with individual arguments.</span>
+<div class="viewcode-block" id="ATTR_BASE">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE">[docs]</a>
+<span class="k">class</span> <span class="nc">ATTR_BASE</span><span class="p">(</span><span class="n">attrs</span><span class="o">.</span><span class="n">Attribute</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A base class that handles initalization in the attrs meta class scheme by ultimately createing an Instance&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">config_cls</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span>
+    <span class="n">attr_prefix</span> <span class="o">=</span> <span class="s2">&quot;ATTR&quot;</span>
+    <span class="n">instance_class</span><span class="p">:</span> <span class="n">AttributeInstance</span> <span class="o">=</span> <span class="n">AttributeInstance</span>  <span class="c1"># Define me</span>
+    <span class="n">default_options</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">template_class</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="c1">#TODO: add generic selection &amp; activation of attributes</span>
+    <span class="n">active</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">combos</span><span class="p">:</span> <span class="nb">list</span>
+
+    <span class="n">none_ok</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="c1">#Activation &amp; Combo Selection Functionality</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">process_combos</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">combos</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">add_combos</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">combos</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;*&#39;</span> <span class="ow">in</span> <span class="n">combos</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;wildcard (*) not allowed in combos!&quot;</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="n">combos</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span> 
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">combos</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">any</span><span class="p">([</span><span class="s1">&#39;*&#39;</span> <span class="ow">in</span> <span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">combos</span><span class="p">]):</span>
+                <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;wildcard (*) not allowed in combos!&quot;</span><span class="p">)</span>            
+            <span class="n">out</span> <span class="o">=</span> <span class="n">combos</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>    
+        
+        <span class="k">if</span> <span class="n">add_combos</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">process_combos</span><span class="p">(</span><span class="n">add_combos</span><span class="p">,</span><span class="n">default</span><span class="o">=</span><span class="n">default</span><span class="p">)</span>
+
+
+        <span class="k">if</span> <span class="n">out</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">out</span>
+        <span class="k">if</span> <span class="n">default</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">default</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">]</span>
+
+    <span class="c1">#Initialization</span>
+<div class="viewcode-block" id="ATTR_BASE.configure_for_system">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE.configure_for_system">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">configure_for_system</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">config_class</span><span class="p">,</span> <span class="n">cb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;add the config class, and perform checks with `class_validate)</span>
+<span class="sd">        :returns: [optional] a dictionary of options to be used in the make_attribute method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> is being configured for </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">attr_prefix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">config_cls</span> <span class="o">=</span> <span class="n">config_class</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">instance_class</span><span class="p">,</span><span class="n">ATTR_BASE</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">instance_class</span><span class="p">,</span> <span class="s2">&quot;backref&quot;</span><span class="p">):</span>
+            <span class="c1">#get parent class</span>
+            <span class="n">refs</span> <span class="o">=</span> <span class="p">[</span><span class="bp">cls</span><span class="p">,</span><span class="n">ATTR_BASE</span><span class="p">]</span>
+            <span class="n">mro_group</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">mro</span><span class="p">()</span>
+            <span class="n">mro_group</span> <span class="o">=</span> <span class="n">mro_group</span><span class="p">[:</span><span class="n">mro_group</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">ATTR_BASE</span><span class="p">)]</span>
+            <span class="n">cans</span> <span class="o">=</span> <span class="p">[</span><span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mro_group</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">refs</span><span class="p">]</span>
+            <span class="n">last</span> <span class="o">=</span> <span class="n">cans</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="c1"># if not hasattr(cls,&#39;instance_class&#39;) or not cls.instance_class:</span>
+            <span class="c1">#     log.info(f&#39;no instance class! {cls}&#39;)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">instance_class</span><span class="o">.</span><span class="n">backref</span> <span class="o">=</span> <span class="n">last</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">pass</span>
+            <span class="c1">#print(f&#39;backref exists {cls.instance_class.backref} {cls}&#39;)</span>
+
+        <span class="k">if</span> <span class="n">cb</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">cb</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">config_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">{}</span>  <span class="c1"># OVERWRITE ME &quot;custom_options&quot;:False</span></div>
+
+
+<div class="viewcode-block" id="ATTR_BASE.create_instance">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE.create_instance">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">:</span> <span class="s2">&quot;Configuration&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AttributeInstance</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an instance of the instance_class&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instance_class</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Instance Class Hasnt Been Defined For `</span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">.instance_class`&quot;</span>
+            <span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="s2">&quot;config_cls&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;`config_cls` hasnt been defined for `</span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2">`&quot;</span><span class="p">)</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">class_validate</span><span class="p">(</span><span class="n">instance</span><span class="o">=</span><span class="n">instance</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">instance_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">)</span></div>
+
+
+    <span class="c1">#Override Me:</span>
+<div class="viewcode-block" id="ATTR_BASE.configure_instance">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE.configure_instance">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">configure_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="n">attribute</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;validates the instance given attr&#39;s init routine&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ATTR_BASE.class_validate">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE.class_validate">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">class_validate</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;validates onetime A method to validate the kwargs passed to the define method&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="ATTR_BASE.define_validate">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE.define_validate">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">define_validate</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;A method to validate the kwargs passed to the define method&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    
+    <span class="c1">#Interafce &amp; Utility</span>
+<div class="viewcode-block" id="ATTR_BASE.define">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE.define">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">define</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;taking a component or system class as possible input valid input is later validated as an instance of that class or subclass&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">template_class</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="si">}</span><span class="s2"> is not template class and cannot defined anything, ie anything that has been created as a function of `define` cannot be defined&quot;</span>
+
+        <span class="bp">cls</span><span class="o">.</span><span class="n">define_validate</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Create A New Signals Class</span>
+        <span class="n">kw_pairs</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()]</span>
+        <span class="n">new_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">attr_prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="p">(</span><span class="s1">&#39;_&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">kw_pairs</span><span class="p">))</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="c1"># define the class dictionary</span>
+        <span class="n">new_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">new_name</span><span class="p">)</span>
+        <span class="n">new_slot</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_setup_cls</span><span class="p">(</span><span class="n">new_name</span><span class="p">,</span> <span class="n">new_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_slot</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_setup_cls</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">new_dict</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+       
+        <span class="c1">#randomize name for specifics reasons</span>
+        <span class="n">uid</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">())</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">uid</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">:</span><span class="mi">16</span><span class="p">]</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;uuid&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">uid</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;default_options&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">default_options</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;template_class&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">new_dict</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="n">new_slot</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="bp">cls</span><span class="p">,),</span> <span class="n">new_dict</span><span class="p">)</span>
+        <span class="n">new_slot</span><span class="o">.</span><span class="n">default_options</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_slot</span><span class="o">.</span><span class="n">make_factory</span><span class="p">()</span>
+        <span class="n">new_slot</span><span class="o">.</span><span class="n">default_options</span><span class="p">[</span><span class="s2">&quot;validator&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">new_slot</span><span class="o">.</span><span class="n">configure_instance</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;defined </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">new_slot</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">| </span><span class="si">{</span><span class="n">new_slot</span><span class="o">.</span><span class="n">default_options</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>         
+        <span class="k">return</span> <span class="n">new_slot</span>   
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">make_factory</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="c1">#print(f&quot;{cls} making factory with: {kwargs}&quot;)</span>
+        <span class="k">return</span> <span class="n">attrs</span><span class="o">.</span><span class="n">Factory</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">create_instance</span><span class="p">,</span> <span class="n">takes_self</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ATTR_BASE.make_attribute">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE.make_attribute">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">make_attribute</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">comp_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;makes an attrs.Attribute for the class&quot;&quot;&quot;</span>
+        <span class="n">cust_options</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">configure_for_system</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">comp_class</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># make copy for new instance</span>
+        <span class="n">opts</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">default_options</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="c1"># update with custom kwargs</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">cust_options</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">opts</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">cust_options</span><span class="p">)</span>
+        <span class="c1"># input has the final override</span>
+        <span class="n">opts</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="c1"># The core functionality</span>
+        <span class="n">opts</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="bp">cls</span><span class="p">)</span>
+
+        <span class="c1"># Handle the default and validator, if not overridden</span>
+        <span class="k">if</span> <span class="s2">&quot;default&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">opts</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">make_factory</span><span class="p">()</span>
+        <span class="k">if</span> <span class="s2">&quot;validator&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">opts</span><span class="p">[</span><span class="s2">&quot;validator&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">configure_instance</span>
+
+        <span class="k">return</span> <span class="n">attrs</span><span class="o">.</span><span class="n">Attribute</span><span class="p">(</span><span class="o">**</span><span class="n">opts</span><span class="p">)</span></div>
+
+
+    <span class="c1"># Structural Orchestration Through Subclassing</span>
+<div class="viewcode-block" id="ATTR_BASE.collect_cls">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE.collect_cls">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">collect_cls</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">system</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;collects all the attributes for a system&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">system</span><span class="p">,</span><span class="nb">type</span><span class="p">):</span>
+            <span class="n">system</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="vm">__class__</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">at</span><span class="o">.</span><span class="n">type</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">at</span> <span class="ow">in</span> <span class="n">system</span><span class="o">.</span><span class="n">_get_init_attrs_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+    
+<div class="viewcode-block" id="ATTR_BASE.collect_attr_inst">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE.collect_attr_inst">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">collect_attr_inst</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">system</span><span class="p">,</span><span class="n">handle_inst</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;collects all the attribute instances for a system&quot;&quot;&quot;</span>
+        <span class="n">cattr</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">collect_cls</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">cattr</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">inst</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">system</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">inst</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">instance_class</span><span class="p">,</span><span class="s1">&#39;none_ok&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">instance_class</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span><span class="bp">cls</span><span class="o">.</span><span class="n">instance_class</span><span class="p">)):</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Attribute </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="n">inst</span><span class="si">}</span><span class="s2"> is not an instance of </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">instance_class</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">system</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">continue</span>
+
+            <span class="k">if</span> <span class="n">inst</span> <span class="ow">and</span> <span class="n">handle_inst</span><span class="p">:</span>
+                <span class="n">inst</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">handle_instance</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span>
+                
+            <span class="k">if</span> <span class="n">inst</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">inst</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">unpack_atrs</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="n">pre</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">conv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">conv</span><span class="p">:</span>
+            <span class="n">conv</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="p">,</span><span class="nb">dict</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="nb">dict</span><span class="p">):</span>
+                    <span class="k">yield</span> <span class="n">k</span><span class="p">,</span><span class="n">pre</span><span class="p">,</span><span class="n">conv</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">v</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">pre</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pre</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span> <span class="n">ppre</span> <span class="o">=</span> <span class="n">pre</span><span class="o">+</span><span class="s1">&#39;.&#39;</span>
+                    <span class="n">ck</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ppre</span><span class="si">}{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span>
+                    <span class="k">for</span> <span class="n">kii</span><span class="p">,</span><span class="n">ki</span><span class="p">,</span><span class="n">vi</span> <span class="ow">in</span> <span class="n">ATTR_BASE</span><span class="o">.</span><span class="n">unpack_atrs</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">ck</span><span class="p">):</span>
+                        <span class="k">yield</span> <span class="n">kii</span><span class="p">,</span><span class="n">ki</span><span class="p">,</span><span class="n">conv</span><span class="p">(</span><span class="n">vi</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">pre</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">pre</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">):</span> <span class="n">ppre</span> <span class="o">=</span> <span class="n">pre</span><span class="o">+</span><span class="s1">&#39;.&#39;</span>
+                    <span class="n">ck</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">ppre</span><span class="si">}{</span><span class="n">k</span><span class="si">}</span><span class="s1">&#39;</span>           
+                    <span class="k">yield</span> <span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">ck</span><span class="p">,</span><span class="n">v</span>
+        <span class="k">return</span> <span class="n">d</span>
+    
+<div class="viewcode-block" id="ATTR_BASE.handle_instance">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE.handle_instance">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">handle_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">canidate</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;handles the instance, override as you wish&quot;&quot;&quot;</span>
+        <span class="c1">#print(&#39;handle_instance&#39;,cls,canidate,cls.instance_class)</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">canidate</span><span class="p">,</span><span class="bp">cls</span><span class="o">.</span><span class="n">instance_class</span><span class="p">):</span>
+            <span class="n">o</span> <span class="o">=</span>  <span class="n">canidate</span><span class="o">.</span><span class="n">as_ref_dict</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">o</span>
+        <span class="k">return</span> <span class="n">canidate</span> <span class="c1">#live and let live</span></div>
+
+    
+<div class="viewcode-block" id="ATTR_BASE.subclasses">
+<a class="viewcode-back" href="../../_autosummary/engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE.subclasses">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">subclasses</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">out</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;return all subclasses of components, including their subclasses</span>
+<span class="sd">        :param out: out is to pass when the middle of a recursive operation, do not use it!</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># init the set by default</span>
+        <span class="k">if</span> <span class="n">out</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="k">for</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">__subclasses__</span><span class="p">():</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">template_class</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">out</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">subclasses</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span>    </div>
+</div>
+
+
+<span class="n">ATTR_BASE</span><span class="o">.</span><span class="n">default_options</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+    <span class="c1"># validator=ATTR_BASE.configure_instance,</span>
+    <span class="nb">repr</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">cmp</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="nb">hash</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">init</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># change this to allow for init input</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">converter</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">kw_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">eq</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">order</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">on_setattr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">inherited</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

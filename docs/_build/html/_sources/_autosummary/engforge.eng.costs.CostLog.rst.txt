@@ -1,0 +1,50 @@
+engforge.eng.costs.CostLog
+==========================
+
+.. currentmodule:: engforge.eng.costs
+
+.. autoclass:: CostLog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~CostLog.add_fields
+      ~CostLog.change_all_log_lvl
+      ~CostLog.critical
+      ~CostLog.debug
+      ~CostLog.error
+      ~CostLog.extract_message
+      ~CostLog.filter
+      ~CostLog.info
+      ~CostLog.installSTDLogger
+      ~CostLog.message_with_identiy
+      ~CostLog.msg
+      ~CostLog.resetLog
+      ~CostLog.resetSystemLogs
+      ~CostLog.slack_notification
+      ~CostLog.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CostLog.identity
+      ~CostLog.log_fmt
+      ~CostLog.log_level
+      ~CostLog.log_on
+      ~CostLog.logger
+      ~CostLog.slack_webhook_url
+   
+   

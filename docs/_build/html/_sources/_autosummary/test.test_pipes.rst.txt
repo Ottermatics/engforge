@@ -1,0 +1,12 @@
+test.test\_pipes
+================
+
+.. automodule:: test.test_pipes
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      TestPipes
+   

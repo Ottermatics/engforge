@@ -1,0 +1,114 @@
+engforge.eng.solid\_materials.CarbonFiber
+=========================================
+
+.. currentmodule:: engforge.eng.solid_materials
+
+.. autoclass:: CarbonFiber
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~CarbonFiber.add_fields
+      ~CarbonFiber.change_all_log_lvl
+      ~CarbonFiber.check_ref_slot_type
+      ~CarbonFiber.cls_compile
+      ~CarbonFiber.collect_all_attributes
+      ~CarbonFiber.collect_inst_attributes
+      ~CarbonFiber.compile_classes
+      ~CarbonFiber.copy_config_at_state
+      ~CarbonFiber.critical
+      ~CarbonFiber.debug
+      ~CarbonFiber.difference
+      ~CarbonFiber.error
+      ~CarbonFiber.extract_message
+      ~CarbonFiber.filter
+      ~CarbonFiber.go_through_configurations
+      ~CarbonFiber.info
+      ~CarbonFiber.input_attrs
+      ~CarbonFiber.input_fields
+      ~CarbonFiber.installSTDLogger
+      ~CarbonFiber.internal_configurations
+      ~CarbonFiber.message_with_identiy
+      ~CarbonFiber.msg
+      ~CarbonFiber.numeric_fields
+      ~CarbonFiber.parent_configurations_cls
+      ~CarbonFiber.plot_attributes
+      ~CarbonFiber.pre_compile
+      ~CarbonFiber.resetLog
+      ~CarbonFiber.resetSystemLogs
+      ~CarbonFiber.setattrs
+      ~CarbonFiber.signals_attributes
+      ~CarbonFiber.slack_notification
+      ~CarbonFiber.slot_refs
+      ~CarbonFiber.slots_attributes
+      ~CarbonFiber.solvers_attributes
+      ~CarbonFiber.subclasses
+      ~CarbonFiber.subcls_compile
+      ~CarbonFiber.table_fields
+      ~CarbonFiber.trace_attributes
+      ~CarbonFiber.transients_attributes
+      ~CarbonFiber.validate_class
+      ~CarbonFiber.von_mises_stress_max
+      ~CarbonFiber.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~CarbonFiber.E
+      ~CarbonFiber.G
+      ~CarbonFiber.allowable_stress
+      ~CarbonFiber.as_dict
+      ~CarbonFiber.attrs_fields
+      ~CarbonFiber.classname
+      ~CarbonFiber.color
+      ~CarbonFiber.displayname
+      ~CarbonFiber.filename
+      ~CarbonFiber.identity
+      ~CarbonFiber.input_as_dict
+      ~CarbonFiber.log_fmt
+      ~CarbonFiber.log_level
+      ~CarbonFiber.log_on
+      ~CarbonFiber.log_silo
+      ~CarbonFiber.logger
+      ~CarbonFiber.nu
+      ~CarbonFiber.numeric_as_dict
+      ~CarbonFiber.numeric_hash
+      ~CarbonFiber.rho
+      ~CarbonFiber.shear_modulus
+      ~CarbonFiber.slack_webhook_url
+      ~CarbonFiber.ultimate_stress
+      ~CarbonFiber.unique_hash
+      ~CarbonFiber.unique_id
+      ~CarbonFiber.yield_stress
+      ~CarbonFiber.name
+      ~CarbonFiber.density
+      ~CarbonFiber.elastic_modulus
+      ~CarbonFiber.yield_strength
+      ~CarbonFiber.tensile_strength_ultimate
+      ~CarbonFiber.poissons_ratio
+      ~CarbonFiber.melting_point
+      ~CarbonFiber.maxium_service_temp
+      ~CarbonFiber.thermal_conductivity
+      ~CarbonFiber.specific_heat
+      ~CarbonFiber.thermal_expansion
+      ~CarbonFiber.electrical_resistitivity
+      ~CarbonFiber.cost_per_kg
+      ~CarbonFiber.in_shear_modulus
+      ~CarbonFiber.hardness
+      ~CarbonFiber.izod
+      ~CarbonFiber.factor_of_saftey
+   
+   

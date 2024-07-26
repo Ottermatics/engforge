@@ -1,0 +1,114 @@
+engforge.eng.geometry.Triangle
+==============================
+
+.. currentmodule:: engforge.eng.geometry
+
+.. autoclass:: Triangle
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Triangle.add_fields
+      ~Triangle.add_prediction_record
+      ~Triangle.calculate_stress
+      ~Triangle.change_all_log_lvl
+      ~Triangle.check_and_retrain
+      ~Triangle.check_out_of_domain
+      ~Triangle.check_ref_slot_type
+      ~Triangle.cls_compile
+      ~Triangle.collect_all_attributes
+      ~Triangle.collect_inst_attributes
+      ~Triangle.compile_classes
+      ~Triangle.copy_config_at_state
+      ~Triangle.critical
+      ~Triangle.debug
+      ~Triangle.difference
+      ~Triangle.display_results
+      ~Triangle.error
+      ~Triangle.estimate_stress
+      ~Triangle.extract_message
+      ~Triangle.filter
+      ~Triangle.go_through_configurations
+      ~Triangle.info
+      ~Triangle.input_attrs
+      ~Triangle.input_fields
+      ~Triangle.installSTDLogger
+      ~Triangle.internal_configurations
+      ~Triangle.message_with_identiy
+      ~Triangle.msg
+      ~Triangle.numeric_fields
+      ~Triangle.observe_and_predict
+      ~Triangle.parent_configurations_cls
+      ~Triangle.plot_attributes
+      ~Triangle.plot_mesh
+      ~Triangle.pre_compile
+      ~Triangle.prediction_dataframe
+      ~Triangle.prediction_weights
+      ~Triangle.resetLog
+      ~Triangle.resetSystemLogs
+      ~Triangle.score_data
+      ~Triangle.setattrs
+      ~Triangle.signals_attributes
+      ~Triangle.slack_notification
+      ~Triangle.slot_refs
+      ~Triangle.slots_attributes
+      ~Triangle.solvers_attributes
+      ~Triangle.subclasses
+      ~Triangle.subcls_compile
+      ~Triangle.table_fields
+      ~Triangle.trace_attributes
+      ~Triangle.train_compare
+      ~Triangle.training_callback
+      ~Triangle.transients_attributes
+      ~Triangle.validate_class
+      ~Triangle.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Triangle.A
+      ~Triangle.Ao
+      ~Triangle.Ixx
+      ~Triangle.Iyy
+      ~Triangle.J
+      ~Triangle.as_dict
+      ~Triangle.attrs_fields
+      ~Triangle.basis
+      ~Triangle.classname
+      ~Triangle.displayname
+      ~Triangle.filename
+      ~Triangle.identity
+      ~Triangle.input_as_dict
+      ~Triangle.log_fmt
+      ~Triangle.log_level
+      ~Triangle.log_on
+      ~Triangle.log_silo
+      ~Triangle.logger
+      ~Triangle.numeric_as_dict
+      ~Triangle.numeric_hash
+      ~Triangle.prediction_goal_error
+      ~Triangle.prediction_records
+      ~Triangle.slack_webhook_url
+      ~Triangle.train_window
+      ~Triangle.trained
+      ~Triangle.unique_hash
+      ~Triangle.x_bounds
+      ~Triangle.y_bounds
+      ~Triangle.b
+      ~Triangle.h
+      ~Triangle.name
+   
+   

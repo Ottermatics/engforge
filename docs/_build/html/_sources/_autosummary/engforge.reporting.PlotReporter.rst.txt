@@ -1,0 +1,55 @@
+engforge.reporting.PlotReporter
+===============================
+
+.. currentmodule:: engforge.reporting
+
+.. autoclass:: PlotReporter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~PlotReporter.add_fields
+      ~PlotReporter.change_all_log_lvl
+      ~PlotReporter.check_config
+      ~PlotReporter.critical
+      ~PlotReporter.debug
+      ~PlotReporter.error
+      ~PlotReporter.extract_message
+      ~PlotReporter.filter
+      ~PlotReporter.info
+      ~PlotReporter.installSTDLogger
+      ~PlotReporter.message_with_identiy
+      ~PlotReporter.msg
+      ~PlotReporter.resetLog
+      ~PlotReporter.resetSystemLogs
+      ~PlotReporter.slack_notification
+      ~PlotReporter.subclasses
+      ~PlotReporter.upload
+      ~PlotReporter.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PlotReporter.ext
+      ~PlotReporter.identity
+      ~PlotReporter.log_fmt
+      ~PlotReporter.log_level
+      ~PlotReporter.log_on
+      ~PlotReporter.logger
+      ~PlotReporter.name
+      ~PlotReporter.slack_webhook_url
+   
+   

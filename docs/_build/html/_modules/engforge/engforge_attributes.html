@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.engforge_attributes &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/test.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.engforge_attributes</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.engforge_attributes</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">engforge.attributes</span> <span class="kn">import</span> <span class="n">ATTR_BASE</span><span class="p">,</span> <span class="n">AttributeInstance</span>
+<span class="kn">from</span> <span class="nn">engforge.attr_dynamics</span> <span class="kn">import</span> <span class="n">Time</span>
+<span class="kn">from</span> <span class="nn">engforge.attr_solver</span> <span class="kn">import</span> <span class="n">Solver</span>
+<span class="kn">from</span> <span class="nn">engforge.attr_signals</span> <span class="kn">import</span> <span class="n">Signal</span>
+<span class="kn">from</span> <span class="nn">engforge.attr_slots</span> <span class="kn">import</span> <span class="n">Slot</span>
+<span class="kn">from</span> <span class="nn">engforge.attr_plotting</span> <span class="kn">import</span> <span class="n">Plot</span><span class="p">,</span> <span class="n">Trace</span>
+<span class="kn">from</span> <span class="nn">engforge.logging</span> <span class="kn">import</span> <span class="n">LoggingMixin</span><span class="p">,</span> <span class="n">log</span>
+<span class="kn">from</span> <span class="nn">engforge.typing</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">deepdiff</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+
+<span class="kn">import</span> <span class="nn">attr</span><span class="o">,</span> <span class="nn">attrs</span>
+
+<span class="kn">from</span>  <span class="nn">attrs</span> <span class="kn">import</span> <span class="n">Attribute</span>
+
+
+<div class="viewcode-block" id="EngAttr">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.EngAttr.html#engforge.engforge_attributes.EngAttr">[docs]</a>
+<span class="k">class</span> <span class="nc">EngAttr</span><span class="p">(</span><span class="n">LoggingMixin</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">EngAttr</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="get_attributes_of">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.get_attributes_of.html#engforge.engforge_attributes.get_attributes_of">[docs]</a>
+<span class="k">def</span> <span class="nf">get_attributes_of</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">subclass_of</span><span class="p">:</span> <span class="nb">type</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">choose</span> <span class="o">=</span> <span class="nb">issubclass</span>
+    <span class="k">if</span> <span class="n">exclude</span><span class="p">:</span>
+        <span class="n">choose</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">ty</span><span class="p">,</span> <span class="n">type_set</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ty</span><span class="p">,</span> <span class="n">type_set</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">subclass_of</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">subclass_of</span> <span class="o">=</span> <span class="n">ATTR_BASE</span>
+
+    <span class="c1"># This handles the attrs class before or after compilation</span>
+    <span class="n">attrval</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="s2">&quot;__attrs_attrs__&quot;</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>  <span class="c1"># Handle Attrs Class</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">fields_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="n">choose</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">subclass_of</span><span class="p">):</span>
+                <span class="n">attrval</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+    <span class="c1"># else:  # Handle Pre-Attrs Class</span>
+    <span class="c1"># FIXME: should this run first?</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="n">choose</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">subclass_of</span><span class="p">):</span>
+            <span class="n">attrval</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+    <span class="k">return</span> <span class="n">attrval</span></div>
+
+
+
+<div class="viewcode-block" id="AttributedBaseMixin">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin">[docs]</a>
+<span class="k">class</span> <span class="nc">AttributedBaseMixin</span><span class="p">(</span><span class="n">LoggingMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A mixin that adds the ability to configure all engforge.core attributes of a class&quot;&quot;&quot;</span>
+
+
+    <span class="c1"># Auto Configuration Methods</span>
+<div class="viewcode-block" id="AttributedBaseMixin.collect_all_attributes">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.collect_all_attributes">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">collect_all_attributes</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;collects all the attributes for a system&quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">base_class</span> <span class="ow">in</span> <span class="n">ATTR_BASE</span><span class="o">.</span><span class="n">subclasses</span><span class="p">():</span>
+            <span class="n">nm</span> <span class="o">=</span> <span class="n">base_class</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_class</span><span class="o">.</span><span class="n">collect_cls</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+    
+<div class="viewcode-block" id="AttributedBaseMixin.collect_inst_attributes">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.collect_inst_attributes">[docs]</a>
+    <span class="k">def</span> <span class="nf">collect_inst_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;collects all the attributes for a system&quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">base_class</span> <span class="ow">in</span> <span class="n">ATTR_BASE</span><span class="o">.</span><span class="n">subclasses</span><span class="p">():</span>
+            <span class="n">nm</span> <span class="o">=</span> <span class="n">base_class</span><span class="o">.</span><span class="vm">__name__</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">nm</span><span class="p">]</span> <span class="o">=</span> <span class="n">base_class</span><span class="o">.</span><span class="n">collect_attr_inst</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">out</span>  </div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_init_attrs_data</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">subclass_of</span><span class="p">:</span> <span class="nb">type</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">choose</span> <span class="o">=</span> <span class="nb">issubclass</span>
+        <span class="k">if</span> <span class="n">exclude</span><span class="p">:</span>
+            <span class="n">choose</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">ty</span><span class="p">,</span> <span class="n">type_set</span><span class="p">:</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">ty</span><span class="p">,</span> <span class="n">type_set</span><span class="p">)</span>
+
+        <span class="n">attrval</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">if</span> <span class="s2">&quot;__attrs_attrs__&quot;</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">:</span>  <span class="c1"># Handle Attrs Class</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">attrs</span><span class="o">.</span><span class="n">fields_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="n">choose</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">subclass_of</span><span class="p">):</span>
+                    <span class="n">attrval</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="c1"># else:  # Handle Pre-Attrs Class</span>
+        <span class="c1"># FIXME: should this run first?</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="n">choose</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">subclass_of</span><span class="p">):</span>
+                <span class="n">attrval</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+
+        <span class="k">return</span> <span class="n">attrval</span>
+
+    <span class="c1"># Attribute Methods</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">attrs_fields</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">attr</span><span class="o">.</span><span class="n">fields</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">))</span>
+
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_extract_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">typ</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;gathers valid types for an attribute.type&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">engforge.attr_slots</span> <span class="kn">import</span> <span class="n">Slot</span>
+        <span class="kn">from</span> <span class="nn">engforge.configuration</span> <span class="kn">import</span> <span class="n">Configuration</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">or</span> <span class="n">typ</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">Slot</span><span class="p">):</span>
+            <span class="n">accept</span> <span class="o">=</span> <span class="n">typ</span><span class="o">.</span><span class="n">accepted</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">accept</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">accept</span><span class="p">)</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">accept</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">typ</span><span class="p">]</span>
+
+        <span class="k">elif</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">typ</span><span class="p">,</span> <span class="n">TABLE_TYPES</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">typ</span><span class="p">]</span>
+
+<div class="viewcode-block" id="AttributedBaseMixin.check_ref_slot_type">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.check_ref_slot_type">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">check_ref_slot_type</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">sys_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;recursively checks class slots for the key, and returns the slot type&quot;&quot;&quot;</span>
+
+        <span class="kn">from</span> <span class="nn">engforge.configuration</span> <span class="kn">import</span> <span class="n">Configuration</span>
+
+        <span class="n">slot_refs</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">slot_refs</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">sys_key</span> <span class="ow">in</span> <span class="n">slot_refs</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">slot_refs</span><span class="p">[</span><span class="n">sys_key</span><span class="p">]</span>
+
+        <span class="n">slts</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">input_attrs</span><span class="p">()</span>
+        <span class="n">key_segs</span> <span class="o">=</span> <span class="n">sys_key</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># print(slts.keys(),sys_key)</span>
+        <span class="k">if</span> <span class="s2">&quot;.&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys_key</span> <span class="ow">and</span> <span class="n">sys_key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">slts</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+        <span class="k">elif</span> <span class="n">sys_key</span> <span class="ow">in</span> <span class="n">slts</span><span class="p">:</span>
+            <span class="c1"># print(f&#39;slt find {sys_key}&#39;)</span>
+            <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_extract_type</span><span class="p">(</span><span class="n">slts</span><span class="p">[</span><span class="n">sys_key</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">fst</span> <span class="o">=</span> <span class="n">key_segs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">rem</span> <span class="o">=</span> <span class="n">key_segs</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="k">if</span> <span class="n">fst</span> <span class="ow">in</span> <span class="n">slts</span><span class="p">:</span>
+                <span class="n">sub_clss</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_extract_type</span><span class="p">(</span><span class="n">slts</span><span class="p">[</span><span class="n">fst</span><span class="p">]</span><span class="o">.</span><span class="n">type</span><span class="p">)</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">acpt</span> <span class="ow">in</span> <span class="n">sub_clss</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">acpt</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">issubclass</span><span class="p">(</span>
+                        <span class="n">acpt</span><span class="p">,</span> <span class="n">Configuration</span>
+                    <span class="p">):</span>
+                        <span class="n">vals</span> <span class="o">=</span> <span class="n">acpt</span><span class="o">.</span><span class="n">check_ref_slot_type</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">rem</span><span class="p">))</span>
+                        <span class="c1"># print(f&#39;recursive find {acpt}.{rem} = {vals}&#39;)</span>
+                        <span class="k">if</span> <span class="n">vals</span><span class="p">:</span>
+                            <span class="n">out</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">vals</span><span class="p">)</span>
+
+                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">acpt</span><span class="p">,</span> <span class="nb">type</span><span class="p">):</span>
+                        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">acpt</span><span class="p">)</span>
+
+        <span class="n">slot_refs</span><span class="p">[</span><span class="n">sys_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="AttributedBaseMixin.slot_refs">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.slot_refs">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">slot_refs</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">recache</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;returns all slot references in this configuration&quot;&quot;&quot;</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">_prv_slot_sys_refs&quot;</span>
+        <span class="k">if</span> <span class="n">recache</span> <span class="o">==</span> <span class="kc">False</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">o</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">o</span></div>
+
+
+<div class="viewcode-block" id="AttributedBaseMixin.slots_attributes">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.slots_attributes">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">slots_attributes</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;Attribute&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lists all slots attributes for class&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_init_attrs_data</span><span class="p">(</span><span class="n">Slot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AttributedBaseMixin.signals_attributes">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.signals_attributes">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">signals_attributes</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;Attribute&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lists all signals attributes for class&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_init_attrs_data</span><span class="p">(</span><span class="n">Signal</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AttributedBaseMixin.solvers_attributes">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.solvers_attributes">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">solvers_attributes</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;Attribute&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lists all signals attributes for class&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_init_attrs_data</span><span class="p">(</span><span class="n">Solver</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AttributedBaseMixin.transients_attributes">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.transients_attributes">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">transients_attributes</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;Attribute&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lists all signals attributes for class&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_init_attrs_data</span><span class="p">(</span><span class="n">Time</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AttributedBaseMixin.trace_attributes">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.trace_attributes">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">trace_attributes</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;Attribute&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lists all trace attributes for class&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_init_attrs_data</span><span class="p">(</span><span class="n">Trace</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AttributedBaseMixin.plot_attributes">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.plot_attributes">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">plot_attributes</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">typing</span><span class="o">.</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="s2">&quot;Attribute&quot;</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Lists all plot attributes for class&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_init_attrs_data</span><span class="p">(</span><span class="n">Plot</span><span class="p">)</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">input_attrs</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">attr</span><span class="o">.</span><span class="n">fields_dict</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+
+<div class="viewcode-block" id="AttributedBaseMixin.input_fields">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.input_fields">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">input_fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">add_ign_types</span><span class="p">:</span><span class="nb">list</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&#39;&#39;&#39;no attr base types, no tuples, no lists, no dicts&#39;&#39;&#39;</span>
+        <span class="n">ignore_types</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">ATTR_BASE</span><span class="p">,</span>
+            <span class="c1">#tuple,</span>
+            <span class="c1">#list,</span>
+            <span class="c1">#dict,</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">add_ign_types</span><span class="p">:</span>
+            <span class="n">ignore_types</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">add_ign_types</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_init_attrs_data</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ignore_types</span><span class="p">),</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">numeric_fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">ignore_types</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">ATTR_BASE</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">,</span>
+            <span class="nb">tuple</span><span class="p">,</span>
+            <span class="nb">list</span><span class="p">,</span>
+            <span class="nb">dict</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">typ</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_init_attrs_data</span><span class="p">(</span><span class="n">ignore_types</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">typ</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)}</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">table_fields</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">keeps</span> <span class="o">=</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>  <span class="c1"># TODO: add numpy fields</span>
+        <span class="n">typ</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_init_attrs_data</span><span class="p">(</span><span class="n">keeps</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">typ</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="c1"># Dictonaries</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;returns values as they are in the class instance&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">engforge.configuration</span> <span class="kn">import</span> <span class="n">Configuration</span>
+
+        <span class="n">inputs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_attrs</span><span class="p">()</span>
+        <span class="c1"># TODO: add signals?</span>
+        <span class="n">properties</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;system_properties_classdef&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">properties</span><span class="p">:</span>
+            <span class="n">inputs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">properties</span><span class="p">())</span>
+
+        <span class="n">o</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inputs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="k">return</span> <span class="n">o</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">input_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;returns values as they are in the class instance, but converts classes inputs to their input_as_dict&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">engforge.configuration</span> <span class="kn">import</span> <span class="n">Configuration</span>
+
+        <span class="n">o</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_fields</span><span class="p">()}</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="o">.</span><span class="n">input_as_dict</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">o</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">o</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">numeric_as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">engforge.configuration</span> <span class="kn">import</span> <span class="n">Configuration</span>
+
+        <span class="n">o</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">numeric_fields</span><span class="p">()}</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Configuration</span><span class="p">)</span> <span class="k">else</span> <span class="n">v</span><span class="o">.</span><span class="n">numeric_as_dict</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">o</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">o</span>
+
+    <span class="c1"># Hashes</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">unique_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span>
+        <span class="k">return</span> <span class="n">deepdiff</span><span class="o">.</span><span class="n">DeepHash</span><span class="p">(</span><span class="n">d</span><span class="p">)[</span><span class="n">d</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">numeric_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_as_dict</span>
+        <span class="k">return</span> <span class="n">deepdiff</span><span class="o">.</span><span class="n">DeepHash</span><span class="p">(</span><span class="n">d</span><span class="p">)[</span><span class="n">d</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">numeric_hash</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">numeric_as_dict</span>
+        <span class="k">return</span> <span class="n">deepdiff</span><span class="o">.</span><span class="n">DeepHash</span><span class="p">(</span><span class="n">d</span><span class="p">)[</span><span class="n">d</span><span class="p">]</span>
+
+    <span class="c1"># Configuration Push/Pop methods</span>
+<div class="viewcode-block" id="AttributedBaseMixin.setattrs">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.setattrs">[docs]</a>
+    <span class="k">def</span> <span class="nf">setattrs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;sets attributes from a dictionary&quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;invalid keys </span><span class="si">{</span><span class="nb">set</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_attrs</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input_attrs</span><span class="p">())),</span> <span class="n">msg</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AttributedBaseMixin.difference">
+<a class="viewcode-back" href="../../_autosummary/engforge.engforge_attributes.AttributedBaseMixin.html#engforge.engforge_attributes.AttributedBaseMixin.difference">[docs]</a>
+    <span class="nd">@contextmanager</span>
+    <span class="k">def</span> <span class="nf">difference</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;a context manager that will allow you to dynamically change any information, then will change it back in a fail safe way.</span>
+
+<span class="sd">        with self.difference(name=&#39;new_name&#39;, value = new_value) as new_config:</span>
+<span class="sd">            #do stuff with config, ok to fail</span>
+
+<span class="sd">        you may not access any &quot;private&quot; variable that starts with an `_` as in _whatever</span>
+
+<span class="sd">        difference is useful for saving slight differences in configuration in conjunction with solve</span>
+<span class="sd">        you might create wrappers for eval, or implement a strategy pattern.</span>
+
+<span class="sd">        only attributes may be changed.</span>
+
+<span class="sd">        #TODO: allow recursive operation with sub comps or systems.</span>
+<span class="sd">        #TODO: make a full system copy so the system can be reverted later</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_temp_vars</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">_temp_vars</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="n">arg</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">arg</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+
+        <span class="n">bad_vars</span> <span class="o">=</span> <span class="nb">set</span><span class="o">.</span><span class="n">difference</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="nb">set</span><span class="p">(</span><span class="n">_temp_vars</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+        <span class="k">if</span> <span class="n">bad_vars</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Could Not Change </span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">bad_vars</span><span class="p">))))</span>
+
+        <span class="k">try</span><span class="p">:</span>  <span class="c1"># Change Variables To Input</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setattrs</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span>
+            <span class="k">yield</span> <span class="bp">self</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">rstdict</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">_temp_vars</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setattrs</span><span class="p">(</span><span class="n">rstdict</span><span class="p">)</span></div>
+</div>
+
+  
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

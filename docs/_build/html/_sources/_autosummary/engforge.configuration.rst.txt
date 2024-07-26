@@ -1,0 +1,47 @@
+engforge.configuration
+======================
+
+.. automodule:: engforge.configuration
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      comp_transform
+      conv_nms
+      forge
+      meta
+      name_generator
+      property_changed
+      signals_slots_handler
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      ConfigLog
+      Configuration
+   
+   
+
+   
+   
+   
+
+
+

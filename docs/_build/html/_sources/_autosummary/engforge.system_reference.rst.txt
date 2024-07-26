@@ -1,0 +1,46 @@
+engforge.system\_reference
+==========================
+
+.. automodule:: engforge.system_reference
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      eval_ref
+      maybe_attr_inst
+      maybe_ref
+      refset_get
+      refset_input
+      scale_val
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      Ref
+      RefLog
+   
+   
+
+   
+   
+   
+
+
+

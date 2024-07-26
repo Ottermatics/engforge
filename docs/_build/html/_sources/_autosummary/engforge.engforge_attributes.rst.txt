@@ -1,0 +1,41 @@
+engforge.engforge\_attributes
+=============================
+
+.. automodule:: engforge.engforge_attributes
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      get_attributes_of
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      AttributedBaseMixin
+      EngAttr
+   
+   
+
+   
+   
+   
+
+
+

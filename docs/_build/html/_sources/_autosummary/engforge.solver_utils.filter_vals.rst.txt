@@ -1,0 +1,6 @@
+engforge.solver\_utils.filter\_vals
+===================================
+
+.. currentmodule:: engforge.solver_utils
+
+.. autofunction:: filter_vals

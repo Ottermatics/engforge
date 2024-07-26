@@ -1,0 +1,190 @@
+engforge.component\_collections.ComponentIterator
+=================================================
+
+.. currentmodule:: engforge.component_collections
+
+.. autoclass:: ComponentIterator
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ComponentIterator.add_fields
+      ~ComponentIterator.append
+      ~ComponentIterator.change_all_log_lvl
+      ~ComponentIterator.check_ref_slot_type
+      ~ComponentIterator.clear
+      ~ComponentIterator.cls_all_attrs_fields
+      ~ComponentIterator.cls_all_property_keys
+      ~ComponentIterator.cls_all_property_labels
+      ~ComponentIterator.cls_compile
+      ~ComponentIterator.collect_all_attributes
+      ~ComponentIterator.collect_comp_refs
+      ~ComponentIterator.collect_dynamic_refs
+      ~ComponentIterator.collect_inst_attributes
+      ~ComponentIterator.collect_post_update_refs
+      ~ComponentIterator.collect_solver_refs
+      ~ComponentIterator.collect_update_refs
+      ~ComponentIterator.comp_references
+      ~ComponentIterator.compile_classes
+      ~ComponentIterator.copy
+      ~ComponentIterator.copy_config_at_state
+      ~ComponentIterator.count
+      ~ComponentIterator.create_dynamic_matricies
+      ~ComponentIterator.create_feedthrough_matrix
+      ~ComponentIterator.create_input_matrix
+      ~ComponentIterator.create_output_constants
+      ~ComponentIterator.create_output_matrix
+      ~ComponentIterator.create_state_constants
+      ~ComponentIterator.create_state_matrix
+      ~ComponentIterator.critical
+      ~ComponentIterator.debug
+      ~ComponentIterator.determine_nearest_stationary_state
+      ~ComponentIterator.difference
+      ~ComponentIterator.error
+      ~ComponentIterator.extend
+      ~ComponentIterator.extract_message
+      ~ComponentIterator.filter
+      ~ComponentIterator.format_columns
+      ~ComponentIterator.get_system_input_refs
+      ~ComponentIterator.go_through_configurations
+      ~ComponentIterator.index
+      ~ComponentIterator.info
+      ~ComponentIterator.input_attrs
+      ~ComponentIterator.input_fields
+      ~ComponentIterator.insert
+      ~ComponentIterator.installSTDLogger
+      ~ComponentIterator.internal_components
+      ~ComponentIterator.internal_configurations
+      ~ComponentIterator.internal_references
+      ~ComponentIterator.internal_systems
+      ~ComponentIterator.internal_tabulations
+      ~ComponentIterator.linear_output
+      ~ComponentIterator.linear_step
+      ~ComponentIterator.locate
+      ~ComponentIterator.locate_ref
+      ~ComponentIterator.message_with_identiy
+      ~ComponentIterator.msg
+      ~ComponentIterator.nonlinear_output
+      ~ComponentIterator.nonlinear_step
+      ~ComponentIterator.numeric_fields
+      ~ComponentIterator.parent_configurations_cls
+      ~ComponentIterator.parse_run_kwargs
+      ~ComponentIterator.parse_simulation_input
+      ~ComponentIterator.plot_attributes
+      ~ComponentIterator.pop
+      ~ComponentIterator.post_update
+      ~ComponentIterator.pre_compile
+      ~ComponentIterator.print_info
+      ~ComponentIterator.rate
+      ~ComponentIterator.rate_linear
+      ~ComponentIterator.rate_nonlinear
+      ~ComponentIterator.ref_dXdt
+      ~ComponentIterator.remove
+      ~ComponentIterator.reset
+      ~ComponentIterator.resetLog
+      ~ComponentIterator.resetSystemLogs
+      ~ComponentIterator.reverse
+      ~ComponentIterator.set_attr
+      ~ComponentIterator.set_time
+      ~ComponentIterator.setattrs
+      ~ComponentIterator.signals_attributes
+      ~ComponentIterator.slack_notification
+      ~ComponentIterator.slot_refs
+      ~ComponentIterator.slots_attributes
+      ~ComponentIterator.smart_split_dataframe
+      ~ComponentIterator.solvers_attributes
+      ~ComponentIterator.sort
+      ~ComponentIterator.step
+      ~ComponentIterator.subclasses
+      ~ComponentIterator.subcls_compile
+      ~ComponentIterator.system_properties_classdef
+      ~ComponentIterator.system_references
+      ~ComponentIterator.table_fields
+      ~ComponentIterator.trace_attributes
+      ~ComponentIterator.transients_attributes
+      ~ComponentIterator.update
+      ~ComponentIterator.update_dynamics
+      ~ComponentIterator.update_feedthrough
+      ~ComponentIterator.update_input
+      ~ComponentIterator.update_output_constants
+      ~ComponentIterator.update_output_matrix
+      ~ComponentIterator.update_state
+      ~ComponentIterator.update_state_constants
+      ~ComponentIterator.validate_class
+      ~ComponentIterator.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ComponentIterator.Ut_ref
+      ~ComponentIterator.Xt_ref
+      ~ComponentIterator.Yt_ref
+      ~ComponentIterator.anything_changed
+      ~ComponentIterator.as_dict
+      ~ComponentIterator.attrs_fields
+      ~ComponentIterator.classname
+      ~ComponentIterator.current
+      ~ComponentIterator.dXtdt_ref
+      ~ComponentIterator.data_dict
+      ~ComponentIterator.dataframe_constants
+      ~ComponentIterator.dataframe_variants
+      ~ComponentIterator.displayname
+      ~ComponentIterator.dynamic_A
+      ~ComponentIterator.dynamic_B
+      ~ComponentIterator.dynamic_C
+      ~ComponentIterator.dynamic_D
+      ~ComponentIterator.dynamic_F
+      ~ComponentIterator.dynamic_K
+      ~ComponentIterator.dynamic_input
+      ~ComponentIterator.dynamic_input_vars
+      ~ComponentIterator.dynamic_output
+      ~ComponentIterator.dynamic_output_vars
+      ~ComponentIterator.dynamic_state
+      ~ComponentIterator.dynamic_state_vars
+      ~ComponentIterator.filename
+      ~ComponentIterator.identity
+      ~ComponentIterator.input_as_dict
+      ~ComponentIterator.last_context
+      ~ComponentIterator.log_fmt
+      ~ComponentIterator.log_level
+      ~ComponentIterator.log_on
+      ~ComponentIterator.log_silo
+      ~ComponentIterator.logger
+      ~ComponentIterator.nonlinear
+      ~ComponentIterator.numeric_as_dict
+      ~ComponentIterator.numeric_hash
+      ~ComponentIterator.plotable_variables
+      ~ComponentIterator.skip_plot_vars
+      ~ComponentIterator.slack_webhook_url
+      ~ComponentIterator.static_A
+      ~ComponentIterator.static_B
+      ~ComponentIterator.static_C
+      ~ComponentIterator.static_D
+      ~ComponentIterator.static_F
+      ~ComponentIterator.static_K
+      ~ComponentIterator.system_id
+      ~ComponentIterator.time
+      ~ComponentIterator.unique_hash
+      ~ComponentIterator.update_interval
+      ~ComponentIterator.wide
+      ~ComponentIterator.component_type
+      ~ComponentIterator.data
+      ~ComponentIterator.current_item
+      ~ComponentIterator.parent
+      ~ComponentIterator.name
+      ~ComponentIterator.dataframe
+   
+   

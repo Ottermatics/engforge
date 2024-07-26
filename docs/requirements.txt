@@ -1,2 +1,17 @@
-myst-parser
+sphinx
 sphinx-rtd-theme
+pydata-sphinx-theme
+sphinx-autodoc-typehints
+
+myst-parser
+#sphinx-rtd-theme>=0.5.1
+sphinx_autodoc_typehints
+#sphinxcontrib-bibtex>=2.3
+#readthedocs-sphinx-ext
+
+# nbsphinx
+# ipython
+# jupytext
+# jupyter
+# matplotlib
+# numpy

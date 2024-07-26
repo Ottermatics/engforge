@@ -1,0 +1,18 @@
+test.test\_comp\_iter
+=====================
+
+.. automodule:: test.test_comp_iter
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DictComp
+      ListComp
+      NarrowSystem
+      TestConfig
+      TestNarrow
+      TestWide
+      WideSystem
+   

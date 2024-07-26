@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.attr_plotting &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/test.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.attr_plotting</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.attr_plotting</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;This module defines Plot and Trace methods that allow the plotting of Statistical &amp; Transient relationships of data in each system</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="kn">import</span> <span class="nn">attrs</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pylab</span> <span class="k">as</span> <span class="nn">pylab</span>
+<span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="kn">import</span> <span class="n">get_font_names</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="c1"># from engforge.configuration import forge</span>
+<span class="kn">from</span> <span class="nn">engforge.properties</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">engforge.logging</span> <span class="kn">import</span> <span class="n">LoggingMixin</span>
+<span class="kn">from</span> <span class="nn">engforge.env_var</span> <span class="kn">import</span> <span class="n">EnvVariable</span>
+<span class="kn">from</span> <span class="nn">engforge.attributes</span> <span class="kn">import</span> <span class="n">ATTR_BASE</span><span class="p">,</span> <span class="n">AttributeInstance</span>
+<span class="kn">from</span> <span class="nn">matplotlib.backends.backend_pdf</span> <span class="kn">import</span> <span class="n">PdfPages</span>
+
+
+<div class="viewcode-block" id="PlotLog">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PlotLog.html#engforge.attr_plotting.PlotLog">[docs]</a>
+<span class="k">class</span> <span class="nc">PlotLog</span><span class="p">(</span><span class="n">LoggingMixin</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">PlotLog</span><span class="p">()</span>
+
+<span class="c1"># Seaborn Config Options</span>
+<span class="n">SEABORN_CONTEXTS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span> <span class="s2">&quot;talk&quot;</span><span class="p">,</span> <span class="s2">&quot;poster&quot;</span><span class="p">,</span> <span class="s2">&quot;notebook&quot;</span><span class="p">]</span>
+<span class="n">SEABORN_THEMES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;darkgrid&quot;</span><span class="p">,</span> <span class="s2">&quot;whitegrid&quot;</span><span class="p">,</span> <span class="s2">&quot;dark&quot;</span><span class="p">,</span> <span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="s2">&quot;ticks&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="conv_ctx">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.conv_ctx.html#engforge.attr_plotting.conv_ctx">[docs]</a>
+<span class="k">def</span> <span class="nf">conv_ctx</span><span class="p">(</span><span class="n">ctx</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">ctx</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SEABORN_CONTEXTS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;theme must be one of </span><span class="si">{</span><span class="n">SEABORN_CONTEXTS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ctx</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="conv_theme">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.conv_theme.html#engforge.attr_plotting.conv_theme">[docs]</a>
+<span class="k">def</span> <span class="nf">conv_theme</span><span class="p">(</span><span class="n">theme</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">theme</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SEABORN_THEMES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;theme must be one of </span><span class="si">{</span><span class="n">SEABORN_THEMES</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">theme</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span></div>
+
+
+
+<span class="c1"># Color Maps</span>
+<span class="n">SEABORN_COLORMAPS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;deep&quot;</span><span class="p">,</span> <span class="s2">&quot;musted&quot;</span><span class="p">,</span> <span class="s2">&quot;bright&quot;</span><span class="p">,</span> <span class="s2">&quot;pastel&quot;</span><span class="p">,</span> <span class="s2">&quot;dark&quot;</span><span class="p">,</span> <span class="s2">&quot;colorblind&quot;</span><span class="p">]</span>
+<span class="n">SEABORN_COLORMAPS</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pylab</span><span class="o">.</span><span class="n">colormaps</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">SEABORN_COLORMAPS</span> <span class="o">+=</span> <span class="p">[</span><span class="s2">&quot;husl&quot;</span><span class="p">,</span> <span class="s2">&quot;hls&quot;</span><span class="p">]</span>
+<span class="c1"># TODO: handle other seaboorn options</span>
+
+
+<div class="viewcode-block" id="conv_maps">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.conv_maps.html#engforge.attr_plotting.conv_maps">[docs]</a>
+<span class="k">def</span> <span class="nf">conv_maps</span><span class="p">(</span><span class="nb">map</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">map</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SEABORN_COLORMAPS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;theme must be one of </span><span class="si">{</span><span class="n">SEABORN_COLORMAPS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="nb">map</span><span class="o">.</span><span class="n">lower</span><span class="p">())</span></div>
+
+
+
+<span class="c1"># SEABORN_FONTS = get_font_names()</span>
+<span class="c1"># FONT_INX_LC = {k.lower():k for k in SEABORN_FONTS}</span>
+<span class="c1"># def conv_font(fnt):</span>
+<span class="c1">#     if fnt.lower() not in FONT_INX_LC:</span>
+<span class="c1">#         raise ValueError(f&#39;theme must be one of {SEABORN_FONTS}&#39;)</span>
+<span class="c1">#     act = FONT_INX_LC[str(fnt).lower()]</span>
+<span class="c1">#     return act</span>
+
+
+<span class="c1"># Seaborn Config Via Env Var</span>
+<span class="n">_def_opts</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;obscure&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;dontovrride&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
+<span class="n">SEABORN_CONTEXT</span> <span class="o">=</span> <span class="n">EnvVariable</span><span class="p">(</span>
+    <span class="s2">&quot;SEABORN_CONTEXT&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s2">&quot;paper&quot;</span><span class="p">,</span>
+    <span class="n">type_conv</span><span class="o">=</span><span class="n">conv_ctx</span><span class="p">,</span>
+    <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;choose one of: </span><span class="si">{</span><span class="n">SEABORN_CONTEXTS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">_def_opts</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">SEABORN_THEME</span> <span class="o">=</span> <span class="n">EnvVariable</span><span class="p">(</span>
+    <span class="s2">&quot;SEABORN_THEME&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s2">&quot;darkgrid&quot;</span><span class="p">,</span>
+    <span class="n">type_conv</span><span class="o">=</span><span class="n">conv_theme</span><span class="p">,</span>
+    <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;choose one of: </span><span class="si">{</span><span class="n">SEABORN_THEMES</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">_def_opts</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">SEABORN_PALETTE</span> <span class="o">=</span> <span class="n">EnvVariable</span><span class="p">(</span>
+    <span class="s2">&quot;SEABORN_PALETTE&quot;</span><span class="p">,</span>
+    <span class="n">default</span><span class="o">=</span><span class="s2">&quot;deep&quot;</span><span class="p">,</span>
+    <span class="n">type_conv</span><span class="o">=</span><span class="n">conv_maps</span><span class="p">,</span>
+    <span class="n">desc</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;choose one of: </span><span class="si">{</span><span class="n">SEABORN_COLORMAPS</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">_def_opts</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Figure Saving Config</span>
+<span class="c1"># FIGURE_SAVE = EnvVariable(</span>
+<span class="c1">#    &quot;&quot;</span>
+<span class="c1"># )</span>
+
+<span class="c1"># TODO: fonts are platform dependent :(</span>
+<span class="c1"># SEABORN_FONT = EnvVariable(&#39;SEABORN_FONT&#39;,default=&#39;sans-serif&#39;,**_def_opts)</span>
+
+<span class="c1"># Staistical View Through Seaborn:</span>
+<span class="c1"># takes a dataframe and displays it via several types of statisical views, the default is `relplot.scatterplot` to show first order trends.</span>
+<span class="n">PLOT_KINDS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;displot&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;histplot&quot;</span><span class="p">,</span> <span class="s2">&quot;kdeplot&quot;</span><span class="p">,</span> <span class="s2">&quot;ecdfplot&quot;</span><span class="p">,</span> <span class="s2">&quot;rugplot&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;relplot&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;scatterplot&quot;</span><span class="p">,</span> <span class="s2">&quot;lineplot&quot;</span><span class="p">),</span>
+    <span class="s2">&quot;catplot&quot;</span><span class="p">:</span> <span class="p">(</span>
+        <span class="s2">&quot;stripplot&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;swarmplot&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;boxplot&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;violinplot&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;pointplot&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;barplot&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">}</span>
+
+
+<span class="c1"># Install Seaborn Themes</span>
+<div class="viewcode-block" id="install_seaborn">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.install_seaborn.html#engforge.attr_plotting.install_seaborn">[docs]</a>
+<span class="k">def</span> <span class="nf">install_seaborn</span><span class="p">(</span><span class="n">rc_override</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+        <span class="n">context</span><span class="o">=</span><span class="n">SEABORN_CONTEXT</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span>
+        <span class="n">style</span><span class="o">=</span><span class="n">SEABORN_THEME</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span>
+        <span class="n">palette</span><span class="o">=</span><span class="n">SEABORN_PALETTE</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">default</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">rc_override</span><span class="p">:</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="o">**</span><span class="n">default</span><span class="p">,</span> <span class="n">rc</span><span class="o">=</span><span class="n">rc_override</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="o">**</span><span class="n">default</span><span class="p">)</span></div>
+
+
+
+<span class="n">install_seaborn</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="save_all_figures_to_pdf">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.save_all_figures_to_pdf.html#engforge.attr_plotting.save_all_figures_to_pdf">[docs]</a>
+<span class="k">def</span> <span class="nf">save_all_figures_to_pdf</span><span class="p">(</span>
+    <span class="n">filename</span><span class="p">,</span> <span class="n">figs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">close</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pdf</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">return_pdf</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Save all figures to a PDF file.</span>
+
+<span class="sd">    :param filename: The name of the PDF file to save.</span>
+<span class="sd">    :param figs: List of figures to save. If None, all open figures will be saved.</span>
+<span class="sd">    :param dpi: The resolution of the saved figures in dots per inch.</span>
+<span class="sd">    :param close: Whether to close all figures after saving.</span>
+<span class="sd">    :param pdf: An existing PdfPages object to append the figures to. If None, a new PdfPages object will be created.</span>
+<span class="sd">    :param return_pdf: Whether to return the PdfPages object after saving.</span>
+<span class="sd">    :return: The PdfPages object if return_pdf is True, else None.</span>
+<span class="sd">    :rtype: PdfPages or None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">pdf</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">pp</span> <span class="o">=</span> <span class="n">PdfPages</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pp</span> <span class="o">=</span> <span class="n">pdf</span>
+
+    <span class="k">if</span> <span class="n">figs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">figs</span> <span class="o">=</span> <span class="p">[</span><span class="n">pylab</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">pylab</span><span class="o">.</span><span class="n">get_fignums</span><span class="p">()]</span>
+
+    <span class="k">for</span> <span class="n">fig</span> <span class="ow">in</span> <span class="n">figs</span><span class="p">:</span>
+        <span class="n">fig</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">pp</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;pdf&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="n">dpi</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">close</span><span class="p">:</span>
+        <span class="n">pylab</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">return_pdf</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pp</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">pp</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>  <span class="c1"># Don&#39;t keep the PDF file open</span></div>
+
+
+
+<div class="viewcode-block" id="PlottingMixin">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PlottingMixin.html#engforge.attr_plotting.PlottingMixin">[docs]</a>
+<span class="k">class</span> <span class="nc">PlottingMixin</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Inherited by Systems and Analyses to provide common interface for plotting&quot;&quot;&quot;</span>
+
+    <span class="n">_stored_plots</span><span class="p">:</span> <span class="nb">dict</span>
+
+    <span class="nd">@instance_cached</span>
+    <span class="k">def</span> <span class="nf">plots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_attributes</span><span class="p">()}</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">stored_plots</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_stored_plots&quot;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stored_plots</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stored_plots</span>
+
+    <span class="nd">@instance_cached</span>
+    <span class="k">def</span> <span class="nf">traces</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">transients_attributes</span><span class="p">():</span>
+            <span class="k">return</span> <span class="p">{}</span>  <span class="c1"># not a transient system</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">trace_attributes</span><span class="p">()}</span>
+
+<div class="viewcode-block" id="PlottingMixin.make_plots">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PlottingMixin.html#engforge.attr_plotting.PlottingMixin.make_plots">[docs]</a>
+    <span class="k">def</span> <span class="nf">make_plots</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">analysis</span><span class="p">:</span> <span class="s2">&quot;Analysis&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">store_figures</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="kc">None</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;makes plots and traces of all on this instance, and if a system is</span>
+<span class="sd">        subsystems. Analysis should call make plots however it can be called on a system as well</span>
+<span class="sd">        :param analysis: the analysis that has triggered this plot</span>
+<span class="sd">        :param store_figure: a boolean or dict, if neither a dictionary will be created and returend from this function</span>
+<span class="sd">        :returns: the dictionary from store_figures logic</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">pre</span><span class="p">:</span>
+            <span class="n">pre</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">classname</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pre</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pre</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">classname</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">if</span> <span class="n">analysis</span> <span class="ow">and</span> <span class="n">store_figures</span> <span class="ow">is</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">imgstore</span> <span class="o">=</span> <span class="n">analysis</span><span class="o">.</span><span class="n">_stored_plots</span>
+        <span class="k">elif</span> <span class="n">store_figures</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">imgstore</span> <span class="o">=</span> <span class="p">{}</span>  <span class="c1"># gotta store somewhere</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">store_figures</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+            <span class="n">imgstore</span> <span class="o">=</span> <span class="n">store_figures</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">imgstore</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Announce</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Plotting </span><span class="si">{</span><span class="n">pre</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Traces</span>
+        <span class="k">for</span> <span class="n">plotnm</span><span class="p">,</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plots</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identity</span><span class="si">}</span><span class="s2"> plotting </span><span class="si">{</span><span class="n">pre</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">plotnm</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">plot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">pylab</span><span class="o">.</span><span class="n">Figure</span><span class="p">):</span>
+                    <span class="n">pylab</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">imgstore</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">imgstore</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pre</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">plotnm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;issue in plot </span><span class="si">{</span><span class="n">plot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Traces</span>
+        <span class="k">for</span> <span class="n">plotnm</span><span class="p">,</span> <span class="n">plot</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">traces</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identity</span><span class="si">}</span><span class="s2"> tracing </span><span class="si">{</span><span class="n">pre</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">plotnm</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">plot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plot</span><span class="p">()</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">pylab</span><span class="o">.</span><span class="n">Figure</span><span class="p">):</span>
+                    <span class="n">pylab</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">imgstore</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">imgstore</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">pre</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">plotnm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">fig</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;issue in trace </span><span class="si">{</span><span class="n">plot</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Sub Systems</span>
+        <span class="k">for</span> <span class="n">confnm</span><span class="p">,</span> <span class="n">conf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_configurations</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">conf</span><span class="p">,</span> <span class="n">PlottingMixin</span><span class="p">):</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identity</span><span class="si">}</span><span class="s2"> system plotting </span><span class="si">{</span><span class="n">confnm</span><span class="si">}</span><span class="s2"> | </span><span class="si">{</span><span class="n">conf</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">conf</span><span class="o">.</span><span class="n">make_plots</span><span class="p">(</span><span class="n">analysis</span><span class="p">,</span> <span class="n">store_figures</span><span class="o">=</span><span class="n">store_figures</span><span class="p">,</span> <span class="n">pre</span><span class="o">=</span><span class="n">pre</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">imgstore</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="PlotInstance">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PlotInstance.html#engforge.attr_plotting.PlotInstance">[docs]</a>
+<span class="k">class</span> <span class="nc">PlotInstance</span><span class="p">(</span><span class="n">AttributeInstance</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;combine plotclass vars with system info&quot;&quot;&quot;</span>
+
+    <span class="n">plot_cls</span><span class="p">:</span> <span class="s2">&quot;Plot&quot;</span>
+    <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span>
+
+    <span class="n">refs</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">,</span> <span class="n">plot_cls</span><span class="p">:</span> <span class="s2">&quot;Plot&quot;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_cls</span> <span class="o">=</span> <span class="n">plot_cls</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">system</span>
+
+        
+        <span class="n">_sys_refs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">system_references</span><span class="p">()</span>
+        <span class="n">sys_refs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span><span class="n">v</span> <span class="k">for</span> <span class="n">atr</span><span class="p">,</span><span class="n">grp</span> <span class="ow">in</span> <span class="n">_sys_refs</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="ow">in</span> <span class="n">grp</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+        <span class="n">diff</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">varss</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">vers</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_cls</span><span class="o">.</span><span class="n">plot_vars</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vers</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vers</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys_refs</span><span class="p">:</span>
+                        <span class="n">diff</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">varss</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">vers</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys_refs</span><span class="p">:</span>
+                <span class="n">diff</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">varss</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">log_level</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;system references: </span><span class="si">{</span><span class="n">sys_refs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">diff</span><span class="p">:</span>
+                <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;has diff </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2">| found: </span><span class="si">{</span><span class="n">varss</span><span class="si">}</span><span class="s2">| possible: </span><span class="si">{</span><span class="n">sys_refs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">diff</span><span class="p">:</span>
+            <span class="c1">#raise KeyError(f&quot;has system diff: {diff} found: {vars}| from: {sys_ref}&quot;)</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;has system diff: </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2"> found: </span><span class="si">{</span><span class="nb">vars</span><span class="si">}</span><span class="s2">| from: </span><span class="si">{</span><span class="n">sys_refs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">refs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">sys_refs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">varss</span><span class="p">}</span>
+
+<div class="viewcode-block" id="PlotInstance.plot">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PlotInstance.html#engforge.attr_plotting.PlotInstance.plot">[docs]</a>
+    <span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;applies the system dataframe to the plot&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+        
+
+<div class="viewcode-block" id="PlotInstance.__call__">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PlotInstance.html#engforge.attr_plotting.PlotInstance.__call__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">override_kw</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        method allowing a similar type.kind(**override_kw,**default) (ie. relplot.scatterplot(x=different var))</span>
+<span class="sd">        #TODO: override strategy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">solved</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;not solved yet!&quot;</span><span class="p">)</span>
+
+        <span class="n">PC</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_cls</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_cls</span><span class="o">.</span><span class="n">plot_func</span>
+
+        <span class="c1"># Defaults</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">PC</span><span class="o">.</span><span class="n">plot_vars</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">PC</span><span class="p">,</span> <span class="s2">&quot;kind&quot;</span><span class="p">):</span>
+            <span class="n">args</span><span class="p">[</span><span class="s2">&quot;kind&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kind</span> <span class="o">=</span> <span class="n">PC</span><span class="o">.</span><span class="n">kind</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;plot&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># these go in plot</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="n">PC</span><span class="o">.</span><span class="n">plot_extra</span><span class="p">()</span>
+
+        <span class="c1"># Parse title</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_cls</span><span class="o">.</span><span class="n">title</span>
+        <span class="k">if</span> <span class="s2">&quot;title&quot;</span> <span class="ow">in</span> <span class="n">override_kw</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">override_kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Announce Override</span>
+        <span class="k">if</span> <span class="n">override_kw</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;overriding vars </span><span class="si">{</span><span class="n">override_kw</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">override_kw</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;plotting </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">identity</span><span class="si">}</span><span class="s2">| </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identity</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="n">fig</span> <span class="o">=</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">extra</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_fig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="nf">process_fig</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fig</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">pylab</span><span class="o">.</span><span class="n">Axes</span><span class="p">):</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">fig</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">sns</span><span class="o">.</span><span class="n">FacetGrid</span><span class="p">):</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span>
+            <span class="n">fig</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">fig</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">fig</span>
+
+        <span class="c1"># Polish Fig Args</span>
+        <span class="k">if</span> <span class="n">title</span><span class="p">:</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+            <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">identity</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_cls</span><span class="o">.</span><span class="n">type</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">plot_cls</span><span class="o">.</span><span class="n">kind</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="PlotBase">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PlotBase.html#engforge.attr_plotting.PlotBase">[docs]</a>
+<span class="k">class</span> <span class="nc">PlotBase</span><span class="p">(</span><span class="n">ATTR_BASE</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;base class for plot attributes&quot;&quot;&quot;</span>
+
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">config_cls</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span>
+    <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">cls_vars</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">}</span>
+    <span class="n">instance_class</span> <span class="o">=</span> <span class="n">PlotInstance</span>
+
+<div class="viewcode-block" id="PlotBase.plot_vars">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PlotBase.html#engforge.attr_plotting.PlotBase.plot_vars">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">plot_vars</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;gathers seaborn plot vars that will scope from system.dataframe&quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">p</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">p</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">hue</span><span class="p">:</span>
+            <span class="n">p</span><span class="p">[</span><span class="s2">&quot;hue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">hue</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">col</span><span class="p">:</span>
+            <span class="n">p</span><span class="p">[</span><span class="s2">&quot;col&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">col</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">row</span><span class="p">:</span>
+            <span class="n">p</span><span class="p">[</span><span class="s2">&quot;row&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">row</span>
+
+        <span class="c1"># Add the options</span>
+        <span class="n">var_opts</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">type_var_options</span><span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">type</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">plot_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">var_opts</span><span class="p">:</span>
+                <span class="n">p</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">arg</span>
+        <span class="k">return</span> <span class="n">p</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">plot_extra</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="n">plot_vars</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">plot_vars</span><span class="p">()</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">plot_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">plot_vars</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">arg</span>
+        <span class="k">return</span> <span class="n">out</span>
+
+<div class="viewcode-block" id="PlotBase.validate_plot_args">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PlotBase.html#engforge.attr_plotting.PlotBase.validate_plot_args">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">validate_plot_args</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks system.system_references that cls.plot_vars exists&quot;&quot;&quot;</span>
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;validating: </span><span class="si">{</span><span class="n">system</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">sys_ref</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">system_references</span><span class="p">()</span>
+        <span class="n">attr_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sys_ref</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">prop_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">sys_ref</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">valid</span> <span class="o">=</span> <span class="n">attr_keys</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="n">prop_keys</span><span class="p">)</span>
+
+        <span class="n">diff</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">vers</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">plot_vars</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vers</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vers</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid</span><span class="p">:</span>
+                        <span class="n">diff</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">vers</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">valid</span><span class="p">:</span>
+                <span class="n">diff</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">vers</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">log</span><span class="o">.</span><span class="n">log_level</span> <span class="o">&lt;=</span> <span class="mi">10</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> has vars: </span><span class="si">{</span><span class="n">attr_keys</span><span class="si">}</span><span class="s2"> and bad input: </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">diff</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bad plot vars: </span><span class="si">{</span><span class="n">diff</span><span class="si">}</span><span class="s2"> do not exist in system: </span><span class="si">{</span><span class="n">valid</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+            <span class="c1">#TODO: fix time being defined on components</span>
+            <span class="c1"># raise KeyError(</span>
+            <span class="c1">#     f&quot;bad plot vars: {diff} do not exist in system: {valid}&quot;</span>
+            <span class="c1"># )</span>
+
+    
+<div class="viewcode-block" id="PlotBase.handle_instance">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PlotBase.html#engforge.attr_plotting.PlotBase.handle_instance">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">handle_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span><span class="n">canidate</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;no interacion with system, reporing only&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="PlotBase.create_instance">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PlotBase.html#engforge.attr_plotting.PlotBase.create_instance">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PlotInstance</span><span class="p">:</span>
+        <span class="bp">cls</span><span class="o">.</span><span class="n">validate_plot_args</span><span class="p">(</span><span class="n">system</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">PlotInstance</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="n">trace_type</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="TraceInstance">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.TraceInstance.html#engforge.attr_plotting.TraceInstance">[docs]</a>
+<span class="k">class</span> <span class="nc">TraceInstance</span><span class="p">(</span><span class="n">PlotInstance</span><span class="p">):</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">plot_extra</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">plot_cls</span><span class="o">.</span><span class="n">extra_args</span>
+
+<div class="viewcode-block" id="TraceInstance.__call__">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.TraceInstance.html#engforge.attr_plotting.TraceInstance.__call__">[docs]</a>
+    <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">override_kw</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        method allowing a similar type.kind(**override_kw,**default) (ie. relplot.scatterplot(x=different var))</span>
+<span class="sd">        #TODO: override strategy</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">solved</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;not solved yet!&quot;</span><span class="p">)</span>
+
+        <span class="n">PC</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_cls</span>
+
+        <span class="nb">type</span> <span class="o">=</span> <span class="n">PC</span><span class="o">.</span><span class="n">type</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">plot_cls</span><span class="o">.</span><span class="n">types</span>
+        <span class="k">if</span> <span class="s2">&quot;type&quot;</span> <span class="ow">in</span> <span class="n">override_kw</span> <span class="ow">and</span> <span class="n">override_kw</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">types</span><span class="p">:</span>
+            <span class="nb">type</span> <span class="o">=</span> <span class="n">override_kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;type&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="s2">&quot;type&quot;</span> <span class="ow">in</span> <span class="n">override_kw</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;invalid trace type, must be in </span><span class="si">{</span><span class="n">types</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;scatter&quot;</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">type</span> <span class="o">==</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span>
+            <span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">ax</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Defaults</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="n">PC</span><span class="o">.</span><span class="n">plot_args</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="c1"># these go in plot</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="n">PC</span><span class="o">.</span><span class="n">plot_extra</span><span class="p">()</span>
+
+        <span class="c1"># Parse title</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="n">PC</span><span class="o">.</span><span class="n">title</span>
+        <span class="k">if</span> <span class="s2">&quot;title&quot;</span> <span class="ow">in</span> <span class="n">override_kw</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">override_kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Announce Override</span>
+        <span class="k">if</span> <span class="n">override_kw</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;overriding vars </span><span class="si">{</span><span class="n">override_kw</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="n">override_kw</span><span class="p">)</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;plotting </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">identity</span><span class="si">}</span><span class="s2">| </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">identity</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># PLOTTING</span>
+        <span class="c1"># Make the axes and plot</span>
+        <span class="c1"># Get The MVPS</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;x&quot;</span> <span class="ow">in</span> <span class="n">override_kw</span><span class="p">:</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">override_kw</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;y&quot;</span> <span class="ow">in</span> <span class="n">override_kw</span><span class="p">:</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="n">override_kw</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="n">y</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+        <span class="c1"># secondary plot</span>
+        <span class="k">if</span> <span class="s2">&quot;y2&quot;</span> <span class="ow">in</span> <span class="n">args</span> <span class="ow">and</span> <span class="n">args</span><span class="p">[</span><span class="s2">&quot;y2&quot;</span><span class="p">]:</span>
+            <span class="n">y2</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;y2&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="s2">&quot;y2&quot;</span> <span class="ow">in</span> <span class="n">override_kw</span><span class="p">:</span>
+                <span class="n">y2</span> <span class="o">=</span> <span class="n">override_kw</span><span class="p">[</span><span class="s2">&quot;y2&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">y2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">y2</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">elif</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="n">y2</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">y2</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">y2</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># TODO: insert marker, color ect per group, ensure no overlap</span>
+        <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span> <span class="k">if</span> <span class="n">y2</span> <span class="k">else</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">y2</span><span class="p">:</span>
+            <span class="n">ax</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span>
+            <span class="n">ax2</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Loop over y1</span>
+        <span class="n">yleg</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">y</span><span class="p">:</span>
+            <span class="n">f</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">extra</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># The only specificity of the code is when plotting the legend</span>
+            <span class="n">h</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">l</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">axes</span>
+                    <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">bounds</span> <span class="o">==</span> <span class="n">ax</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">bounds</span>
+                <span class="p">]</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">l</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Loop over y2</span>
+        <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">y2</span><span class="p">:</span>
+            <span class="n">f</span><span class="p">(</span><span class="n">ax2</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">extra</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># The only specificity of the code is when plotting the legend</span>
+            <span class="n">h</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">hstack</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">l</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+                    <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">ax2</span><span class="o">.</span><span class="n">figure</span><span class="o">.</span><span class="n">axes</span>
+                    <span class="k">if</span> <span class="n">l</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">bounds</span> <span class="o">==</span> <span class="n">ax2</span><span class="o">.</span><span class="n">bbox</span><span class="o">.</span><span class="n">bounds</span>
+                <span class="p">]</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+            <span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">l</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper right&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">process_fig</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Trace">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.Trace.html#engforge.attr_plotting.Trace">[docs]</a>
+<span class="k">class</span> <span class="nc">Trace</span><span class="p">(</span><span class="n">PlotBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;trace is a plot for transients, with y and y2 axes which can have multiple vars each&quot;&quot;&quot;</span>
+
+    <span class="n">types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;scatter&quot;</span><span class="p">,</span> <span class="s2">&quot;line&quot;</span><span class="p">]</span>
+    <span class="nb">type</span> <span class="o">=</span> <span class="s2">&quot;scatter&quot;</span>
+    <span class="n">instance_class</span> <span class="o">=</span> <span class="n">TraceInstance</span>
+
+    <span class="c1"># mainem</span>
+    <span class="n">y2</span><span class="p">:</span> <span class="n">trace_type</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">trace_type</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="n">plot_args</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">extra_args</span><span class="p">:</span> <span class="nb">dict</span>
+
+    <span class="c1"># Extended vars per option</span>
+    <span class="n">type_var_options</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;scatter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="s2">&quot;color&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;color&quot;</span><span class="p">,</span> <span class="s2">&quot;marker&quot;</span><span class="p">,</span> <span class="s2">&quot;linestyle&quot;</span><span class="p">),</span>
+    <span class="p">}</span>
+
+    <span class="n">type_options</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;scatter&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;vmax&quot;</span><span class="p">,</span> <span class="s2">&quot;vmin&quot;</span><span class="p">,</span> <span class="s2">&quot;marker&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;cmap&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;line&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;linewidth&quot;</span><span class="p">,),</span>
+    <span class="p">}</span>
+    <span class="n">all_options</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="s2">&quot;xlabel&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;ylabel&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;y2label&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;title&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;xticks&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;yticks&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;alpha&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">always</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;y2&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Trace.define">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.Trace.html#engforge.attr_plotting.Trace.define">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">define</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">trace_type</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">y2</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;line&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Defines a plot that will be matplotlib, with validation happening as much as possible in the define method</span>
+
+<span class="sd">        #Plot Choice</span>
+<span class="sd">        :param kind: specify the kind of type of plot scatter or line, with the default being line</span>
+
+<span class="sd">        # Dependents &amp; Independents:</span>
+<span class="sd">        :param x: the x var for each plot, by default &#39;time&#39;</span>
+<span class="sd">        :param y: the y var for each plot, required</span>
+<span class="sd">        :param y2: the y2 var for each plot, optional</span>
+
+<span class="sd">        # Additional Parameters:</span>
+<span class="sd">        :param title: this title will be applied to the figure.suptitle()</span>
+<span class="sd">        :param xlabel: the x label, by default the capitalized var</span>
+<span class="sd">        :param ylabel: the x label, by default the capitalized var</span>
+<span class="sd">        :param y2label: the x label, by default the capitalized var</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="n">x</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">y</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x and y must both be input&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;x must be string&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y must be string or list&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">([</span><span class="n">y2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">str</span><span class="p">))]):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;y2 must be string or list&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Validate Plot</span>
+        <span class="k">assert</span> <span class="n">kind</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">types</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;invalid kind not in </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">types</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;line&quot;</span><span class="p">:</span>
+            <span class="n">pfunc</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">plot</span>
+        <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;scatter&quot;</span><span class="p">:</span>
+            <span class="n">pfunc</span> <span class="o">=</span> <span class="n">pylab</span><span class="o">.</span><span class="n">scatter</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bad plot kind: </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Remove special args</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s2">&quot;title&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Remove special args</span>
+        <span class="n">non_var_args</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">valid_non_vars</span><span class="p">(</span><span class="n">kind</span><span class="p">)</span>
+        <span class="n">var_args</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">valid_vars_options</span><span class="p">(</span><span class="n">kind</span><span class="p">)</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">non_var_args</span><span class="p">:</span>
+                <span class="n">extra</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+        <span class="c1"># Validate Args</span>
+        <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">var_args</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;invalid plot args </span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">plot_args</span> <span class="o">=</span> <span class="n">kwargs</span>
+        <span class="n">plot_args</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="n">plot_args</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span>
+
+        <span class="k">if</span> <span class="s2">&quot;y2&quot;</span><span class="p">:</span>
+            <span class="n">plot_args</span><span class="p">[</span><span class="s2">&quot;y2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">y2</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;adding Trace|</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">y2</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Create A New Signals Class</span>
+        <span class="n">new_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Trace_x_</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">_y_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">new_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">new_name</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">y2</span><span class="o">=</span><span class="n">y2</span><span class="p">,</span>
+            <span class="n">plot_func</span><span class="o">=</span><span class="n">pfunc</span><span class="p">,</span>
+            <span class="n">plot_args</span><span class="o">=</span><span class="n">plot_args</span><span class="p">,</span>
+            <span class="n">extra_args</span><span class="o">=</span><span class="n">extra</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+            <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">new_plot</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_setup_cls</span><span class="p">(</span><span class="n">new_name</span><span class="p">,</span> <span class="n">new_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_plot</span></div>
+
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">valid_non_vars</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">all_options</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">type_options</span><span class="p">[</span><span class="nb">type</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">valid_vars_options</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">always</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">type_var_options</span><span class="p">[</span><span class="nb">type</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">s</span>
+
+<div class="viewcode-block" id="Trace.plot_vars">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.Trace.html#engforge.attr_plotting.Trace.plot_vars">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">plot_vars</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">:</span>
+        <span class="n">pa</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">plot_args</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+        <span class="n">y1</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">y1</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">y1</span><span class="p">)</span>
+        <span class="n">pa</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="s2">&quot;y2&quot;</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
+            <span class="n">c</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            <span class="n">y2</span> <span class="o">=</span> <span class="n">pa</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;y2&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">y2</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">y2</span><span class="p">:</span>
+                    <span class="n">c</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">y2</span><span class="p">)</span>
+
+            <span class="n">pa</span><span class="p">[</span><span class="s2">&quot;y2&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">pa</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Plot">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PLOT.html#engforge.attr_plotting.Plot">[docs]</a>
+<span class="k">class</span> <span class="nc">Plot</span><span class="p">(</span><span class="n">PlotBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Plot is a conveinence method&quot;&quot;&quot;</span>
+
+    <span class="n">types</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;displot&quot;</span><span class="p">,</span> <span class="s2">&quot;relplot&quot;</span><span class="p">,</span> <span class="s2">&quot;catplot&quot;</span><span class="p">)</span>
+    <span class="n">std_fields</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;col&quot;</span><span class="p">,</span> <span class="s2">&quot;hue&quot;</span><span class="p">,</span> <span class="s2">&quot;row&quot;</span><span class="p">)</span>
+
+    <span class="c1"># These options must be filled out</span>
+    <span class="nb">type</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">x</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">y</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="c1"># optional, must be var</span>
+    <span class="n">hue</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">col</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">row</span><span class="p">:</span> <span class="nb">str</span>
+
+    <span class="c1"># Extended vars per option</span>
+    <span class="n">type_var_options</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;displot&quot;</span><span class="p">:</span> <span class="p">(),</span>
+        <span class="s2">&quot;relplot&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s2">&quot;style&quot;</span><span class="p">,</span> <span class="s2">&quot;shape&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;catplot&quot;</span><span class="p">:</span> <span class="p">(),</span>
+    <span class="p">}</span>
+
+    <span class="c1"># These capture the function and extra keywords</span>
+    <span class="n">plot_func</span><span class="p">:</span> <span class="kc">None</span>
+    <span class="n">plot_args</span><span class="p">:</span> <span class="nb">dict</span>
+
+<div class="viewcode-block" id="Plot.define">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PLOT.html#engforge.attr_plotting.Plot.define">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">define</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span>
+        <span class="n">x</span><span class="p">,</span>
+        <span class="n">y</span><span class="p">,</span>
+        <span class="n">_type</span><span class="o">=</span><span class="s2">&quot;relplot&quot;</span><span class="p">,</span>
+        <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;scatterplot&quot;</span><span class="p">,</span>
+        <span class="n">row</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">col</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">hue</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Defines a plot that will be rendered in seaborn, with validation happening as much as possible in the define method</span>
+
+<span class="sd">        #Plot Choice</span>
+<span class="sd">        :param _type: the type of seaborn plot (relplot,displot,catplot)</span>
+<span class="sd">        :param kind: specify the kind of type of plot (ie. scatterplot of relplot)</span>
+
+<span class="sd">        # Dependents &amp; Independents:</span>
+<span class="sd">        :param x: the x var for each plot</span>
+<span class="sd">        :param y: the y var for each plot</span>
+
+<span class="sd">        # Additional Parameters:</span>
+<span class="sd">        :param row: create a grid of data with row var</span>
+<span class="sd">        :param col: create a grid of data with column var</span>
+<span class="sd">        :param hue: provide an additional dimension of color based on this var</span>
+<span class="sd">        :param title: this title will be applied to the figure.suptitle()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Validate Plot</span>
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="n">_type</span> <span class="ow">in</span> <span class="n">PLOT_KINDS</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;type </span><span class="si">{</span><span class="n">_type</span><span class="si">}</span><span class="s2"> must be in </span><span class="si">{</span><span class="n">PLOT_KINDS</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">kinds</span> <span class="o">=</span> <span class="n">PLOT_KINDS</span><span class="p">[</span><span class="n">_type</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">kind</span> <span class="ow">in</span> <span class="n">kinds</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;plot kind </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2"> not in </span><span class="si">{</span><span class="n">kinds</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Remove special args</span>
+        <span class="n">title</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="s2">&quot;title&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">title</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Validate Args</span>
+        <span class="n">pfunc</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sns</span><span class="p">,</span> <span class="n">_type</span><span class="p">)</span>
+        <span class="n">kfunc</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">sns</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">kfunc</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">args</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;only </span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s2"> allowed for kw&quot;</span>
+        <span class="n">plot_args</span> <span class="o">=</span> <span class="n">kwargs</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;adding PLOT|</span><span class="si">{</span><span class="n">_type</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">,hue=</span><span class="si">{</span><span class="n">hue</span><span class="si">}</span><span class="s2">,c:[</span><span class="si">{</span><span class="n">col</span><span class="si">}</span><span class="s2">],r:[</span><span class="si">{</span><span class="n">row</span><span class="si">}</span><span class="s2">],</span><span class="si">{</span><span class="n">kwargs</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Create A New Signals Class</span>
+        <span class="n">new_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;PLOT_x_</span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="s2">_y_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+            <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">new_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">new_name</span><span class="p">,</span>
+            <span class="n">x</span><span class="o">=</span><span class="n">x</span><span class="p">,</span>
+            <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">hue</span><span class="o">=</span><span class="n">hue</span><span class="p">,</span>
+            <span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span>
+            <span class="n">col</span><span class="o">=</span><span class="n">col</span><span class="p">,</span>
+            <span class="nb">type</span><span class="o">=</span><span class="n">_type</span><span class="p">,</span>
+            <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span>
+            <span class="n">plot_func</span><span class="o">=</span><span class="n">pfunc</span><span class="p">,</span>
+            <span class="n">plot_args</span><span class="o">=</span><span class="n">plot_args</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="n">title</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">new_plot</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_setup_cls</span><span class="p">(</span><span class="n">new_name</span><span class="p">,</span> <span class="n">new_dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">new_plot</span></div>
+
+
+<div class="viewcode-block" id="Plot.plot_vars">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_plotting.PLOT.html#engforge.attr_plotting.Plot.plot_vars">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">plot_vars</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;gathers seaborn plot vars that will scope from system.dataframe&quot;&quot;&quot;</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">p</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">p</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">y</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">hue</span><span class="p">:</span>
+            <span class="n">p</span><span class="p">[</span><span class="s2">&quot;hue&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">hue</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">col</span><span class="p">:</span>
+            <span class="n">p</span><span class="p">[</span><span class="s2">&quot;col&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">col</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">row</span><span class="p">:</span>
+            <span class="n">p</span><span class="p">[</span><span class="s2">&quot;row&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">row</span>
+
+        <span class="c1"># Add the options</span>
+        <span class="n">var_opts</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">type_var_options</span><span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">type</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">arg</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">plot_args</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">var_opts</span><span class="p">:</span>
+                <span class="n">p</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">arg</span>
+        <span class="k">return</span> <span class="n">p</span></div>
+</div>
+
+
+
+<span class="c1">### Support Previous API</span>
+<span class="n">PLOT</span> <span class="o">=</span> <span class="n">Plot</span>
+<span class="n">Trace</span> <span class="o">=</span> <span class="n">Trace</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

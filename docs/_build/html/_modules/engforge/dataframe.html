@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.dataframe &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/test.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.dataframe</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.dataframe</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Dataframe Module:</span>
+
+<span class="sd">Store data in dataframes and provide a simple interface to manipulate it.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">attr</span>
+
+<span class="kn">from</span> <span class="nn">engforge.common</span> <span class="kn">import</span> <span class="n">inst_vectorize</span><span class="p">,</span> <span class="n">chunks</span>
+<span class="kn">from</span> <span class="nn">engforge.properties</span> <span class="kn">import</span> <span class="n">engforge_prop</span>
+<span class="c1"># from engforge.configuration import Configuration, forge</span>
+<span class="kn">from</span> <span class="nn">engforge.logging</span> <span class="kn">import</span> <span class="n">LoggingMixin</span>
+<span class="kn">from</span> <span class="nn">engforge.typing</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">engforge.properties</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+
+
+<div class="viewcode-block" id="DataFrameLog">
+<a class="viewcode-back" href="../../_autosummary/engforge.dataframe.DataFrameLog.html#engforge.dataframe.DataFrameLog">[docs]</a>
+<span class="k">class</span> <span class="nc">DataFrameLog</span><span class="p">(</span><span class="n">LoggingMixin</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">DataFrameLog</span><span class="p">()</span>
+
+
+<span class="c1"># Dataframe interrogation functions</span>
+<div class="viewcode-block" id="is_uniform">
+<a class="viewcode-back" href="../../_autosummary/engforge.dataframe.is_uniform.html#engforge.dataframe.is_uniform">[docs]</a>
+<span class="k">def</span> <span class="nf">is_uniform</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>  <span class="c1"># s.values (pandas&lt;0.24)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">numpy</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+            <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+
+<span class="c1"># key_func = lambda kv: len(kv[0].split(&#39;.&#39;))*len(kv[1])</span>
+<span class="c1"># length of matches / length of key</span>
+<span class="n">key_func</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">kv</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">kv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">kv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span>
+<span class="c1"># key_func = lambda kv: len(kv[1])</span>
+
+
+<span class="c1"># TODO: remove duplicate columns</span>
+<span class="c1"># mtches = collections.defaultdict(set)</span>
+<span class="c1"># dfv = ecs.dataframe_variants[0]</span>
+<span class="c1"># for v1,v2 in itertools.combinations(dfv.columns,2):</span>
+<span class="c1">#     if numpy.all(dfv[v1]==dfv[v2]):</span>
+<span class="c1">#</span>
+<span class="c1">#         mtches[v1].add(v2)</span>
+<span class="c1">#         mtches[v2].add(v1)</span>
+
+<span class="c1">#TODO: integrate statistical output of dataframe, if at all in problem domain</span>
+<span class="c1">#1. stats_mode: mean, median,min,max mode, std, var, skew, kurtosis</span>
+<span class="c1">#2. min_mode: mean,median,std,min,max</span>
+<span class="c1">#3. sub_mode: store the dataframe completely separately</span>
+<div class="viewcode-block" id="dataframe_property">
+<a class="viewcode-back" href="../../_autosummary/engforge.dataframe.dataframe_property.html#engforge.dataframe.dataframe_property">[docs]</a>
+<span class="k">class</span> <span class="nc">dataframe_property</span><span class="p">(</span><span class="n">engforge_prop</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<span class="c1">#aliases</span>
+<span class="n">dataframe_prop</span> <span class="o">=</span> <span class="n">dataframe_property</span>
+<span class="n">df_prop</span> <span class="o">=</span> <span class="n">dataframe_property</span>
+
+
+<div class="viewcode-block" id="determine_split">
+<a class="viewcode-back" href="../../_autosummary/engforge.dataframe.determine_split.html#engforge.dataframe.determine_split">[docs]</a>
+<span class="k">def</span> <span class="nf">determine_split</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">top</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">key_f</span><span class="o">=</span><span class="n">key_func</span><span class="p">):</span>
+    <span class="n">parents</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">rw</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">:</span>
+        <span class="n">grp</span> <span class="o">=</span> <span class="n">rw</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">grp</span><span class="p">)):</span>
+            <span class="n">tkn</span> <span class="o">=</span> <span class="s2">&quot;.&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">grp</span><span class="p">[</span><span class="mi">0</span> <span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])</span>
+            <span class="n">parents</span><span class="p">[</span><span class="n">tkn</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">rw</span> <span class="ow">in</span> <span class="n">raw</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">par</span> <span class="ow">in</span> <span class="n">parents</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">rw</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">par</span><span class="p">):</span>
+                <span class="n">parents</span><span class="p">[</span><span class="n">par</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">rw</span><span class="p">)</span>
+
+    <span class="n">grps</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">parents</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">key_f</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:</span><span class="n">top</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">grps</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="split_dataframe">
+<a class="viewcode-back" href="../../_autosummary/engforge.dataframe.split_dataframe.html#engforge.dataframe.split_dataframe">[docs]</a>
+<span class="k">def</span> <span class="nf">split_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;split dataframe into a dictionary of invariants and a dataframe of variable values</span>
+
+<span class="sd">    :returns tuple: constants,dataframe</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">uniform</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">s</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">is_uniform</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
+            <span class="n">uniform</span><span class="p">[</span><span class="n">s</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">df_unique</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">uniform</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">uniform</span><span class="p">,</span> <span class="n">df_unique</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_unique</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">df_unique</span></div>
+
+
+
+<div class="viewcode-block" id="DataframeMixin">
+<a class="viewcode-back" href="../../_autosummary/engforge.dataframe.DataframeMixin.html#engforge.dataframe.DataframeMixin">[docs]</a>
+<span class="k">class</span> <span class="nc">DataframeMixin</span><span class="p">:</span>
+    <span class="n">dataframe</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span>
+
+    <span class="n">_split_dataframe_func</span> <span class="o">=</span> <span class="n">split_dataframe</span>
+    <span class="n">_determine_split_func</span> <span class="o">=</span> <span class="n">determine_split</span>
+
+<div class="viewcode-block" id="DataframeMixin.smart_split_dataframe">
+<a class="viewcode-back" href="../../_autosummary/engforge.dataframe.DataframeMixin.html#engforge.dataframe.DataframeMixin.smart_split_dataframe">[docs]</a>
+    <span class="k">def</span> <span class="nf">smart_split_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">df</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">split_groups</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">key_f</span><span class="o">=</span><span class="n">key_func</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;splits dataframe between constant values and variants&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">df</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">const</span><span class="p">,</span> <span class="n">vardf</span> <span class="o">=</span> <span class="n">split_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+        <span class="n">out</span><span class="p">[</span><span class="s2">&quot;constants&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">const</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">vardf</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">split_groups</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">split_groups</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">split_groups</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">out</span><span class="p">[</span><span class="s2">&quot;variants&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vardf</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nconst</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">cgrp</span> <span class="o">=</span> <span class="n">determine_split</span><span class="p">(</span><span class="n">const</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="n">split_groups</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">const</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">grp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">cgrp</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
+                <span class="n">columns</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+                <span class="n">bad_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">grp</span><span class="p">)]</span>
+                <span class="n">good_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">grp</span><span class="p">)]</span>
+                <span class="n">nconst</span><span class="p">[</span><span class="n">grp</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="n">const</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">good_columns</span><span class="p">}</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">good_columns</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span><span class="p">:</span>
+                        <span class="n">columns</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="n">out</span><span class="p">[</span><span class="s2">&quot;constants&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nconst</span>
+
+            <span class="n">raw</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+            <span class="n">grps</span> <span class="o">=</span> <span class="n">determine_split</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="n">split_groups</span><span class="p">,</span> <span class="n">key_f</span><span class="o">=</span><span class="n">key_f</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">grp</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">grps</span><span class="p">,</span> <span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)):</span>
+                <span class="n">columns</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">vardf</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+                <span class="n">bad_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">grp</span><span class="p">)]</span>
+                <span class="n">good_columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">grp</span><span class="p">)]</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">grp</span><span class="p">]</span> <span class="o">=</span> <span class="n">vardf</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">bad_columns</span><span class="p">)</span>
+                <span class="c1"># remove columns from vardf</span>
+                <span class="n">vardf</span> <span class="o">=</span> <span class="n">vardf</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">good_columns</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">vardf</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="s2">&quot;misc&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">vardf</span>
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+    <span class="nd">@solver_cached</span>
+    <span class="k">def</span> <span class="nf">_split_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;splits dataframe between constant values and variants&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">split_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dataframe</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dataframe_constants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_split_dataframe</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dataframe_variants</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_split_dataframe</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span><span class="nb">tuple</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">o</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">return</span> <span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">o</span>
+
+    <span class="k">def</span> <span class="nf">format_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dataframe</span><span class="p">:</span> <span class="n">pandas</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">dataframe</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;columns&quot;</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+
+    <span class="c1"># Plotting Interface</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">skip_plot_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;accesses &#39;_skip_plot_vars&#39; if it exists, otherwise returns empty list&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;_skip_plot_vars&quot;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="p">[</span><span class="n">var</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_skip_plot_vars</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;returns the dataframe&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;must be implemented in subclass&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

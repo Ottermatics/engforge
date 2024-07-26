@@ -1,0 +1,178 @@
+engforge.component\_collections.ComponentIter
+=============================================
+
+.. currentmodule:: engforge.component_collections
+
+.. autoclass:: ComponentIter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ComponentIter.add_fields
+      ~ComponentIter.change_all_log_lvl
+      ~ComponentIter.check_ref_slot_type
+      ~ComponentIter.cls_all_attrs_fields
+      ~ComponentIter.cls_all_property_keys
+      ~ComponentIter.cls_all_property_labels
+      ~ComponentIter.cls_compile
+      ~ComponentIter.collect_all_attributes
+      ~ComponentIter.collect_comp_refs
+      ~ComponentIter.collect_dynamic_refs
+      ~ComponentIter.collect_inst_attributes
+      ~ComponentIter.collect_post_update_refs
+      ~ComponentIter.collect_solver_refs
+      ~ComponentIter.collect_update_refs
+      ~ComponentIter.comp_references
+      ~ComponentIter.compile_classes
+      ~ComponentIter.copy_config_at_state
+      ~ComponentIter.create_dynamic_matricies
+      ~ComponentIter.create_feedthrough_matrix
+      ~ComponentIter.create_input_matrix
+      ~ComponentIter.create_output_constants
+      ~ComponentIter.create_output_matrix
+      ~ComponentIter.create_state_constants
+      ~ComponentIter.create_state_matrix
+      ~ComponentIter.critical
+      ~ComponentIter.debug
+      ~ComponentIter.determine_nearest_stationary_state
+      ~ComponentIter.difference
+      ~ComponentIter.error
+      ~ComponentIter.extract_message
+      ~ComponentIter.filter
+      ~ComponentIter.format_columns
+      ~ComponentIter.get_system_input_refs
+      ~ComponentIter.go_through_configurations
+      ~ComponentIter.info
+      ~ComponentIter.input_attrs
+      ~ComponentIter.input_fields
+      ~ComponentIter.installSTDLogger
+      ~ComponentIter.internal_components
+      ~ComponentIter.internal_configurations
+      ~ComponentIter.internal_references
+      ~ComponentIter.internal_systems
+      ~ComponentIter.internal_tabulations
+      ~ComponentIter.linear_output
+      ~ComponentIter.linear_step
+      ~ComponentIter.locate
+      ~ComponentIter.locate_ref
+      ~ComponentIter.message_with_identiy
+      ~ComponentIter.msg
+      ~ComponentIter.nonlinear_output
+      ~ComponentIter.nonlinear_step
+      ~ComponentIter.numeric_fields
+      ~ComponentIter.parent_configurations_cls
+      ~ComponentIter.parse_run_kwargs
+      ~ComponentIter.parse_simulation_input
+      ~ComponentIter.plot_attributes
+      ~ComponentIter.post_update
+      ~ComponentIter.pre_compile
+      ~ComponentIter.print_info
+      ~ComponentIter.rate
+      ~ComponentIter.rate_linear
+      ~ComponentIter.rate_nonlinear
+      ~ComponentIter.ref_dXdt
+      ~ComponentIter.reset
+      ~ComponentIter.resetLog
+      ~ComponentIter.resetSystemLogs
+      ~ComponentIter.set_attr
+      ~ComponentIter.set_time
+      ~ComponentIter.setattrs
+      ~ComponentIter.signals_attributes
+      ~ComponentIter.slack_notification
+      ~ComponentIter.slot_refs
+      ~ComponentIter.slots_attributes
+      ~ComponentIter.smart_split_dataframe
+      ~ComponentIter.solvers_attributes
+      ~ComponentIter.step
+      ~ComponentIter.subclasses
+      ~ComponentIter.subcls_compile
+      ~ComponentIter.system_properties_classdef
+      ~ComponentIter.system_references
+      ~ComponentIter.table_fields
+      ~ComponentIter.trace_attributes
+      ~ComponentIter.transients_attributes
+      ~ComponentIter.update
+      ~ComponentIter.update_dynamics
+      ~ComponentIter.update_feedthrough
+      ~ComponentIter.update_input
+      ~ComponentIter.update_output_constants
+      ~ComponentIter.update_output_matrix
+      ~ComponentIter.update_state
+      ~ComponentIter.update_state_constants
+      ~ComponentIter.validate_class
+      ~ComponentIter.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ComponentIter.Ut_ref
+      ~ComponentIter.Xt_ref
+      ~ComponentIter.Yt_ref
+      ~ComponentIter.anything_changed
+      ~ComponentIter.as_dict
+      ~ComponentIter.attrs_fields
+      ~ComponentIter.classname
+      ~ComponentIter.current
+      ~ComponentIter.dXtdt_ref
+      ~ComponentIter.data_dict
+      ~ComponentIter.dataframe_constants
+      ~ComponentIter.dataframe_variants
+      ~ComponentIter.displayname
+      ~ComponentIter.dynamic_A
+      ~ComponentIter.dynamic_B
+      ~ComponentIter.dynamic_C
+      ~ComponentIter.dynamic_D
+      ~ComponentIter.dynamic_F
+      ~ComponentIter.dynamic_K
+      ~ComponentIter.dynamic_input
+      ~ComponentIter.dynamic_input_vars
+      ~ComponentIter.dynamic_output
+      ~ComponentIter.dynamic_output_vars
+      ~ComponentIter.dynamic_state
+      ~ComponentIter.dynamic_state_vars
+      ~ComponentIter.filename
+      ~ComponentIter.identity
+      ~ComponentIter.input_as_dict
+      ~ComponentIter.last_context
+      ~ComponentIter.log_fmt
+      ~ComponentIter.log_level
+      ~ComponentIter.log_on
+      ~ComponentIter.log_silo
+      ~ComponentIter.logger
+      ~ComponentIter.nonlinear
+      ~ComponentIter.numeric_as_dict
+      ~ComponentIter.numeric_hash
+      ~ComponentIter.plotable_variables
+      ~ComponentIter.skip_plot_vars
+      ~ComponentIter.slack_webhook_url
+      ~ComponentIter.static_A
+      ~ComponentIter.static_B
+      ~ComponentIter.static_C
+      ~ComponentIter.static_D
+      ~ComponentIter.static_F
+      ~ComponentIter.static_K
+      ~ComponentIter.system_id
+      ~ComponentIter.time
+      ~ComponentIter.unique_hash
+      ~ComponentIter.update_interval
+      ~ComponentIter.wide
+      ~ComponentIter.data
+      ~ComponentIter.current_item
+      ~ComponentIter.parent
+      ~ComponentIter.name
+      ~ComponentIter.dataframe
+   
+   

@@ -1,0 +1,12 @@
+test.test\_four\_bar
+====================
+
+.. automodule:: test.test_four_bar
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      FourBar
+   

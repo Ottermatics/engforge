@@ -1,0 +1,6 @@
+engforge.solver\_utils.filt\_active
+===================================
+
+.. currentmodule:: engforge.solver_utils
+
+.. autofunction:: filt_active

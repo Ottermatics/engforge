@@ -28,11 +28,7 @@ def check_comp_type(instance, attr, value):
     """ensures the input component type is a Component"""
     from engforge.eng.costs import CostModel
 
-    if (
-        not instance.wide
-        and isinstance(value, type)
-        and issubclass(value, CostModel)
-    ):
+    if not instance.wide and isinstance(value, type) and issubclass(value, CostModel):
         raise TypeError(f"Cost Mixin Not Supported As Iter Type! {value}")
 
     if isinstance(value, type) and issubclass(value, Component):
@@ -98,7 +94,7 @@ class ComponentIter(Component):
         """override this to customize data access to self.data or other container name"""
         return itkey
 
-    #TODO: way to update internal references in problem, do on update()?
+    # TODO: way to update internal references in problem, do on update()?
     @property
     def _internal_references(self) -> dict:
         """considers wide format to return active references"""
@@ -109,7 +105,7 @@ class ComponentIter(Component):
                 return self._item_refs[self._first_item_key]
             return self._item_refs[self.current_item]
 
-    def comp_references(self,**kw):
+    def comp_references(self, **kw):
         """Returns this components global references"""
         out = {}
         out["attributes"] = at = {}
@@ -123,7 +119,7 @@ class ComponentIter(Component):
 
         return out
 
-    def internal_references(self, recache=False,numeric_only=False):
+    def internal_references(self, recache=False, numeric_only=False):
         """lists the this_name.comp_key.<attr/prop key>: Ref format to override data_dict"""
 
         if (

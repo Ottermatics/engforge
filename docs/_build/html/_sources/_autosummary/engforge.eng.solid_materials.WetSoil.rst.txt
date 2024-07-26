@@ -1,0 +1,114 @@
+engforge.eng.solid\_materials.WetSoil
+=====================================
+
+.. currentmodule:: engforge.eng.solid_materials
+
+.. autoclass:: WetSoil
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~WetSoil.add_fields
+      ~WetSoil.change_all_log_lvl
+      ~WetSoil.check_ref_slot_type
+      ~WetSoil.cls_compile
+      ~WetSoil.collect_all_attributes
+      ~WetSoil.collect_inst_attributes
+      ~WetSoil.compile_classes
+      ~WetSoil.copy_config_at_state
+      ~WetSoil.critical
+      ~WetSoil.debug
+      ~WetSoil.difference
+      ~WetSoil.error
+      ~WetSoil.extract_message
+      ~WetSoil.filter
+      ~WetSoil.go_through_configurations
+      ~WetSoil.info
+      ~WetSoil.input_attrs
+      ~WetSoil.input_fields
+      ~WetSoil.installSTDLogger
+      ~WetSoil.internal_configurations
+      ~WetSoil.message_with_identiy
+      ~WetSoil.msg
+      ~WetSoil.numeric_fields
+      ~WetSoil.parent_configurations_cls
+      ~WetSoil.plot_attributes
+      ~WetSoil.pre_compile
+      ~WetSoil.resetLog
+      ~WetSoil.resetSystemLogs
+      ~WetSoil.setattrs
+      ~WetSoil.signals_attributes
+      ~WetSoil.slack_notification
+      ~WetSoil.slot_refs
+      ~WetSoil.slots_attributes
+      ~WetSoil.solvers_attributes
+      ~WetSoil.subclasses
+      ~WetSoil.subcls_compile
+      ~WetSoil.table_fields
+      ~WetSoil.trace_attributes
+      ~WetSoil.transients_attributes
+      ~WetSoil.validate_class
+      ~WetSoil.von_mises_stress_max
+      ~WetSoil.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~WetSoil.E
+      ~WetSoil.G
+      ~WetSoil.allowable_stress
+      ~WetSoil.as_dict
+      ~WetSoil.attrs_fields
+      ~WetSoil.classname
+      ~WetSoil.color
+      ~WetSoil.displayname
+      ~WetSoil.filename
+      ~WetSoil.identity
+      ~WetSoil.input_as_dict
+      ~WetSoil.log_fmt
+      ~WetSoil.log_level
+      ~WetSoil.log_on
+      ~WetSoil.log_silo
+      ~WetSoil.logger
+      ~WetSoil.nu
+      ~WetSoil.numeric_as_dict
+      ~WetSoil.numeric_hash
+      ~WetSoil.rho
+      ~WetSoil.shear_modulus
+      ~WetSoil.slack_webhook_url
+      ~WetSoil.ultimate_stress
+      ~WetSoil.unique_hash
+      ~WetSoil.unique_id
+      ~WetSoil.yield_stress
+      ~WetSoil.name
+      ~WetSoil.density
+      ~WetSoil.elastic_modulus
+      ~WetSoil.yield_strength
+      ~WetSoil.tensile_strength_ultimate
+      ~WetSoil.poissons_ratio
+      ~WetSoil.melting_point
+      ~WetSoil.maxium_service_temp
+      ~WetSoil.thermal_conductivity
+      ~WetSoil.specific_heat
+      ~WetSoil.thermal_expansion
+      ~WetSoil.electrical_resistitivity
+      ~WetSoil.cost_per_kg
+      ~WetSoil.in_shear_modulus
+      ~WetSoil.hardness
+      ~WetSoil.izod
+      ~WetSoil.factor_of_saftey
+   
+   

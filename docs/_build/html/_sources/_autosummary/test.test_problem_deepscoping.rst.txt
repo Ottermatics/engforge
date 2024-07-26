@@ -1,0 +1,23 @@
+test.test\_problem\_deepscoping
+===============================
+
+.. automodule:: test.test_problem_deepscoping
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      test_con
+      test_obj
+      test_zero
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      DeepComp
+      DeepSys
+      TestComp
+      TestDeep
+   

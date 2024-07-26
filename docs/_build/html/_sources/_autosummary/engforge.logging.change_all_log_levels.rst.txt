@@ -1,0 +1,6 @@
+engforge.logging.change\_all\_log\_levels
+=========================================
+
+.. currentmodule:: engforge.logging
+
+.. autofunction:: change_all_log_levels

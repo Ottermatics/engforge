@@ -1,0 +1,183 @@
+engforge.eng.fluid\_material.Steam
+==================================
+
+.. currentmodule:: engforge.eng.fluid_material
+
+.. autoclass:: Steam
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Steam.add_fields
+      ~Steam.change_all_log_lvl
+      ~Steam.check_ref_slot_type
+      ~Steam.cls_all_attrs_fields
+      ~Steam.cls_all_property_keys
+      ~Steam.cls_all_property_labels
+      ~Steam.cls_compile
+      ~Steam.collect_all_attributes
+      ~Steam.collect_comp_refs
+      ~Steam.collect_dynamic_refs
+      ~Steam.collect_inst_attributes
+      ~Steam.collect_post_update_refs
+      ~Steam.collect_solver_refs
+      ~Steam.collect_update_refs
+      ~Steam.comp_references
+      ~Steam.compile_classes
+      ~Steam.copy_config_at_state
+      ~Steam.create_dynamic_matricies
+      ~Steam.create_feedthrough_matrix
+      ~Steam.create_input_matrix
+      ~Steam.create_output_constants
+      ~Steam.create_output_matrix
+      ~Steam.create_state_constants
+      ~Steam.create_state_matrix
+      ~Steam.critical
+      ~Steam.debug
+      ~Steam.determine_nearest_stationary_state
+      ~Steam.difference
+      ~Steam.error
+      ~Steam.extract_message
+      ~Steam.filter
+      ~Steam.format_columns
+      ~Steam.get_system_input_refs
+      ~Steam.go_through_configurations
+      ~Steam.info
+      ~Steam.input_attrs
+      ~Steam.input_fields
+      ~Steam.installSTDLogger
+      ~Steam.internal_components
+      ~Steam.internal_configurations
+      ~Steam.internal_references
+      ~Steam.internal_systems
+      ~Steam.internal_tabulations
+      ~Steam.linear_output
+      ~Steam.linear_step
+      ~Steam.locate
+      ~Steam.locate_ref
+      ~Steam.message_with_identiy
+      ~Steam.msg
+      ~Steam.nonlinear_output
+      ~Steam.nonlinear_step
+      ~Steam.numeric_fields
+      ~Steam.parent_configurations_cls
+      ~Steam.parse_run_kwargs
+      ~Steam.parse_simulation_input
+      ~Steam.plot_attributes
+      ~Steam.post_update
+      ~Steam.pre_compile
+      ~Steam.print_info
+      ~Steam.rate
+      ~Steam.rate_linear
+      ~Steam.rate_nonlinear
+      ~Steam.ref_dXdt
+      ~Steam.resetLog
+      ~Steam.resetSystemLogs
+      ~Steam.set_attr
+      ~Steam.set_time
+      ~Steam.setattrs
+      ~Steam.signals_attributes
+      ~Steam.slack_notification
+      ~Steam.slot_refs
+      ~Steam.slots_attributes
+      ~Steam.smart_split_dataframe
+      ~Steam.solvers_attributes
+      ~Steam.step
+      ~Steam.subclasses
+      ~Steam.subcls_compile
+      ~Steam.system_properties_classdef
+      ~Steam.system_references
+      ~Steam.table_fields
+      ~Steam.trace_attributes
+      ~Steam.transients_attributes
+      ~Steam.update
+      ~Steam.update_dynamics
+      ~Steam.update_feedthrough
+      ~Steam.update_input
+      ~Steam.update_output_constants
+      ~Steam.update_output_matrix
+      ~Steam.update_state
+      ~Steam.update_state_constants
+      ~Steam.validate_class
+      ~Steam.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Steam.Psat
+      ~Steam.Tsat
+      ~Steam.Ut_ref
+      ~Steam.Xt_ref
+      ~Steam.Yt_ref
+      ~Steam.anything_changed
+      ~Steam.as_dict
+      ~Steam.attrs_fields
+      ~Steam.classname
+      ~Steam.dXtdt_ref
+      ~Steam.data_dict
+      ~Steam.dataframe_constants
+      ~Steam.dataframe_variants
+      ~Steam.density
+      ~Steam.displayname
+      ~Steam.dynamic_A
+      ~Steam.dynamic_B
+      ~Steam.dynamic_C
+      ~Steam.dynamic_D
+      ~Steam.dynamic_F
+      ~Steam.dynamic_K
+      ~Steam.dynamic_input
+      ~Steam.dynamic_input_vars
+      ~Steam.dynamic_output
+      ~Steam.dynamic_output_vars
+      ~Steam.dynamic_state
+      ~Steam.dynamic_state_vars
+      ~Steam.enthalpy
+      ~Steam.filename
+      ~Steam.identity
+      ~Steam.input_as_dict
+      ~Steam.last_context
+      ~Steam.log_fmt
+      ~Steam.log_level
+      ~Steam.log_on
+      ~Steam.log_silo
+      ~Steam.logger
+      ~Steam.material
+      ~Steam.nonlinear
+      ~Steam.numeric_as_dict
+      ~Steam.numeric_hash
+      ~Steam.plotable_variables
+      ~Steam.skip_plot_vars
+      ~Steam.slack_webhook_url
+      ~Steam.specific_heat
+      ~Steam.state
+      ~Steam.static_A
+      ~Steam.static_B
+      ~Steam.static_C
+      ~Steam.static_D
+      ~Steam.static_F
+      ~Steam.static_K
+      ~Steam.surface_tension
+      ~Steam.system_id
+      ~Steam.thermal_conductivity
+      ~Steam.time
+      ~Steam.unique_hash
+      ~Steam.update_interval
+      ~Steam.viscosity
+      ~Steam.parent
+      ~Steam.name
+      ~Steam.dataframe
+   
+   

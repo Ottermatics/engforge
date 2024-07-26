@@ -1,0 +1,113 @@
+engforge.eng.geometry.Circle
+============================
+
+.. currentmodule:: engforge.eng.geometry
+
+.. autoclass:: Circle
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Circle.add_fields
+      ~Circle.add_prediction_record
+      ~Circle.calculate_stress
+      ~Circle.change_all_log_lvl
+      ~Circle.check_and_retrain
+      ~Circle.check_out_of_domain
+      ~Circle.check_ref_slot_type
+      ~Circle.cls_compile
+      ~Circle.collect_all_attributes
+      ~Circle.collect_inst_attributes
+      ~Circle.compile_classes
+      ~Circle.copy_config_at_state
+      ~Circle.critical
+      ~Circle.debug
+      ~Circle.difference
+      ~Circle.display_results
+      ~Circle.error
+      ~Circle.estimate_stress
+      ~Circle.extract_message
+      ~Circle.filter
+      ~Circle.go_through_configurations
+      ~Circle.info
+      ~Circle.input_attrs
+      ~Circle.input_fields
+      ~Circle.installSTDLogger
+      ~Circle.internal_configurations
+      ~Circle.message_with_identiy
+      ~Circle.msg
+      ~Circle.numeric_fields
+      ~Circle.observe_and_predict
+      ~Circle.parent_configurations_cls
+      ~Circle.plot_attributes
+      ~Circle.plot_mesh
+      ~Circle.pre_compile
+      ~Circle.prediction_dataframe
+      ~Circle.prediction_weights
+      ~Circle.resetLog
+      ~Circle.resetSystemLogs
+      ~Circle.score_data
+      ~Circle.setattrs
+      ~Circle.signals_attributes
+      ~Circle.slack_notification
+      ~Circle.slot_refs
+      ~Circle.slots_attributes
+      ~Circle.solvers_attributes
+      ~Circle.subclasses
+      ~Circle.subcls_compile
+      ~Circle.table_fields
+      ~Circle.trace_attributes
+      ~Circle.train_compare
+      ~Circle.training_callback
+      ~Circle.transients_attributes
+      ~Circle.validate_class
+      ~Circle.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Circle.A
+      ~Circle.Ao
+      ~Circle.Ixx
+      ~Circle.Iyy
+      ~Circle.J
+      ~Circle.as_dict
+      ~Circle.attrs_fields
+      ~Circle.basis
+      ~Circle.classname
+      ~Circle.displayname
+      ~Circle.filename
+      ~Circle.identity
+      ~Circle.input_as_dict
+      ~Circle.log_fmt
+      ~Circle.log_level
+      ~Circle.log_on
+      ~Circle.log_silo
+      ~Circle.logger
+      ~Circle.numeric_as_dict
+      ~Circle.numeric_hash
+      ~Circle.prediction_goal_error
+      ~Circle.prediction_records
+      ~Circle.slack_webhook_url
+      ~Circle.train_window
+      ~Circle.trained
+      ~Circle.unique_hash
+      ~Circle.x_bounds
+      ~Circle.y_bounds
+      ~Circle.d
+      ~Circle.name
+   
+   

@@ -1,0 +1,114 @@
+engforge.eng.geometry.Rectangle
+===============================
+
+.. currentmodule:: engforge.eng.geometry
+
+.. autoclass:: Rectangle
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Rectangle.add_fields
+      ~Rectangle.add_prediction_record
+      ~Rectangle.calculate_stress
+      ~Rectangle.change_all_log_lvl
+      ~Rectangle.check_and_retrain
+      ~Rectangle.check_out_of_domain
+      ~Rectangle.check_ref_slot_type
+      ~Rectangle.cls_compile
+      ~Rectangle.collect_all_attributes
+      ~Rectangle.collect_inst_attributes
+      ~Rectangle.compile_classes
+      ~Rectangle.copy_config_at_state
+      ~Rectangle.critical
+      ~Rectangle.debug
+      ~Rectangle.difference
+      ~Rectangle.display_results
+      ~Rectangle.error
+      ~Rectangle.estimate_stress
+      ~Rectangle.extract_message
+      ~Rectangle.filter
+      ~Rectangle.go_through_configurations
+      ~Rectangle.info
+      ~Rectangle.input_attrs
+      ~Rectangle.input_fields
+      ~Rectangle.installSTDLogger
+      ~Rectangle.internal_configurations
+      ~Rectangle.message_with_identiy
+      ~Rectangle.msg
+      ~Rectangle.numeric_fields
+      ~Rectangle.observe_and_predict
+      ~Rectangle.parent_configurations_cls
+      ~Rectangle.plot_attributes
+      ~Rectangle.plot_mesh
+      ~Rectangle.pre_compile
+      ~Rectangle.prediction_dataframe
+      ~Rectangle.prediction_weights
+      ~Rectangle.resetLog
+      ~Rectangle.resetSystemLogs
+      ~Rectangle.score_data
+      ~Rectangle.setattrs
+      ~Rectangle.signals_attributes
+      ~Rectangle.slack_notification
+      ~Rectangle.slot_refs
+      ~Rectangle.slots_attributes
+      ~Rectangle.solvers_attributes
+      ~Rectangle.subclasses
+      ~Rectangle.subcls_compile
+      ~Rectangle.table_fields
+      ~Rectangle.trace_attributes
+      ~Rectangle.train_compare
+      ~Rectangle.training_callback
+      ~Rectangle.transients_attributes
+      ~Rectangle.validate_class
+      ~Rectangle.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Rectangle.A
+      ~Rectangle.Ao
+      ~Rectangle.Ixx
+      ~Rectangle.Iyy
+      ~Rectangle.J
+      ~Rectangle.as_dict
+      ~Rectangle.attrs_fields
+      ~Rectangle.basis
+      ~Rectangle.classname
+      ~Rectangle.displayname
+      ~Rectangle.filename
+      ~Rectangle.identity
+      ~Rectangle.input_as_dict
+      ~Rectangle.log_fmt
+      ~Rectangle.log_level
+      ~Rectangle.log_on
+      ~Rectangle.log_silo
+      ~Rectangle.logger
+      ~Rectangle.numeric_as_dict
+      ~Rectangle.numeric_hash
+      ~Rectangle.prediction_goal_error
+      ~Rectangle.prediction_records
+      ~Rectangle.slack_webhook_url
+      ~Rectangle.train_window
+      ~Rectangle.trained
+      ~Rectangle.unique_hash
+      ~Rectangle.x_bounds
+      ~Rectangle.y_bounds
+      ~Rectangle.b
+      ~Rectangle.h
+      ~Rectangle.name
+   
+   

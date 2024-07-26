@@ -1,0 +1,50 @@
+engforge.dataframe.DataFrameLog
+===============================
+
+.. currentmodule:: engforge.dataframe
+
+.. autoclass:: DataFrameLog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~DataFrameLog.add_fields
+      ~DataFrameLog.change_all_log_lvl
+      ~DataFrameLog.critical
+      ~DataFrameLog.debug
+      ~DataFrameLog.error
+      ~DataFrameLog.extract_message
+      ~DataFrameLog.filter
+      ~DataFrameLog.info
+      ~DataFrameLog.installSTDLogger
+      ~DataFrameLog.message_with_identiy
+      ~DataFrameLog.msg
+      ~DataFrameLog.resetLog
+      ~DataFrameLog.resetSystemLogs
+      ~DataFrameLog.slack_notification
+      ~DataFrameLog.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DataFrameLog.identity
+      ~DataFrameLog.log_fmt
+      ~DataFrameLog.log_level
+      ~DataFrameLog.log_on
+      ~DataFrameLog.logger
+      ~DataFrameLog.slack_webhook_url
+   
+   

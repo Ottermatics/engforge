@@ -1,0 +1,25 @@
+engforge.patterns.Singleton
+===========================
+
+.. currentmodule:: engforge.patterns
+
+.. autoclass:: Singleton
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Singleton.instance
+   
+   
+
+   
+   
+   

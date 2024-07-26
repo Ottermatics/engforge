@@ -1,0 +1,6 @@
+engforge.eng.geometry.get\_mesh\_size
+=====================================
+
+.. currentmodule:: engforge.eng.geometry
+
+.. autofunction:: get_mesh_size

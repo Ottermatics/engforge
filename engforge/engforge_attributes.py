@@ -15,6 +15,8 @@ import datetime
 
 import attr, attrs
 
+from attrs import Attribute
+
 
 class EngAttr(LoggingMixin):
     pass
@@ -50,7 +52,6 @@ def get_attributes_of(cls, subclass_of: type = None, exclude=False):
 class AttributedBaseMixin(LoggingMixin):
     """A mixin that adds the ability to configure all engforge.core attributes of a class"""
 
-
     # Auto Configuration Methods
     @classmethod
     def collect_all_attributes(cls):
@@ -60,14 +61,14 @@ class AttributedBaseMixin(LoggingMixin):
             nm = base_class.__name__.lower()
             out[nm] = base_class.collect_cls(cls)
         return out
-    
-    def collect_inst_attributes(self,**kw):
+
+    def collect_inst_attributes(self, **kw):
         """collects all the attributes for a system"""
         out = {}
         for base_class in ATTR_BASE.subclasses():
             nm = base_class.__name__.lower()
-            out[nm] = base_class.collect_attr_inst(self,**kw)
-        return out  
+            out[nm] = base_class.collect_attr_inst(self, **kw)
+        return out
 
     @classmethod
     def _get_init_attrs_data(cls, subclass_of: type, exclude=False):
@@ -93,8 +94,6 @@ class AttributedBaseMixin(LoggingMixin):
     @property
     def attrs_fields(self) -> set:
         return set(attr.fields(self.__class__))
-
-
 
     @classmethod
     def _extract_type(cls, typ):
@@ -144,9 +143,7 @@ class AttributedBaseMixin(LoggingMixin):
                 sub_clss = cls._extract_type(slts[fst].type)
                 out = []
                 for acpt in sub_clss:
-                    if isinstance(acpt, type) and issubclass(
-                        acpt, Configuration
-                    ):
+                    if isinstance(acpt, type) and issubclass(acpt, Configuration):
                         vals = acpt.check_ref_slot_type(".".join(rem))
                         # print(f'recursive find {acpt}.{rem} = {vals}')
                         if vals:
@@ -204,15 +201,17 @@ class AttributedBaseMixin(LoggingMixin):
         return attr.fields_dict(cls)
 
     @classmethod
-    def input_fields(cls):
-        '''no attr base types, no tuples, no lists, no dicts'''
-        ignore_types = (
+    def input_fields(cls, add_ign_types: list = None):
+        """no attr base types, no tuples, no lists, no dicts"""
+        ignore_types = [
             ATTR_BASE,
-            #tuple,
-            #list,
-            #dict,
-        )
-        return cls._get_init_attrs_data(ignore_types, exclude=True)
+            # tuple,
+            # list,
+            # dict,
+        ]
+        if add_ign_types:
+            ignore_types.extend(add_ign_types)
+        return cls._get_init_attrs_data(tuple(ignore_types), exclude=True)
 
     @classmethod
     def numeric_fields(cls):
@@ -332,4 +331,3 @@ class AttributedBaseMixin(LoggingMixin):
         finally:
             rstdict = {k: _temp_vars[k] for k, v in kwargs.items()}
             self.setattrs(rstdict)
-  

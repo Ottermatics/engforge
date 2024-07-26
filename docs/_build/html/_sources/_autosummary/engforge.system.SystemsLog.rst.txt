@@ -1,0 +1,50 @@
+engforge.system.SystemsLog
+==========================
+
+.. currentmodule:: engforge.system
+
+.. autoclass:: SystemsLog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~SystemsLog.add_fields
+      ~SystemsLog.change_all_log_lvl
+      ~SystemsLog.critical
+      ~SystemsLog.debug
+      ~SystemsLog.error
+      ~SystemsLog.extract_message
+      ~SystemsLog.filter
+      ~SystemsLog.info
+      ~SystemsLog.installSTDLogger
+      ~SystemsLog.message_with_identiy
+      ~SystemsLog.msg
+      ~SystemsLog.resetLog
+      ~SystemsLog.resetSystemLogs
+      ~SystemsLog.slack_notification
+      ~SystemsLog.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SystemsLog.identity
+      ~SystemsLog.log_fmt
+      ~SystemsLog.log_level
+      ~SystemsLog.log_on
+      ~SystemsLog.logger
+      ~SystemsLog.slack_webhook_url
+   
+   

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.eng.solid_materials &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="engforge.eng.solid_materials.ih" href="engforge.eng.solid_materials.ih.html" />
+    <link rel="prev" title="engforge.eng.prediction.PredictionMixin" href="engforge.eng.prediction.PredictionMixin.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">Tests</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="engforge.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="engforge.analysis.html">engforge.analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_dynamics.html">engforge.attr_dynamics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_plotting.html">engforge.attr_plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_signals.html">engforge.attr_signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_slots.html">engforge.attr_slots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_solver.html">engforge.attr_solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attributes.html">engforge.attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.common.html">engforge.common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.component_collections.html">engforge.component_collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.components.html">engforge.components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.configuration.html">engforge.configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.dataframe.html">engforge.dataframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.datastores.html">engforge.datastores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.dynamics.html">engforge.dynamics</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="engforge.eng.html">engforge.eng</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.costs.html">engforge.eng.costs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.fluid_material.html">engforge.eng.fluid_material</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.geometry.html">engforge.eng.geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.pipes.html">engforge.eng.pipes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.prediction.html">engforge.eng.prediction</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">engforge.eng.solid_materials</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.ih.html">engforge.eng.solid_materials.ih</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.random_color.html">engforge.eng.solid_materials.random_color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.ANSI_4130.html">engforge.eng.solid_materials.ANSI_4130</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.ANSI_4340.html">engforge.eng.solid_materials.ANSI_4340</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.Aluminum.html">engforge.eng.solid_materials.Aluminum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.CarbonFiber.html">engforge.eng.solid_materials.CarbonFiber</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.Concrete.html">engforge.eng.solid_materials.Concrete</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.DrySoil.html">engforge.eng.solid_materials.DrySoil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.Rock.html">engforge.eng.solid_materials.Rock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.Rubber.html">engforge.eng.solid_materials.Rubber</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.SS_316.html">engforge.eng.solid_materials.SS_316</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.SolidMaterial.html">engforge.eng.solid_materials.SolidMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.WetSoil.html">engforge.eng.solid_materials.WetSoil</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.structure_beams.html">engforge.eng.structure_beams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.thermodynamics.html">engforge.eng.thermodynamics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.engforge_attributes.html">engforge.engforge_attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.env_var.html">engforge.env_var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.locations.html">engforge.locations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.logging.html">engforge.logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.patterns.html">engforge.patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.problem_context.html">engforge.problem_context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.properties.html">engforge.properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.reporting.html">engforge.reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solveable.html">engforge.solveable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solver.html">engforge.solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solver_utils.html">engforge.solver_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.system.html">engforge.system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.system_reference.html">engforge.system_reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.tabulation.html">engforge.tabulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.typing.html">engforge.typing</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="engforge.html">engforge</a></li>
+          <li class="breadcrumb-item"><a href="engforge.eng.html">engforge.eng</a></li>
+      <li class="breadcrumb-item active">engforge.eng.solid_materials</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-engforge.eng.solid_materials">
+<span id="engforge-eng-solid-materials"></span><h1>engforge.eng.solid_materials<a class="headerlink" href="#module-engforge.eng.solid_materials" title="Link to this heading"></a></h1>
+<p class="rubric">Functions</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="engforge.eng.solid_materials.ih.html#engforge.eng.solid_materials.ih" title="engforge.eng.solid_materials.ih"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ih</span></code></a></p></td>
+<td><p>ignore hash</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="engforge.eng.solid_materials.random_color.html#engforge.eng.solid_materials.random_color" title="engforge.eng.solid_materials.random_color"><code class="xref py py-obj docutils literal notranslate"><span class="pre">random_color</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Classes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="engforge.eng.solid_materials.ANSI_4130.html#engforge.eng.solid_materials.ANSI_4130" title="engforge.eng.solid_materials.ANSI_4130"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ANSI_4130</span></code></a></p></td>
+<td><p>Method generated by attrs for class ANSI_4130.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="engforge.eng.solid_materials.ANSI_4340.html#engforge.eng.solid_materials.ANSI_4340" title="engforge.eng.solid_materials.ANSI_4340"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ANSI_4340</span></code></a></p></td>
+<td><p>Method generated by attrs for class ANSI_4340.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="engforge.eng.solid_materials.Aluminum.html#engforge.eng.solid_materials.Aluminum" title="engforge.eng.solid_materials.Aluminum"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Aluminum</span></code></a></p></td>
+<td><p>Method generated by attrs for class Aluminum.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="engforge.eng.solid_materials.CarbonFiber.html#engforge.eng.solid_materials.CarbonFiber" title="engforge.eng.solid_materials.CarbonFiber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">CarbonFiber</span></code></a></p></td>
+<td><p>Method generated by attrs for class CarbonFiber.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="engforge.eng.solid_materials.Concrete.html#engforge.eng.solid_materials.Concrete" title="engforge.eng.solid_materials.Concrete"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concrete</span></code></a></p></td>
+<td><p>Method generated by attrs for class Concrete.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="engforge.eng.solid_materials.DrySoil.html#engforge.eng.solid_materials.DrySoil" title="engforge.eng.solid_materials.DrySoil"><code class="xref py py-obj docutils literal notranslate"><span class="pre">DrySoil</span></code></a></p></td>
+<td><p>Method generated by attrs for class DrySoil.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="engforge.eng.solid_materials.Rock.html#engforge.eng.solid_materials.Rock" title="engforge.eng.solid_materials.Rock"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rock</span></code></a></p></td>
+<td><p>Method generated by attrs for class Rock.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="engforge.eng.solid_materials.Rubber.html#engforge.eng.solid_materials.Rubber" title="engforge.eng.solid_materials.Rubber"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Rubber</span></code></a></p></td>
+<td><p>Method generated by attrs for class Rubber.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="engforge.eng.solid_materials.SS_316.html#engforge.eng.solid_materials.SS_316" title="engforge.eng.solid_materials.SS_316"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SS_316</span></code></a></p></td>
+<td><p>Method generated by attrs for class SS_316.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="engforge.eng.solid_materials.SolidMaterial.html#engforge.eng.solid_materials.SolidMaterial" title="engforge.eng.solid_materials.SolidMaterial"><code class="xref py py-obj docutils literal notranslate"><span class="pre">SolidMaterial</span></code></a></p></td>
+<td><p>A class to hold physical properties of solid structural materials and act as both a section property material and a pynite material</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="engforge.eng.solid_materials.WetSoil.html#engforge.eng.solid_materials.WetSoil" title="engforge.eng.solid_materials.WetSoil"><code class="xref py py-obj docutils literal notranslate"><span class="pre">WetSoil</span></code></a></p></td>
+<td><p>Method generated by attrs for class WetSoil.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="engforge.eng.prediction.PredictionMixin.html" class="btn btn-neutral float-left" title="engforge.eng.prediction.PredictionMixin" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="engforge.eng.solid_materials.ih.html" class="btn btn-neutral float-right" title="engforge.eng.solid_materials.ih" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

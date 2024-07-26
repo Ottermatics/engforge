@@ -11,7 +11,7 @@ pandas
 scikit-learn~=1.3.2
 seaborn
 sectionproperties~=3.1.2
-PyNiteFEA@ git+https://github.com/Ottermatics/PyNite.git@v1nept
+PyNiteFEA@ git+https://github.com/Ottermatics/PyNite.git@v2nept
 control
 fluids
 CoolProp

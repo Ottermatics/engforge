@@ -7,3 +7,5 @@ dist/*
 .VSCodeCounter/*
 *.profile
 *.log
+
+docs/_autosummary*

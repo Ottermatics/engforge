@@ -1,0 +1,6 @@
+engforge.common.is\_ec2\_instance
+=================================
+
+.. currentmodule:: engforge.common
+
+.. autofunction:: is_ec2_instance

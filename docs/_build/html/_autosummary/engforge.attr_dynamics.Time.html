@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.attr_dynamics.Time &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="engforge.attr_plotting" href="engforge.attr_plotting.html" />
+    <link rel="prev" title="engforge.attr_dynamics.TRANSIENT" href="engforge.attr_dynamics.TRANSIENT.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">Tests</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="engforge.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="engforge.analysis.html">engforge.analysis</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="engforge.attr_dynamics.html">engforge.attr_dynamics</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="engforge.attr_dynamics.IntegratorInstance.html">engforge.attr_dynamics.IntegratorInstance</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.attr_dynamics.TRANSIENT.html">engforge.attr_dynamics.TRANSIENT</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">engforge.attr_dynamics.Time</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#engforge.attr_dynamics.Time"><code class="docutils literal notranslate"><span class="pre">Time</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_plotting.html">engforge.attr_plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_signals.html">engforge.attr_signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_slots.html">engforge.attr_slots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_solver.html">engforge.attr_solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attributes.html">engforge.attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.common.html">engforge.common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.component_collections.html">engforge.component_collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.components.html">engforge.components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.configuration.html">engforge.configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.dataframe.html">engforge.dataframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.datastores.html">engforge.datastores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.dynamics.html">engforge.dynamics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.eng.html">engforge.eng</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.engforge_attributes.html">engforge.engforge_attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.env_var.html">engforge.env_var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.locations.html">engforge.locations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.logging.html">engforge.logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.patterns.html">engforge.patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.problem_context.html">engforge.problem_context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.properties.html">engforge.properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.reporting.html">engforge.reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solveable.html">engforge.solveable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solver.html">engforge.solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solver_utils.html">engforge.solver_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.system.html">engforge.system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.system_reference.html">engforge.system_reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.tabulation.html">engforge.tabulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.typing.html">engforge.typing</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="engforge.html">engforge</a></li>
+          <li class="breadcrumb-item"><a href="engforge.attr_dynamics.html">engforge.attr_dynamics</a></li>
+      <li class="breadcrumb-item active">engforge.attr_dynamics.Time</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="engforge-attr-dynamics-time">
+<h1>engforge.attr_dynamics.Time<a class="headerlink" href="#engforge-attr-dynamics-time" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validator</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">repr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cmp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inherited</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kw_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">eq_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">order_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_setattr</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alias</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/attr_dynamics.html#Time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.attr_dynamics.Time" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="engforge.attributes.ATTR_BASE.html#engforge.attributes.ATTR_BASE" title="engforge.attributes.ATTR_BASE"><code class="xref py py-class docutils literal notranslate"><span class="pre">ATTR_BASE</span></code></a></p>
+<p>Transient is a base class for integrators over time</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.add_var_constraint" title="engforge.attr_dynamics.Time.add_var_constraint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_var_constraint</span></code></a></p></td>
+<td><p>adds a <cite>type</cite> constraint to the solver.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.class_validate" title="engforge.attr_dynamics.Time.class_validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">class_validate</span></code></a></p></td>
+<td><p>validates onetime A method to validate the kwargs passed to the define method</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.collect_attr_inst" title="engforge.attr_dynamics.Time.collect_attr_inst"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_attr_inst</span></code></a></p></td>
+<td><p>collects all the attribute instances for a system</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.collect_cls" title="engforge.attr_dynamics.Time.collect_cls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_cls</span></code></a></p></td>
+<td><p>collects all the attributes for a system</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.configure_for_system" title="engforge.attr_dynamics.Time.configure_for_system"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_for_system</span></code></a></p></td>
+<td><p>add the config class, and perform checks with <a href="#id1"><span class="problematic" id="id2">`</span></a>class_validate) :returns: [optional] a dictionary of options to be used in the make_attribute method</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.configure_instance" title="engforge.attr_dynamics.Time.configure_instance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">configure_instance</span></code></a></p></td>
+<td><p>validates the instance given attr's init routine</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.constraint_exists" title="engforge.attr_dynamics.Time.constraint_exists"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constraint_exists</span></code></a></p></td>
+<td><p>check constraints on the system, return its index position if found, else None.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.create_instance" title="engforge.attr_dynamics.Time.create_instance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">create_instance</span></code></a></p></td>
+<td><p>Create an instance of the instance_class</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.define" title="engforge.attr_dynamics.Time.define"><code class="xref py py-obj docutils literal notranslate"><span class="pre">define</span></code></a></p></td>
+<td><p>taking a component or system class as possible input valid input is later validated as an instance of that class or subclass</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.define_validate" title="engforge.attr_dynamics.Time.define_validate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">define_validate</span></code></a></p></td>
+<td><p>A method to validate the kwargs passed to the define method</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.evolve" title="engforge.attr_dynamics.Time.evolve"><code class="xref py py-obj docutils literal notranslate"><span class="pre">evolve</span></code></a></p></td>
+<td><p>Copy <em>self</em> and apply <em>changes</em>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_counting_attr</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.handle_instance" title="engforge.attr_dynamics.Time.handle_instance"><code class="xref py py-obj docutils literal notranslate"><span class="pre">handle_instance</span></code></a></p></td>
+<td><p>handles the instance, override as you wish</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.integrate" title="engforge.attr_dynamics.Time.integrate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">integrate</span></code></a></p></td>
+<td><p>Defines an ODE like integrator that will be integrated over time with the defined integration rule.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.make_attribute" title="engforge.attr_dynamics.Time.make_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_attribute</span></code></a></p></td>
+<td><p>makes an attrs.Attribute for the class</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_factory</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">process_combos</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.attr_dynamics.Time.subclasses" title="engforge.attr_dynamics.Time.subclasses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subclasses</span></code></a></p></td>
+<td><p>return all subclasses of components, including their subclasses :type out:  :param out: out is to pass when the middle of a recursive operation, do not use it!</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unpack_atrs</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validator</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">repr</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">eq</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">eq_key</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">order</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">order_key</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">hash</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">init</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">metadata</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">type</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">converter</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">kw_only</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">inherited</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">on_setattr</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">alias</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">allow_constraint_override</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">attr_prefix</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_options</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">none_ok</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">template_class</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mode</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">var</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rate</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">constraints</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">config_cls</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">active</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">combos</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.add_var_constraint">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_var_constraint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'min'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/attr_dynamics.html#Time.add_var_constraint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.attr_dynamics.Time.add_var_constraint" title="Link to this definition"></a></dt>
+<dd><p>adds a <cite>type</cite> constraint to the solver. If value is numeric it is used as a bound with <cite>scipy</cite> optimize.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>type</strong> – str, must be either min or max with var value comparison, or with a function additionally eq,ineq (same as max(0)) can be used</p>
+</dd>
+<dt class="field-even">Value<span class="colon">:</span></dt>
+<dd class="field-even"><p>either a numeric (int,float), or a function, f(system)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.class_validate">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">class_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/attr_dynamics.html#Time.class_validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.attr_dynamics.Time.class_validate" title="Link to this definition"></a></dt>
+<dd><p>validates onetime A method to validate the kwargs passed to the define method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.collect_attr_inst">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">collect_attr_inst</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle_inst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.attr_dynamics.Time.collect_attr_inst" title="Link to this definition"></a></dt>
+<dd><p>collects all the attribute instances for a system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.collect_cls">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">collect_cls</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">system</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.attr_dynamics.Time.collect_cls" title="Link to this definition"></a></dt>
+<dd><p>collects all the attributes for a system</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.configure_for_system">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">configure_for_system</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_class</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.attr_dynamics.Time.configure_for_system" title="Link to this definition"></a></dt>
+<dd><p>add the config class, and perform checks with <a href="#id3"><span class="problematic" id="id4">`</span></a>class_validate)
+:returns: [optional] a dictionary of options to be used in the make_attribute method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.configure_instance">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">configure_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.attr_dynamics.Time.configure_instance" title="Link to this definition"></a></dt>
+<dd><p>validates the instance given attr’s init routine</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.constraint_exists">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">constraint_exists</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/attr_dynamics.html#Time.constraint_exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.attr_dynamics.Time.constraint_exists" title="Link to this definition"></a></dt>
+<dd><p>check constraints on the system, return its index position if found, else None.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.create_instance">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">create_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instance</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.attr_dynamics.Time.create_instance" title="Link to this definition"></a></dt>
+<dd><p>Create an instance of the instance_class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="engforge.attributes.AttributeInstance.html#engforge.attributes.AttributeInstance" title="engforge.attributes.AttributeInstance"><code class="xref py py-class docutils literal notranslate"><span class="pre">AttributeInstance</span></code></a></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>instance</strong> (<a class="reference internal" href="engforge.configuration.Configuration.html#engforge.configuration.Configuration" title="engforge.configuration.Configuration"><em>Configuration</em></a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.define">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.attr_dynamics.Time.define" title="Link to this definition"></a></dt>
+<dd><p>taking a component or system class as possible input valid input is later validated as an instance of that class or subclass</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.define_validate">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">define_validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.attr_dynamics.Time.define_validate" title="Link to this definition"></a></dt>
+<dd><p>A method to validate the kwargs passed to the define method</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.evolve">
+<span class="sig-name descname"><span class="pre">evolve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">changes</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.attr_dynamics.Time.evolve" title="Link to this definition"></a></dt>
+<dd><p>Copy <em>self</em> and apply <em>changes</em>.</p>
+<p>This works similarly to <cite>attrs.evolve</cite> but that function does not work
+with <cite>Attribute</cite>.</p>
+<p>It is mainly meant to be used for <cite>transform-fields</cite>.</p>
+<div class="versionadded">
+<p><span class="versionmodified added">Added in version 20.3.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.handle_instance">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_instance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">canidate</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.attr_dynamics.Time.handle_instance" title="Link to this definition"></a></dt>
+<dd><p>handles the instance, override as you wish</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.instance_class">
+<span class="sig-name descname"><span class="pre">instance_class</span></span><a class="headerlink" href="#engforge.attr_dynamics.Time.instance_class" title="Link to this definition"></a></dt>
+<dd><p>alias of <a class="reference internal" href="engforge.attr_dynamics.IntegratorInstance.html#engforge.attr_dynamics.IntegratorInstance" title="engforge.attr_dynamics.IntegratorInstance"><code class="xref py py-class docutils literal notranslate"><span class="pre">IntegratorInstance</span></code></a></p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.integrate">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">integrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'euler'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">combos</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/attr_dynamics.html#Time.integrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.attr_dynamics.Time.integrate" title="Link to this definition"></a></dt>
+<dd><p>Defines an ODE like integrator that will be integrated over time with the defined integration rule.</p>
+<p>Input should be of strings to look up the particular property or field</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>var</strong> (<em>str</em>)</p></li>
+<li><p><strong>rate</strong> (<a class="reference internal" href="engforge.properties.system_property.html#engforge.properties.system_property" title="engforge.properties.system_property"><em>system_property</em></a>)</p></li>
+<li><p><strong>mode</strong> (<em>str</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.make_attribute">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">make_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comp_class</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.attr_dynamics.Time.make_attribute" title="Link to this definition"></a></dt>
+<dd><p>makes an attrs.Attribute for the class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.attr_dynamics.Time.subclasses">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">subclasses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.attr_dynamics.Time.subclasses" title="Link to this definition"></a></dt>
+<dd><p>return all subclasses of components, including their subclasses
+:type out: 
+:param out: out is to pass when the middle of a recursive operation, do not use it!</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="engforge.attr_dynamics.TRANSIENT.html" class="btn btn-neutral float-left" title="engforge.attr_dynamics.TRANSIENT" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="engforge.attr_plotting.html" class="btn btn-neutral float-right" title="engforge.attr_plotting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

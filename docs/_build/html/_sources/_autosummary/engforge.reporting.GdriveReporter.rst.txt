@@ -1,0 +1,59 @@
+engforge.reporting.GdriveReporter
+=================================
+
+.. currentmodule:: engforge.reporting
+
+.. autoclass:: GdriveReporter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~GdriveReporter.add_fields
+      ~GdriveReporter.change_all_log_lvl
+      ~GdriveReporter.check_config
+      ~GdriveReporter.critical
+      ~GdriveReporter.debug
+      ~GdriveReporter.error
+      ~GdriveReporter.extract_message
+      ~GdriveReporter.filter
+      ~GdriveReporter.info
+      ~GdriveReporter.installSTDLogger
+      ~GdriveReporter.message_with_identiy
+      ~GdriveReporter.msg
+      ~GdriveReporter.resetLog
+      ~GdriveReporter.resetSystemLogs
+      ~GdriveReporter.slack_notification
+      ~GdriveReporter.subclasses
+      ~GdriveReporter.upload
+      ~GdriveReporter.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GdriveReporter.share_drive
+      ~GdriveReporter.date_key
+      ~GdriveReporter.ext
+      ~GdriveReporter.identity
+      ~GdriveReporter.log_fmt
+      ~GdriveReporter.log_level
+      ~GdriveReporter.log_on
+      ~GdriveReporter.logger
+      ~GdriveReporter.month_key
+      ~GdriveReporter.name
+      ~GdriveReporter.report_root
+      ~GdriveReporter.slack_webhook_url
+   
+   

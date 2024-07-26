@@ -1,0 +1,114 @@
+engforge.eng.solid\_materials.SS\_316
+=====================================
+
+.. currentmodule:: engforge.eng.solid_materials
+
+.. autoclass:: SS_316
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~SS_316.add_fields
+      ~SS_316.change_all_log_lvl
+      ~SS_316.check_ref_slot_type
+      ~SS_316.cls_compile
+      ~SS_316.collect_all_attributes
+      ~SS_316.collect_inst_attributes
+      ~SS_316.compile_classes
+      ~SS_316.copy_config_at_state
+      ~SS_316.critical
+      ~SS_316.debug
+      ~SS_316.difference
+      ~SS_316.error
+      ~SS_316.extract_message
+      ~SS_316.filter
+      ~SS_316.go_through_configurations
+      ~SS_316.info
+      ~SS_316.input_attrs
+      ~SS_316.input_fields
+      ~SS_316.installSTDLogger
+      ~SS_316.internal_configurations
+      ~SS_316.message_with_identiy
+      ~SS_316.msg
+      ~SS_316.numeric_fields
+      ~SS_316.parent_configurations_cls
+      ~SS_316.plot_attributes
+      ~SS_316.pre_compile
+      ~SS_316.resetLog
+      ~SS_316.resetSystemLogs
+      ~SS_316.setattrs
+      ~SS_316.signals_attributes
+      ~SS_316.slack_notification
+      ~SS_316.slot_refs
+      ~SS_316.slots_attributes
+      ~SS_316.solvers_attributes
+      ~SS_316.subclasses
+      ~SS_316.subcls_compile
+      ~SS_316.table_fields
+      ~SS_316.trace_attributes
+      ~SS_316.transients_attributes
+      ~SS_316.validate_class
+      ~SS_316.von_mises_stress_max
+      ~SS_316.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SS_316.E
+      ~SS_316.G
+      ~SS_316.allowable_stress
+      ~SS_316.as_dict
+      ~SS_316.attrs_fields
+      ~SS_316.classname
+      ~SS_316.color
+      ~SS_316.displayname
+      ~SS_316.filename
+      ~SS_316.identity
+      ~SS_316.input_as_dict
+      ~SS_316.log_fmt
+      ~SS_316.log_level
+      ~SS_316.log_on
+      ~SS_316.log_silo
+      ~SS_316.logger
+      ~SS_316.nu
+      ~SS_316.numeric_as_dict
+      ~SS_316.numeric_hash
+      ~SS_316.rho
+      ~SS_316.shear_modulus
+      ~SS_316.slack_webhook_url
+      ~SS_316.ultimate_stress
+      ~SS_316.unique_hash
+      ~SS_316.unique_id
+      ~SS_316.yield_stress
+      ~SS_316.name
+      ~SS_316.density
+      ~SS_316.elastic_modulus
+      ~SS_316.yield_strength
+      ~SS_316.tensile_strength_ultimate
+      ~SS_316.poissons_ratio
+      ~SS_316.melting_point
+      ~SS_316.maxium_service_temp
+      ~SS_316.thermal_conductivity
+      ~SS_316.specific_heat
+      ~SS_316.thermal_expansion
+      ~SS_316.electrical_resistitivity
+      ~SS_316.cost_per_kg
+      ~SS_316.in_shear_modulus
+      ~SS_316.hardness
+      ~SS_316.izod
+      ~SS_316.factor_of_saftey
+   
+   

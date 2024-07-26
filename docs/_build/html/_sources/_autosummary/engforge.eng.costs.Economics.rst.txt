@@ -1,0 +1,190 @@
+engforge.eng.costs.Economics
+============================
+
+.. currentmodule:: engforge.eng.costs
+
+.. autoclass:: Economics
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Economics.add_fields
+      ~Economics.calculate_costs
+      ~Economics.calculate_production
+      ~Economics.change_all_log_lvl
+      ~Economics.check_ref_slot_type
+      ~Economics.cls_all_attrs_fields
+      ~Economics.cls_all_property_keys
+      ~Economics.cls_all_property_labels
+      ~Economics.cls_compile
+      ~Economics.collect_all_attributes
+      ~Economics.collect_comp_refs
+      ~Economics.collect_dynamic_refs
+      ~Economics.collect_inst_attributes
+      ~Economics.collect_post_update_refs
+      ~Economics.collect_solver_refs
+      ~Economics.collect_update_refs
+      ~Economics.comp_references
+      ~Economics.compile_classes
+      ~Economics.copy_config_at_state
+      ~Economics.create_dynamic_matricies
+      ~Economics.create_feedthrough_matrix
+      ~Economics.create_input_matrix
+      ~Economics.create_output_constants
+      ~Economics.create_output_matrix
+      ~Economics.create_state_constants
+      ~Economics.create_state_matrix
+      ~Economics.critical
+      ~Economics.debug
+      ~Economics.determine_nearest_stationary_state
+      ~Economics.difference
+      ~Economics.error
+      ~Economics.extract_message
+      ~Economics.filter
+      ~Economics.format_columns
+      ~Economics.get_prop
+      ~Economics.get_system_input_refs
+      ~Economics.go_through_configurations
+      ~Economics.info
+      ~Economics.input_attrs
+      ~Economics.input_fields
+      ~Economics.installSTDLogger
+      ~Economics.internal_components
+      ~Economics.internal_configurations
+      ~Economics.internal_references
+      ~Economics.internal_systems
+      ~Economics.internal_tabulations
+      ~Economics.linear_output
+      ~Economics.linear_step
+      ~Economics.locate
+      ~Economics.locate_ref
+      ~Economics.message_with_identiy
+      ~Economics.msg
+      ~Economics.nonlinear_output
+      ~Economics.nonlinear_step
+      ~Economics.numeric_fields
+      ~Economics.parent_configurations_cls
+      ~Economics.parse_run_kwargs
+      ~Economics.parse_simulation_input
+      ~Economics.plot_attributes
+      ~Economics.post_update
+      ~Economics.pre_compile
+      ~Economics.print_info
+      ~Economics.rate
+      ~Economics.rate_linear
+      ~Economics.rate_nonlinear
+      ~Economics.ref_dXdt
+      ~Economics.resetLog
+      ~Economics.resetSystemLogs
+      ~Economics.set_attr
+      ~Economics.set_time
+      ~Economics.setattrs
+      ~Economics.signals_attributes
+      ~Economics.slack_notification
+      ~Economics.slot_refs
+      ~Economics.slots_attributes
+      ~Economics.smart_split_dataframe
+      ~Economics.solvers_attributes
+      ~Economics.step
+      ~Economics.subclasses
+      ~Economics.subcls_compile
+      ~Economics.sum_cost_references
+      ~Economics.sum_references
+      ~Economics.sum_term_fgen
+      ~Economics.system_properties_classdef
+      ~Economics.system_references
+      ~Economics.table_fields
+      ~Economics.term_fgen
+      ~Economics.trace_attributes
+      ~Economics.transients_attributes
+      ~Economics.update
+      ~Economics.update_dynamics
+      ~Economics.update_feedthrough
+      ~Economics.update_input
+      ~Economics.update_output_constants
+      ~Economics.update_output_matrix
+      ~Economics.update_state
+      ~Economics.update_state_constants
+      ~Economics.validate_class
+      ~Economics.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Economics.Ut_ref
+      ~Economics.Xt_ref
+      ~Economics.Yt_ref
+      ~Economics.anything_changed
+      ~Economics.as_dict
+      ~Economics.attrs_fields
+      ~Economics.classname
+      ~Economics.combine_cost
+      ~Economics.cost_references
+      ~Economics.dXtdt_ref
+      ~Economics.data_dict
+      ~Economics.dataframe_constants
+      ~Economics.dataframe_variants
+      ~Economics.displayname
+      ~Economics.dynamic_A
+      ~Economics.dynamic_B
+      ~Economics.dynamic_C
+      ~Economics.dynamic_D
+      ~Economics.dynamic_F
+      ~Economics.dynamic_K
+      ~Economics.dynamic_input
+      ~Economics.dynamic_input_vars
+      ~Economics.dynamic_output
+      ~Economics.dynamic_output_vars
+      ~Economics.dynamic_state
+      ~Economics.dynamic_state_vars
+      ~Economics.filename
+      ~Economics.identity
+      ~Economics.input_as_dict
+      ~Economics.last_context
+      ~Economics.lifecycle_dataframe
+      ~Economics.lifecycle_output
+      ~Economics.log_fmt
+      ~Economics.log_level
+      ~Economics.log_on
+      ~Economics.log_silo
+      ~Economics.logger
+      ~Economics.nonlinear
+      ~Economics.numeric_as_dict
+      ~Economics.numeric_hash
+      ~Economics.output
+      ~Economics.plotable_variables
+      ~Economics.skip_plot_vars
+      ~Economics.slack_webhook_url
+      ~Economics.static_A
+      ~Economics.static_B
+      ~Economics.static_C
+      ~Economics.static_D
+      ~Economics.static_F
+      ~Economics.static_K
+      ~Economics.system_id
+      ~Economics.time
+      ~Economics.unique_hash
+      ~Economics.update_interval
+      ~Economics.term_length
+      ~Economics.discount_rate
+      ~Economics.fixed_output
+      ~Economics.output_type
+      ~Economics.terms_per_year
+      ~Economics.parent
+      ~Economics.name
+      ~Economics.dataframe
+   
+   

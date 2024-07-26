@@ -1,0 +1,6 @@
+engforge.dataframe.is\_uniform
+==============================
+
+.. currentmodule:: engforge.dataframe
+
+.. autofunction:: is_uniform

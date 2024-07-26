@@ -1,0 +1,6 @@
+engforge.patterns.singleton\_meta\_object
+=========================================
+
+.. currentmodule:: engforge.patterns
+
+.. autofunction:: singleton_meta_object

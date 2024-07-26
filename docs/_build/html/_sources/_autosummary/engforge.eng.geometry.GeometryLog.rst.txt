@@ -1,0 +1,50 @@
+engforge.eng.geometry.GeometryLog
+=================================
+
+.. currentmodule:: engforge.eng.geometry
+
+.. autoclass:: GeometryLog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~GeometryLog.add_fields
+      ~GeometryLog.change_all_log_lvl
+      ~GeometryLog.critical
+      ~GeometryLog.debug
+      ~GeometryLog.error
+      ~GeometryLog.extract_message
+      ~GeometryLog.filter
+      ~GeometryLog.info
+      ~GeometryLog.installSTDLogger
+      ~GeometryLog.message_with_identiy
+      ~GeometryLog.msg
+      ~GeometryLog.resetLog
+      ~GeometryLog.resetSystemLogs
+      ~GeometryLog.slack_notification
+      ~GeometryLog.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~GeometryLog.identity
+      ~GeometryLog.log_fmt
+      ~GeometryLog.log_level
+      ~GeometryLog.log_on
+      ~GeometryLog.logger
+      ~GeometryLog.slack_webhook_url
+   
+   

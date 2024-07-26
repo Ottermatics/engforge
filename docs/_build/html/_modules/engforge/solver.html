@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.solver &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/test.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.solver</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.solver</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;solver defines a SolverMixin for use by System.</span>
+
+<span class="sd">Additionally the Solver attribute is defined to add complex behavior to a system as well as add constraints and transient integration.</span>
+
+<span class="sd">### A general Solver Run Will Look Like:</span>
+<span class="sd">0. run pre execute (signals=pre,both)</span>
+<span class="sd">1. add execution context with **kwargument for the signals. </span>
+<span class="sd">2. parse signals here (through a new Signals.parse_rtkwargs(**kw)) which will non destructively parse the signals and return all the signal candiates which are put into an ProblemExec object that resets the signals after the run depending on the revert behavior</span>
+<span class="sd">3. the execute method will recieve this ProblemExec object where it can update the solver references / signals so that it can handle them per the signals api</span>
+<span class="sd">4. with self.execution_context(**kwargs) as ctx_exe: </span>
+<span class="sd">    1. pre-update / signals</span>
+<span class="sd">    &lt;FLEXIBLE_Exec&gt;#self.execute(ctx_exe,**kwargs) </span>
+<span class="sd">    2. post-update / signals</span>
+<span class="sd">    &gt; signals will be reset after the execute per the api</span>
+<span class="sd">5. run post update</span>
+<span class="sd">6. exit condition check via problem context input</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">attrs</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">scipy.optimize</span> <span class="k">as</span> <span class="nn">scopt</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="c1"># from engforge.dynamics import DynamicsMixin</span>
+<span class="kn">from</span> <span class="nn">engforge.properties</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">engforge.solveable</span> <span class="kn">import</span> <span class="n">SolveableMixin</span>
+<span class="kn">from</span> <span class="nn">engforge.system_reference</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">pprint</span>
+<span class="kn">import</span> <span class="nn">itertools</span><span class="o">,</span> <span class="nn">collections</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+
+<span class="n">SOLVER_OPTIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;minimize&quot;</span><span class="p">]</span><span class="c1">#&quot;root&quot;, &quot;global&quot;, </span>
+<span class="kn">from</span> <span class="nn">engforge.solver_utils</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">engforge.problem_context</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">engforge.attr_solver</span> <span class="kn">import</span> <span class="n">Solver</span><span class="p">,</span><span class="n">SolverInstance</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<div class="viewcode-block" id="SolverLog">
+<a class="viewcode-back" href="../../_autosummary/engforge.solver.SolverLog.html#engforge.solver.SolverLog">[docs]</a>
+<span class="k">class</span> <span class="nc">SolverLog</span><span class="p">(</span><span class="n">LoggingMixin</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">SolverLog</span><span class="p">()</span>
+
+
+<span class="c1"># add to any SolvableMixin to allow solver use from its namespace</span>
+<div class="viewcode-block" id="SolverMixin">
+<a class="viewcode-back" href="../../_autosummary/engforge.solver.SolverMixin.html#engforge.solver.SolverMixin">[docs]</a>
+<span class="k">class</span> <span class="nc">SolverMixin</span><span class="p">(</span><span class="n">SolveableMixin</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A base class inherited by solveable items providing the ability to solve itself&quot;&quot;&quot;</span>
+
+    <span class="c1">#TODO: implement constraint equality solver as root</span>
+    
+    <span class="c1"># Configuration Information</span>
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">solved</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_context</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="kc">False</span>        
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">last_context</span><span class="o">.</span><span class="n">data</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    
+    <span class="c1"># Replaces Tabulation Method</span>
+    <span class="nd">@solver_cached</span>
+    <span class="k">def</span> <span class="nf">data_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;records properties from the entire system, via system references cache&quot;&quot;&quot;</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">OrderedDict</span><span class="p">()</span>
+        <span class="n">sref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system_references</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sref</span><span class="p">[</span><span class="s2">&quot;attributes&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">TABLE_TYPES</span><span class="p">):</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sref</span><span class="p">[</span><span class="s2">&quot;properties&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">val</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">value</span><span class="p">()</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">TABLE_TYPES</span><span class="p">):</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">nan</span>
+        <span class="k">return</span> <span class="n">out</span>    
+    
+    <span class="c1">#Official Solver Interface</span>
+<div class="viewcode-block" id="SolverMixin.solver_vars">
+<a class="viewcode-back" href="../../_autosummary/engforge.solver.SolverMixin.html#engforge.solver.SolverMixin.solver_vars">[docs]</a>
+    <span class="k">def</span> <span class="nf">solver_vars</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">check_dynamics</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">addable</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;applies the default combo filter, and your keyword arguments to the collect_solver_refs to test the ref / vars creations</span>
+<span class="sd">        </span>
+<span class="sd">        parses `add_vars` in kwargs to append to the collected solver vars</span>
+<span class="sd">        :param add_vars: can be a str, a list or a dictionary of variables: solver_instance kwargs. If a str or list the variable will be added with positive only constraints. If a dictionary is chosen, it can have keys as parameters, and itself have a subdictionary with keys: min / max, where each respective value is placed in the constraints list, which may be a callable(sys,prob) or numeric. If nothing is specified the default is min=0,max=None, ie positive only.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">engforge.solver</span> <span class="kn">import</span> <span class="n">combo_filter</span>
+
+        <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">collect_solver_refs</span><span class="p">(</span><span class="n">check_atr_f</span><span class="o">=</span><span class="n">combo_filter</span><span class="p">,</span><span class="n">check_kw</span><span class="o">=</span><span class="n">kwargs</span><span class="p">,</span><span class="n">check_dynamics</span><span class="o">=</span><span class="n">check_dynamics</span><span class="p">)</span>
+
+        <span class="n">base_const</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;min&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;max&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">}</span> <span class="c1">#positive only</span>
+
+        <span class="c1">#get add_vars and add to attributes</span>
+        <span class="k">if</span> <span class="n">addable</span> <span class="ow">and</span> <span class="p">(</span> <span class="n">addvar</span><span class="o">:=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;add_vars&#39;</span><span class="p">,[])):</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">addvar</span><span class="p">:</span>
+                
+                <span class="c1">#handle csv, listify string</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addvar</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+                    <span class="n">addvar</span> <span class="o">=</span> <span class="n">addvar</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                
+                <span class="c1">#handle dictionary                    </span>
+                <span class="n">added</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(())</span>
+                <span class="n">avars</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">addable</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                <span class="k">for</span> <span class="n">av</span> <span class="ow">in</span> <span class="n">addvar</span><span class="p">:</span> <span class="c1">#list/dict-keys</span>
+                    <span class="n">matches</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">fnmatch</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">avars</span><span class="p">,</span><span class="n">av</span><span class="p">))</span>
+                    <span class="c1">#Lookup Constraints if input is a dictionary</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addvar</span><span class="p">,</span><span class="nb">dict</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addvar</span><span class="p">[</span><span class="n">av</span><span class="p">],</span><span class="nb">dict</span><span class="p">):</span>
+                        <span class="n">const</span> <span class="o">=</span> <span class="n">base_const</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                        <span class="n">const</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">addvar</span><span class="p">[</span><span class="n">av</span><span class="p">])</span>
+                    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">addvar</span><span class="p">,</span><span class="nb">dict</span><span class="p">):</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;dictionary must have a subdictionary for </span><span class="si">{</span><span class="n">av</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">const</span> <span class="o">=</span> <span class="n">base_const</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+                    <span class="c1">#for each match we add the variable</span>
+                    <span class="k">for</span> <span class="n">mtch</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">mtch</span> <span class="ow">in</span> <span class="n">added</span><span class="p">:</span>
+                            <span class="k">continue</span> <span class="c1">#add only once</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">added</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mtch</span><span class="p">)</span>
+
+                        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_level</span> <span class="o">&lt;</span> <span class="mi">5</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;adding </span><span class="si">{</span><span class="n">mtch</span><span class="si">}</span><span class="s1"> to solver vars&#39;</span><span class="p">)</span>
+                        <span class="c1">#add constraint values and type/instance</span>
+                        <span class="n">ref</span> <span class="o">=</span> <span class="n">addable</span><span class="p">[</span><span class="s1">&#39;attributes&#39;</span><span class="p">][</span><span class="n">mtch</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+                        <span class="n">mtch_type</span> <span class="o">=</span> <span class="n">Solver</span><span class="o">.</span><span class="n">declare_var</span><span class="p">(</span><span class="n">mtch</span><span class="p">)</span> <span class="c1">#type</span>
+                        <span class="c1">#bounds</span>
+                        <span class="n">mtch_type</span><span class="o">.</span><span class="n">constraints</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">const</span><span class="p">[</span><span class="s1">&#39;min&#39;</span><span class="p">]</span>
+                        <span class="n">mtch_type</span><span class="o">.</span><span class="n">constraints</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;value&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">const</span><span class="p">[</span><span class="s1">&#39;max&#39;</span><span class="p">]</span> 
+                        <span class="c1">#instance</span>
+                        <span class="n">mtch_inst</span> <span class="o">=</span> <span class="n">SolverInstance</span><span class="p">(</span><span class="n">mtch_type</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span>
+                        <span class="c1">#attach</span>
+                        <span class="n">out</span><span class="p">[</span><span class="s1">&#39;attrs&#39;</span><span class="p">][</span><span class="s1">&#39;solver.var&#39;</span><span class="p">][</span><span class="n">mtch</span><span class="p">]</span> <span class="o">=</span> <span class="n">ref</span>
+                        <span class="n">out</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">][</span><span class="s1">&#39;solver&#39;</span><span class="p">][</span><span class="n">mtch</span><span class="p">]</span> <span class="o">=</span> <span class="n">mtch_inst</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+
+    
+
+<div class="viewcode-block" id="SolverMixin.post_run_callback">
+<a class="viewcode-back" href="../../_autosummary/engforge.solver.SolverMixin.html#engforge.solver.SolverMixin.post_run_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">post_run_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;user callback for when run is complete&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SolverMixin.pre_run_callback">
+<a class="viewcode-back" href="../../_autosummary/engforge.solver.SolverMixin.html#engforge.solver.SolverMixin.pre_run_callback">[docs]</a>
+    <span class="k">def</span> <span class="nf">pre_run_callback</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;user callback for when run is beginning&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="SolverMixin.run">
+<a class="viewcode-back" href="../../_autosummary/engforge.solver.SolverMixin.html#engforge.solver.SolverMixin.run">[docs]</a>
+    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;the steady state run the solver for the system. It will run the system with the input vars and return the system with the results. Dynamics systems will be run so they are in a steady state nearest their initial position.&quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="s1">&#39;opt_fail&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;opt_fail&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">kwargs</span><span class="p">,</span><span class="n">level_name</span><span class="o">=</span><span class="s1">&#39;run&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbx</span><span class="p">:</span>
+            <span class="c1">#problem context removes slv/args from kwargs</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_iterate_input_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">eval</span><span class="p">,</span> <span class="n">return_results</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="SolverMixin.run_internal_systems">
+<a class="viewcode-back" href="../../_autosummary/engforge.solver.SolverMixin.html#engforge.solver.SolverMixin.run_internal_systems">[docs]</a>
+    <span class="k">def</span> <span class="nf">run_internal_systems</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sys_kw</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;runs internal systems with potentially scoped kwargs&quot;&quot;&quot;</span>
+        <span class="c1"># Pre Execute Which Sets Fields And PRE Signals</span>
+        <span class="kn">from</span> <span class="nn">engforge.system</span> <span class="kn">import</span> <span class="n">System</span>
+
+        <span class="c1"># Record any changed state in components here, important for iterators</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">System</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_references</span><span class="p">(</span><span class="n">recache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># System Solver Loop</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">comp</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">internal_systems</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">comp</span><span class="p">,</span><span class="s1">&#39;_solver_override&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">comp</span><span class="o">.</span><span class="n">_solver_override</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">sys_kw</span> <span class="ow">and</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">sys_kw</span><span class="p">:</span>
+                    <span class="n">sys_kw_comp</span> <span class="o">=</span> <span class="n">sys_kw</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">sys_kw_comp</span> <span class="o">=</span> <span class="p">{}</span>
+
+                <span class="c1"># Systems solve cycle</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">comp</span><span class="p">,</span> <span class="n">System</span><span class="p">):</span>  <span class="c1"># should always be true</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;solving </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> with </span><span class="si">{</span><span class="n">sys_kw_comp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">comp</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="o">**</span><span class="n">sys_kw_comp</span><span class="p">)</span></div>
+
+ 
+    <span class="c1"># Single Point Flow</span>
+<div class="viewcode-block" id="SolverMixin.eval">
+<a class="viewcode-back" href="../../_autosummary/engforge.solver.SolverMixin.html#engforge.solver.SolverMixin.eval">[docs]</a>
+    <span class="k">def</span> <span class="nf">eval</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">Xo</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">eval_kw</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">sys_kw</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span><span class="n">cb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Evaluates the system with pre/post execute methodology</span>
+<span class="sd">        :param kw: kwargs come from `sys_kw` input in run ect.</span>
+<span class="sd">        :param cb: an optional callback taking the system as an argument of the form (self,eval_kw,sys_kw,**kw)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># Transeint</span>
+        <span class="kn">from</span> <span class="nn">engforge.system</span> <span class="kn">import</span> <span class="n">System</span>
+        <span class="k">if</span> <span class="n">kw</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;refresh_references&#39;</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">System</span><span class="p">):</span>
+            <span class="c1">#recache is important for iterators #TODO: only with iterable comps</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_references</span><span class="p">(</span><span class="n">recache</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>    
+
+        <span class="c1">#default behavior of system is to accept non-optimal results but describe the behavior anyways</span>
+        <span class="k">if</span> <span class="s1">&#39;opt_fail&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">kw</span><span class="p">:</span>
+            <span class="n">kw</span><span class="p">[</span><span class="s1">&#39;opt_fail&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;running with kw:</span><span class="si">{</span><span class="n">kw</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="c1">#execute with problem context and execute signals</span>
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">kw</span><span class="p">,</span><span class="n">level_name</span><span class="o">=</span><span class="s1">&#39;eval&#39;</span><span class="p">,</span><span class="n">eval_kw</span><span class="o">=</span><span class="n">eval_kw</span><span class="p">,</span> <span class="n">sys_kw</span><span class="o">=</span><span class="n">sys_kw</span><span class="p">,</span><span class="n">post_callback</span><span class="o">=</span><span class="n">cb</span><span class="p">,</span><span class="n">Xnew</span><span class="o">=</span><span class="n">Xo</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbx</span><span class="p">:</span>
+            <span class="n">out</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+            <span class="n">pbx</span><span class="o">.</span><span class="n">exit_to_level</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="s1">&#39;eval&#39;</span><span class="p">,</span><span class="n">revert</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_level</span> <span class="o">&gt;=</span> <span class="mi">20</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+<div class="viewcode-block" id="SolverMixin.execute">
+<a class="viewcode-back" href="../../_autosummary/engforge.solver.SolverMixin.html#engforge.solver.SolverMixin.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Solves the system&#39;s system of constraints and integrates transients if any exist</span>
+
+<span class="sd">        Override this function for custom solving functions, and call `solver` to use default solver functionality.</span>
+
+<span class="sd">        :returns: the result of this function is returned from solver()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># steady state</span>
+        <span class="n">dflt</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span><span class="c1">#obj=None, cons=True, X0=None, dXdt=0)</span>
+        <span class="n">dflt</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">(</span><span class="o">**</span><span class="n">dflt</span><span class="p">)</span></div>
+
+
+    <span class="c1"># TODO: add global optimization search for objective addin, via a new  `search_optimization` method.</span>
+
+    <span class="c1"># TODO: code options for transient integration</span>
+<div class="viewcode-block" id="SolverMixin.solver">
+<a class="viewcode-back" href="../../_autosummary/engforge.solver.SolverMixin.html#engforge.solver.SolverMixin.solver">[docs]</a>
+    <span class="k">def</span> <span class="nf">solver</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span> <span class="n">enter_refresh</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">save_on_exit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="o">**</span><span class="n">kw</span>
+        <span class="p">):</span>
+<span class="w">            </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">            runs the system solver using the current system state and modifying it. This is the default solver for the system, and it is recommended to add additional options or methods via the execute method.</span>
+
+<span class="sd">            </span>
+
+<span class="sd">            :param obj: the objective function to minimize, by default will minimize the sum of the squares of the residuals. Objective function should be a function(system,Xs,Xt) where Xs is the system state and Xt is the system transient state. The objective function will be argmin(X)|(1+custom_objective)*residual_RSS when `add_obj` is True in kw otherwise argmin(X)|custom_objective with constraints on the system as balances instead of first objective being included.</span>
+<span class="sd">            :param cons: the constraints to be used in the solver, by default will use the system&#39;s constraints will be enabled when True. If a dictionary is passed the solver will use the dictionary as the constraints in addition to system constraints. These can be individually disabled by key=None in the dictionary.</span>
+
+<span class="sd">            :param X0: the initial guess for the solver, by default will use the current system state. If a dictionary is passed the solver will use the dictionary as the initial guess in addition to the system state.</span>
+<span class="sd">            :param dXdt: can be 0 to indicate steady-state, or None to not run the transient constraints. Otherwise a partial dictionary of vars for the dynamics rates can be given, those not given will be assumed steady state or 0.</span>
+
+<span class="sd">            :param kw: additional options for the solver, such as the solver_option, or the solver method options. Described below</span>
+<span class="sd">            :param combos: a csv str or list of combos to include, including wildcards. the default means all combos will be run unless ign_combos or only combos alters behavior. The initial selection of combos is made by matching any case with the full name of the combo, or a parial name with a wildcard(s) in the combo name Ignore and only combos will further filter the selection. Wildcards / queries per fnmatch</span>
+<span class="sd">            :param ign_combos: a list of combo vars to ignore.</span>
+<span class="sd">            :param only_combos: a list of combo vars to include exclusively.</span>
+<span class="sd">            :param add_var: a csv str or variables to include, including wildcards. the default means all combos will be run unless ign_combos or only combos alters behavior. The initial selection of combos is made by matching any case with the full name of the combo, or a parial name with a wildcard(s) in the combo name Ignore and only combos will further filter the selection. Wildcards / queries per fnmatch</span>
+<span class="sd">            :param ign_var: a list of combo vars to ignore.</span>
+<span class="sd">            :param only_var: a list of combo vars to include exclusively.            </span>
+<span class="sd">            :param add_obj: a flag to add the objective to the system constraints, by default will add the objective to the system constraints. If False the objective will be the only constraint.</span>
+<span class="sd">            :param only_active: default True, will only look at active variables objectives and constraints</span>
+<span class="sd">            :param activate: default None, a list of solver vars to activate</span>
+<span class="sd">            :param deactivate: default None, a list of solver vars to deactivate (if not activated above)</span>
+<span class="sd">            &quot;&quot;&quot;</span>
+
+            <span class="c1">#to your liking sir</span>
+            <span class="n">opts</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1">#TODO: add defaults</span>
+            <span class="n">opts</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">kw</span><span class="p">)</span> <span class="c1">#your custom args!</span>
+                   
+            <span class="c1">#use problem execution context</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;starting solver: </span><span class="si">{</span><span class="n">opts</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            
+            <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">opts</span><span class="p">,</span><span class="n">level_name</span><span class="o">=</span><span class="s1">&#39;sys_slvr&#39;</span><span class="p">,</span><span class="n">enter_refresh</span><span class="o">=</span><span class="n">enter_refresh</span><span class="p">,</span><span class="n">save_on_exit</span><span class="o">=</span><span class="n">save_on_exit</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbx</span><span class="p">:</span>
+                
+                <span class="c1">#Use Solver Context to Solve</span>
+                <span class="n">out</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">solve_min</span><span class="p">(</span><span class="o">**</span><span class="n">opts</span><span class="p">)</span>
+                <span class="n">has_ans</span> <span class="o">=</span> <span class="s1">&#39;ans&#39;</span> <span class="ow">in</span> <span class="n">out</span>
+                <span class="c1">#depending on the solver success, failure or no solution, we can exit the solver</span>
+                <span class="k">if</span> <span class="n">has_ans</span> <span class="ow">and</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;ans&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;ans&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
+                    <span class="c1">#this is where you want to be! &lt;&lt;&lt;</span>
+                    <span class="n">pbx</span><span class="o">.</span><span class="n">set_ref_values</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;Xans&#39;</span><span class="p">])</span>
+                    <span class="n">pbx</span><span class="o">.</span><span class="n">exit_to_level</span><span class="p">(</span><span class="s1">&#39;sys_slvr&#39;</span><span class="p">,</span><span class="kc">False</span><span class="p">)</span>
+
+                <span class="k">elif</span> <span class="n">has_ans</span> <span class="ow">and</span> <span class="n">out</span><span class="p">[</span><span class="s1">&#39;ans&#39;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="c1">#deterministic input based case for updates / signals</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;exiting solver with no solution </span><span class="si">{</span><span class="n">out</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">pbx</span><span class="o">.</span><span class="n">exit_with_state</span><span class="p">()</span> 
+
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1">#handle failure options</span>
+                    <span class="k">if</span> <span class="n">pbx</span><span class="o">.</span><span class="n">opt_fail</span><span class="p">:</span>
+
+                        <span class="c1">#if log.log_level &lt; 15:</span>
+                        <span class="n">pbx</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Optimization Failed: </span><span class="si">{</span><span class="n">pbx</span><span class="o">.</span><span class="n">sys_refs</span><span class="si">}</span><span class="s1"> | </span><span class="si">{</span><span class="n">pbx</span><span class="o">.</span><span class="n">constraints</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                        <span class="c1">#if log.log_level &lt; 5:</span>
+                        <span class="n">pbx</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">pbx</span><span class="o">.</span><span class="vm">__dict__</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+                        <span class="n">ve</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Solver failed to converge: </span><span class="si">{</span><span class="n">out</span><span class="p">[</span><span class="s1">&#39;ans&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">ve</span><span class="p">)</span>
+                    
+                    <span class="k">if</span> <span class="n">pbx</span><span class="o">.</span><span class="n">fail_revert</span><span class="p">:</span>
+                        <span class="n">pbx</span><span class="o">.</span><span class="n">exit_and_revert</span><span class="p">()</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">pbx</span><span class="o">.</span><span class="n">exit_with_state</span><span class="p">()</span>  
+                <span class="c1">#close context</span>
+            
+            <span class="c1">#return output</span>
+            <span class="k">return</span> <span class="n">out</span></div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

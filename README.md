@@ -50,13 +50,7 @@ run a throttle sweep with filter loss characteristic and fan afinity law based p
 from engforge.analysis import Analysis
 from engforge.reporting import CSVReporter,DiskPlotReporter
 from engforge.properties import system_property
-from engforge.components import Component
-from engforge.system import System
-from engforge.plotting import PLOT
-from engforge.slots import SLOT
-from engforge.solver import Solver
-from engforge.signals import SIGNAL
-from engforge.configuration import forge
+from engforge import *
 import numpy as np
 import os,pathlib
 import attrs
@@ -64,20 +58,20 @@ import attrs
 @forge
 class Fan(Component):
 
-    n:float = attrs.field(default=1)
-    dp_design= attrs.field(default=100)
-    w_design = attrs.field(default=2)
+    n_frac:float = field(default=1)
+    dp_design:float= field(default=100)
+    w_design:float = field(default=2)
 
 
     @system_property
     def dP_fan(self) -> float:
-        return self.dp_design*(self.n*self.w_design)**2.0
-    
+        return self.dp_design*(self.n_frac*self.w_design)**2.0
+
 @forge
 class Filter(Component):
 
-    w:float = attrs.field(default=0)
-    k_loss:float = attrs.field(default=50)
+    w:float = field(default=0)
+    k_loss:float = field(default=50)
 
     @system_property
     def dP_filter(self) -> float:
@@ -86,20 +80,23 @@ class Filter(Component):
 @forge
 class Airfilter(System):
 
-    throttle:float = attrs.field(default=1)
-    w:float = attrs.field(default=1)
-    k_parasitic:float = attrs.field(default=0.1)
+    throttle:float = field(default=1)
+    w:float = field(default=1)
+    k_parasitic:float = field(default=0.1)
 
-    fan: Fan = SLOT.define(Fan)
-    filt: Filter = SLOT.define(Filter)
+    fan: Fan = Slot.define(Fan)
+    filt: Filter = Slot.define(Filter)
 
-    set_fan_n = SIGNAL.define('fan.n','throttle',mode='both')
-    set_filter_w = SIGNAL.define('filt.w','w',mode='both')
+    set_fan_n = Signal.define('fan.n_frac','throttle',mode='both')
+    set_filter_w = Signal.define('filt.w','w',mode='both')
 
-    flow_solver = Solver.define('sum_dP','w')
-    flow_solver.add_constraint('min',0)
+    flow_var = Solver.declare_var('w',combos='flow')
+    flow_var.add_var_constraint(0,'min',combos='flow')
+    
+    pr_eq = Solver.constraint_equality('sum_dP',0,combos='flow')
+    
 
-    flow_curve = PLOT.define(
+    flow_curve = Plot.define(
         "throttle", "w", kind="lineplot", title="Flow Curve"
     )    
 
@@ -113,22 +110,25 @@ class Airfilter(System):
 
 
 #Run the system
-from engforge.logging import change_all_log_levels
 from matplotlib.pylab import *
+
+
 
 fan = Fan()
 filt = Filter()
 af = Airfilter(fan=fan,filt=filt)
 
-af.run(throttle=list(np.arange(0.1,1.1,0.1)))
+change_all_log_levels(af,20) #info
+
+af.run(throttle=list(np.arange(0.1,1.1,0.1)),combos='*')
 
 df = af.dataframe
 
 fig,(ax,ax2) = subplots(2,1)
 ax.plot(df.throttle*100,df.w,'k--',label='flow')
-ax2.plot(df.throttle*100,filt.dataframe.dp_filter,label='filter')
+ax2.plot(df.throttle*100,df.filt_dp_filter,label='filter')
 ax2.plot(df.throttle*100,df.dp_parasitic,label='parasitic')
-ax2.plot(df.throttle*100,fan.dataframe.dp_fan,label='fan')
+ax2.plot(df.throttle*100,df.fan_dp_fan,label='fan')
 ax.legend(loc='upper right')
 ax.set_title('flow')
 ax.grid()
@@ -146,56 +146,73 @@ ax2.set_xlabel(f'throttle%')
 ##### Overview
 Test case results in accurate resonance frequency calculation
 ```python
+
 @forge
 class SpringMass(System):
-
-    k:float = attrs.field(default=50)
-    m:float = attrs.field(default=1)
-    g:float = attrs.field(default=9.81)
-    u:float = attrs.field(default=0.3)
-
-    a:float = attrs.field(default=0)
-    x:float = attrs.field(default=0.0)
-    v:float = attrs.field(default=0.0)
-    t:float = attrs.field(default=0.0)
-
-    x_neutral:float = attrs.field(default=0.5)
     
-    #a is solved for to ensure sumF is zero
-    res = Solver.define('sumF','a')
+    k: float = attrs.field(default=50)
+    m: float = attrs.field(default=1)
+    g: float = attrs.field(default=9.81)
+    u: float = attrs.field(default=0.3)
 
-	#a is integrated to provide v, similar to v integrated to supply x
-    vtx = TRANSIENT.integrate('v','a')
-    xtx = TRANSIENT.integrate('x','v')
+    a: float = attrs.field(default=0)
+    x: float = attrs.field(default=0.0)
+    v: float = attrs.field(default=0.0)
+
+    wo_f: float = attrs.field(default=1.0)
+    Fa: float = attrs.field(default=10.0)
+
+    x_neutral: float = attrs.field(default=0.5)
+
+    res =Solver.constraint_equality("sumF")
+    var_a = Solver.declare_var("a",combos='a',active=False)
+    var_b = Solver.declare_var("u",combos='u',active=False)
+    var_b.add_var_constraint(0.0,kind="min")
+    var_b.add_var_constraint(1.0,kind="max")
+
+    vtx = Time.integrate("v", "accl")
+    xtx = Time.integrate("x", "v")
+    xtx.add_var_constraint(0,kind="min")
+
+    #FIXME: implement trace testing
+    #pos = Trace.define(y="x", y2=["v", "a"])
 
     @system_property
-    def dx(self)-> float:
-        return self.x_neutral- self.x 
+    def dx(self) -> float:
+        return self.x_neutral - self.x
 
     @system_property
-    def Fspring(self)-> float:
+    def Fspring(self) -> float:
         return self.k * self.dx
-    
+
     @system_property
-    def Fgrav(self)-> float:
+    def Fgrav(self) -> float:
         return self.g * self.m
-    
+
     @system_property
-    def Faccel(self)-> float:
+    def Faccel(self) -> float:
         return self.a * self.m
-    
+
     @system_property
-    def Ffric(self)->float:
-        return self.u*self.v
+    def Ffric(self) -> float:
+        return self.u * self.v
 
     @system_property
     def sumF(self) -> float:
-        return self.Fspring - self.Fgrav - self.Faccel - self.Ffric
+        return self.Fspring - self.Fgrav - self.Faccel - self.Ffric + self.Fext
+    
+    @system_property
+    def Fext(self) -> float:
+        return self.Fa * np.cos( self.time * self.wo_f )
 
+    @system_property
+    def accl(self) -> float:
+        return self.sumF / self.m
+    
 
 #Run The System, Compare damping `u`=0 & 0.1
 sm = SpringMass(x=0.0)
-sm.run(dt=0.01,endtime=10,u=[0.0,0.1])
+sm.sim(dt=0.01,endtime=10,u=[0.0,0.1],combos='*',slv_vars='*')
 
 df = sm.dataframe
 df.groupby('run_id').plot('time','x')
@@ -262,10 +279,10 @@ sa = AirfilterAnalysis(
                    )
 
 #Run the analysis! Input passed to system
-sa.run(throttle=list(np.arange(0.1,1.1,0.1)))
+sa.run(throttle=list(np.arange(0.1,1.1,0.1)),combos='*')
+
 
 #CSV's & Plots available in ./airfilter_report!
-
 ```
 
 
@@ -288,7 +305,7 @@ FORGE_DB_NAME                            |SECRETS[FORGE_DB_NAME]                
 FORGE_DB_PASS                            |SECRETS[FORGE_DB_PASS]                    = postgres
 FORGE_DB_PORT                            |SECRETS[FORGE_DB_PORT]                    = 5432
 FORGE_DB_USER                            |SECRETS[FORGE_DB_USER]                    = postgres
-FORGE_HOSTNAME                           |SECRETS[FORGE_HOSTNAME]                   = DEATHRAY
+FORGE_HOSTNAME                           |SECRETS[FORGE_HOSTNAME]                   = <your-machine>
 FORGE_REPORT_PATH                        |SECRETS[FORGE_REPORT_PATH]                = 
 FORGE_SLACK_LOG_WEBHOOK                  |SECRETS[FORGE_SLACK_LOG_WEBHOOK]          = 
 SEABORN_CONTEXT                         |SECRETS[SEABORN_CONTEXT]                 = paper

@@ -1,0 +1,6 @@
+engforge.attr\_plotting.install\_seaborn
+========================================
+
+.. currentmodule:: engforge.attr_plotting
+
+.. autofunction:: install_seaborn

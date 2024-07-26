@@ -1,0 +1,44 @@
+engforge.attr\_signals.SignalInstance
+=====================================
+
+.. currentmodule:: engforge.attr_signals
+
+.. autoclass:: SignalInstance
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~SignalInstance.apply
+      ~SignalInstance.as_ref_dict
+      ~SignalInstance.compile
+      ~SignalInstance.get_alias
+      ~SignalInstance.is_active
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SignalInstance.active
+      ~SignalInstance.classname
+      ~SignalInstance.combos
+      ~SignalInstance.mode
+      ~SignalInstance.system
+      ~SignalInstance.signal
+      ~SignalInstance.target
+      ~SignalInstance.source
+      ~SignalInstance.class_attr
+      ~SignalInstance.backref
+   
+   

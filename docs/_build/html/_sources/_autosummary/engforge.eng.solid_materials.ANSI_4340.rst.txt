@@ -1,0 +1,114 @@
+engforge.eng.solid\_materials.ANSI\_4340
+========================================
+
+.. currentmodule:: engforge.eng.solid_materials
+
+.. autoclass:: ANSI_4340
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ANSI_4340.add_fields
+      ~ANSI_4340.change_all_log_lvl
+      ~ANSI_4340.check_ref_slot_type
+      ~ANSI_4340.cls_compile
+      ~ANSI_4340.collect_all_attributes
+      ~ANSI_4340.collect_inst_attributes
+      ~ANSI_4340.compile_classes
+      ~ANSI_4340.copy_config_at_state
+      ~ANSI_4340.critical
+      ~ANSI_4340.debug
+      ~ANSI_4340.difference
+      ~ANSI_4340.error
+      ~ANSI_4340.extract_message
+      ~ANSI_4340.filter
+      ~ANSI_4340.go_through_configurations
+      ~ANSI_4340.info
+      ~ANSI_4340.input_attrs
+      ~ANSI_4340.input_fields
+      ~ANSI_4340.installSTDLogger
+      ~ANSI_4340.internal_configurations
+      ~ANSI_4340.message_with_identiy
+      ~ANSI_4340.msg
+      ~ANSI_4340.numeric_fields
+      ~ANSI_4340.parent_configurations_cls
+      ~ANSI_4340.plot_attributes
+      ~ANSI_4340.pre_compile
+      ~ANSI_4340.resetLog
+      ~ANSI_4340.resetSystemLogs
+      ~ANSI_4340.setattrs
+      ~ANSI_4340.signals_attributes
+      ~ANSI_4340.slack_notification
+      ~ANSI_4340.slot_refs
+      ~ANSI_4340.slots_attributes
+      ~ANSI_4340.solvers_attributes
+      ~ANSI_4340.subclasses
+      ~ANSI_4340.subcls_compile
+      ~ANSI_4340.table_fields
+      ~ANSI_4340.trace_attributes
+      ~ANSI_4340.transients_attributes
+      ~ANSI_4340.validate_class
+      ~ANSI_4340.von_mises_stress_max
+      ~ANSI_4340.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ANSI_4340.E
+      ~ANSI_4340.G
+      ~ANSI_4340.allowable_stress
+      ~ANSI_4340.as_dict
+      ~ANSI_4340.attrs_fields
+      ~ANSI_4340.classname
+      ~ANSI_4340.color
+      ~ANSI_4340.displayname
+      ~ANSI_4340.filename
+      ~ANSI_4340.identity
+      ~ANSI_4340.input_as_dict
+      ~ANSI_4340.log_fmt
+      ~ANSI_4340.log_level
+      ~ANSI_4340.log_on
+      ~ANSI_4340.log_silo
+      ~ANSI_4340.logger
+      ~ANSI_4340.nu
+      ~ANSI_4340.numeric_as_dict
+      ~ANSI_4340.numeric_hash
+      ~ANSI_4340.rho
+      ~ANSI_4340.shear_modulus
+      ~ANSI_4340.slack_webhook_url
+      ~ANSI_4340.ultimate_stress
+      ~ANSI_4340.unique_hash
+      ~ANSI_4340.unique_id
+      ~ANSI_4340.yield_stress
+      ~ANSI_4340.name
+      ~ANSI_4340.density
+      ~ANSI_4340.elastic_modulus
+      ~ANSI_4340.yield_strength
+      ~ANSI_4340.tensile_strength_ultimate
+      ~ANSI_4340.poissons_ratio
+      ~ANSI_4340.melting_point
+      ~ANSI_4340.maxium_service_temp
+      ~ANSI_4340.thermal_conductivity
+      ~ANSI_4340.specific_heat
+      ~ANSI_4340.thermal_expansion
+      ~ANSI_4340.electrical_resistitivity
+      ~ANSI_4340.cost_per_kg
+      ~ANSI_4340.in_shear_modulus
+      ~ANSI_4340.hardness
+      ~ANSI_4340.izod
+      ~ANSI_4340.factor_of_saftey
+   
+   

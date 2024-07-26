@@ -1,0 +1,46 @@
+engforge.patterns
+=================
+
+.. automodule:: engforge.patterns
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      chunks
+      flat2gen
+      flatten
+      singleton_meta_object
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      InputSingletonMeta
+      Singleton
+      SingletonMeta
+      inst_vectorize
+   
+   
+
+   
+   
+   
+
+
+

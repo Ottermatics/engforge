@@ -1,0 +1,183 @@
+engforge.eng.fluid\_material.Water
+==================================
+
+.. currentmodule:: engforge.eng.fluid_material
+
+.. autoclass:: Water
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Water.add_fields
+      ~Water.change_all_log_lvl
+      ~Water.check_ref_slot_type
+      ~Water.cls_all_attrs_fields
+      ~Water.cls_all_property_keys
+      ~Water.cls_all_property_labels
+      ~Water.cls_compile
+      ~Water.collect_all_attributes
+      ~Water.collect_comp_refs
+      ~Water.collect_dynamic_refs
+      ~Water.collect_inst_attributes
+      ~Water.collect_post_update_refs
+      ~Water.collect_solver_refs
+      ~Water.collect_update_refs
+      ~Water.comp_references
+      ~Water.compile_classes
+      ~Water.copy_config_at_state
+      ~Water.create_dynamic_matricies
+      ~Water.create_feedthrough_matrix
+      ~Water.create_input_matrix
+      ~Water.create_output_constants
+      ~Water.create_output_matrix
+      ~Water.create_state_constants
+      ~Water.create_state_matrix
+      ~Water.critical
+      ~Water.debug
+      ~Water.determine_nearest_stationary_state
+      ~Water.difference
+      ~Water.error
+      ~Water.extract_message
+      ~Water.filter
+      ~Water.format_columns
+      ~Water.get_system_input_refs
+      ~Water.go_through_configurations
+      ~Water.info
+      ~Water.input_attrs
+      ~Water.input_fields
+      ~Water.installSTDLogger
+      ~Water.internal_components
+      ~Water.internal_configurations
+      ~Water.internal_references
+      ~Water.internal_systems
+      ~Water.internal_tabulations
+      ~Water.linear_output
+      ~Water.linear_step
+      ~Water.locate
+      ~Water.locate_ref
+      ~Water.message_with_identiy
+      ~Water.msg
+      ~Water.nonlinear_output
+      ~Water.nonlinear_step
+      ~Water.numeric_fields
+      ~Water.parent_configurations_cls
+      ~Water.parse_run_kwargs
+      ~Water.parse_simulation_input
+      ~Water.plot_attributes
+      ~Water.post_update
+      ~Water.pre_compile
+      ~Water.print_info
+      ~Water.rate
+      ~Water.rate_linear
+      ~Water.rate_nonlinear
+      ~Water.ref_dXdt
+      ~Water.resetLog
+      ~Water.resetSystemLogs
+      ~Water.set_attr
+      ~Water.set_time
+      ~Water.setattrs
+      ~Water.signals_attributes
+      ~Water.slack_notification
+      ~Water.slot_refs
+      ~Water.slots_attributes
+      ~Water.smart_split_dataframe
+      ~Water.solvers_attributes
+      ~Water.step
+      ~Water.subclasses
+      ~Water.subcls_compile
+      ~Water.system_properties_classdef
+      ~Water.system_references
+      ~Water.table_fields
+      ~Water.trace_attributes
+      ~Water.transients_attributes
+      ~Water.update
+      ~Water.update_dynamics
+      ~Water.update_feedthrough
+      ~Water.update_input
+      ~Water.update_output_constants
+      ~Water.update_output_matrix
+      ~Water.update_state
+      ~Water.update_state_constants
+      ~Water.validate_class
+      ~Water.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Water.Psat
+      ~Water.Tsat
+      ~Water.Ut_ref
+      ~Water.Xt_ref
+      ~Water.Yt_ref
+      ~Water.anything_changed
+      ~Water.as_dict
+      ~Water.attrs_fields
+      ~Water.classname
+      ~Water.dXtdt_ref
+      ~Water.data_dict
+      ~Water.dataframe_constants
+      ~Water.dataframe_variants
+      ~Water.density
+      ~Water.displayname
+      ~Water.dynamic_A
+      ~Water.dynamic_B
+      ~Water.dynamic_C
+      ~Water.dynamic_D
+      ~Water.dynamic_F
+      ~Water.dynamic_K
+      ~Water.dynamic_input
+      ~Water.dynamic_input_vars
+      ~Water.dynamic_output
+      ~Water.dynamic_output_vars
+      ~Water.dynamic_state
+      ~Water.dynamic_state_vars
+      ~Water.enthalpy
+      ~Water.filename
+      ~Water.identity
+      ~Water.input_as_dict
+      ~Water.last_context
+      ~Water.log_fmt
+      ~Water.log_level
+      ~Water.log_on
+      ~Water.log_silo
+      ~Water.logger
+      ~Water.material
+      ~Water.nonlinear
+      ~Water.numeric_as_dict
+      ~Water.numeric_hash
+      ~Water.plotable_variables
+      ~Water.skip_plot_vars
+      ~Water.slack_webhook_url
+      ~Water.specific_heat
+      ~Water.state
+      ~Water.static_A
+      ~Water.static_B
+      ~Water.static_C
+      ~Water.static_D
+      ~Water.static_F
+      ~Water.static_K
+      ~Water.surface_tension
+      ~Water.system_id
+      ~Water.thermal_conductivity
+      ~Water.time
+      ~Water.unique_hash
+      ~Water.update_interval
+      ~Water.viscosity
+      ~Water.parent
+      ~Water.name
+      ~Water.dataframe
+   
+   

@@ -1,0 +1,176 @@
+engforge.eng.fluid\_material.IdealGas
+=====================================
+
+.. currentmodule:: engforge.eng.fluid_material
+
+.. autoclass:: IdealGas
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~IdealGas.add_fields
+      ~IdealGas.change_all_log_lvl
+      ~IdealGas.check_ref_slot_type
+      ~IdealGas.cls_all_attrs_fields
+      ~IdealGas.cls_all_property_keys
+      ~IdealGas.cls_all_property_labels
+      ~IdealGas.cls_compile
+      ~IdealGas.collect_all_attributes
+      ~IdealGas.collect_comp_refs
+      ~IdealGas.collect_dynamic_refs
+      ~IdealGas.collect_inst_attributes
+      ~IdealGas.collect_post_update_refs
+      ~IdealGas.collect_solver_refs
+      ~IdealGas.collect_update_refs
+      ~IdealGas.comp_references
+      ~IdealGas.compile_classes
+      ~IdealGas.copy_config_at_state
+      ~IdealGas.create_dynamic_matricies
+      ~IdealGas.create_feedthrough_matrix
+      ~IdealGas.create_input_matrix
+      ~IdealGas.create_output_constants
+      ~IdealGas.create_output_matrix
+      ~IdealGas.create_state_constants
+      ~IdealGas.create_state_matrix
+      ~IdealGas.critical
+      ~IdealGas.debug
+      ~IdealGas.determine_nearest_stationary_state
+      ~IdealGas.difference
+      ~IdealGas.error
+      ~IdealGas.extract_message
+      ~IdealGas.filter
+      ~IdealGas.format_columns
+      ~IdealGas.get_system_input_refs
+      ~IdealGas.go_through_configurations
+      ~IdealGas.info
+      ~IdealGas.input_attrs
+      ~IdealGas.input_fields
+      ~IdealGas.installSTDLogger
+      ~IdealGas.internal_components
+      ~IdealGas.internal_configurations
+      ~IdealGas.internal_references
+      ~IdealGas.internal_systems
+      ~IdealGas.internal_tabulations
+      ~IdealGas.linear_output
+      ~IdealGas.linear_step
+      ~IdealGas.locate
+      ~IdealGas.locate_ref
+      ~IdealGas.message_with_identiy
+      ~IdealGas.msg
+      ~IdealGas.nonlinear_output
+      ~IdealGas.nonlinear_step
+      ~IdealGas.numeric_fields
+      ~IdealGas.parent_configurations_cls
+      ~IdealGas.parse_run_kwargs
+      ~IdealGas.parse_simulation_input
+      ~IdealGas.plot_attributes
+      ~IdealGas.post_update
+      ~IdealGas.pre_compile
+      ~IdealGas.print_info
+      ~IdealGas.rate
+      ~IdealGas.rate_linear
+      ~IdealGas.rate_nonlinear
+      ~IdealGas.ref_dXdt
+      ~IdealGas.resetLog
+      ~IdealGas.resetSystemLogs
+      ~IdealGas.set_attr
+      ~IdealGas.set_time
+      ~IdealGas.setattrs
+      ~IdealGas.signals_attributes
+      ~IdealGas.slack_notification
+      ~IdealGas.slot_refs
+      ~IdealGas.slots_attributes
+      ~IdealGas.smart_split_dataframe
+      ~IdealGas.solvers_attributes
+      ~IdealGas.step
+      ~IdealGas.subclasses
+      ~IdealGas.subcls_compile
+      ~IdealGas.system_properties_classdef
+      ~IdealGas.system_references
+      ~IdealGas.table_fields
+      ~IdealGas.trace_attributes
+      ~IdealGas.transients_attributes
+      ~IdealGas.update
+      ~IdealGas.update_dynamics
+      ~IdealGas.update_feedthrough
+      ~IdealGas.update_input
+      ~IdealGas.update_output_constants
+      ~IdealGas.update_output_matrix
+      ~IdealGas.update_state
+      ~IdealGas.update_state_constants
+      ~IdealGas.validate_class
+      ~IdealGas.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~IdealGas.Ut_ref
+      ~IdealGas.Xt_ref
+      ~IdealGas.Yt_ref
+      ~IdealGas.anything_changed
+      ~IdealGas.as_dict
+      ~IdealGas.attrs_fields
+      ~IdealGas.classname
+      ~IdealGas.dXtdt_ref
+      ~IdealGas.data_dict
+      ~IdealGas.dataframe_constants
+      ~IdealGas.dataframe_variants
+      ~IdealGas.density
+      ~IdealGas.displayname
+      ~IdealGas.dynamic_A
+      ~IdealGas.dynamic_B
+      ~IdealGas.dynamic_C
+      ~IdealGas.dynamic_D
+      ~IdealGas.dynamic_F
+      ~IdealGas.dynamic_K
+      ~IdealGas.dynamic_input
+      ~IdealGas.dynamic_input_vars
+      ~IdealGas.dynamic_output
+      ~IdealGas.dynamic_output_vars
+      ~IdealGas.dynamic_state
+      ~IdealGas.dynamic_state_vars
+      ~IdealGas.filename
+      ~IdealGas.identity
+      ~IdealGas.input_as_dict
+      ~IdealGas.last_context
+      ~IdealGas.log_fmt
+      ~IdealGas.log_level
+      ~IdealGas.log_on
+      ~IdealGas.log_silo
+      ~IdealGas.logger
+      ~IdealGas.nonlinear
+      ~IdealGas.numeric_as_dict
+      ~IdealGas.numeric_hash
+      ~IdealGas.plotable_variables
+      ~IdealGas.skip_plot_vars
+      ~IdealGas.slack_webhook_url
+      ~IdealGas.static_A
+      ~IdealGas.static_B
+      ~IdealGas.static_C
+      ~IdealGas.static_D
+      ~IdealGas.static_F
+      ~IdealGas.static_K
+      ~IdealGas.surface_tension
+      ~IdealGas.system_id
+      ~IdealGas.time
+      ~IdealGas.unique_hash
+      ~IdealGas.update_interval
+      ~IdealGas.viscosity
+      ~IdealGas.parent
+      ~IdealGas.name
+      ~IdealGas.dataframe
+   
+   

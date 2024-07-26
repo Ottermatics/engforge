@@ -1,0 +1,6 @@
+engforge.solver\_utils.secondary\_obj
+=====================================
+
+.. currentmodule:: engforge.solver_utils
+
+.. autofunction:: secondary_obj

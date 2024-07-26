@@ -1,0 +1,123 @@
+engforge.components.SolveableInterface
+======================================
+
+.. currentmodule:: engforge.components
+
+.. autoclass:: SolveableInterface
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~SolveableInterface.add_fields
+      ~SolveableInterface.change_all_log_lvl
+      ~SolveableInterface.check_ref_slot_type
+      ~SolveableInterface.cls_all_attrs_fields
+      ~SolveableInterface.cls_all_property_keys
+      ~SolveableInterface.cls_all_property_labels
+      ~SolveableInterface.cls_compile
+      ~SolveableInterface.collect_all_attributes
+      ~SolveableInterface.collect_comp_refs
+      ~SolveableInterface.collect_dynamic_refs
+      ~SolveableInterface.collect_inst_attributes
+      ~SolveableInterface.collect_post_update_refs
+      ~SolveableInterface.collect_solver_refs
+      ~SolveableInterface.collect_update_refs
+      ~SolveableInterface.comp_references
+      ~SolveableInterface.compile_classes
+      ~SolveableInterface.copy_config_at_state
+      ~SolveableInterface.critical
+      ~SolveableInterface.debug
+      ~SolveableInterface.difference
+      ~SolveableInterface.error
+      ~SolveableInterface.extract_message
+      ~SolveableInterface.filter
+      ~SolveableInterface.format_columns
+      ~SolveableInterface.get_system_input_refs
+      ~SolveableInterface.go_through_configurations
+      ~SolveableInterface.info
+      ~SolveableInterface.input_attrs
+      ~SolveableInterface.input_fields
+      ~SolveableInterface.installSTDLogger
+      ~SolveableInterface.internal_components
+      ~SolveableInterface.internal_configurations
+      ~SolveableInterface.internal_references
+      ~SolveableInterface.internal_systems
+      ~SolveableInterface.internal_tabulations
+      ~SolveableInterface.locate
+      ~SolveableInterface.locate_ref
+      ~SolveableInterface.message_with_identiy
+      ~SolveableInterface.msg
+      ~SolveableInterface.numeric_fields
+      ~SolveableInterface.parent_configurations_cls
+      ~SolveableInterface.parse_run_kwargs
+      ~SolveableInterface.parse_simulation_input
+      ~SolveableInterface.plot_attributes
+      ~SolveableInterface.post_update
+      ~SolveableInterface.pre_compile
+      ~SolveableInterface.print_info
+      ~SolveableInterface.resetLog
+      ~SolveableInterface.resetSystemLogs
+      ~SolveableInterface.set_attr
+      ~SolveableInterface.setattrs
+      ~SolveableInterface.signals_attributes
+      ~SolveableInterface.slack_notification
+      ~SolveableInterface.slot_refs
+      ~SolveableInterface.slots_attributes
+      ~SolveableInterface.smart_split_dataframe
+      ~SolveableInterface.solvers_attributes
+      ~SolveableInterface.subclasses
+      ~SolveableInterface.subcls_compile
+      ~SolveableInterface.system_properties_classdef
+      ~SolveableInterface.system_references
+      ~SolveableInterface.table_fields
+      ~SolveableInterface.trace_attributes
+      ~SolveableInterface.transients_attributes
+      ~SolveableInterface.update
+      ~SolveableInterface.validate_class
+      ~SolveableInterface.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SolveableInterface.anything_changed
+      ~SolveableInterface.as_dict
+      ~SolveableInterface.attrs_fields
+      ~SolveableInterface.classname
+      ~SolveableInterface.data_dict
+      ~SolveableInterface.dataframe_constants
+      ~SolveableInterface.dataframe_variants
+      ~SolveableInterface.displayname
+      ~SolveableInterface.filename
+      ~SolveableInterface.identity
+      ~SolveableInterface.input_as_dict
+      ~SolveableInterface.last_context
+      ~SolveableInterface.log_fmt
+      ~SolveableInterface.log_level
+      ~SolveableInterface.log_on
+      ~SolveableInterface.log_silo
+      ~SolveableInterface.logger
+      ~SolveableInterface.numeric_as_dict
+      ~SolveableInterface.numeric_hash
+      ~SolveableInterface.plotable_variables
+      ~SolveableInterface.skip_plot_vars
+      ~SolveableInterface.slack_webhook_url
+      ~SolveableInterface.system_id
+      ~SolveableInterface.unique_hash
+      ~SolveableInterface.parent
+      ~SolveableInterface.name
+      ~SolveableInterface.dataframe
+   
+   

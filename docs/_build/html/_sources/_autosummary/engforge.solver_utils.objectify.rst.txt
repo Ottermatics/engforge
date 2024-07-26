@@ -1,0 +1,6 @@
+engforge.solver\_utils.objectify
+================================
+
+.. currentmodule:: engforge.solver_utils
+
+.. autofunction:: objectify

@@ -1,0 +1,6 @@
+engforge.problem\_context.ProblemExit
+=====================================
+
+.. currentmodule:: engforge.problem_context
+
+.. autoexception:: ProblemExit

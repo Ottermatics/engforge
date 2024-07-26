@@ -1,0 +1,61 @@
+engforge.reporting.ExcelReporter
+================================
+
+.. currentmodule:: engforge.reporting
+
+.. autoclass:: ExcelReporter
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ExcelReporter.add_fields
+      ~ExcelReporter.change_all_log_lvl
+      ~ExcelReporter.check_config
+      ~ExcelReporter.critical
+      ~ExcelReporter.debug
+      ~ExcelReporter.ensure_exists
+      ~ExcelReporter.ensure_path
+      ~ExcelReporter.error
+      ~ExcelReporter.extract_message
+      ~ExcelReporter.filter
+      ~ExcelReporter.info
+      ~ExcelReporter.installSTDLogger
+      ~ExcelReporter.message_with_identiy
+      ~ExcelReporter.msg
+      ~ExcelReporter.resetLog
+      ~ExcelReporter.resetSystemLogs
+      ~ExcelReporter.slack_notification
+      ~ExcelReporter.subclasses
+      ~ExcelReporter.upload
+      ~ExcelReporter.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ExcelReporter.date_key
+      ~ExcelReporter.identity
+      ~ExcelReporter.log_fmt
+      ~ExcelReporter.log_level
+      ~ExcelReporter.log_on
+      ~ExcelReporter.logger
+      ~ExcelReporter.month_key
+      ~ExcelReporter.name
+      ~ExcelReporter.path
+      ~ExcelReporter.report_mode
+      ~ExcelReporter.report_root
+      ~ExcelReporter.slack_webhook_url
+   
+   

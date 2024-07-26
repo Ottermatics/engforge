@@ -1,0 +1,196 @@
+engforge.eng.pipes.PipeFitting
+==============================
+
+.. currentmodule:: engforge.eng.pipes
+
+.. autoclass:: PipeFitting
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~PipeFitting.add_fields
+      ~PipeFitting.add_segment
+      ~PipeFitting.change_all_log_lvl
+      ~PipeFitting.check_ref_slot_type
+      ~PipeFitting.cls_all_attrs_fields
+      ~PipeFitting.cls_all_property_keys
+      ~PipeFitting.cls_all_property_labels
+      ~PipeFitting.cls_compile
+      ~PipeFitting.collect_all_attributes
+      ~PipeFitting.collect_comp_refs
+      ~PipeFitting.collect_dynamic_refs
+      ~PipeFitting.collect_inst_attributes
+      ~PipeFitting.collect_post_update_refs
+      ~PipeFitting.collect_solver_refs
+      ~PipeFitting.collect_update_refs
+      ~PipeFitting.comp_references
+      ~PipeFitting.compile_classes
+      ~PipeFitting.copy_config_at_state
+      ~PipeFitting.create_dynamic_matricies
+      ~PipeFitting.create_feedthrough_matrix
+      ~PipeFitting.create_input_matrix
+      ~PipeFitting.create_output_constants
+      ~PipeFitting.create_output_matrix
+      ~PipeFitting.create_state_constants
+      ~PipeFitting.create_state_matrix
+      ~PipeFitting.critical
+      ~PipeFitting.debug
+      ~PipeFitting.determine_nearest_stationary_state
+      ~PipeFitting.difference
+      ~PipeFitting.error
+      ~PipeFitting.extract_message
+      ~PipeFitting.filter
+      ~PipeFitting.format_columns
+      ~PipeFitting.get_system_input_refs
+      ~PipeFitting.go_through_configurations
+      ~PipeFitting.info
+      ~PipeFitting.input_attrs
+      ~PipeFitting.input_fields
+      ~PipeFitting.installSTDLogger
+      ~PipeFitting.internal_components
+      ~PipeFitting.internal_configurations
+      ~PipeFitting.internal_references
+      ~PipeFitting.internal_systems
+      ~PipeFitting.internal_tabulations
+      ~PipeFitting.linear_output
+      ~PipeFitting.linear_step
+      ~PipeFitting.locate
+      ~PipeFitting.locate_ref
+      ~PipeFitting.message_with_identiy
+      ~PipeFitting.msg
+      ~PipeFitting.nonlinear_output
+      ~PipeFitting.nonlinear_step
+      ~PipeFitting.numeric_fields
+      ~PipeFitting.parent_configurations_cls
+      ~PipeFitting.parse_run_kwargs
+      ~PipeFitting.parse_simulation_input
+      ~PipeFitting.plot_attributes
+      ~PipeFitting.post_update
+      ~PipeFitting.pre_compile
+      ~PipeFitting.print_info
+      ~PipeFitting.rate
+      ~PipeFitting.rate_linear
+      ~PipeFitting.rate_nonlinear
+      ~PipeFitting.ref_dXdt
+      ~PipeFitting.resetLog
+      ~PipeFitting.resetSystemLogs
+      ~PipeFitting.set_attr
+      ~PipeFitting.set_flow
+      ~PipeFitting.set_time
+      ~PipeFitting.setattrs
+      ~PipeFitting.signals_attributes
+      ~PipeFitting.slack_notification
+      ~PipeFitting.slot_refs
+      ~PipeFitting.slots_attributes
+      ~PipeFitting.smart_split_dataframe
+      ~PipeFitting.solvers_attributes
+      ~PipeFitting.step
+      ~PipeFitting.subclasses
+      ~PipeFitting.subcls_compile
+      ~PipeFitting.system_properties_classdef
+      ~PipeFitting.system_references
+      ~PipeFitting.table_fields
+      ~PipeFitting.trace_attributes
+      ~PipeFitting.transients_attributes
+      ~PipeFitting.update
+      ~PipeFitting.update_dynamics
+      ~PipeFitting.update_feedthrough
+      ~PipeFitting.update_input
+      ~PipeFitting.update_output_constants
+      ~PipeFitting.update_output_matrix
+      ~PipeFitting.update_state
+      ~PipeFitting.update_state_constants
+      ~PipeFitting.validate_class
+      ~PipeFitting.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PipeFitting.A
+      ~PipeFitting.C
+      ~PipeFitting.Fvec
+      ~PipeFitting.Mf
+      ~PipeFitting.P
+      ~PipeFitting.Q
+      ~PipeFitting.T
+      ~PipeFitting.Ut_ref
+      ~PipeFitting.Xt_ref
+      ~PipeFitting.Yt_ref
+      ~PipeFitting.anything_changed
+      ~PipeFitting.as_dict
+      ~PipeFitting.attrs_fields
+      ~PipeFitting.classname
+      ~PipeFitting.dP_f
+      ~PipeFitting.dP_p
+      ~PipeFitting.dP_tot
+      ~PipeFitting.dXtdt_ref
+      ~PipeFitting.data_dict
+      ~PipeFitting.dataframe_constants
+      ~PipeFitting.dataframe_variants
+      ~PipeFitting.density
+      ~PipeFitting.displayname
+      ~PipeFitting.dynamic_A
+      ~PipeFitting.dynamic_B
+      ~PipeFitting.dynamic_C
+      ~PipeFitting.dynamic_D
+      ~PipeFitting.dynamic_F
+      ~PipeFitting.dynamic_K
+      ~PipeFitting.dynamic_input
+      ~PipeFitting.dynamic_input_vars
+      ~PipeFitting.dynamic_output
+      ~PipeFitting.dynamic_output_vars
+      ~PipeFitting.dynamic_state
+      ~PipeFitting.dynamic_state_vars
+      ~PipeFitting.enthalpy
+      ~PipeFitting.filename
+      ~PipeFitting.identity
+      ~PipeFitting.input_as_dict
+      ~PipeFitting.last_context
+      ~PipeFitting.log_fmt
+      ~PipeFitting.log_level
+      ~PipeFitting.log_on
+      ~PipeFitting.log_silo
+      ~PipeFitting.logger
+      ~PipeFitting.nonlinear
+      ~PipeFitting.numeric_as_dict
+      ~PipeFitting.numeric_hash
+      ~PipeFitting.plotable_variables
+      ~PipeFitting.reynoldsNumber
+      ~PipeFitting.segments
+      ~PipeFitting.skip_plot_vars
+      ~PipeFitting.slack_webhook_url
+      ~PipeFitting.static_A
+      ~PipeFitting.static_B
+      ~PipeFitting.static_C
+      ~PipeFitting.static_D
+      ~PipeFitting.static_F
+      ~PipeFitting.static_K
+      ~PipeFitting.sum_of_flows
+      ~PipeFitting.system_id
+      ~PipeFitting.time
+      ~PipeFitting.unique_hash
+      ~PipeFitting.update_interval
+      ~PipeFitting.viscosity
+      ~PipeFitting.x
+      ~PipeFitting.y
+      ~PipeFitting.z
+      ~PipeFitting.D
+      ~PipeFitting.v
+      ~PipeFitting.parent
+      ~PipeFitting.name
+      ~PipeFitting.dataframe
+   
+   

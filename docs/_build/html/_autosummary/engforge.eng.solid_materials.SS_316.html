@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.eng.solid_materials.SS_316 &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="engforge.eng.solid_materials.SolidMaterial" href="engforge.eng.solid_materials.SolidMaterial.html" />
+    <link rel="prev" title="engforge.eng.solid_materials.Rubber" href="engforge.eng.solid_materials.Rubber.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="test.html">Tests</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="engforge.html">API reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="engforge.analysis.html">engforge.analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_dynamics.html">engforge.attr_dynamics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_plotting.html">engforge.attr_plotting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_signals.html">engforge.attr_signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_slots.html">engforge.attr_slots</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attr_solver.html">engforge.attr_solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.attributes.html">engforge.attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.common.html">engforge.common</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.component_collections.html">engforge.component_collections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.components.html">engforge.components</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.configuration.html">engforge.configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.dataframe.html">engforge.dataframe</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.datastores.html">engforge.datastores</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.dynamics.html">engforge.dynamics</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="engforge.eng.html">engforge.eng</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.costs.html">engforge.eng.costs</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.fluid_material.html">engforge.eng.fluid_material</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.geometry.html">engforge.eng.geometry</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.pipes.html">engforge.eng.pipes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.prediction.html">engforge.eng.prediction</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="engforge.eng.solid_materials.html">engforge.eng.solid_materials</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.ih.html">engforge.eng.solid_materials.ih</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.random_color.html">engforge.eng.solid_materials.random_color</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.ANSI_4130.html">engforge.eng.solid_materials.ANSI_4130</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.ANSI_4340.html">engforge.eng.solid_materials.ANSI_4340</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.Aluminum.html">engforge.eng.solid_materials.Aluminum</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.CarbonFiber.html">engforge.eng.solid_materials.CarbonFiber</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.Concrete.html">engforge.eng.solid_materials.Concrete</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.DrySoil.html">engforge.eng.solid_materials.DrySoil</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.Rock.html">engforge.eng.solid_materials.Rock</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.Rubber.html">engforge.eng.solid_materials.Rubber</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">engforge.eng.solid_materials.SS_316</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.SolidMaterial.html">engforge.eng.solid_materials.SolidMaterial</a></li>
+<li class="toctree-l4"><a class="reference internal" href="engforge.eng.solid_materials.WetSoil.html">engforge.eng.solid_materials.WetSoil</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.structure_beams.html">engforge.eng.structure_beams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="engforge.eng.thermodynamics.html">engforge.eng.thermodynamics</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.engforge_attributes.html">engforge.engforge_attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.env_var.html">engforge.env_var</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.locations.html">engforge.locations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.logging.html">engforge.logging</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.patterns.html">engforge.patterns</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.problem_context.html">engforge.problem_context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.properties.html">engforge.properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.reporting.html">engforge.reporting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solveable.html">engforge.solveable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solver.html">engforge.solver</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.solver_utils.html">engforge.solver_utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.system.html">engforge.system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.system_reference.html">engforge.system_reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.tabulation.html">engforge.tabulation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engforge.typing.html">engforge.typing</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="engforge.html">engforge</a></li>
+          <li class="breadcrumb-item"><a href="engforge.eng.html">engforge.eng</a></li>
+          <li class="breadcrumb-item"><a href="engforge.eng.solid_materials.html">engforge.eng.solid_materials</a></li>
+      <li class="breadcrumb-item active">engforge.eng.solid_materials.SS_316</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="engforge-eng-solid-materials-ss-316">
+<h1>engforge.eng.solid_materials.SS_316<a class="headerlink" href="#engforge-eng-solid-materials-ss-316" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">SS_316</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'stainless</span> <span class="pre">steel</span> <span class="pre">316'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">NOTHING</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_shear_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hardness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">izod</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">factor_of_saftey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">8000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elastic_modulus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">193000000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">yield_strength</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">240000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tensile_strength_ultimate</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">550000000.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poissons_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1643</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maxium_service_temp</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1143</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thermal_conductivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">specific_heat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thermal_expansion</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.6e-05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">electrical_resistitivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">7.4e-07</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cost_per_kg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.26</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/engforge/eng/solid_materials.html#SS_316"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#engforge.eng.solid_materials.SS_316" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="engforge.eng.solid_materials.SolidMaterial.html#engforge.eng.solid_materials.SolidMaterial" title="engforge.eng.solid_materials.SolidMaterial"><code class="xref py py-class docutils literal notranslate"><span class="pre">SolidMaterial</span></code></a></p>
+<p>Method generated by attrs for class SS_316.</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.add_fields" title="engforge.eng.solid_materials.SS_316.add_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_fields</span></code></a></p></td>
+<td><p>Overwrite this to modify logging fields</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">change_all_log_lvl</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.check_ref_slot_type" title="engforge.eng.solid_materials.SS_316.check_ref_slot_type"><code class="xref py py-obj docutils literal notranslate"><span class="pre">check_ref_slot_type</span></code></a></p></td>
+<td><p>recursively checks class slots for the key, and returns the slot type</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.cls_compile" title="engforge.eng.solid_materials.SS_316.cls_compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cls_compile</span></code></a></p></td>
+<td><p>compiles this class, override this to compile functionality for this class</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.collect_all_attributes" title="engforge.eng.solid_materials.SS_316.collect_all_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_all_attributes</span></code></a></p></td>
+<td><p>collects all the attributes for a system</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.collect_inst_attributes" title="engforge.eng.solid_materials.SS_316.collect_inst_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collect_inst_attributes</span></code></a></p></td>
+<td><p>collects all the attributes for a system</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.compile_classes" title="engforge.eng.solid_materials.SS_316.compile_classes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compile_classes</span></code></a></p></td>
+<td><p>compiles all subclass functionality</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.copy_config_at_state" title="engforge.eng.solid_materials.SS_316.copy_config_at_state"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy_config_at_state</span></code></a></p></td>
+<td><p>copy the system at the current state recrusively to a certain level, by default copying everything :type levels_deep: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span> :param levels_deep: how many levels deep to copy, -1 is all :type level:  :param level: the current level, defaults to 0 if not set</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.critical" title="engforge.eng.solid_materials.SS_316.critical"><code class="xref py py-obj docutils literal notranslate"><span class="pre">critical</span></code></a></p></td>
+<td><p>A routine to communicate to the root of the server network that there is an issue</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.debug" title="engforge.eng.solid_materials.SS_316.debug"><code class="xref py py-obj docutils literal notranslate"><span class="pre">debug</span></code></a></p></td>
+<td><p>Writes at a low level to the log file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.difference" title="engforge.eng.solid_materials.SS_316.difference"><code class="xref py py-obj docutils literal notranslate"><span class="pre">difference</span></code></a></p></td>
+<td><p>a context manager that will allow you to dynamically change any information, then will change it back in a fail safe way.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.error" title="engforge.eng.solid_materials.SS_316.error"><code class="xref py py-obj docutils literal notranslate"><span class="pre">error</span></code></a></p></td>
+<td><p>Writes to log as a error</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extract_message</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.filter" title="engforge.eng.solid_materials.SS_316.filter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filter</span></code></a></p></td>
+<td><p>This acts as the interface for <cite>logging.Filter</cite> Don't overwrite this, use <cite>add_fields</cite> instead.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.go_through_configurations" title="engforge.eng.solid_materials.SS_316.go_through_configurations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">go_through_configurations</span></code></a></p></td>
+<td><p>A generator that will go through all internal configurations up to a certain level if levels_to_descend is less than 0 ie(-1) it will go down, if it 0, None, or False it will only go through this configuration</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.info" title="engforge.eng.solid_materials.SS_316.info"><code class="xref py py-obj docutils literal notranslate"><span class="pre">info</span></code></a></p></td>
+<td><p>Writes to log but with info category, these are important typically and inform about progress of process in general</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_attrs</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.input_fields" title="engforge.eng.solid_materials.SS_316.input_fields"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_fields</span></code></a></p></td>
+<td><p>no attr base types, no tuples, no lists, no dicts</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.installSTDLogger" title="engforge.eng.solid_materials.SS_316.installSTDLogger"><code class="xref py py-obj docutils literal notranslate"><span class="pre">installSTDLogger</span></code></a></p></td>
+<td><p>We only want std logging to start</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.internal_configurations" title="engforge.eng.solid_materials.SS_316.internal_configurations"><code class="xref py py-obj docutils literal notranslate"><span class="pre">internal_configurations</span></code></a></p></td>
+<td><p>go through all attributes determining which are configuration objects additionally this skip any configuration that start with an underscore (private variable)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.message_with_identiy" title="engforge.eng.solid_materials.SS_316.message_with_identiy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">message_with_identiy</span></code></a></p></td>
+<td><p>converts to color and string via the termcolor library :type message: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span> :param message: a string convertable entity :type color:  :param color: a color in [grey,red,green,yellow,blue,magenta,cyan,white]</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.msg" title="engforge.eng.solid_materials.SS_316.msg"><code class="xref py py-obj docutils literal notranslate"><span class="pre">msg</span></code></a></p></td>
+<td><p>Writes to log.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">numeric_fields</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.parent_configurations_cls" title="engforge.eng.solid_materials.SS_316.parent_configurations_cls"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parent_configurations_cls</span></code></a></p></td>
+<td><p>returns all subclasses that are a Configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.plot_attributes" title="engforge.eng.solid_materials.SS_316.plot_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_attributes</span></code></a></p></td>
+<td><p>Lists all plot attributes for class</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.pre_compile" title="engforge.eng.solid_materials.SS_316.pre_compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pre_compile</span></code></a></p></td>
+<td><p>an overrideable classmethod that executes when compiled, however will not execute as a subclass</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.resetLog" title="engforge.eng.solid_materials.SS_316.resetLog"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetLog</span></code></a></p></td>
+<td><p>reset log</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.resetSystemLogs" title="engforge.eng.solid_materials.SS_316.resetSystemLogs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">resetSystemLogs</span></code></a></p></td>
+<td><p>resets log on all internal instance LoggingMixins</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.setattrs" title="engforge.eng.solid_materials.SS_316.setattrs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">setattrs</span></code></a></p></td>
+<td><p>sets attributes from a dictionary</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.signals_attributes" title="engforge.eng.solid_materials.SS_316.signals_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">signals_attributes</span></code></a></p></td>
+<td><p>Lists all signals attributes for class</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">slack_notification</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.slot_refs" title="engforge.eng.solid_materials.SS_316.slot_refs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slot_refs</span></code></a></p></td>
+<td><p>returns all slot references in this configuration</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.slots_attributes" title="engforge.eng.solid_materials.SS_316.slots_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slots_attributes</span></code></a></p></td>
+<td><p>Lists all slots attributes for class</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.solvers_attributes" title="engforge.eng.solid_materials.SS_316.solvers_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">solvers_attributes</span></code></a></p></td>
+<td><p>Lists all signals attributes for class</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.subclasses" title="engforge.eng.solid_materials.SS_316.subclasses"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subclasses</span></code></a></p></td>
+<td><p>return all subclasses of components, including their subclasses :type out:  :param out: out is to pass when the middle of a recursive operation, do not use it!</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.subcls_compile" title="engforge.eng.solid_materials.SS_316.subcls_compile"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subcls_compile</span></code></a></p></td>
+<td><p>reliably compiles this method even for subclasses, override this to compile functionality for subclass interfaces &amp; mixins</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">table_fields</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.trace_attributes" title="engforge.eng.solid_materials.SS_316.trace_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">trace_attributes</span></code></a></p></td>
+<td><p>Lists all trace attributes for class</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.transients_attributes" title="engforge.eng.solid_materials.SS_316.transients_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transients_attributes</span></code></a></p></td>
+<td><p>Lists all signals attributes for class</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.validate_class" title="engforge.eng.solid_materials.SS_316.validate_class"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_class</span></code></a></p></td>
+<td><p>A customizeable validator at the end of class creation in forge</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.von_mises_stress_max" title="engforge.eng.solid_materials.SS_316.von_mises_stress_max"><code class="xref py py-obj docutils literal notranslate"><span class="pre">von_mises_stress_max</span></code></a></p></td>
+<td><p>Return arrays with the results of <cite>pyfunc</cite> broadcast (vectorized) over <cite>args</cite> and <cite>kwargs</cite> not in <cite>excluded</cite>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.warning" title="engforge.eng.solid_materials.SS_316.warning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">warning</span></code></a></p></td>
+<td><p>Writes to log as a warning</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Attributes</p>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">E</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">G</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">allowable_stress</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.as_dict" title="engforge.eng.solid_materials.SS_316.as_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">as_dict</span></code></a></p></td>
+<td><p>returns values as they are in the class instance</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">attrs_fields</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.classname" title="engforge.eng.solid_materials.SS_316.classname"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classname</span></code></a></p></td>
+<td><p>Shorthand for the classname</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">color</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">displayname</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.filename" title="engforge.eng.solid_materials.SS_316.filename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">filename</span></code></a></p></td>
+<td><p>A nice to have, good to override</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.identity" title="engforge.eng.solid_materials.SS_316.identity"><code class="xref py py-obj docutils literal notranslate"><span class="pre">identity</span></code></a></p></td>
+<td><p>A customizeable property that will be in the log by default</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.input_as_dict" title="engforge.eng.solid_materials.SS_316.input_as_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">input_as_dict</span></code></a></p></td>
+<td><p>returns values as they are in the class instance, but converts classes inputs to their input_as_dict</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_fmt</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_level</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_on</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_silo</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">logger</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">nu</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">numeric_as_dict</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">numeric_hash</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">rho</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#engforge.eng.solid_materials.SS_316.shear_modulus" title="engforge.eng.solid_materials.SS_316.shear_modulus"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shear_modulus</span></code></a></p></td>
+<td><p>Shear Modulus</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">slack_webhook_url</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">ultimate_stress</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique_hash</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">unique_id</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">yield_stress</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">density</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">elastic_modulus</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">yield_strength</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tensile_strength_ultimate</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">poissons_ratio</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">melting_point</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">maxium_service_temp</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">thermal_conductivity</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">specific_heat</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">thermal_expansion</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">electrical_resistitivity</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">cost_per_kg</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">in_shear_modulus</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">hardness</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">izod</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">factor_of_saftey</span></code></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>)</p></li>
+<li><p><strong>color</strong> (<em>float</em>)</p></li>
+<li><p><strong>in_shear_modulus</strong> (<em>float</em>)</p></li>
+<li><p><strong>hardness</strong> (<em>float</em>)</p></li>
+<li><p><strong>izod</strong> (<em>float</em>)</p></li>
+<li><p><strong>factor_of_saftey</strong> (<em>float</em>)</p></li>
+<li><p><strong>density</strong> (<em>float</em>)</p></li>
+<li><p><strong>elastic_modulus</strong> (<em>float</em>)</p></li>
+<li><p><strong>yield_strength</strong> (<em>float</em>)</p></li>
+<li><p><strong>tensile_strength_ultimate</strong> (<em>float</em>)</p></li>
+<li><p><strong>poissons_ratio</strong> (<em>float</em>)</p></li>
+<li><p><strong>melting_point</strong> (<em>float</em>)</p></li>
+<li><p><strong>maxium_service_temp</strong> (<em>float</em>)</p></li>
+<li><p><strong>thermal_conductivity</strong> (<em>float</em>)</p></li>
+<li><p><strong>specific_heat</strong> (<em>float</em>)</p></li>
+<li><p><strong>thermal_expansion</strong> (<em>float</em>)</p></li>
+<li><p><strong>electrical_resistitivity</strong> (<em>float</em>)</p></li>
+<li><p><strong>cost_per_kg</strong> (<em>float</em>)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.add_fields">
+<span class="sig-name descname"><span class="pre">add_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.add_fields" title="Link to this definition"></a></dt>
+<dd><p>Overwrite this to modify logging fields</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.as_dict">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">as_dict</span></span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.as_dict" title="Link to this definition"></a></dt>
+<dd><p>returns values as they are in the class instance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.check_ref_slot_type">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check_ref_slot_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sys_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.check_ref_slot_type" title="Link to this definition"></a></dt>
+<dd><p>recursively checks class slots for the key, and returns the slot type</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>sys_key</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.classname">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">classname</span></span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.classname" title="Link to this definition"></a></dt>
+<dd><p>Shorthand for the classname</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.cls_compile">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">cls_compile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.cls_compile" title="Link to this definition"></a></dt>
+<dd><p>compiles this class, override this to compile functionality for this class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.collect_all_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">collect_all_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.collect_all_attributes" title="Link to this definition"></a></dt>
+<dd><p>collects all the attributes for a system</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.collect_inst_attributes">
+<span class="sig-name descname"><span class="pre">collect_inst_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.collect_inst_attributes" title="Link to this definition"></a></dt>
+<dd><p>collects all the attributes for a system</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.compile_classes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compile_classes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.compile_classes" title="Link to this definition"></a></dt>
+<dd><p>compiles all subclass functionality</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.copy_config_at_state">
+<span class="sig-name descname"><span class="pre">copy_config_at_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels_deep</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">changed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.copy_config_at_state" title="Link to this definition"></a></dt>
+<dd><p>copy the system at the current state recrusively to a certain level, by default copying everything
+:type levels_deep: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></span>
+:param levels_deep: how many levels deep to copy, -1 is all
+:type level: 
+:param level: the current level, defaults to 0 if not set</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>levels_deep</strong> (<em>int</em>)</p></li>
+<li><p><strong>changed</strong> (<em>dict</em><em> | </em><em>None</em>)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.critical">
+<span class="sig-name descname"><span class="pre">critical</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.critical" title="Link to this definition"></a></dt>
+<dd><p>A routine to communicate to the root of the server network that there is an issue</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.debug">
+<span class="sig-name descname"><span class="pre">debug</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.debug" title="Link to this definition"></a></dt>
+<dd><p>Writes at a low level to the log file… usually this should
+be detailed messages about what exactly is going on</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.difference">
+<span class="sig-name descname"><span class="pre">difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.difference" title="Link to this definition"></a></dt>
+<dd><p>a context manager that will allow you to dynamically change any information, then will change it back in a fail safe way.</p>
+<dl class="simple">
+<dt>with self.difference(name=’new_name’, value = new_value) as new_config:</dt><dd><p>#do stuff with config, ok to fail</p>
+</dd>
+</dl>
+<p>you may not access any “private” variable that starts with an <cite>_</cite> as in _whatever</p>
+<p>difference is useful for saving slight differences in configuration in conjunction with solve
+you might create wrappers for eval, or implement a strategy pattern.</p>
+<p>only attributes may be changed.</p>
+<p>#TODO: allow recursive operation with sub comps or systems.
+#TODO: make a full system copy so the system can be reverted later</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.error">
+<span class="sig-name descname"><span class="pre">error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">error</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.error" title="Link to this definition"></a></dt>
+<dd><p>Writes to log as a error</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.filename">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">filename</span></span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.filename" title="Link to this definition"></a></dt>
+<dd><p>A nice to have, good to override</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.filter">
+<span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">record</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.filter" title="Link to this definition"></a></dt>
+<dd><p>This acts as the interface for <cite>logging.Filter</cite>
+Don’t overwrite this, use <cite>add_fields</cite> instead.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.go_through_configurations">
+<span class="sig-name descname"><span class="pre">go_through_configurations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels_to_descend</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">-1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parent_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">only_inst</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kw</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.go_through_configurations" title="Link to this definition"></a></dt>
+<dd><p>A generator that will go through all internal configurations up to a certain level
+if levels_to_descend is less than 0 ie(-1) it will go down, if it 0, None, or False it will
+only go through this configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>level,config</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.identity">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">identity</span></span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.identity" title="Link to this definition"></a></dt>
+<dd><p>A customizeable property that will be in the log by default</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.info">
+<span class="sig-name descname"><span class="pre">info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.info" title="Link to this definition"></a></dt>
+<dd><p>Writes to log but with info category, these are important typically
+and inform about progress of process in general</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.input_as_dict">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_as_dict</span></span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.input_as_dict" title="Link to this definition"></a></dt>
+<dd><p>returns values as they are in the class instance, but converts classes inputs to their input_as_dict</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.input_fields">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">input_fields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">add_ign_types</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.input_fields" title="Link to this definition"></a></dt>
+<dd><p>no attr base types, no tuples, no lists, no dicts</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>add_ign_types</strong> (<em>list</em><em> | </em><em>None</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.installSTDLogger">
+<span class="sig-name descname"><span class="pre">installSTDLogger</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.installSTDLogger" title="Link to this definition"></a></dt>
+<dd><p>We only want std logging to start</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.internal_configurations">
+<span class="sig-name descname"><span class="pre">internal_configurations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">check_config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">none_ok</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.internal_configurations" title="Link to this definition"></a></dt>
+<dd><p>go through all attributes determining which are configuration objects
+additionally this skip any configuration that start with an underscore (private variable)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.message_with_identiy">
+<span class="sig-name descname"><span class="pre">message_with_identiy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.message_with_identiy" title="Link to this definition"></a></dt>
+<dd><p>converts to color and string via the termcolor library
+:type message: <span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></span>
+:param message: a string convertable entity
+:type color: 
+:param color: a color in [grey,red,green,yellow,blue,magenta,cyan,white]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>message</strong> (<em>str</em>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.msg">
+<span class="sig-name descname"><span class="pre">msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lvl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.msg" title="Link to this definition"></a></dt>
+<dd><p>Writes to log… this should be for raw data or something… least priorty</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.parent_configurations_cls">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parent_configurations_cls</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.parent_configurations_cls" title="Link to this definition"></a></dt>
+<dd><p>returns all subclasses that are a Configuration</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.plot_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">plot_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.plot_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all plot attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.pre_compile">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pre_compile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.pre_compile" title="Link to this definition"></a></dt>
+<dd><p>an overrideable classmethod that executes when compiled, however will not execute as a subclass</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.resetLog">
+<span class="sig-name descname"><span class="pre">resetLog</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.resetLog" title="Link to this definition"></a></dt>
+<dd><p>reset log</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.resetSystemLogs">
+<span class="sig-name descname"><span class="pre">resetSystemLogs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reseted</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.resetSystemLogs" title="Link to this definition"></a></dt>
+<dd><p>resets log on all internal instance LoggingMixins</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.setattrs">
+<span class="sig-name descname"><span class="pre">setattrs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.setattrs" title="Link to this definition"></a></dt>
+<dd><p>sets attributes from a dictionary</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.shear_modulus">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">shear_modulus</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.shear_modulus" title="Link to this definition"></a></dt>
+<dd><p>Shear Modulus</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.signals_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signals_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.signals_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all signals attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.slot_refs">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">slot_refs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recache</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.slot_refs" title="Link to this definition"></a></dt>
+<dd><p>returns all slot references in this configuration</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.slots_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">slots_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.slots_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all slots attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.solvers_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">solvers_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.solvers_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all signals attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.subclasses">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">subclasses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.subclasses" title="Link to this definition"></a></dt>
+<dd><p>return all subclasses of components, including their subclasses
+:type out: 
+:param out: out is to pass when the middle of a recursive operation, do not use it!</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.subcls_compile">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">subcls_compile</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.subcls_compile" title="Link to this definition"></a></dt>
+<dd><p>reliably compiles this method even for subclasses, override this to compile functionality for subclass interfaces &amp; mixins</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.trace_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">trace_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.trace_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all trace attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.transients_attributes">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">transients_attributes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.transients_attributes" title="Link to this definition"></a></dt>
+<dd><p>Lists all signals attributes for class</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.validate_class">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">validate_class</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.validate_class" title="Link to this definition"></a></dt>
+<dd><p>A customizeable validator at the end of class creation in forge</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.von_mises_stress_max">
+<span class="sig-name descname"><span class="pre">von_mises_stress_max</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.von_mises_stress_max" title="Link to this definition"></a></dt>
+<dd><p>Return arrays with the results of <cite>pyfunc</cite> broadcast (vectorized) over
+<cite>args</cite> and <cite>kwargs</cite> not in <cite>excluded</cite>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="engforge.eng.solid_materials.SS_316.warning">
+<span class="sig-name descname"><span class="pre">warning</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#engforge.eng.solid_materials.SS_316.warning" title="Link to this definition"></a></dt>
+<dd><p>Writes to log as a warning</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="engforge.eng.solid_materials.Rubber.html" class="btn btn-neutral float-left" title="engforge.eng.solid_materials.Rubber" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="engforge.eng.solid_materials.SolidMaterial.html" class="btn btn-neutral float-right" title="engforge.eng.solid_materials.SolidMaterial" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

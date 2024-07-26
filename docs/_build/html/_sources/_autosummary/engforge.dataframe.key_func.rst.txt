@@ -1,0 +1,6 @@
+engforge.dataframe.key\_func
+============================
+
+.. currentmodule:: engforge.dataframe
+
+.. autofunction:: key_func

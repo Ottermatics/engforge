@@ -1,0 +1,204 @@
+engforge.eng.pipes.Pipe
+=======================
+
+.. currentmodule:: engforge.eng.pipes
+
+.. autoclass:: Pipe
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Pipe.add_fields
+      ~Pipe.change_all_log_lvl
+      ~Pipe.check_ref_slot_type
+      ~Pipe.cls_all_attrs_fields
+      ~Pipe.cls_all_property_keys
+      ~Pipe.cls_all_property_labels
+      ~Pipe.cls_compile
+      ~Pipe.collect_all_attributes
+      ~Pipe.collect_comp_refs
+      ~Pipe.collect_dynamic_refs
+      ~Pipe.collect_inst_attributes
+      ~Pipe.collect_post_update_refs
+      ~Pipe.collect_solver_refs
+      ~Pipe.collect_update_refs
+      ~Pipe.comp_references
+      ~Pipe.compile_classes
+      ~Pipe.copy_config_at_state
+      ~Pipe.create_dynamic_matricies
+      ~Pipe.create_feedthrough_matrix
+      ~Pipe.create_input_matrix
+      ~Pipe.create_output_constants
+      ~Pipe.create_output_matrix
+      ~Pipe.create_state_constants
+      ~Pipe.create_state_matrix
+      ~Pipe.critical
+      ~Pipe.debug
+      ~Pipe.determine_nearest_stationary_state
+      ~Pipe.difference
+      ~Pipe.error
+      ~Pipe.extract_message
+      ~Pipe.filter
+      ~Pipe.format_columns
+      ~Pipe.get_system_input_refs
+      ~Pipe.go_through_configurations
+      ~Pipe.info
+      ~Pipe.input_attrs
+      ~Pipe.input_fields
+      ~Pipe.installSTDLogger
+      ~Pipe.internal_components
+      ~Pipe.internal_configurations
+      ~Pipe.internal_references
+      ~Pipe.internal_systems
+      ~Pipe.internal_tabulations
+      ~Pipe.linear_output
+      ~Pipe.linear_step
+      ~Pipe.locate
+      ~Pipe.locate_ref
+      ~Pipe.message_with_identiy
+      ~Pipe.msg
+      ~Pipe.nonlinear_output
+      ~Pipe.nonlinear_step
+      ~Pipe.numeric_fields
+      ~Pipe.parent_configurations_cls
+      ~Pipe.parse_run_kwargs
+      ~Pipe.parse_simulation_input
+      ~Pipe.plot_attributes
+      ~Pipe.post_update
+      ~Pipe.pre_compile
+      ~Pipe.print_info
+      ~Pipe.rate
+      ~Pipe.rate_linear
+      ~Pipe.rate_nonlinear
+      ~Pipe.ref_dXdt
+      ~Pipe.resetLog
+      ~Pipe.resetSystemLogs
+      ~Pipe.set_attr
+      ~Pipe.set_flow
+      ~Pipe.set_time
+      ~Pipe.setattrs
+      ~Pipe.signals_attributes
+      ~Pipe.slack_notification
+      ~Pipe.slot_refs
+      ~Pipe.slots_attributes
+      ~Pipe.smart_split_dataframe
+      ~Pipe.solvers_attributes
+      ~Pipe.step
+      ~Pipe.subclasses
+      ~Pipe.subcls_compile
+      ~Pipe.system_properties_classdef
+      ~Pipe.system_references
+      ~Pipe.table_fields
+      ~Pipe.trace_attributes
+      ~Pipe.transients_attributes
+      ~Pipe.update
+      ~Pipe.update_dynamics
+      ~Pipe.update_feedthrough
+      ~Pipe.update_input
+      ~Pipe.update_output_constants
+      ~Pipe.update_output_matrix
+      ~Pipe.update_state
+      ~Pipe.update_state_constants
+      ~Pipe.validate_class
+      ~Pipe.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Pipe.A
+      ~Pipe.C
+      ~Pipe.Fvec
+      ~Pipe.Kpipe
+      ~Pipe.L
+      ~Pipe.Lhz
+      ~Pipe.Lx
+      ~Pipe.Ly
+      ~Pipe.Lz
+      ~Pipe.Mf
+      ~Pipe.P
+      ~Pipe.Q
+      ~Pipe.T
+      ~Pipe.Ut_ref
+      ~Pipe.Xt_ref
+      ~Pipe.Yt_ref
+      ~Pipe.anything_changed
+      ~Pipe.as_dict
+      ~Pipe.attrs_fields
+      ~Pipe.classname
+      ~Pipe.dP_f
+      ~Pipe.dP_p
+      ~Pipe.dP_tot
+      ~Pipe.dXtdt_ref
+      ~Pipe.data_dict
+      ~Pipe.dataframe_constants
+      ~Pipe.dataframe_variants
+      ~Pipe.density
+      ~Pipe.displayname
+      ~Pipe.dynamic_A
+      ~Pipe.dynamic_B
+      ~Pipe.dynamic_C
+      ~Pipe.dynamic_D
+      ~Pipe.dynamic_F
+      ~Pipe.dynamic_K
+      ~Pipe.dynamic_input
+      ~Pipe.dynamic_input_vars
+      ~Pipe.dynamic_output
+      ~Pipe.dynamic_output_vars
+      ~Pipe.dynamic_state
+      ~Pipe.dynamic_state_vars
+      ~Pipe.enthalpy
+      ~Pipe.filename
+      ~Pipe.friction_factor
+      ~Pipe.identity
+      ~Pipe.inclination
+      ~Pipe.input_as_dict
+      ~Pipe.laminar_method
+      ~Pipe.last_context
+      ~Pipe.log_fmt
+      ~Pipe.log_level
+      ~Pipe.log_on
+      ~Pipe.log_silo
+      ~Pipe.logger
+      ~Pipe.nonlinear
+      ~Pipe.numeric_as_dict
+      ~Pipe.numeric_hash
+      ~Pipe.plotable_variables
+      ~Pipe.reynoldsNumber
+      ~Pipe.sign
+      ~Pipe.skip_plot_vars
+      ~Pipe.slack_webhook_url
+      ~Pipe.static_A
+      ~Pipe.static_B
+      ~Pipe.static_C
+      ~Pipe.static_D
+      ~Pipe.static_F
+      ~Pipe.static_K
+      ~Pipe.straight_method
+      ~Pipe.system_id
+      ~Pipe.time
+      ~Pipe.turbulent_method
+      ~Pipe.unique_hash
+      ~Pipe.update_interval
+      ~Pipe.viscosity
+      ~Pipe.roughness
+      ~Pipe.bend_radius
+      ~Pipe.D
+      ~Pipe.v
+      ~Pipe.parent
+      ~Pipe.name
+      ~Pipe.dataframe
+   
+   

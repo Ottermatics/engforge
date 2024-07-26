@@ -1,0 +1,6 @@
+engforge.solver\_utils.f\_lin\_min
+==================================
+
+.. currentmodule:: engforge.solver_utils
+
+.. autofunction:: f_lin_min

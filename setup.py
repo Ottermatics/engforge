@@ -32,8 +32,11 @@ setup(
         "console_scripts": [
             # command = package.module:function
             "condaenvset=engforge.common:main_cli",
-            "ollymakes=engforge.locations:main_cli",
-            "engforgedrive=engforge.gdocs:main_cli",
+            #"ollymakes=engforge.locations:main_cli",
+            #"engforgedrive=engforge.gdocs:main_cli",
+            #TODO: inspect folders / list / display components + solver options
+            #TODO: test adhoc modules with 
+            #TODO: run analysis adhoc on components with cli options
         ]
     },
     install_requires=install_reqs,

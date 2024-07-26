@@ -1,0 +1,34 @@
+engforge.attr\_dynamics
+=======================
+
+.. automodule:: engforge.attr_dynamics
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      IntegratorInstance
+      TRANSIENT
+      Time
+   
+   
+
+   
+   
+   
+
+
+

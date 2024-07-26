@@ -1,0 +1,6 @@
+engforge.datastores.data.autocorrelation\_direct
+================================================
+
+.. currentmodule:: engforge.datastores.data
+
+.. autofunction:: autocorrelation_direct

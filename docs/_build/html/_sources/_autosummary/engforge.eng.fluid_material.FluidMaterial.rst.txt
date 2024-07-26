@@ -1,0 +1,176 @@
+engforge.eng.fluid\_material.FluidMaterial
+==========================================
+
+.. currentmodule:: engforge.eng.fluid_material
+
+.. autoclass:: FluidMaterial
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~FluidMaterial.add_fields
+      ~FluidMaterial.change_all_log_lvl
+      ~FluidMaterial.check_ref_slot_type
+      ~FluidMaterial.cls_all_attrs_fields
+      ~FluidMaterial.cls_all_property_keys
+      ~FluidMaterial.cls_all_property_labels
+      ~FluidMaterial.cls_compile
+      ~FluidMaterial.collect_all_attributes
+      ~FluidMaterial.collect_comp_refs
+      ~FluidMaterial.collect_dynamic_refs
+      ~FluidMaterial.collect_inst_attributes
+      ~FluidMaterial.collect_post_update_refs
+      ~FluidMaterial.collect_solver_refs
+      ~FluidMaterial.collect_update_refs
+      ~FluidMaterial.comp_references
+      ~FluidMaterial.compile_classes
+      ~FluidMaterial.copy_config_at_state
+      ~FluidMaterial.create_dynamic_matricies
+      ~FluidMaterial.create_feedthrough_matrix
+      ~FluidMaterial.create_input_matrix
+      ~FluidMaterial.create_output_constants
+      ~FluidMaterial.create_output_matrix
+      ~FluidMaterial.create_state_constants
+      ~FluidMaterial.create_state_matrix
+      ~FluidMaterial.critical
+      ~FluidMaterial.debug
+      ~FluidMaterial.determine_nearest_stationary_state
+      ~FluidMaterial.difference
+      ~FluidMaterial.error
+      ~FluidMaterial.extract_message
+      ~FluidMaterial.filter
+      ~FluidMaterial.format_columns
+      ~FluidMaterial.get_system_input_refs
+      ~FluidMaterial.go_through_configurations
+      ~FluidMaterial.info
+      ~FluidMaterial.input_attrs
+      ~FluidMaterial.input_fields
+      ~FluidMaterial.installSTDLogger
+      ~FluidMaterial.internal_components
+      ~FluidMaterial.internal_configurations
+      ~FluidMaterial.internal_references
+      ~FluidMaterial.internal_systems
+      ~FluidMaterial.internal_tabulations
+      ~FluidMaterial.linear_output
+      ~FluidMaterial.linear_step
+      ~FluidMaterial.locate
+      ~FluidMaterial.locate_ref
+      ~FluidMaterial.message_with_identiy
+      ~FluidMaterial.msg
+      ~FluidMaterial.nonlinear_output
+      ~FluidMaterial.nonlinear_step
+      ~FluidMaterial.numeric_fields
+      ~FluidMaterial.parent_configurations_cls
+      ~FluidMaterial.parse_run_kwargs
+      ~FluidMaterial.parse_simulation_input
+      ~FluidMaterial.plot_attributes
+      ~FluidMaterial.post_update
+      ~FluidMaterial.pre_compile
+      ~FluidMaterial.print_info
+      ~FluidMaterial.rate
+      ~FluidMaterial.rate_linear
+      ~FluidMaterial.rate_nonlinear
+      ~FluidMaterial.ref_dXdt
+      ~FluidMaterial.resetLog
+      ~FluidMaterial.resetSystemLogs
+      ~FluidMaterial.set_attr
+      ~FluidMaterial.set_time
+      ~FluidMaterial.setattrs
+      ~FluidMaterial.signals_attributes
+      ~FluidMaterial.slack_notification
+      ~FluidMaterial.slot_refs
+      ~FluidMaterial.slots_attributes
+      ~FluidMaterial.smart_split_dataframe
+      ~FluidMaterial.solvers_attributes
+      ~FluidMaterial.step
+      ~FluidMaterial.subclasses
+      ~FluidMaterial.subcls_compile
+      ~FluidMaterial.system_properties_classdef
+      ~FluidMaterial.system_references
+      ~FluidMaterial.table_fields
+      ~FluidMaterial.trace_attributes
+      ~FluidMaterial.transients_attributes
+      ~FluidMaterial.update
+      ~FluidMaterial.update_dynamics
+      ~FluidMaterial.update_feedthrough
+      ~FluidMaterial.update_input
+      ~FluidMaterial.update_output_constants
+      ~FluidMaterial.update_output_matrix
+      ~FluidMaterial.update_state
+      ~FluidMaterial.update_state_constants
+      ~FluidMaterial.validate_class
+      ~FluidMaterial.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FluidMaterial.Ut_ref
+      ~FluidMaterial.Xt_ref
+      ~FluidMaterial.Yt_ref
+      ~FluidMaterial.anything_changed
+      ~FluidMaterial.as_dict
+      ~FluidMaterial.attrs_fields
+      ~FluidMaterial.classname
+      ~FluidMaterial.dXtdt_ref
+      ~FluidMaterial.data_dict
+      ~FluidMaterial.dataframe_constants
+      ~FluidMaterial.dataframe_variants
+      ~FluidMaterial.density
+      ~FluidMaterial.displayname
+      ~FluidMaterial.dynamic_A
+      ~FluidMaterial.dynamic_B
+      ~FluidMaterial.dynamic_C
+      ~FluidMaterial.dynamic_D
+      ~FluidMaterial.dynamic_F
+      ~FluidMaterial.dynamic_K
+      ~FluidMaterial.dynamic_input
+      ~FluidMaterial.dynamic_input_vars
+      ~FluidMaterial.dynamic_output
+      ~FluidMaterial.dynamic_output_vars
+      ~FluidMaterial.dynamic_state
+      ~FluidMaterial.dynamic_state_vars
+      ~FluidMaterial.filename
+      ~FluidMaterial.identity
+      ~FluidMaterial.input_as_dict
+      ~FluidMaterial.last_context
+      ~FluidMaterial.log_fmt
+      ~FluidMaterial.log_level
+      ~FluidMaterial.log_on
+      ~FluidMaterial.log_silo
+      ~FluidMaterial.logger
+      ~FluidMaterial.nonlinear
+      ~FluidMaterial.numeric_as_dict
+      ~FluidMaterial.numeric_hash
+      ~FluidMaterial.plotable_variables
+      ~FluidMaterial.skip_plot_vars
+      ~FluidMaterial.slack_webhook_url
+      ~FluidMaterial.static_A
+      ~FluidMaterial.static_B
+      ~FluidMaterial.static_C
+      ~FluidMaterial.static_D
+      ~FluidMaterial.static_F
+      ~FluidMaterial.static_K
+      ~FluidMaterial.surface_tension
+      ~FluidMaterial.system_id
+      ~FluidMaterial.time
+      ~FluidMaterial.unique_hash
+      ~FluidMaterial.update_interval
+      ~FluidMaterial.viscosity
+      ~FluidMaterial.parent
+      ~FluidMaterial.name
+      ~FluidMaterial.dataframe
+   
+   

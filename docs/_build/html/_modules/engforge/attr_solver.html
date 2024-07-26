@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.attr_solver &mdash; engforge 1.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="../../_static/readthedocs-custom.css" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=f2a433a1"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/test.html">Tests</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.attr_solver</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.attr_solver</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;solver defines a SolverMixin for use by System.</span>
+
+<span class="sd">Additionally the Solver attribute is defined to add complex behavior to a system as well as add constraints and transient integration.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">attrs</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">scipy.optimize</span> <span class="k">as</span> <span class="nn">scopt</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">contextmanager</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">typing</span>
+
+<span class="kn">from</span> <span class="nn">engforge.attributes</span> <span class="kn">import</span> <span class="n">ATTR_BASE</span><span class="p">,</span> <span class="n">AttributeInstance</span>
+<span class="kn">from</span> <span class="nn">engforge.system_reference</span> <span class="kn">import</span> <span class="n">Ref</span><span class="p">,</span><span class="n">maybe_attr_inst</span><span class="p">,</span><span class="n">maybe_ref</span>
+<span class="kn">from</span> <span class="nn">engforge.properties</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="kn">import</span> <span class="nn">itertools</span>
+
+<span class="n">INTEGRATION_MODES</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;euler&quot;</span><span class="p">,</span> <span class="s2">&quot;trapezoid&quot;</span><span class="p">,</span> <span class="s2">&quot;implicit&quot;</span><span class="p">]</span>
+<span class="n">SOLVER_OPTIONS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;root&quot;</span><span class="p">,</span> <span class="s2">&quot;minimize&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="AttrSolverLog">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.AttrSolverLog.html#engforge.attr_solver.AttrSolverLog">[docs]</a>
+<span class="k">class</span> <span class="nc">AttrSolverLog</span><span class="p">(</span><span class="n">LoggingMixin</span><span class="p">):</span>
+    <span class="k">pass</span></div>
+
+
+
+<span class="n">log</span> <span class="o">=</span> <span class="n">AttrSolverLog</span><span class="p">()</span>
+
+
+<span class="n">indep_type</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="n">dep_type</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="n">system_property</span><span class="p">,</span><span class="nb">callable</span><span class="p">]</span>
+<span class="n">ref_type</span> <span class="o">=</span> <span class="n">typing</span><span class="o">.</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">system_property</span><span class="p">,</span> <span class="nb">callable</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+
+
+<span class="c1"># Solver minimizes residual by changing vars</span>
+<div class="viewcode-block" id="SolverInstance">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.SolverInstance.html#engforge.attr_solver.SolverInstance">[docs]</a>
+<span class="k">class</span> <span class="nc">SolverInstance</span><span class="p">(</span><span class="n">AttributeInstance</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A decoupled signal instance to perform operations on a system instance&quot;&quot;&quot;</span>
+
+    <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span>
+    <span class="n">solver</span><span class="p">:</span> <span class="s2">&quot;Solver&quot;</span>
+
+    <span class="c1"># compiled info</span>
+    <span class="n">obj</span><span class="p">:</span> <span class="s2">&quot;Ref&quot;</span>
+    <span class="n">var</span><span class="p">:</span> <span class="s2">&quot;Ref&quot;</span>
+    <span class="n">lhs</span><span class="p">:</span> <span class="s2">&quot;Ref&quot;</span>
+    <span class="n">rhs</span><span class="p">:</span> <span class="s2">&quot;Ref&quot;</span>
+    <span class="n">const_f</span><span class="p">:</span> <span class="s2">&quot;Ref&quot;</span>
+
+    <span class="n">_active</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">_constraints</span><span class="p">:</span> <span class="nb">list</span>
+
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">solver</span><span class="p">:</span> <span class="s2">&quot;Solver&quot;</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">,</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;kwargs passed to compile&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">class_attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span> <span class="o">=</span> <span class="n">solver</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">system</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SolverInstance.compile">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.SolverInstance.html#engforge.attr_solver.SolverInstance.compile">[docs]</a>
+    <span class="k">def</span> <span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;establishes the references for the solver to use directly&quot;&quot;&quot;</span>
+        <span class="kn">from</span> <span class="nn">engforge.solver</span> <span class="kn">import</span> <span class="n">objectify</span><span class="p">,</span><span class="n">secondary_obj</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span> <span class="o">==</span> <span class="s2">&quot;var&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">var</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">locate_ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">var</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;solving with indpendent: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ineq&quot;</span><span class="p">,</span> <span class="s2">&quot;eq&quot;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">locate_ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">lhs</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span> <span class="s2">&quot;rhs&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">rhs</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span><span class="ow">or</span> <span class="nb">callable</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">rhs</span><span class="p">)):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">locate_ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">rhs</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="p">,</span> <span class="s2">&quot;rhs&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">rhs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="c1">#raise Exception(f&quot;bad rhs: {self.solver.rhs}&quot;)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rhs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">rhs</span>
+                
+            <span class="n">m</span> <span class="o">=</span> <span class="s2">&quot; = &quot;</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span> <span class="o">==</span> <span class="s2">&quot;eq&quot;</span> <span class="k">else</span> <span class="s2">&quot; &gt;= &quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;solving </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs</span><span class="si">}{</span><span class="n">m</span><span class="si">}{</span><span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s1">&#39;rhs&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">rhs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">mult</span><span class="o">=</span><span class="mi">1</span>
+                <span class="n">bias</span><span class="o">=</span><span class="kc">None</span>
+                <span class="n">power</span><span class="o">=</span><span class="kc">None</span>
+                <span class="c1">#careful with kw vs positional args here</span>
+                <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">sys</span><span class="p">,</span><span class="n">prob</span><span class="p">:</span> <span class="n">maybe_ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs</span><span class="p">,</span><span class="n">SolverInstance</span><span class="p">,</span><span class="n">sys</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span><span class="n">prob</span><span class="o">=</span><span class="n">prob</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span><span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">,</span><span class="n">power</span><span class="o">=</span><span class="n">power</span><span class="p">)</span> <span class="o">-</span> <span class="n">maybe_ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="p">,</span><span class="n">SolverInstance</span><span class="p">,</span><span class="n">sys</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span><span class="n">prob</span><span class="o">=</span><span class="n">prob</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span><span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">,</span><span class="n">power</span><span class="o">=</span><span class="n">power</span><span class="p">)</span>
+                <span class="n">fun</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">lhs</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">rhs</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">objfunc</span> <span class="o">=</span> <span class="n">Ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="p">,</span><span class="n">fun</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">objfunc</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lhs</span>
+            
+            <span class="k">if</span> <span class="n">log</span><span class="o">.</span><span class="n">log_level</span> <span class="o">&lt;=</span> <span class="mi">6</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;const defined: </span><span class="si">{</span><span class="n">objfunc</span><span class="si">}</span><span class="s2">|</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">const_f</span> <span class="o">=</span> <span class="n">objfunc</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span> <span class="o">==</span> <span class="s1">&#39;obj&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj_ref</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">locate_ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">obj</span><span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s1">&#39;max&#39;</span><span class="p">:</span>
+                <span class="n">mult</span><span class="o">=</span><span class="kc">None</span>
+                <span class="n">bias</span><span class="o">=</span><span class="kc">None</span>
+                <span class="n">power</span><span class="o">=</span><span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mult</span><span class="o">=</span><span class="kc">None</span>
+                <span class="n">bias</span><span class="o">=</span><span class="kc">None</span>
+                <span class="n">power</span><span class="o">=</span><span class="kc">None</span>
+
+            <span class="n">fun</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">sys</span><span class="p">,</span><span class="n">prob</span><span class="p">:</span> <span class="n">maybe_ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">obj_ref</span><span class="p">,</span><span class="n">SolverInstance</span><span class="p">,</span><span class="n">sys</span><span class="o">=</span><span class="n">sys</span><span class="p">,</span><span class="n">prob</span><span class="o">=</span><span class="n">prob</span><span class="p">,</span><span class="n">mult</span><span class="o">=</span><span class="n">mult</span><span class="p">,</span><span class="n">bias</span><span class="o">=</span><span class="n">bias</span><span class="p">,</span><span class="n">power</span><span class="o">=</span><span class="n">power</span><span class="p">)</span>  
+            <span class="n">fun</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;obj_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">obj</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">kind</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">obj</span> <span class="o">=</span> <span class="n">Ref</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="p">,</span><span class="n">fun</span><span class="p">)</span>
+            <span class="c1">#self.obj = self.system.locate_ref(fun)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;solving with obj: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">obj</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+            
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s1">&#39;_constraints&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_constraints</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">,</span><span class="s1">&#39;obj&#39;</span><span class="p">]:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#just me</span>
+            <span class="k">return</span> <span class="p">[{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">slvtype</span><span class="p">,</span><span class="s1">&#39;var&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">lhs</span><span class="p">,</span><span class="s1">&#39;value&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">const_f</span><span class="p">}]</span>
+        
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">slvtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">combos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">combos</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">normalize</span>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">active</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s1">&#39;_active&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_active</span>        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">active</span>
+    
+    <span class="k">def</span> <span class="nf">get_alias</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pre</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span>  <span class="o">==</span> <span class="s1">&#39;var&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span><span class="o">.</span><span class="n">key</span> <span class="c1">#direct ref</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_alias</span><span class="p">(</span><span class="n">pre</span><span class="p">)</span> <span class="c1">#default</span>
+
+    <span class="k">def</span> <span class="nf">as_ref_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;var&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span><span class="s1">&#39;eq&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span><span class="s1">&#39;ineq&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span><span class="s1">&#39;obj&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">}</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span> <span class="o">==</span> <span class="s2">&quot;var&quot;</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="s1">&#39;var&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">var</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span> <span class="o">==</span> <span class="s2">&quot;obj&quot;</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="s1">&#39;obj&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">obj</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span> <span class="o">==</span> <span class="s2">&quot;eq&quot;</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="s1">&#39;eq&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">const_f</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">solver</span><span class="o">.</span><span class="n">slvtype</span> <span class="o">==</span> <span class="s2">&quot;ineq&quot;</span><span class="p">:</span>
+                <span class="n">out</span><span class="p">[</span><span class="s1">&#39;ineq&#39;</span><span class="p">]</span> <span class="o">=</span>  <span class="bp">self</span><span class="o">.</span><span class="n">const_f</span>
+        
+        <span class="k">return</span> <span class="n">out</span></div>
+
+
+            
+            
+
+<div class="viewcode-block" id="Solver">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.Solver.html#engforge.attr_solver.Solver">[docs]</a>
+<span class="k">class</span> <span class="nc">Solver</span><span class="p">(</span><span class="n">ATTR_BASE</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;solver creates subclasses per solver balance&quot;&quot;&quot;</span>
+
+    <span class="n">obj</span><span class="p">:</span> <span class="n">dep_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">var</span><span class="p">:</span> <span class="n">indep_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">rhs</span><span class="p">:</span> <span class="n">ref_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">lhs</span><span class="p">:</span> <span class="n">ref_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">slvtype</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">constraints</span><span class="p">:</span> <span class="nb">dict</span>
+    <span class="n">combos</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="kc">None</span>
+    
+    <span class="n">normalize</span><span class="p">:</span> <span class="n">ref_type</span>
+    <span class="n">allow_constraint_override</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="n">attr_prefix</span> <span class="o">=</span> <span class="s2">&quot;Solver&quot;</span>
+    <span class="n">active</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">instance_class</span> <span class="o">=</span> <span class="n">SolverInstance</span>
+
+    <span class="n">define</span> <span class="o">=</span> <span class="kc">None</span>
+
+
+<div class="viewcode-block" id="Solver.configure_for_system">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.Solver.html#engforge.attr_solver.Solver.configure_for_system">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">configure_for_system</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">config_class</span><span class="p">,</span> <span class="n">cb</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;add the config class, and perform checks with `class_validate)</span>
+<span class="sd">        :returns: [optional] a dictionary of options to be used in the make_attribute method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pre_name</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">name</span> <span class="c1">#random attr name</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">Solver</span><span class="p">,</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">configure_for_system</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="n">config_class</span><span class="p">,</span><span class="n">cb</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1">#change name of constraint  var if </span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">slvtype</span> <span class="o">==</span> <span class="s2">&quot;var&quot;</span><span class="p">:</span>
+            <span class="c1">#provide defaults ot constraints, and update combo_var with attribut name</span>
+            <span class="k">for</span> <span class="n">const</span> <span class="ow">in</span> <span class="bp">cls</span><span class="o">.</span><span class="n">constraints</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;combo_var&#39;</span> <span class="ow">in</span> <span class="n">const</span> <span class="ow">and</span> <span class="n">const</span><span class="p">[</span><span class="s1">&#39;combo_var&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">pre_name</span><span class="p">:</span>
+                    <span class="n">const</span><span class="p">[</span><span class="s1">&#39;combo_var&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span> <span class="c1">#update me</span>
+                <span class="k">elif</span> <span class="s1">&#39;combo_var&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">const</span><span class="p">:</span>
+                    <span class="n">const</span><span class="p">[</span><span class="s1">&#39;combo_var&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span> <span class="c1">#update me</span>
+                
+                <span class="k">if</span> <span class="s1">&#39;combos&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">const</span><span class="p">:</span>
+                    <span class="n">const</span><span class="p">[</span><span class="s1">&#39;combos&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;default&#39;</span></div>
+
+                    
+
+    <span class="c1"># TODO: add normalize attribute to tune optimizations</span>
+<div class="viewcode-block" id="Solver.declare_var">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.Solver.html#engforge.attr_solver.Solver.declare_var">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">declare_var</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">var</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Defines a solver variable for optimization in the class, constraints defined on this solver will correspond to the limits of that variable</span>
+<span class="sd">        :param var: The var attribute for the solver variable.</span>
+<span class="sd">        :param combos: The combinations of the solver variable.</span>
+<span class="sd">        :return: The setup class for the solver variable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="s1">&#39;,&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">var</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;var cannot have commas: </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Create A New Signals Class</span>
+        <span class="n">active</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">combos</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;combos&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;default,</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span> <span class="c1">#default + var_name</span>
+
+        <span class="n">new_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Solver_var_</span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="n">bkw</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;var&quot;</span><span class="p">:</span> <span class="n">var</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="n">constraints</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">bkw</span><span class="p">},</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">bkw</span><span class="p">}]</span>
+        <span class="n">new_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">new_name</span><span class="p">,</span> <span class="c1">#until configured for system, it gets the assigned name</span>
+            <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">,</span>
+            <span class="n">var</span><span class="o">=</span><span class="n">var</span><span class="p">,</span>
+            <span class="n">slvtype</span><span class="o">=</span><span class="s2">&quot;var&quot;</span><span class="p">,</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="n">constraints</span><span class="p">,</span>
+            <span class="n">combos</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">process_combos</span><span class="p">(</span><span class="n">combos</span><span class="p">),</span>
+            <span class="n">default_options</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">default_options</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_setup_cls</span><span class="p">(</span><span class="n">new_name</span><span class="p">,</span> <span class="n">new_dict</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Solver.objective">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.Solver.html#engforge.attr_solver.Solver.objective">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">objective</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Defines a solver variable for optimization in the class, constraints defined on this solver will correspond to the limits of that variable</span>
+
+<span class="sd">        :param obj: The var attribute for the solver variable.</span>
+<span class="sd">        :param combos: The combinations of the solver variable.</span>
+<span class="sd">        :vara kind: the kind of optimization, either min or max</span>
+<span class="sd">        :return: The setup class for the solver variable.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Create A New Signals Class</span>
+        <span class="n">active</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">combos</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;combos&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;kind&quot;</span><span class="p">,</span> <span class="s2">&quot;min&quot;</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">)</span>
+
+        <span class="n">new_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Solver_obj_</span><span class="si">{</span><span class="n">obj</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="n">bkw</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;var&quot;</span><span class="p">:</span> <span class="n">obj</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}</span>
+        <span class="n">new_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">new_name</span><span class="p">,</span>
+            <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">=</span><span class="n">obj</span><span class="p">,</span>
+            <span class="n">slvtype</span><span class="o">=</span><span class="s2">&quot;obj&quot;</span><span class="p">,</span>
+            <span class="n">kind</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">combos</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">process_combos</span><span class="p">(</span><span class="n">combos</span><span class="p">),</span>
+            <span class="n">default_options</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">default_options</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_setup_cls</span><span class="p">(</span><span class="n">new_name</span><span class="p">,</span> <span class="n">new_dict</span><span class="p">)</span></div>
+
+
+    <span class="n">obj</span> <span class="o">=</span> <span class="n">objective</span>  
+
+<div class="viewcode-block" id="Solver.constraint_equality">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.Solver.html#engforge.attr_solver.Solver.constraint_equality">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">constraint_equality</span><span class="p">(</span>
+        <span class="bp">cls</span><span class="p">,</span> <span class="n">lhs</span><span class="p">:</span> <span class="s2">&quot;system_property&quot;</span><span class="p">,</span> <span class="n">rhs</span><span class="p">:</span> <span class="s2">&quot;system_property&quot;</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Defines an equality constraint based on a required lhs of equation, and an optional rhs, the difference of which will be driven to zero&quot;&quot;&quot;</span>
+        <span class="n">combos</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;combos&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
+        <span class="n">active</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Create A New Signals Class</span>
+        <span class="n">new_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Solver_coneq_</span><span class="si">{</span><span class="n">lhs</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">rhs</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="n">new_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">new_name</span><span class="p">,</span>
+            <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">,</span>
+            <span class="n">lhs</span><span class="o">=</span><span class="n">lhs</span><span class="p">,</span>
+            <span class="n">rhs</span><span class="o">=</span><span class="n">rhs</span><span class="p">,</span>
+            <span class="n">slvtype</span><span class="o">=</span><span class="s2">&quot;eq&quot;</span><span class="p">,</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">combos</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">process_combos</span><span class="p">(</span><span class="n">combos</span><span class="p">),</span>
+            <span class="n">default_options</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">default_options</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_setup_cls</span><span class="p">(</span><span class="n">new_name</span><span class="p">,</span> <span class="n">new_dict</span><span class="p">)</span></div>
+
+
+    <span class="n">con_eq</span> <span class="o">=</span> <span class="n">constraint_equality</span>
+
+<div class="viewcode-block" id="Solver.constraint_inequality">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.Solver.html#engforge.attr_solver.Solver.constraint_inequality">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">constraint_inequality</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">lhs</span><span class="p">:</span> <span class="n">ref_type</span><span class="p">,</span> <span class="n">rhs</span><span class="p">:</span> <span class="n">ref_type</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Defines an inequality constraint&quot;&quot;&quot;</span>
+        <span class="n">combos</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;combos&quot;</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
+        <span class="n">active</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="c1"># Create A New Signals Class</span>
+        <span class="n">new_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Solver_conineq_</span><span class="si">{</span><span class="n">lhs</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">rhs</span><span class="si">}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span>
+        <span class="n">new_dict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">name</span><span class="o">=</span><span class="n">new_name</span><span class="p">,</span>
+            <span class="n">active</span><span class="o">=</span><span class="n">active</span><span class="p">,</span>
+            <span class="n">lhs</span><span class="o">=</span><span class="n">lhs</span><span class="p">,</span>
+            <span class="n">rhs</span><span class="o">=</span><span class="n">rhs</span><span class="p">,</span>
+            <span class="n">slvtype</span><span class="o">=</span><span class="s2">&quot;ineq&quot;</span><span class="p">,</span>
+            <span class="n">constraints</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">combos</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">process_combos</span><span class="p">(</span><span class="n">combos</span><span class="p">),</span>
+            <span class="n">default_options</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="n">default_options</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_setup_cls</span><span class="p">(</span><span class="n">new_name</span><span class="p">,</span> <span class="n">new_dict</span><span class="p">)</span></div>
+
+
+    <span class="n">con_ineq</span> <span class="o">=</span> <span class="n">constraint_inequality</span>
+
+    <span class="c1"># TODO: add minimize / maximize / objective options</span>
+
+<div class="viewcode-block" id="Solver.class_validate">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.Solver.html#engforge.attr_solver.Solver.class_validate">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">class_validate</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">instance</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">engforge.properties</span> <span class="kn">import</span> <span class="n">system_property</span>
+
+        <span class="n">system</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">config_cls</span>
+
+        <span class="c1"># TODO: normalize references to ref or constant here</span>
+        <span class="c1"># TODO: add a check for the solver to be a valid solver type</span>
+
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">slvtype</span> <span class="o">==</span> <span class="s2">&quot;var&quot;</span><span class="p">:</span>
+            <span class="n">var_type</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">locate</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">var</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">var_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;var not found: </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">var</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">var_type</span><span class="p">,</span> <span class="n">attrs</span><span class="o">.</span><span class="n">Attribute</span>
+            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;bad var </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">var</span><span class="si">}</span><span class="s2"> not attribute: </span><span class="si">{</span><span class="n">var_type</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">assert</span> <span class="n">var_type</span><span class="o">.</span><span class="n">type</span> <span class="ow">in</span> <span class="p">(</span>
+                <span class="nb">int</span><span class="p">,</span>
+                <span class="nb">float</span><span class="p">,</span>
+            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;bad var </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">var</span><span class="si">}</span><span class="s2"> not numeric&quot;</span>
+
+        <span class="k">elif</span> <span class="bp">cls</span><span class="o">.</span><span class="n">slvtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;ineq&quot;</span><span class="p">,</span> <span class="s2">&quot;eq&quot;</span><span class="p">]:</span>
+            <span class="n">driv_type</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">locate</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">lhs</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">driv_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;LHS not found: </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">lhs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                <span class="n">driv_type</span><span class="p">,</span> <span class="n">system_property</span>
+            <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;bad LHS </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">lhs</span><span class="si">}</span><span class="s2"> type: </span><span class="si">{</span><span class="n">driv_type</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">rhs</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">driv_type</span> <span class="o">=</span> <span class="n">system</span><span class="o">.</span><span class="n">locate</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">rhs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">driv_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;RHS not found: </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">rhs</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span>
+                    <span class="n">driv_type</span><span class="p">,</span> <span class="n">system_property</span>
+                <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;bad RHS </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">rhs</span><span class="si">}</span><span class="s2"> type: </span><span class="si">{</span><span class="n">driv_type</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;bad slvtype: </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="n">slvtype</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Solver.create_instance">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.Solver.html#engforge.attr_solver.Solver.create_instance">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">create_instance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">system</span><span class="p">:</span> <span class="s2">&quot;System&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SolverInstance</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">SolverInstance</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">system</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Solver.add_var_constraint">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.Solver.html#engforge.attr_solver.Solver.add_var_constraint">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_var_constraint</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;adds a `type` constraint to the solver. If value is numeric it is used as a bound with `scipy` optimize.</span>
+
+<span class="sd">        If value is a function it should be of the form value(Xarray) and will establish an inequality constraint that var var must be:</span>
+<span class="sd">            1. less than for max</span>
+<span class="sd">            2. more than for min</span>
+
+<span class="sd">        During the evaluation of the limit function system.X should be set, and pre_execute() have already run.</span>
+
+<span class="sd">        :param type: str, must be either min or max with var value comparison, or with a function additionally eq,ineq (same as max(0)) can be used</span>
+<span class="sd">        :value: either a numeric (int,float), or a function, f(system)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">cls</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">Solver</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;must set constraint on Solver subclass&quot;</span>
+        <span class="c1"># assert not cls.constraint_exists(type=kind,var=var), f&quot;constraint already exists!&quot;</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">))</span> <span class="ow">or</span> <span class="nb">callable</span><span class="p">(</span>
+            <span class="n">value</span>
+        <span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;only int,float or callables allow. Callables must take system as argument&quot;</span>
+
+        <span class="n">var</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">var</span>
+        <span class="k">assert</span> <span class="n">var</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;must provide var on non-var solvers&quot;</span>
+        <span class="k">assert</span> <span class="bp">cls</span><span class="o">.</span><span class="n">slvtype</span> <span class="o">==</span> <span class="s2">&quot;var&quot;</span><span class="p">,</span> <span class="s2">&quot;only Solver.declare_var can have constraints&quot;</span>
+        <span class="k">assert</span> <span class="n">kind</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="s2">&quot;max&quot;</span><span class="p">)</span>
+
+        <span class="n">combo_dflt</span> <span class="o">=</span> <span class="s2">&quot;default,lim&quot;</span>
+        <span class="n">cmbs</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;combos&quot;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">combos</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">process_combos</span><span class="p">(</span><span class="n">cmbs</span><span class="p">,</span><span class="n">combo_dflt</span><span class="p">,</span><span class="n">combo_dflt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">combos</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+            <span class="n">combos</span> <span class="o">=</span> <span class="n">combos</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="n">active</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;active&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+        <span class="n">const</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="n">kind</span><span class="p">,</span> <span class="s2">&quot;value&quot;</span><span class="p">:</span> <span class="n">value</span><span class="p">,</span> <span class="s2">&quot;var&quot;</span><span class="p">:</span> <span class="n">var</span><span class="p">,</span> <span class="s2">&quot;active&quot;</span><span class="p">:</span> <span class="n">active</span><span class="p">,</span> <span class="s2">&quot;combos&quot;</span><span class="p">:</span> <span class="n">combos</span><span class="p">,</span> <span class="s1">&#39;combo_var&#39;</span><span class="p">:</span><span class="bp">cls</span><span class="o">.</span><span class="n">name</span><span class="p">}</span>
+        <span class="c1">#print(const,cls.__dict__)</span>
+
+        <span class="n">cinx</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">constraint_exists</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">kind</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="n">var</span><span class="p">)</span>
+        <span class="n">inix</span> <span class="o">=</span> <span class="n">cinx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="bp">cls</span><span class="o">.</span><span class="n">allow_constraint_override</span> <span class="ow">and</span> <span class="n">inix</span><span class="p">:</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;replacing constraint </span><span class="si">{</span><span class="n">cinx</span><span class="si">}</span><span class="s1"> with </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s1"> </span><span class="si">{</span><span class="n">var</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">constraint</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">constraints</span><span class="p">[</span><span class="n">cinx</span><span class="p">]</span>
+            <span class="n">constraint</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">const</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">cls</span><span class="o">.</span><span class="n">allow_constraint_override</span> <span class="ow">and</span> <span class="n">inix</span><span class="p">:</span>
+            <span class="n">cnx</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">constraints</span><span class="p">[</span><span class="n">cinx</span><span class="p">]</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;constraint already exists! </span><span class="si">{</span><span class="n">cnx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">constraints</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">const</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Solver.constraint_exists">
+<a class="viewcode-back" href="../../_autosummary/engforge.attr_solver.Solver.html#engforge.attr_solver.Solver.constraint_exists">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">constraint_exists</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;check constraints on the system, return its index position if found, else None.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">constraints</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">c</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">==</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">kw</span><span class="o">.</span><span class="n">items</span><span class="p">()]):</span>
+                <span class="k">return</span> <span class="n">i</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</div>
+
+
+
+<span class="c1"># Support Previous SnakeCase</span>
+<span class="n">Solver</span> <span class="o">=</span> <span class="n">Solver</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

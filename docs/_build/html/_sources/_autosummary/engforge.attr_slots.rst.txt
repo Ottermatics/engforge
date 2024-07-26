@@ -1,0 +1,33 @@
+engforge.attr\_slots
+====================
+
+.. automodule:: engforge.attr_slots
+
+   
+   
+   
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      Slot
+      SlotLog
+   
+   
+
+   
+   
+   
+
+
+

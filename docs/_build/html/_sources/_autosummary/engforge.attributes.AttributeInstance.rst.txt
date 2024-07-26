@@ -1,0 +1,39 @@
+engforge.attributes.AttributeInstance
+=====================================
+
+.. currentmodule:: engforge.attributes
+
+.. autoclass:: AttributeInstance
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~AttributeInstance.as_ref_dict
+      ~AttributeInstance.compile
+      ~AttributeInstance.get_alias
+      ~AttributeInstance.is_active
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~AttributeInstance.active
+      ~AttributeInstance.classname
+      ~AttributeInstance.combos
+      ~AttributeInstance.class_attr
+      ~AttributeInstance.system
+      ~AttributeInstance.backref
+   
+   

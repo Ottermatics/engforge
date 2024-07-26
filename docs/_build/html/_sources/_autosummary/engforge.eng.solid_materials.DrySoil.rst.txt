@@ -1,0 +1,114 @@
+engforge.eng.solid\_materials.DrySoil
+=====================================
+
+.. currentmodule:: engforge.eng.solid_materials
+
+.. autoclass:: DrySoil
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~DrySoil.add_fields
+      ~DrySoil.change_all_log_lvl
+      ~DrySoil.check_ref_slot_type
+      ~DrySoil.cls_compile
+      ~DrySoil.collect_all_attributes
+      ~DrySoil.collect_inst_attributes
+      ~DrySoil.compile_classes
+      ~DrySoil.copy_config_at_state
+      ~DrySoil.critical
+      ~DrySoil.debug
+      ~DrySoil.difference
+      ~DrySoil.error
+      ~DrySoil.extract_message
+      ~DrySoil.filter
+      ~DrySoil.go_through_configurations
+      ~DrySoil.info
+      ~DrySoil.input_attrs
+      ~DrySoil.input_fields
+      ~DrySoil.installSTDLogger
+      ~DrySoil.internal_configurations
+      ~DrySoil.message_with_identiy
+      ~DrySoil.msg
+      ~DrySoil.numeric_fields
+      ~DrySoil.parent_configurations_cls
+      ~DrySoil.plot_attributes
+      ~DrySoil.pre_compile
+      ~DrySoil.resetLog
+      ~DrySoil.resetSystemLogs
+      ~DrySoil.setattrs
+      ~DrySoil.signals_attributes
+      ~DrySoil.slack_notification
+      ~DrySoil.slot_refs
+      ~DrySoil.slots_attributes
+      ~DrySoil.solvers_attributes
+      ~DrySoil.subclasses
+      ~DrySoil.subcls_compile
+      ~DrySoil.table_fields
+      ~DrySoil.trace_attributes
+      ~DrySoil.transients_attributes
+      ~DrySoil.validate_class
+      ~DrySoil.von_mises_stress_max
+      ~DrySoil.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DrySoil.E
+      ~DrySoil.G
+      ~DrySoil.allowable_stress
+      ~DrySoil.as_dict
+      ~DrySoil.attrs_fields
+      ~DrySoil.classname
+      ~DrySoil.color
+      ~DrySoil.displayname
+      ~DrySoil.filename
+      ~DrySoil.identity
+      ~DrySoil.input_as_dict
+      ~DrySoil.log_fmt
+      ~DrySoil.log_level
+      ~DrySoil.log_on
+      ~DrySoil.log_silo
+      ~DrySoil.logger
+      ~DrySoil.nu
+      ~DrySoil.numeric_as_dict
+      ~DrySoil.numeric_hash
+      ~DrySoil.rho
+      ~DrySoil.shear_modulus
+      ~DrySoil.slack_webhook_url
+      ~DrySoil.ultimate_stress
+      ~DrySoil.unique_hash
+      ~DrySoil.unique_id
+      ~DrySoil.yield_stress
+      ~DrySoil.name
+      ~DrySoil.density
+      ~DrySoil.elastic_modulus
+      ~DrySoil.yield_strength
+      ~DrySoil.tensile_strength_ultimate
+      ~DrySoil.poissons_ratio
+      ~DrySoil.melting_point
+      ~DrySoil.maxium_service_temp
+      ~DrySoil.thermal_conductivity
+      ~DrySoil.specific_heat
+      ~DrySoil.thermal_expansion
+      ~DrySoil.electrical_resistitivity
+      ~DrySoil.cost_per_kg
+      ~DrySoil.in_shear_modulus
+      ~DrySoil.hardness
+      ~DrySoil.izod
+      ~DrySoil.factor_of_saftey
+   
+   

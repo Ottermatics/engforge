@@ -1,0 +1,61 @@
+engforge.reporting.DiskReporterMixin
+====================================
+
+.. currentmodule:: engforge.reporting
+
+.. autoclass:: DiskReporterMixin
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~DiskReporterMixin.add_fields
+      ~DiskReporterMixin.change_all_log_lvl
+      ~DiskReporterMixin.check_config
+      ~DiskReporterMixin.critical
+      ~DiskReporterMixin.debug
+      ~DiskReporterMixin.ensure_exists
+      ~DiskReporterMixin.ensure_path
+      ~DiskReporterMixin.error
+      ~DiskReporterMixin.extract_message
+      ~DiskReporterMixin.filter
+      ~DiskReporterMixin.info
+      ~DiskReporterMixin.installSTDLogger
+      ~DiskReporterMixin.message_with_identiy
+      ~DiskReporterMixin.msg
+      ~DiskReporterMixin.resetLog
+      ~DiskReporterMixin.resetSystemLogs
+      ~DiskReporterMixin.slack_notification
+      ~DiskReporterMixin.subclasses
+      ~DiskReporterMixin.upload
+      ~DiskReporterMixin.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DiskReporterMixin.path
+      ~DiskReporterMixin.report_mode
+      ~DiskReporterMixin.date_key
+      ~DiskReporterMixin.identity
+      ~DiskReporterMixin.log_fmt
+      ~DiskReporterMixin.log_level
+      ~DiskReporterMixin.log_on
+      ~DiskReporterMixin.logger
+      ~DiskReporterMixin.month_key
+      ~DiskReporterMixin.name
+      ~DiskReporterMixin.report_root
+      ~DiskReporterMixin.slack_webhook_url
+   
+   

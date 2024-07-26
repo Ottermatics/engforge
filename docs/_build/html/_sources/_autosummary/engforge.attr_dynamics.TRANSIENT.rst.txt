@@ -1,0 +1,77 @@
+engforge.attr\_dynamics.TRANSIENT
+=================================
+
+.. currentmodule:: engforge.attr_dynamics
+
+.. autoclass:: TRANSIENT
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TRANSIENT.add_var_constraint
+      ~TRANSIENT.class_validate
+      ~TRANSIENT.collect_attr_inst
+      ~TRANSIENT.collect_cls
+      ~TRANSIENT.configure_for_system
+      ~TRANSIENT.configure_instance
+      ~TRANSIENT.constraint_exists
+      ~TRANSIENT.create_instance
+      ~TRANSIENT.define
+      ~TRANSIENT.define_validate
+      ~TRANSIENT.evolve
+      ~TRANSIENT.from_counting_attr
+      ~TRANSIENT.handle_instance
+      ~TRANSIENT.integrate
+      ~TRANSIENT.make_attribute
+      ~TRANSIENT.make_factory
+      ~TRANSIENT.process_combos
+      ~TRANSIENT.subclasses
+      ~TRANSIENT.unpack_atrs
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TRANSIENT.name
+      ~TRANSIENT.default
+      ~TRANSIENT.validator
+      ~TRANSIENT.repr
+      ~TRANSIENT.eq
+      ~TRANSIENT.eq_key
+      ~TRANSIENT.order
+      ~TRANSIENT.order_key
+      ~TRANSIENT.hash
+      ~TRANSIENT.init
+      ~TRANSIENT.metadata
+      ~TRANSIENT.type
+      ~TRANSIENT.converter
+      ~TRANSIENT.kw_only
+      ~TRANSIENT.inherited
+      ~TRANSIENT.on_setattr
+      ~TRANSIENT.alias
+      ~TRANSIENT.allow_constraint_override
+      ~TRANSIENT.attr_prefix
+      ~TRANSIENT.default_options
+      ~TRANSIENT.none_ok
+      ~TRANSIENT.template_class
+      ~TRANSIENT.mode
+      ~TRANSIENT.var
+      ~TRANSIENT.rate
+      ~TRANSIENT.constraints
+      ~TRANSIENT.config_cls
+      ~TRANSIENT.active
+      ~TRANSIENT.combos
+   
+   

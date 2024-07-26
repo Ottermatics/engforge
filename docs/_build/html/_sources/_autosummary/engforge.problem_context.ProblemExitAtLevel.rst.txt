@@ -1,0 +1,6 @@
+engforge.problem\_context.ProblemExitAtLevel
+============================================
+
+.. currentmodule:: engforge.problem_context
+
+.. autoexception:: ProblemExitAtLevel

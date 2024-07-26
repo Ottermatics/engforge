@@ -1,14 +1,17 @@
 name: "Pull Request Docs Check"
-on: 
+on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.head_ref }}
+
     - uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "docs/"
@@ -18,20 +21,19 @@ jobs:
         name: DocumentationHTML
         path: docs/build/html/
 
-    - uses: actions/checkout@v2
-    - name: Format code with black
-      run: |
-        pip install black
-        black -l 80 --include="\.py" .
-        
-    - name: Commit changes
-      uses: EndBug/add-and-commit@v4
-      with:
-        author_name: ${{ github.actor }}
-        author_email: ${{ github.actor }}@users.noreply.github.com
-        message: "Format code with black"
-        add: "."
-        branch: ${{ github.ref }}        
+    # - uses: actions/checkout@v2
+    # - name: Format code with black
+    #   run: |
+    #     pip install black
+    #     black -l 80 --include="\.py" .
+    #     
+    # - name: Commit changes
+    #   uses: EndBug/add-and-commit@v4
+    #   with:
+    #     author_name: ${{ github.actor }}
+    #     author_email: ${{ github.actor }}@users.noreply.github.com
+    #     message: "Built Documentation / Format code with black"
+    #     add: "."       
 
     # Create an artifact out of the previously built pdf.
     # - uses: actions/upload-artifact@v1

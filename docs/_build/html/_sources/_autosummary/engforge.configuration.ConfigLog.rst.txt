@@ -1,0 +1,50 @@
+engforge.configuration.ConfigLog
+================================
+
+.. currentmodule:: engforge.configuration
+
+.. autoclass:: ConfigLog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ConfigLog.add_fields
+      ~ConfigLog.change_all_log_lvl
+      ~ConfigLog.critical
+      ~ConfigLog.debug
+      ~ConfigLog.error
+      ~ConfigLog.extract_message
+      ~ConfigLog.filter
+      ~ConfigLog.info
+      ~ConfigLog.installSTDLogger
+      ~ConfigLog.message_with_identiy
+      ~ConfigLog.msg
+      ~ConfigLog.resetLog
+      ~ConfigLog.resetSystemLogs
+      ~ConfigLog.slack_notification
+      ~ConfigLog.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ConfigLog.identity
+      ~ConfigLog.log_fmt
+      ~ConfigLog.log_level
+      ~ConfigLog.log_on
+      ~ConfigLog.logger
+      ~ConfigLog.slack_webhook_url
+   
+   
