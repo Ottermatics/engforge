@@ -9,6 +9,9 @@ on:
       - '**.rst'
       - '**.yml'
 
+permissions:
+  id-token: write
+
 jobs:
   docs:
     runs-on: ubuntu-latest
