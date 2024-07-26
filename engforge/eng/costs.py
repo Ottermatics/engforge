@@ -34,7 +34,11 @@ from engforge.components import Component
 from engforge.configuration import forge, Configuration
 from engforge.tabulation import TabulationMixin, system_property
 from engforge.system_reference import Ref
-from engforge.properties import instance_cached, solver_cached, cached_system_property
+from engforge.properties import (
+    instance_cached,
+    solver_cached,
+    cached_system_property,
+)
 from engforge.logging import LoggingMixin
 from engforge.component_collections import ComponentIter
 import typing
@@ -560,13 +564,21 @@ class Economics(Component):
         if self._cost_categories:
             for key, refs in self._cost_categories.items():
                 props[key] = Ref(
-                    self._cost_categories, key, False, False, eval_f=self.sum_references
+                    self._cost_categories,
+                    key,
+                    False,
+                    False,
+                    eval_f=self.sum_references,
                 )
 
         if self._comp_categories:
             for key, refs in self._comp_categories.items():
                 props[key] = Ref(
-                    self._comp_categories, key, False, False, eval_f=self.sum_references
+                    self._comp_categories,
+                    key,
+                    False,
+                    False,
+                    eval_f=self.sum_references,
                 )
 
         for k, v in lc_out.items():
@@ -797,7 +809,11 @@ class Economics(Component):
             _key = bse + slot_name + ".cost.item_cost"
             if not isinstance(cur_slot, Configuration) and _key not in CST:
                 CST[_key] = ref = Ref(
-                    conf._slot_costs, slot_name, False, False, eval_f=eval_slot_cost
+                    conf._slot_costs,
+                    slot_name,
+                    False,
+                    False,
+                    eval_f=eval_slot_cost,
                 )
 
                 cc = "unit"
@@ -812,7 +828,10 @@ class Economics(Component):
         for compnm, comp in conf.internal_configurations(False, none_ok=True).items():
             if comp is None:
                 if self.log_level < 5:
-                    self.msg(f"{conf} looking up base class costs for {compnm}", lvl=5)
+                    self.msg(
+                        f"{conf} looking up base class costs for {compnm}",
+                        lvl=5,
+                    )
                 comp_cls = conf.slots_attributes()[compnm].type.accepted
                 for cc in comp_cls:
                     if issubclass(cc, CostModel):

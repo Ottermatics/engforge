@@ -19,7 +19,14 @@ log = ConfigLog()
 conv_nms = lambda v: v.split(",") if isinstance(v, str) else v
 NAME_ADJ = EnvVariable(
     "FORGE_NAME_ADJ",
-    default=("geometry", "size", "algorithms", "complexity", "colors", "materials"),
+    default=(
+        "geometry",
+        "size",
+        "algorithms",
+        "complexity",
+        "colors",
+        "materials",
+    ),
     type_conv=conv_nms,
 )
 NAME_NOUN = EnvVariable(
@@ -40,19 +47,8 @@ NAME_NOUN = EnvVariable(
 )
 FORGE_DEBUG = EnvVariable(
     "FORGE_LOG_LEVEL",
-    default=(
-        "chemistry",
-        "astronomy",
-        "linear_algebra",
-        "geometry",
-        "coding",
-        "corporate_job",
-        "design",
-        "car_parts",
-        "machine_learning",
-        "physics_units",
-    ),
-    type_conv=conv_nms,
+    default=20,
+    type_conv=int,
 )
 
 
@@ -67,7 +63,14 @@ def name_generator(instance):
     return out
 
 
-PROTECTED_NAMES = ["solver", "dataframe", "_anything_changed"]
+PROTECTED_NAMES = [
+    "solver",
+    "dataframe",
+    "_anything_changed",
+    "time",
+    "run_id",
+    "converged",
+]
 
 
 # Wraps Configuration with a decorator, similar to @attrs.define(**options)
@@ -436,7 +439,12 @@ class Configuration(AttributedBaseMixin):
         return new_sys
 
     def go_through_configurations(
-        self, level=0, levels_to_descend=-1, parent_level=0, only_inst=True, **kw
+        self,
+        level=0,
+        levels_to_descend=-1,
+        parent_level=0,
+        only_inst=True,
+        **kw,
     ):
         """A generator that will go through all internal configurations up to a certain level
         if levels_to_descend is less than 0 ie(-1) it will go down, if it 0, None, or False it will

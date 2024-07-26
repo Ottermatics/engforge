@@ -191,13 +191,25 @@ class CubeSystem(System, SpaceMixin):
     y_lim = Solver.con_ineq("y", "comp.y", combos="tierd_top", active=False)
 
     sig_x_cst = Signal.define(
-        "comp.cost_x", "cost_x", mode="both", combos="mirror_costs", active=False
+        "comp.cost_x",
+        "cost_x",
+        mode="both",
+        combos="mirror_costs",
+        active=False,
     )
     sig_y_cst = Signal.define(
-        "comp.cost_y", "cost_y", mode="both", combos="mirror_costs", active=False
+        "comp.cost_y",
+        "cost_y",
+        mode="both",
+        combos="mirror_costs",
+        active=False,
     )
     sig_z_cst = Signal.define(
-        "comp.cost_z", "cost_z", mode="both", combos="mirror_costs", active=False
+        "comp.cost_z",
+        "cost_z",
+        mode="both",
+        combos="mirror_costs",
+        active=False,
     )
 
     @system_property
@@ -726,6 +738,7 @@ class SliderCrank(System, CostModel):
         accl_react = self.reaction_torque / self.Imain_gear
         return np.array([0, accl_input + accl_react])
 
+# COSTS Testing
 
 # COSTS Testing
 

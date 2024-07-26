@@ -7,7 +7,6 @@ To prevent storage of env vars in program memory, access to the os env variables
 For example add: `db_driver(DB_HOST.secret,DB_PASSWORD.secret,...)
 """
 
-
 import os
 from engforge.logging import LoggingMixin
 from typing import Any

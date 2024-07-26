@@ -1,4 +1,5 @@
 """tests airfilter system operation by solving for airflow between filter and and fan"""
+
 import unittest
 
 from engforge.configuration import forge
@@ -19,16 +20,6 @@ import numpy as np
 from matplotlib.pyplot import *
 
 import attrs
-
-
-from engforge.analysis import Analysis
-from engforge.reporting import CSVReporter,DiskPlotReporter
-from engforge.properties import system_property
-from engforge import *
-import numpy as np
-import os,pathlib
-import attrs
-
 
 
 class TestFilterSystem(unittest.TestCase):
@@ -60,7 +51,7 @@ class TestAnalysis(unittest.TestCase):
         self.af = AirFilterAnalysis()
 
     def test_plot(self):
-        self.af.run(throttle=np.linspace(0, 1, 10),combos='*',slv_vars='*')
+        self.af.run(throttle=np.linspace(0, 1, 10), combos="*", slv_vars="*")
         fig = self.af.system.flow_curve()
         ofig = self.af._stored_plots["airfilteranalysis.airfilter.flow_curve"]
         print(fig)

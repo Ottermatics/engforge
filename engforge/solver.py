@@ -91,7 +91,9 @@ class SolverMixin(SolveableMixin):
         from engforge.solver import combo_filter
 
         out = self.collect_solver_refs(
-            check_atr_f=combo_filter, check_kw=kwargs, check_dynamics=check_dynamics
+            check_atr_f=combo_filter,
+            check_kw=kwargs,
+            check_dynamics=check_dynamics,
         )
 
         base_const = {"min": 0, "max": None}  # positive only
@@ -214,6 +216,7 @@ class SolverMixin(SolveableMixin):
             Xnew=Xo,
         ) as pbx:
             out = self.execute(**kw)
+            pbx.save_data()  # context handles checking if anything changed
             pbx.exit_to_level(level="eval", revert=False)
 
         if self.log_level >= 20:
@@ -268,6 +271,7 @@ class SolverMixin(SolveableMixin):
         # use problem execution context
         self.debug(f"starting solver: {opts}")
 
+        # this should be the outer context
         with ProblemExec(
             self,
             opts,

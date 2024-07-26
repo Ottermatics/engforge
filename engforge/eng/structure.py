@@ -53,9 +53,9 @@ log = StructureLog()
 SECTIONS = {
     k: v
     for k, v in filter(
-        lambda kv: issubclass(kv[1], geometry.Geometry)
-        if type(kv[1]) is type
-        else False,
+        lambda kv: (
+            issubclass(kv[1], geometry.Geometry) if type(kv[1]) is type else False
+        ),
         sections.__dict__.items(),
     )
 }
@@ -261,7 +261,10 @@ class Structure(System, CostModel, PredictionMixin):
 
         if self.prediction:
             d = {
-                "fails": {"mod": svm.SVC(C=1000, gamma=0.1, probability=True), "N": 0},
+                "fails": {
+                    "mod": svm.SVC(C=1000, gamma=0.1, probability=True),
+                    "N": 0,
+                },
                 "fail_frac": {"mod": svm.SVR(C=1, gamma=0.1), "N": 0},
                 "beam_fail_frac": {"mod": svm.SVR(C=1, gamma=0.1), "N": 0},
                 "mesh_fail_frac": {"mod": svm.SVR(C=1, gamma=0.1), "N": 0},
@@ -440,7 +443,13 @@ class Structure(System, CostModel, PredictionMixin):
                         x1=guess,
                         rtol=tol,
                         xtol=tol,
-                        args=(fail_parm, base_kw, mult, target_failure_frac, solutions),
+                        args=(
+                            fail_parm,
+                            base_kw,
+                            mult,
+                            target_failure_frac,
+                            solutions,
+                        ),
                         bracket=(0, maxx),
                     )
                     self.info(
@@ -454,7 +463,13 @@ class Structure(System, CostModel, PredictionMixin):
                         x1=guess,
                         rtol=tol,
                         xtol=tol,
-                        args=(fail_parm, base_kw, mult, target_failure_frac, solutions),
+                        args=(
+                            fail_parm,
+                            base_kw,
+                            mult,
+                            target_failure_frac,
+                            solutions,
+                        ),
                     )
                     self.info(
                         f"{mult}x{fail_parm:<6}| success: {ans.converged} , ans:{ans.root}, base: {base_kw}"
@@ -466,7 +481,9 @@ class Structure(System, CostModel, PredictionMixin):
                 if ans.converged:
                     self.setattrs({fail_parm: ans.root})
                     self.execute(
-                        save=True, *args, **{k: v for k, v in kw.items() if k != "save"}
+                        save=True,
+                        *args,
+                        **{k: v for k, v in kw.items() if k != "save"},
                     )
                     return ans.root
 
@@ -688,7 +705,10 @@ class Structure(System, CostModel, PredictionMixin):
             for case in self.gravity_cases:
                 for nname, disnode in nodes.items():
                     self.add_node_load(
-                        disnode.name, self.gravity_dir, fnode, case=self.gravity_name
+                        disnode.name,
+                        self.gravity_dir,
+                        fnode,
+                        case=self.gravity_name,
                     )
 
     def add_member(self, name, node1, node2, section, material=None, **kwargs):
@@ -871,7 +891,7 @@ class Structure(System, CostModel, PredictionMixin):
         """sum of all panels cost"""
         return sum([sum(self.costs["quads"].values())])
 
-    @cost_property(category="mfg,material,panels")
+    @cost_property(category="mfg,material,structure")
     def structure_cost(self):
         return self.structure_cost_beams + self.structure_cost_panels
 
@@ -1357,7 +1377,10 @@ class Structure(System, CostModel, PredictionMixin):
 
         # add mesh failures
         mesh_summary = self.check_mesh_failures(
-            combo, run_full=self.calculate_full_failure, SF=1.0, return_complete=True
+            combo,
+            run_full=self.calculate_full_failure,
+            SF=1.0,
+            return_complete=True,
         )
         mesh_failures = mesh_summary["failures"]
         mesh_success = mesh_summary["stable"]

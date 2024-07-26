@@ -600,7 +600,9 @@ class ShapelySection(Profile2D):
         """caches section properties and mesh"""
         self._cross_section = None  # reset cross section
         self._mesh = self._geo.create_mesh(
-            mesh_sizes=self.mesh_size, coarse=self.coarse, min_angle=self.min_mesh_angle
+            mesh_sizes=self.mesh_size,
+            coarse=self.coarse,
+            min_angle=self.min_mesh_angle,
         )
         self._sec = Section(self._geo)
         self._sec.calculate_geometric_properties()
@@ -905,7 +907,10 @@ class ShapelySection(Profile2D):
                         )
                         if not self._symmetric:
                             self.solve_fail(
-                                fail_parm, base_kw, guess=guesstimate, mult=-1 * mult
+                                fail_parm,
+                                base_kw,
+                                guess=guesstimate,
+                                mult=-1 * mult,
                             )  # alternato
 
             self.N_pareto = len(self.prediction_records)

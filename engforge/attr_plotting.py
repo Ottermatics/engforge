@@ -1,7 +1,6 @@
 """This module defines Plot and Trace methods that allow the plotting of Statistical & Transient relationships of data in each system
 """
 
-
 import attrs
 import uuid
 import numpy as np

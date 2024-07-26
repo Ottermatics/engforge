@@ -14,7 +14,7 @@ This isn't technically a singleton pattern, but it does provide a similar interf
         for i in range(10):
             pe.solve_min(pe.Xref,pe.Yref,**other_args)
             pe.set_checkpoint() #save the state of the system 
-            self.save_data()
+            pe.save_data()
             
 
     #Solver Module (can use without knowledge of the runtime system)
@@ -32,6 +32,9 @@ The `slv_vars` argument can be used to select a specific set of solvables. From 
 The `only_active` argument can be used to select only active items. The `activate` and `deactivate` arguments can be used to activate or deactivate specific solvables.
 
 `add_obj` can be used to add an objective to the solver. 
+
+# Root Parameter Determination:
+Any session's may access root session parameters defined in the `root_parameters` dictionary like `converged`, or `data` can be accessed by calling `session.<parm>` this eventually calls `root._<parm>` via the __getattr__ method.
 
 # Exit Mode Handling
 
@@ -193,6 +196,7 @@ class ProblemExitAtLevel(ProblemExit):
         return f"ProblemExit[{self.prob}|lvl={self.level}|rvt={self.revert}]"
 
 
+# TODO: develop subproblem strategy (multiple root cache problem in class cache)
 # TODO: determine when components are updated, and refresh the system references accordingly.
 # TODO: Map attributes/properties by component key and then autofix refs! (this is a big one), no refresh required. Min work
 class ProblemExec:
@@ -207,7 +211,7 @@ class ProblemExec:
     # TODO: convert this to a system based cache where there is a unique problem for each system instance. On subprobem copy a system and add o dictionary.
     class_cache = None  # ProblemExec is assigned below
 
-    # this class, wide, dont redefine it
+    # this class, wide, dont redefine it pls
     problems_dict = weakref.WeakValueDictionary()
 
     system: "System"
@@ -290,7 +294,7 @@ class ProblemExec:
         #TODO: create an option to copy the system and run operations on it, and options for applying the state from the optimized copy to the original system
 
         :param system: The system to be executed.
-        :param Xnew: The new state of the system to set wrt. reversion, optional
+        :param Xnew: The new state of the system to set at the start o the problem context, and will revert after the problem exits, optional
         :param ctx_fail_new: Whether to raise an error if no execution context is available, use in utility methods ect. Default is False.
         :param kw_dict: A keyword argument dictionary to be parsed for solver options, and removed from the outer context. Changes are made to this dictionary, so they are removed automatically from the outer context, and thus no longer passed to interior vars.
         :param dxdt: The dynamics integration method. Default is None meaning that dynamic vars are not considered for minimization unless otherwise specified. Steady State can be specified by dxdt=0 all dynamic vars are considered as solver variables, with the constraint that their rate of change is zero. If a dictionary is passed then the dynamic vars are considered as solver variables, with the constraint that their rate of change is equal to the value in the dictionary, and all other unspecified rates are zero (steady).
@@ -399,6 +403,7 @@ class ProblemExec:
             else:
                 raise IllegalArgument(f"bad dxdt value {dxdt}")
 
+        # Check if there is an existing problem session, else create it
         if hasattr(self.class_cache, "session"):
             # mirror the state of session (exactly)
             copy_vals = {
@@ -438,12 +443,12 @@ class ProblemExec:
             raise IllegalArgument(f"no execution context available")
 
         else:
-            # add the prob options to the context
+            # add the prob options to the context and establish system
             self.__dict__.update(opt_in)
             self._problem_id = True  # this is the top level
             self.problems_dict[self._problem_id] = self  # carry that weight
             self._prob_levels = {}
-
+            self._converged = None
             self._dxdt = dxdt
             self.reset_data()
 
@@ -482,7 +487,6 @@ class ProblemExec:
 
         # place me here after system has been modified
         self.system = system
-        # cache as much as possible before running the problem (stitch in time saves 9 or whatever)
 
         # pass args without creating singleton (yet)
         self.session_id = int(uuid.uuid4())
@@ -549,7 +553,9 @@ class ProblemExec:
         check_dynamics = sesh.check_dynamics
         sesh._num_refs = sesh.system.system_references(numeric_only=True)
         sesh._sys_refs = sesh.system.solver_vars(
-            check_dynamics=check_dynamics, addable=sesh._num_refs, **sesh._slv_kw
+            check_dynamics=check_dynamics,
+            addable=sesh._num_refs,
+            **sesh._slv_kw,
         )
 
         sesh.update_methods(sesh=sesh)
@@ -638,7 +644,7 @@ class ProblemExec:
             self.class_cache.level_number += 1
             self.class_cache.session._prob_levels[self.level_name] = self
 
-            return self.class_cache.session
+            return self.class_cache.session  # appear as top
 
         # return New
         self.class_cache.session = self
@@ -874,7 +880,8 @@ class ProblemExec:
             self._run_time = self._run_end - self._run_start
             if self.log_level <= 10:
                 self.debug(
-                    f"EXIT[{self.system.identity}] run time: {self._run_time}", lvl=5
+                    f"EXIT[{self.system.identity}] run time: {self._run_time}",
+                    lvl=5,
                 )
 
     # time context
@@ -907,7 +914,7 @@ class ProblemExec:
         if not intl_refs:
             raise Exception(f"no transient parameters found")
 
-        x_cur = {k: v.value(sesh.system, sesh) for k, v in intl_refs.items()}
+        x_cur = {k: v.value(v.comp, sesh) for k, v in intl_refs.items()}
 
         if self.log_level < 10:
             self.debug(f"initial state {X0} {intl_refs}| {refs}")
@@ -977,7 +984,7 @@ class ProblemExec:
             for name, trdct in pbx.integrators.items():
                 if self.log_level <= 10:
                     self.info(
-                        f"updating {trdct.var}|{trdct.var_ref.value(self.system,self)}<-{trdct.rate}|{trdct.current_rate}|{trdct.rate_ref.value(self.system,self)}"
+                        f"updating {trdct.var}|{trdct.var_ref.value(self.system,self)}<-{trdct.rate}|{trdct.current_rate}|{trdct.rate_ref.value(trdct.comp,system.last_context)}"
                     )
                     print(getattr(self.system, trdct.var, None))
                     print(getattr(self.system, trdct.rate, None))
@@ -1065,8 +1072,8 @@ class ProblemExec:
 
         # TODO: options for solver detail in response
         dflt = {
-            "Xstart": Ref.refset_get(Xref, sys=sesh.system, prob=sesh),
-            "Ystart": Ref.refset_get(Yref, sys=sesh.system, prob=sesh),
+            "Xstart": Ref.refset_get(Xref, prob=sesh),
+            "Ystart": Ref.refset_get(Yref, prob=sesh),
             "Xans": None,
             "success": None,
             "Xans": None,
@@ -1112,7 +1119,8 @@ class ProblemExec:
     def handle_solution(self, answer, Xref, Yref, output):
         # TODO: move exit condition handiling somewhere else, reduce cross over from process_ans
         sesh = self.sesh
-
+        if self.log_level < 10:
+            self.info(f"handiling solution: {answer}")
         thresh = sesh.success_thresh
         vars = list(Xref)
 
@@ -1121,7 +1129,7 @@ class ProblemExec:
         output["Xans"] = Xa
         Ref.refset_input(Xref, Xa)
 
-        Yout = {p: Yref[p].value(sesh.system, self) for p in Yref}
+        Yout = {p: yit.value(yit.comp, self) for p, yit in Yref.items()}
         output["Yobj"] = Yout
 
         Ycon = {}
@@ -1135,6 +1143,7 @@ class ProblemExec:
         de = answer.fun
         if answer.success and de < thresh if thresh else True:
             sesh.system._converged = True  # TODO: put in context
+            sesh._converged = True
             output["success"] = True
 
         elif answer.success:
@@ -1143,10 +1152,12 @@ class ProblemExec:
                 f"solver didnt meet threshold: {de} <? {thresh} ! {answer.x} -> residual: {answer.fun}"
             )
             sesh.system._converged = False
+            sesh._converged = False
             output["success"] = False  # only false with threshold
 
         else:
             sesh.system._converged = False
+            sesh._converged = False
             if self.opt_fail:
                 raise Exception(f"solver didnt converge: {answer}")
             else:
@@ -1175,7 +1186,7 @@ class ProblemExec:
 
     @property
     def final_objectives(self) -> dict:
-        """returns the final objective of the system"""
+        """returns the final objective of the system, depending on mixed objective, equalities, and constraints"""
         sesh = self.sesh
         Yobj = sesh.problem_objs
         Yeq = sesh.problem_eq
@@ -1251,7 +1262,11 @@ class ProblemExec:
         bnd_list = [[None, None]] * Nstates
         con_list = []
         con_info = []  # names of constraints
-        constraints = {"constraints": con_list, "bounds": bnd_list, "info": con_info}
+        constraints = {
+            "constraints": con_list,
+            "bounds": bnd_list,
+            "info": con_info,
+        }
 
         if isinstance(add_con, dict):
             # Remove None Values
@@ -1272,10 +1287,9 @@ class ProblemExec:
         # Add Constraints
         ex_arg = {"con_args": (), **kw}
 
-        # Variable limit (function -> ineq, numeric -> bounds)
         # TODO: dynamic limits
+        # Establish Anonymous Problem Constraint Refs
         for slvr, ref in sesh.problem_opt_vars.items():
-            # TODO: solution to this is to combine the independent variables into one, but allow multiple dependent objectives for constraints/objectives
             assert not all(
                 (slvr in slv_inst, slvr in trv_inst)
             ), f"solver and integrator share parameter {slvr} "
@@ -1293,6 +1307,7 @@ class ProblemExec:
             if log.log_level < 7:
                 self.debug(f"constraints {slvr} {slv_constraints}")
 
+            # combine the independent variables into one, but allow multiple dependent objectives for constraints/objectives
             for ctype in slv_constraints:
                 cval = ctype["value"]
                 kind = ctype["type"]
@@ -1369,6 +1384,7 @@ class ProblemExec:
                         # Ref Case
                         ccst = ref_to_val_constraint(
                             system,
+                            varref.comp,
                             system.last_context,
                             Xrefs,
                             varref,
@@ -1402,6 +1418,7 @@ class ProblemExec:
                             # Ref Case
                             ccst = ref_to_val_constraint(
                                 system,
+                                varref.comp,
                                 system.last_context,
                                 Xrefs,
                                 varref,
@@ -1431,7 +1448,15 @@ class ProblemExec:
                         self.debug(f"filtering constraint {slvr} |{name}")
                     con_info.append(name)
                     con_list.append(
-                        create_constraint(system, Xrefs, "ineq", cval, **kw)
+                        create_constraint(
+                            system,
+                            ref.comp,
+                            Xrefs,
+                            "ineq",
+                            cval,
+                            system.last_context,
+                            **kw,
+                        )
                     )
 
         for slvr, ref in self.problem_eq.items():
@@ -1452,13 +1477,31 @@ class ProblemExec:
                             f"eq_{parent}{ref.comp.classname}.{slvr}_{kind}_{cval}"
                         )
                         con_list.append(
-                            create_constraint(system, Xrefs, "eq", cval, **kw)
+                            create_constraint(
+                                system,
+                                ref.comp,
+                                Xrefs,
+                                "eq",
+                                cval,
+                                system.last_context,
+                                **kw,
+                            )
                         )
             else:
                 # This must be a dynamic rate
                 self.debug(f"dynamic rate eq {slvr} ")
                 con_info.append(f"eq_{parent}{ref.comp.classname}.{slvr}_rate")
-                con_list.append(create_constraint(system, Xrefs, "eq", ref, **kw))
+                con_list.append(
+                    create_constraint(
+                        system,
+                        ref.comp,
+                        Xrefs,
+                        "eq",
+                        ref,
+                        system.last_context,
+                        **kw,
+                    )
+                )
 
         return constraints
 
@@ -1494,7 +1537,11 @@ class ProblemExec:
 
     @classmethod
     def get_extra_kws(
-        cls, kwargs, _check_keys: dict = slv_dflt_options, rmv=False, use_defaults=True
+        cls,
+        kwargs,
+        _check_keys: dict = slv_dflt_options,
+        rmv=False,
+        use_defaults=True,
     ):
         """extracts the combo input from the kwargs"""
         # extract combo input
@@ -1517,7 +1564,8 @@ class ProblemExec:
         filtr = dict(
             list(
                 filter(
-                    lambda kv: kv[1] is not None or kv[0] in _check_keys, output.items()
+                    lambda kv: kv[1] is not None or kv[0] in _check_keys,
+                    output.items(),
                 )
             )
         )
@@ -1685,12 +1733,16 @@ class ProblemExec:
 
     def warning(self, msg, *a, **kw):
         log.warning(
-            f"{self.identity}|[{self.level_number}-{self.level_name}]  {msg}", *a, **kw
+            f"{self.identity}|[{self.level_number}-{self.level_name}]  {msg}",
+            *a,
+            **kw,
         )
 
     def info(self, msg, *a, **kw):
         log.info(
-            f"{self.identity}|[{self.level_number}-{self.level_name}]  {msg}", *a, **kw
+            f"{self.identity}|[{self.level_number}-{self.level_name}]  {msg}",
+            *a,
+            **kw,
         )
 
     def error(self, error, msg, *a, **kw):
@@ -1703,7 +1755,9 @@ class ProblemExec:
 
     def critical(self, msg, *a, **kw):
         log.critical(
-            f"{self.identity}|[{self.level_number}-{self.level_name}]  {msg}", *a, **kw
+            f"{self.identity}|[{self.level_number}-{self.level_name}]  {msg}",
+            *a,
+            **kw,
         )
 
     # Safe Access Methods
@@ -1802,6 +1856,7 @@ class ProblemExec:
                     rate_val = self._dxdt
                     con_ref = ref_to_val_constraint(
                         system,
+                        varref.comp,
                         system.last_context,
                         Xrefs,
                         varref,

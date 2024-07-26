@@ -1,4 +1,5 @@
 """This module defines the slot attrs attribute to define the update behavior of a component or between components in an analysis"""
+
 """Signals define data flow in the solver system. These updates can happen before or after a solver execution as defined in SolverMixin
 
 """

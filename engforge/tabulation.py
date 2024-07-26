@@ -31,7 +31,8 @@ class TableLog(LoggingMixin):
 
 log = TableLog()
 
-SKIP_REF = ["run_id", "converged", "name", "index", "converged"]
+# SKIP_REF = ["run_id", "converged", "name", "index"]
+SKIP_REF = ["name", "index"]
 
 
 class TabulationMixin(SolveableMixin, DataframeMixin):
@@ -46,7 +47,7 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
 
     # Cached and private
     # _table: dict = None
-    _anything_changed: bool
+    _anything_changed: bool = True
     _always_save_data = False
 
     @property
@@ -227,8 +228,6 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
                 # and "engforge" not in mrv.__module__
             ):
                 for k, obj in mrv.__dict__.items():
-                    if k in SKIP_REF:
-                        continue
                     if k not in __system_properties and isinstance(
                         obj, system_property
                     ):  # Precedent

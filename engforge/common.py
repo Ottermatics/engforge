@@ -1,4 +1,5 @@
 """A set of common values and functions that are globaly available."""
+
 import sys
 import functools
 

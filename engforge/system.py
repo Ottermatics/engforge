@@ -26,6 +26,7 @@ The solver uses the root or cobla scipy optimizer results on quick references to
 
 SignalS can be limited with constrains via `min or max` values on `NumericProperty` which can be numeric values (int or float) or functions taking one argument of the component it is defined on. Additionally signals may take arguments of `min` or `max` which are numeric values or callbacks which take the system instance as an argument.
 """
+
 import attrs
 
 from engforge.properties import *
@@ -76,6 +77,14 @@ class System(SolverMixin, SolveableInterface, PlottingMixin, GlobalDynamics):
         if self.last_context is None:
             return None
         return self.last_context.converged
+
+    @property
+    def _converged(self):
+        return self.last_context.converged
+
+    @_converged.setter
+    def _converged(self, inpt):
+        self.last_context._converged = inpt
 
     @system_property
     def run_id(self) -> int:

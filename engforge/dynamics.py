@@ -84,9 +84,11 @@ class INDEX_MAP:
         }
         oop1 = {arg: self.indify(new_index, val)[0] for arg, val in opt2.items()}
         oop2 = {
-            arg: self.indify(new_index, val)[0]
-            if (invert != isinstance(val, self.oppo[arg.__class__]))
-            else val
+            arg: (
+                self.indify(new_index, val)[0]
+                if (invert != isinstance(val, self.oppo[arg.__class__]))
+                else val
+            )
             for arg, val in oop1.items()
         }
         return oop2
