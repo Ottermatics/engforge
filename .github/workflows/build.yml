@@ -9,11 +9,15 @@ on:
       - reopened
     paths-ignore:
       - '**.md'
+    paths:
+      - '**.py'
   push:
     branches:
       - main
     paths-ignore:
       - '**.md'
+    paths:
+      - '**.py'
 
 jobs:
   test:

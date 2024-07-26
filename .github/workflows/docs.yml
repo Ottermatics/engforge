@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '**.py'
+      - '**.md'
+      - '**.rst'
 
 jobs:
   docs:
