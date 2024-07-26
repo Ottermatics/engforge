@@ -93,7 +93,7 @@ class DiskReporterMixin(TemporalReporterMixin):
             pth = pathlib.Path(self.report_root)
             pth.mkdir(parents=True, exist_ok=True)
 
-    def ensure_path(self, file_path,is_dir=False):
+    def ensure_path(self, file_path, is_dir=False):
         pth = pathlib.Path(file_path)
         diri = pth if is_dir else pth.parent
         if not diri.exists():
@@ -119,18 +119,18 @@ class PlotReporter(Reporter):
     # ext: str = attrs.field(default='png')
     ext = "png"
 
-#     def upload(self, analysis):
-#         for figkey, fig in analysis.stored_plots.items():
-#             try:
-#                 filname = os.path.join(self.report_root, f"{figkey}.{self.ext}")
-#                 self.ensure_path(filname)
-#                 self.info(f"saving {figkey} to {filname}")
-#                 fig.savefig(filname)
-# 
-#             except Exception as e:
-#                 self.error(e, f"issue showing {figkey}")
-    def upload(self,analyis):
-        raise NotImplemented(f'plot reporter subclass needs an upload method')
+    #     def upload(self, analysis):
+    #         for figkey, fig in analysis.stored_plots.items():
+    #             try:
+    #                 filname = os.path.join(self.report_root, f"{figkey}.{self.ext}")
+    #                 self.ensure_path(filname)
+    #                 self.info(f"saving {figkey} to {filname}")
+    #                 fig.savefig(filname)
+    #
+    #             except Exception as e:
+    #                 self.error(e, f"issue showing {figkey}")
+    def upload(self, analyis):
+        raise NotImplemented(f"plot reporter subclass needs an upload method")
 
 
 # Table Reporters
@@ -150,12 +150,13 @@ class CSVReporter(TableReporter, DiskReporterMixin):
         self.info(f"saving system to: {af}")
         system.dataframe.to_csv(af)
 
+
 #         # Make Analysis Dataframe
 #         af = os.path.join(self.report_root, f"analysis_{analysis.name}.csv")
 #         self.ensure_path(af)
 #         self.info(f"saving analysis to: {af}")
 #         analysis.dataframe.to_csv(af)
-# 
+#
 #         for ckey, comp in system.comp_references().items():
 #             af = os.path.join(self.report_root, f"{ckey}_{comp.name}.csv")
 #             self.ensure_path(af)
@@ -197,7 +198,8 @@ class DiskPlotReporter(PlotReporter, DiskReporterMixin):
                 fig.savefig(filname)
 
             except Exception as e:
-                self.error(e, f"issue showing {figkey}")    
+                self.error(e, f"issue showing {figkey}")
+
 
 @attrs.define
 class GdriveReporter(PlotReporter, TemporalReporterMixin):

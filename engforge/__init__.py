@@ -7,7 +7,7 @@
 # # from engforge.datastores import *
 
 from engforge.attr_dynamics import Time
-from engforge.attr_plotting import Trace,Plot
+from engforge.attr_plotting import Trace, Plot
 from engforge.attr_signals import Signal
 from engforge.attr_slots import Slot
 from engforge.attr_solver import Solver
@@ -18,6 +18,6 @@ from engforge.system import System
 from engforge.analysis import Analysis
 
 from engforge.env_var import EnvVariable
-from engforge.logging import LoggingMixin,change_all_log_levels
+from engforge.logging import LoggingMixin, change_all_log_levels
 
 from attrs import field

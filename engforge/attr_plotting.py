@@ -257,9 +257,8 @@ class PlotInstance(AttributeInstance):
         self.plot_cls = plot_cls
         self.system = system
 
-        
         _sys_refs = self.system.system_references()
-        sys_refs = {k:v for atr,grp in _sys_refs.items() for k,v in grp.items()}
+        sys_refs = {k: v for atr, grp in _sys_refs.items() for k, v in grp.items()}
 
         diff = set()
         varss = set()
@@ -281,7 +280,7 @@ class PlotInstance(AttributeInstance):
                 log.warning(f"has diff {diff}| found: {varss}| possible: {sys_refs}")
 
         if diff:
-            #raise KeyError(f"has system diff: {diff} found: {vars}| from: {sys_ref}")
+            # raise KeyError(f"has system diff: {diff} found: {vars}| from: {sys_ref}")
             log.warning(f"has system diff: {diff} found: {vars}| from: {sys_refs}")
 
         self.refs = {k: sys_refs[k] for k in varss}
@@ -289,7 +288,6 @@ class PlotInstance(AttributeInstance):
     def plot(self, **kwargs):
         """applies the system dataframe to the plot"""
         return self(**kwargs)
-        
 
     def __call__(self, **override_kw):
         """
@@ -320,9 +318,7 @@ class PlotInstance(AttributeInstance):
             log.debug(f"overriding vars {override_kw}")
             args.update(**override_kw)
 
-        log.info(
-            f"plotting {self.system.identity}| {self.identity} with {args}"
-        )
+        log.info(f"plotting {self.system.identity}| {self.identity} with {args}")
         fig = ax = f(data=self.system.dataframe, **args, **extra)
 
         return self.process_fig(fig, title)
@@ -407,20 +403,17 @@ class PlotBase(ATTR_BASE):
                 diff.add(vers)
 
         if log.log_level <= 10:
-            log.debug(
-                f"{cls.__name__} has vars: {attr_keys} and bad input: {diff}"
-            )
+            log.debug(f"{cls.__name__} has vars: {attr_keys} and bad input: {diff}")
 
         if diff:
             log.warning(f"bad plot vars: {diff} do not exist in system: {valid}")
-            #TODO: fix time being defined on components
+            # TODO: fix time being defined on components
             # raise KeyError(
             #     f"bad plot vars: {diff} do not exist in system: {valid}"
             # )
 
-    
     @classmethod
-    def handle_instance(cls,canidate):
+    def handle_instance(cls, canidate):
         """no interacion with system, reporing only"""
         return None
 
@@ -476,9 +469,7 @@ class TraceInstance(PlotInstance):
             log.debug(f"overriding vars {override_kw}")
             args.update(**override_kw)
 
-        log.info(
-            f"plotting {self.system.identity}| {self.identity} with {args}"
-        )
+        log.info(f"plotting {self.system.identity}| {self.identity} with {args}")
 
         # PLOTTING
         # Make the axes and plot
@@ -582,9 +573,7 @@ class Trace(PlotBase):
     always = ("x", "y", "y2")
 
     @classmethod
-    def define(
-        cls, x="time", y: trace_type = None, y2=None, kind="line", **kwargs
-    ):
+    def define(cls, x="time", y: trace_type = None, y2=None, kind="line", **kwargs):
         """Defines a plot that will be matplotlib, with validation happening as much as possible in the define method
 
         #Plot Choice
@@ -649,9 +638,7 @@ class Trace(PlotBase):
         log.info(f"adding Trace|{kind} {x},{y},{y2},{kwargs}")
 
         # Create A New Signals Class
-        new_name = f"Trace_x_{x}_y_{y}".replace(
-            ".", "_"
-        ).replace("-", "")
+        new_name = f"Trace_x_{x}_y_{y}".replace(".", "_").replace("-", "")
         new_dict = dict(
             name=new_name,
             x=x,
@@ -762,9 +749,7 @@ class Plot(PlotBase):
         """
 
         # Validate Plot
-        assert (
-            _type in PLOT_KINDS
-        ), f"type {_type} must be in {PLOT_KINDS.keys()}"
+        assert _type in PLOT_KINDS, f"type {_type} must be in {PLOT_KINDS.keys()}"
         kinds = PLOT_KINDS[_type]
         assert kind in kinds, f"plot kind {kind} not in {kinds}"
 
@@ -785,9 +770,7 @@ class Plot(PlotBase):
         )
 
         # Create A New Signals Class
-        new_name = f"PLOT_x_{x}_y_{y}".replace(
-            ".", "_"
-        ).replace("-", "")
+        new_name = f"PLOT_x_{x}_y_{y}".replace(".", "_").replace("-", "")
         new_dict = dict(
             name=new_name,
             x=x,

@@ -43,5 +43,9 @@ jobs:
       run: python -c "import sys; print(sys.version)"
 
     - name: Run tests
-      run: python -m unittest discover engforge.test
-      
+      run: python -m unittest discover ./test/
+
+    - uses: psf/black@stable
+      with:
+        options: "--check --verbose"
+        src: "./engforge"

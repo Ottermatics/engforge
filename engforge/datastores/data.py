@@ -210,9 +210,7 @@ class DiskCacheStore(LoggingMixin, metaclass=SingletonMeta):
     def cache_root(self):
         # TODO: CHECK CACHE IS NOT SYNCED TO DROPBOX
         if self.alt_path is not None:
-            return os.path.join(
-                client_path(skip_wsl=False), "cache", self.alt_path
-            )
+            return os.path.join(client_path(skip_wsl=False), "cache", self.alt_path)
         return os.path.join(
             client_path(skip_wsl=False),
             "cache",
@@ -275,9 +273,7 @@ class DiskCacheStore(LoggingMixin, metaclass=SingletonMeta):
             ttl -= 1
             if ttl > 0:
                 time.sleep(self.sleep_time * (self.retries - ttl))
-                return self.get(
-                    key=key, on_missing=on_missing, retry=True, ttl=ttl
-                )
+                return self.get(key=key, on_missing=on_missing, retry=True, ttl=ttl)
             else:
                 self.error(e, "Issue Getting Item From Cache")
 
@@ -285,10 +281,7 @@ class DiskCacheStore(LoggingMixin, metaclass=SingletonMeta):
         """wrapper for diskcache expire method that only permits expiration on a certain interval
         :return: bool, True if expired called"""
         now = time.time()
-        if (
-            self.last_expire is None
-            or now - self.last_expire > self.expire_threshold
-        ):
+        if self.last_expire is None or now - self.last_expire > self.expire_threshold:
             self.cache.expire()
             self.last_expire = now
             return True
@@ -327,9 +320,7 @@ class DBConnection(LoggingMixin, metaclass=InputSingletonMeta):
 
     # TODO: Make Threadsafe W/ ThreadPoolExecutor!
     # we love postgres!
-    _connection_template = (
-        "postgresql://{user}:{passd}@{host}:{port}/{database}"
-    )
+    _connection_template = "postgresql://{user}:{passd}@{host}:{port}/{database}"
 
     pool_size = 20
     max_overflow = 0
@@ -352,9 +343,7 @@ class DBConnection(LoggingMixin, metaclass=InputSingletonMeta):
 
     connect_args = {"connect_timeout": 5}
 
-    def __init__(
-        self, database_name=None, host=None, user=None, passd=None, **kwargs
-    ):
+    def __init__(self, database_name=None, host=None, user=None, passd=None, **kwargs):
         """On the Singleton DBconnection.instance(): __init__(*args,**kwargs) will get called, technically you
         could do it this way but won't be thread safe, or a single instance
         :param database_name: the name for the database inside the db server
@@ -429,9 +418,7 @@ class DBConnection(LoggingMixin, metaclass=InputSingletonMeta):
 
         # self.scopefunc = functools.partial(context.get, "uuid")
 
-        self.session_factory = sessionmaker(
-            bind=self.engine, expire_on_commit=True
-        )
+        self.session_factory = sessionmaker(bind=self.engine, expire_on_commit=True)
         self.Session = scoped_session(self.session_factory)
 
     @contextmanager
