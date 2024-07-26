@@ -1,4 +1,5 @@
 [![build](https://github.com/Ottermatics/engforge/actions/workflows/build.yml/badge.svg)](https://github.com/Ottermatics/engforge/actions/workflows/build.yml)
+[![docs](https://github.com/Ottermatics/engforge/actions/workflows/docs.yml/badge.svg)](https://github.com/Ottermatics/engforge/actions/workflows/docs.yml)
 # EngForge
 A library to tabulate information from complex systems with various ways to store data and act as glue code for complex systems & engineering problems.
 
@@ -289,7 +290,7 @@ sa.run(throttle=list(np.arange(0.1,1.1,0.1)),combos='*')
 
 
 ## Documentation:
-https://engforge.github.io/engforge/build/html/index.html
+https://ottermatics.github.io/engforge/
 
 ### DataStores
 Datastores are a work in progress feature to provide a zero configuration library for storage of tabulated data and report generated artifacts. No garuntee is provided as to their stability yet.
