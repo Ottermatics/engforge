@@ -660,7 +660,7 @@ class ProblemExec:
                 f"creating execution context for {self.system}| {self._slv_kw}| {refs}"
             )
 
-        return self
+        return self #return the local problem context, use self.sesh to get top values
 
     def __exit__(self, exc_type, exc_value, traceback):
         # define exit action, to handle the error here return True. Otherwise error propigates up to top level
@@ -1582,7 +1582,11 @@ class ProblemExec:
         """records the state of the system using session"""
         # refs = self.all_variable_refs
         sesh = self.sesh
-        refs = sesh.all_comps_and_vars  # no need for properties
+        #only get used refs modified no need for properties
+        #TODO: more elegant solution
+        chk = self.temp_state if self.temp_state else {}
+        refs = {k:v for k,v in sesh.all_comps_and_vars.items() if k in chk}
+        #refs = {k:v for k,v in sesh.all_comps_and_vars}
         return Ref.refset_get(refs, sys=sesh.system, prob=self)
 
     @property
@@ -1618,10 +1622,21 @@ class ProblemExec:
     def set_ref_values(self, values, refs=None):
         """returns the values of the refs"""
         # TODO: add checks for the refs
-        sesh = self.sesh
         if refs is None:
+            sesh = self.sesh
             refs = sesh.all_comps_and_vars
         return Ref.refset_input(refs, values)
+
+    def change_sys_var(self,key,value,refs=None):
+        """use this function to change the value of a system var and update the start state, multiple uses in the same context will not change the record preserving the start value"""
+        refs = self.sesh.all_comps_and_vars
+        assert key in refs, f'bad system var: {key}'
+        ref = refs[key]
+        if key not in self.x_start:
+            cur_value = ref.value()
+            self.x_start[key] = cur_value
+        ref.set_value(value)
+        
 
     def set_checkpoint(self):
         """sets the checkpoint"""

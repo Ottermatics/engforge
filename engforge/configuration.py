@@ -168,19 +168,25 @@ def property_changed(instance, variable, value):
         return value
     # log.info(f'property changed {variable.name} {value}')
 
+    attrs = attr.fields(instance.__class__)  # check identity of variable
+    cur = getattr(instance, variable.name)
+    is_different = value != cur
+    is_var = variable in attrs
+    chgnw = instance._anything_changed
+        
     if log.log_level <= 6:
-        log.debug(f"checking property changed {instance}{variable.name} {value}")
+        log.debug(f"checking property changed {instance}{variable.name} {value}|invar: {is_var}| nteqval: {is_different}")
 
     # Check if should be updated
-    cur = getattr(instance, variable.name)
-    attrs = attr.fields(instance.__class__)  # check identity of variable
-    if not instance._anything_changed and variable in attrs and value != cur:
+    
+    
+    if not chgnw and is_var and is_different:
         if log.log_level < 5:
             log.debug(f"changing variables: {variable.name} {value}")
         instance._anything_changed = True
 
-    elif log.log_level < 4 and variable in attrs:
-        log.warning(f"didnt change variables {variable.name}| {value} == {cur}")
+    elif log.log_level < 4 and is_var and not is_different:
+        log.warning(f"variables same {variable.name}| {value} == {cur}")
 
     # If active session in dynamic mode and the component is dynamic, flag for matrix update
     # TODO: determine if dynamic matricies affected by this.

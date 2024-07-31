@@ -131,6 +131,7 @@ class Ref:
         "_log_func",
         "hxd",
         "_name",
+        "attr_type"
     ]
     comp: "TabulationMixin"
     key: str
@@ -141,12 +142,14 @@ class Ref:
     key_override: bool
     _value_eval: callable
     _log_func: callable
+    attr_type: type
 
     def __init__(self, comp, key, use_call=True, allow_set=True, eval_f=None):
         self.set(comp, key, use_call, allow_set, eval_f)
 
     def set(self, comp, key, use_call=True, allow_set=True, eval_f=None):
         # key can be a ref, in which case this ref will be identical to the other ref except for the component provided if it is not None
+        from engforge.engforge_attributes import AttributedBaseMixin
         if isinstance(key, Ref):
             self.__dict__.update(key.__dict__)
             if comp is not None:
@@ -175,6 +178,13 @@ class Ref:
             self.eval_f = eval_f
             if not self.use_dict:
                 self._name = self.comp.classname
+
+        self.attr_type = None
+        if self.allow_set and isinstance(self.comp,AttributedBaseMixin):
+            fieldz = self.comp.__class__.cls_all_attrs_fields()
+            atr_canidate = fieldz.get(self.key,None)
+            if isinstance(atr_canidate,attrs.Attribute):
+                self.attr_type = atr_canidate.type
 
         if not hasattr(self, "_name"):
             self._name = "NULL"
@@ -241,7 +251,11 @@ class Ref:
 
     def set_value(self, val):
         if self.allow_set:
-            if self.value() != val:  # this increases perf. by reducing writes
+            if self.attr_type not in (str,float,int,bool):
+                if self.comp and self.comp.log_level < 10:
+                    self.comp.msg(f"REF[set] {self} <- {val}")                
+                return setattr(self.comp, self.key, val)
+            elif self.value() != val:  # this increases perf. by reducing writes
                 if self.comp and self.comp.log_level < 10:
                     self.comp.msg(f"REF[set] {self} <- {val}")
                 return setattr(self.comp, self.key, val)
