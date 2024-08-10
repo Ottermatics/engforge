@@ -215,6 +215,24 @@ def signals_slots_handler(
 
     log.debug(f"transforming signals and slots for {cls.__name__}")
 
+    #add attrs attributes from mro parent class 
+    #TODO: work on this to allow attrs from non attrs classes
+    # fd = {f.name:f for f in fields}
+    # has_fields = set(list(fd.keys()))
+    # 
+    # if cls._inherit_parent_attributres:
+    #     non_dec_attrs = {} #get all attrs variables from non-decorated mixins
+    #     for icls in cls.mro():
+    #         if attrs.has(icls):
+    #             print(icls,str(list(attrs.fields_dict(icls).keys()))[:100])
+    #         atr_dict = {k:v.evolve(icls) for k,v in icls.__dict__.items() if isinstance(v,attrs.Attribute)}
+    #         non_dec_attrs.update({k:v for k,v in atr_dict.items() if k not in non_dec_attrs and k not in has_fields})
+    #     if non_dec_attrs:
+    #         log.info(f'adding non decorated attrs: {list(non_dec_attrs.keys())}')
+    #         fields = fields + list(non_dec_attrs.values())
+
+
+    #Fields
     for t in fields:
         if t.name in PROTECTED_NAMES:
             raise Exception(f"cannot use {t.name} as a field name, its protected")
@@ -359,6 +377,7 @@ class Configuration(AttributedBaseMixin):
         kw_only=True,
     )
 
+    _inherit_parent_attributres = True
     log_fmt = "[%(name)-24s]%(message)s"
     log_silo = True
 
