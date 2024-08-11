@@ -25,6 +25,10 @@ log = RefLog()
 def refset_input(refs, delta_dict, chk=True, fail=True, warn=True):
     """change a set of refs with a dictionary of values. If chk is True k will be checked for membership in refs"""
     for k, v in delta_dict.items():
+        if isinstance(k,Ref):
+            k.set_value(v)
+            continue
+            
         memb = k in refs
         if not chk or memb:
             refs[k].set_value(v)
@@ -262,17 +266,20 @@ class Ref:
         else:
             raise Exception(f"not allowed to set value on {self.key}")
 
+    @property
+    def full_key(self):
+        if self.key_override:
+            return f'{self._name}.{self.key.__name__}'
+        else:
+            return f'{self._name}.{self.key}'
+
     def __str__(self) -> str:
         if self.use_dict:
             return f"REF[{self.hxd}][DICT.{self.key}]"
-        if self.key_override:
-            return f"REF[{self.hxd}][{self._name}.{self.key.__name__}]"
-        return f"REF[{self.hxd}][{self._name}.{self.key}]"
+        return f"REF[{self.hxd}][{self.full_key}]"
 
     def __repr__(self) -> str:
-        if self.key_override:
-            return f"REF[{self.hxd}][{self._name}.{self.key.__name__}]"
-        return f"REF[{self.hxd}][{self._name}.{self.key}]"
+        return f"REF[{self.hxd}][{self.full_key}]"
 
     # Utilty Methods
     refset_get = refset_get
