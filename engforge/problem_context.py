@@ -1629,6 +1629,8 @@ class ProblemExec:
 
     def change_sys_var(self,key,value,refs=None):
         """use this function to change the value of a system var and update the start state, multiple uses in the same context will not change the record preserving the start value"""
+        if self.log_level < 5:
+            self.msg(f'setting var: {key} <= {value}')
         if refs is None:
             refs = self.sesh.all_comps_and_vars
         if key in refs:
@@ -1636,6 +1638,8 @@ class ProblemExec:
             if key not in self.x_start:
                 cur_value = ref.value()
                 self.x_start[key] = cur_value
+                if self.log_level < 5:
+                    self.msg(f'setting var: {key} <= {value} from {cur_value}')
             ref.set_value(value)
         elif isinstance(key,Ref):
             ref = key
