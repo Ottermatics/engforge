@@ -126,7 +126,7 @@ class Ref:
     __slots__ = [
         "comp",
         "key",
-        "use_call",
+        #"use_call",
         "use_dict",
         "allow_set",
         "eval_f",
@@ -139,7 +139,7 @@ class Ref:
     ]
     comp: "TabulationMixin"
     key: str
-    use_call: bool
+    #use_call: bool
     use_dict: bool
     allow_set: bool
     eval_f: callable
@@ -148,10 +148,10 @@ class Ref:
     _log_func: callable
     attr_type: type
 
-    def __init__(self, comp, key, use_call=True, allow_set=True, eval_f=None):
-        self.set(comp, key, use_call, allow_set, eval_f)
+    def __init__(self, comp, key, allow_set=True, eval_f=None):
+        self.set(comp, key, allow_set, eval_f)
 
-    def set(self, comp, key, use_call=True, allow_set=True, eval_f=None):
+    def set(self, comp, key, allow_set=True, eval_f=None):
         # key can be a ref, in which case this ref will be identical to the other ref except for the component provided if it is not None
         from engforge.engforge_attributes import AttributedBaseMixin
         if isinstance(key, Ref):
@@ -167,21 +167,25 @@ class Ref:
         else:
             self.use_dict = False
 
+        self.eval_f = eval_f
         self.key_override = False
+        #Check if system_property with setter functionality
+        if allow_set == False and not self.use_dict and isinstance(comp,AttributedBaseMixin) and isinstance(key,str):
+            sys_props = comp.system_properties_classdef()
+            if key in sys_props:
+                allow_set = sys_props[key].allow_set #override, picked up later
+            
         if callable(key):
             self.key_override = True
             self.key = key  # this should take have signature f(system,slv_info)
-            self.use_call = False
             self.allow_set = False
-            self.eval_f = eval_f
             self._name = "callable"
         else:
+            #get by str reference to something
             self.key = key
-            self.use_call = use_call
             self.allow_set = allow_set
-            self.eval_f = eval_f
             if not self.use_dict:
-                self._name = self.comp.classname
+                self._name = self.comp.classname #TODO: scope from top system
 
         self.attr_type = None
         if self.allow_set and isinstance(self.comp,AttributedBaseMixin):
@@ -217,10 +221,14 @@ class Ref:
             if self.use_dict:
                 p = lambda *a, **kw: self.comp.get(self.key)
             elif self.key in self.comp.__dict__:
+                #attrs values
                 p = lambda *a, **kw: self.comp.__dict__[self.key]
             else:
+                #property
+
                 p = lambda *a, **kw: getattr(self.comp, self.key)
 
+            #eval function happens after call
             if self.eval_f:
                 g = lambda *a, **kw: self.eval_f(p(*a, **kw))
             else:

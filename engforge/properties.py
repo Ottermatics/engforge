@@ -26,6 +26,7 @@ class engforge_prop:
     """an interface for extension and identification and class return support"""
 
     must_return = False
+    allow_set = False
 
     def __init__(self, fget=None, fset=None, fdel=None, *args, **kwargs):
         """ """
@@ -84,11 +85,15 @@ class engforge_prop:
         return type(self)(fget, self.fset, self.fdel, self.__doc__)
 
     def setter(self, fset):
+        self.allow_set = True #you may proceed with the sets
         return type(self)(self.fget, fset, self.fdel, self.__doc__)
 
     def deleter(self, fdel):
         return type(self)(self.fget, self.fset, fdel, self.__doc__)
 
+    @property
+    def is_settable(self):
+        return self.fset is not None
 
 class cache_prop(engforge_prop):
     allow_set: bool = False  # keep this flag false to maintain current persistent value
