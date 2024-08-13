@@ -70,8 +70,7 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
         """Returns the last context"""
         raise NotImplemented("this should be implemented in the solvable class")
 
-    #@solver_cached #TODO: doesnt respond to calls on last_context
-    @property
+    @solver_cached
     def dataframe(self):
         if hasattr(self, "last_context") and hasattr(self.last_context, "dataframe"):
             return self.last_context.dataframe

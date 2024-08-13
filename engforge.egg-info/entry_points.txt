@@ -1,0 +1,2 @@
+[console_scripts]
+condaenvset = engforge.common:main_cli
