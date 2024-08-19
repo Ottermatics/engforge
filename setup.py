@@ -9,6 +9,7 @@ Created on Sat May 11 22:38:11 2019
 from setuptools import setup
 import setuptools
 
+__version__ = '0.0.9'
 
 def parse_requirements(filename):
     """load requirements from a pip requirements file"""
@@ -20,7 +21,7 @@ install_reqs = parse_requirements("requirements.txt")
 
 setup(
     name="engforge",
-    version="0.9.2",
+    version=__version__,
     description="The Engineer's Framework",
     url="https://github.com/SoundsSerious/engforge",
     author="Kevin russell",
@@ -31,7 +32,7 @@ setup(
     entry_points={
         "console_scripts": [
             # command = package.module:function
-            "condaenvset=engforge.common:main_cli",
+            #"condaenvset=engforge.common:main_cli",
             #"ollymakes=engforge.locations:main_cli",
             #"engforgedrive=engforge.gdocs:main_cli",
             #TODO: inspect folders / list / display components + solver options
