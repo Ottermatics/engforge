@@ -260,6 +260,7 @@ class AttributedBaseMixin(LoggingMixin):
 
     @property
     def numeric_as_dict(self):
+        """recursively gets internal components numeric_as_dict as well as its own numeric values"""
         from engforge.configuration import Configuration
 
         o = {k: getattr(self, k, None) for k in self.numeric_fields()}
@@ -270,20 +271,31 @@ class AttributedBaseMixin(LoggingMixin):
         return o
 
     # Hashes
+    # TODO: issue with logging sub-items
+    def hash_with(self, **input_kw):
+        d = self.as_dict
+        d.update(input_kw)
+        return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
+
+    def hash_numeric_with(self, **input_kw):
+        d = self.numeric_as_dict
+        d.update(input_kw)
+        return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
+
     @property
     def unique_hash(self):
         d = self.as_dict
-        return deepdiff.DeepHash(d)[d]
+        return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
 
     @property
-    def numeric_hash(self):
+    def input_hash(self):
         d = self.input_as_dict
-        return deepdiff.DeepHash(d)[d]
+        return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
 
     @property
     def numeric_hash(self):
         d = self.numeric_as_dict
-        return deepdiff.DeepHash(d)[d]
+        return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
 
     # Configuration Push/Pop methods
     def setattrs(self, dict):

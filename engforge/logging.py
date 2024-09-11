@@ -75,7 +75,7 @@ class LoggingMixin(logging.Filter):
                 LoggingMixin.slack_webhook_url = SLACK_WEBHOOK
 
         if not hasattr(self, "_f_change_log"):
-
+            # change log level listener
             def _change_log(new_level, check_function=None):
                 if new_level != self.log_level:
                     if check_function is None or check_function(self):
@@ -86,6 +86,7 @@ class LoggingMixin(logging.Filter):
                         self.log_level = new_level
                         self.resetLog()
 
+            # our emitter gets set with a callback
             log_change_emitter.add_listener("change_level", _change_log)
 
             self._f_change_log = _change_log

@@ -1,7 +1,9 @@
 LICENSE
 README.md
+setup.cfg
 setup.py
 engforge/__init__.py
+engforge/_testing_components.py
 engforge/analysis.py
 engforge/attr_dynamics.py
 engforge/attr_plotting.py
@@ -33,7 +35,6 @@ engforge/typing.py
 engforge.egg-info/PKG-INFO
 engforge.egg-info/SOURCES.txt
 engforge.egg-info/dependency_links.txt
-engforge.egg-info/entry_points.txt
 engforge.egg-info/not-zip-safe
 engforge.egg-info/requires.txt
 engforge.egg-info/top_level.txt
@@ -52,12 +53,8 @@ engforge/eng/solid_materials.py
 engforge/eng/structure.py
 engforge/eng/structure_beams.py
 engforge/eng/thermodynamics.py
-engforge/examples/__init__.py
-engforge/examples/air_filter.py
-engforge/examples/spring_mass.py
 engforge/test/__init__.py
 engforge/test/report_testing.py
-engforge/test/solver_testing_components.py
 engforge/test/test_airfilter.py
 engforge/test/test_analysis.py
 engforge/test/test_comp_iter.py
@@ -75,3 +72,8 @@ engforge/test/test_slider_crank.py
 engforge/test/test_solver.py
 engforge/test/test_structures.py
 engforge/test/test_tabulation.py
+examples/__init__.py
+examples/air_filter.py
+examples/field_area.py
+examples/spring_mass.py
+test/test_problem.py

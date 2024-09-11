@@ -199,6 +199,8 @@ class ProblemExitAtLevel(ProblemExit):
 # TODO: develop subproblem strategy (multiple root cache problem in class cache)
 # TODO: determine when components are updated, and refresh the system references accordingly.
 # TODO: Map attributes/properties by component key and then autofix refs! (this is a big one), no refresh required. Min work
+# TODO: component graph with pyee anything changed system to make a lazy observer system.
+# TODO: plot levels to manage report output (with pdf graph publishing)
 class ProblemExec:
     """
     Represents the execution context for a problem in the system. The ProblemExec class provides a uniform set of options for managing the state of the system and its solvables, establishing the selection of combos or de/active attributes to Solvables. Once once created any further entracnces to ProblemExec will return the same instance until finally the last exit is called.
@@ -547,6 +549,43 @@ class ProblemExec:
             self.inst_sesh = out
         return out
 
+    # @classmethod
+    # def cls_get_sesh(cls, sesh=None):
+    #     """get the session"""
+    #     out = sesh
+    #     if not sesh:
+    #         if hasattr(cls.class_cache, "session"):
+    #             out = self.class_cache.session
+    #         elif self._problem_id == True:
+    #             out = self
+    #     if out:
+    #         self.inst_sesh = out
+    #     return out
+
+    #     @property
+    #     def index(self):
+    #         sesh = self.get_sesh()
+    #         if not sesh._data:
+    #             return 0
+    #         else:
+    #             return max(list(sesh._data.keys()))
+    #
+    #     @property
+    #     def last_index(self):
+    #         sesh = self.index
+    #         if sesh == 0:
+    #             return None
+    #         else:
+    #             return sesh - 1
+    #
+    #     @property
+    #     def next_index(self):
+    #         sesh = self.index
+    #         if sesh == 0:
+    #             return 1
+    #         else:
+    #             return sesh + 1
+
     # Update Methods
     def refresh_references(self, sesh=None):
         """refresh the system references"""
@@ -593,6 +632,7 @@ class ProblemExec:
         sesh._all_refs = sesh.system.system_references(
             recache=True, check_config=False, ignore_none_comp=False
         )
+        # sesh._attr_sys_key_map = sesh.attribute_sys_key_map
 
         # Problem Variable Definitions
         sesh.Xref = sesh.all_problem_vars
@@ -660,7 +700,7 @@ class ProblemExec:
                 f"creating execution context for {self.system}| {self._slv_kw}| {refs}"
             )
 
-        return self
+        return self  # return the local problem context, use self.sesh to get top values
 
     def __exit__(self, exc_type, exc_value, traceback):
         # define exit action, to handle the error here return True. Otherwise error propigates up to top level
@@ -1095,7 +1135,7 @@ class ProblemExec:
             output = dflt
 
         if len(Xref) == 0:
-            self.info(f"no variables found for solver: {kw}")
+            self.debug(f"no variables found for solver: {kw}")
             # None for `ans` will not trigger optimization failure
             return output
 
@@ -1582,7 +1622,12 @@ class ProblemExec:
         """records the state of the system using session"""
         # refs = self.all_variable_refs
         sesh = self.sesh
-        refs = sesh.all_comps_and_vars  # no need for properties
+        # only get used refs modified no need for properties
+        # TODO: more elegant solution
+        chk = self.temp_state if self.temp_state else {}
+        # FIXME: only record state as it changes
+        # refs = {k:v for k,v in sesh.all_comps_and_vars.items()} # if k in chk
+        refs = {k: v for k, v in sesh.all_comps_and_vars.items()}
         return Ref.refset_get(refs, sys=sesh.system, prob=self)
 
     @property
@@ -1618,10 +1663,40 @@ class ProblemExec:
     def set_ref_values(self, values, refs=None):
         """returns the values of the refs"""
         # TODO: add checks for the refs
-        sesh = self.sesh
         if refs is None:
+            sesh = self.sesh
             refs = sesh.all_comps_and_vars
         return Ref.refset_input(refs, values)
+
+    def change_sys_var(self, key, value, refs=None, doset=True, attr_key_map=None):
+        """use this function to change the value of a system var and update the start state, multiple uses in the same context will not change the record preserving the start value
+
+        :param key: a string corresponding to a ref, or an `attrs.Attribute` of one of the system or its component's.
+        """
+        if self.log_level < 5:
+            self.msg(f"setting var: {key} <= {value}")
+
+        # if isinstance(key,attrs.Attribute):
+        #    if attr_key_map is None:
+        #        attr_key_map = self.attribute_sys_key_map
+        #    key = attr_key_map[key] #change to system key format
+
+        if refs is None:
+            refs = self.sesh.all_comps_and_vars
+        if key in refs:
+            ref = refs[key]
+            if key not in self.x_start:
+                cur_value = ref.value()
+                self.x_start[key] = cur_value
+                if self.log_level < 5:
+                    self.msg(f"setting var: {key} <= {value} from {cur_value}")
+            if doset:
+                ref.set_value(value)
+        elif isinstance(key, Ref):
+            ref = key
+            self.x_start[key] = key.value()
+            if doset:
+                ref.set_value(value)
 
     def set_checkpoint(self):
         """sets the checkpoint"""
@@ -1934,12 +2009,21 @@ class ProblemExec:
     # Dataframe support
 
     @property
+    def numeric_data(self):
+        """return a list of sorted data rows by item and filter each row to remove invalid data"""
+        sesh = self.sesh
+        filter_non_numeric = lambda kv: (
+            False if isinstance(kv[1], (list, dict, tuple)) else True
+        )
+        f_numrow = lambda in_dict: dict(filter(filter_non_numeric, in_dict.items()))
+        return [
+            f_numrow(kv[-1]) for kv in sorted(sesh.data.items(), key=lambda kv: kv[0])
+        ]
+
+    @property
     def dataframe(self) -> pd.DataFrame:
         """returns the dataframe of the system"""
-        sesh = self.sesh
-        res = pd.DataFrame(
-            [kv[-1] for kv in sorted(sesh.data.items(), key=lambda kv: kv[0])]
-        )
+        res = pd.DataFrame(self.numeric_data)
         self.system.format_columns(res)
         return res
 
@@ -2032,6 +2116,17 @@ class ProblemExec:
         return attrs
 
     @property
+    def attribute_sys_key_map(self) -> dict:
+        """returns an attribute:key mapping to lookup the key from the attribute"""
+        sesh = self.sesh
+        attrvars = sesh.all_refs["attributes"]
+        comps = {c: k for k, c in self.all_components.items()}
+        return {
+            refget_attr(v): refget_key(v, sesh.system, comps)
+            for k, v in attrvars.items()
+        }
+
+    @property
     def all_system_references(self) -> dict:
         sesh = self.sesh
         refs = sesh.all_refs
@@ -2044,6 +2139,12 @@ class ProblemExec:
         # TODO: expand this
         return f"ProblemContext[{self.level_name:^12}][{str(self.session_id)[0:8]}-{str(self._problem_id)[0:8]}][{self.system.identity}]"
 
+
+refget_attr = lambda ref: getattr(ref.comp.__class__.__attrs_attrs__, ref.key)
+###FIXME: ref.comp needs to be reliablly in comps
+refget_key = (
+    lambda ref, slf, comps: f'{comps[ref.comp]+"." if slf != ref.comp else ""}{ref.key}'
+)
 
 # TODO: move all system_reference concept inside problem context, remove from system/tabulation ect.
 # TODO: use prob.register/change(comp,key='') to add components to the problem context, mapping subcomponents to the problem context

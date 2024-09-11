@@ -76,17 +76,22 @@ class FourBar(System):
         return self.r3_x_zero**2 + self.y_zero**2
 
     @system_prop
-    def l3_gamma(self)-> float:
-        return (self.r3_x**2 + self.y**2)
-    
+    def l3_gamma(self) -> float:
+        return self.r3_x**2 + self.y**2
 
-if __name__ == '__main__':
-    #%run -i ~/engforge/engforge/test/test_four_bar.py
+
+if __name__ == "__main__":
+    # %run -i ~/engforge/engforge/test/test_four_bar.py
     import numpy as np
 
     fb = FourBar()
-    fb.run(combos='*',revert_last=False,revert_every=False)
+    fb.run(combos="*", revert_last=False, revert_every=False)
 
     df = fb.last_context.dataframe
 
-    fb.run(combos='goal,gamma,theta,lim',theta=np.linspace(0,3.14159),revert_last=False,revert_every=False)
+    fb.run(
+        combos="goal,gamma,theta,lim",
+        theta=np.linspace(0, 3.14159),
+        revert_last=False,
+        revert_every=False,
+    )

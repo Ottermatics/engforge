@@ -98,7 +98,7 @@ def split_dataframe(df: pandas.DataFrame) -> tuple:
     for s in df:
         c = df[s]
         if is_uniform(c):
-            uniform[s] = c[0]
+            uniform[s] = c.iloc[0]
 
     df_unique = df.copy().drop(columns=list(uniform))
     return uniform, df_unique if len(df_unique) > 0 else df_unique

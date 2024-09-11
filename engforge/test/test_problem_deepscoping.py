@@ -62,7 +62,6 @@ class TestDeep(unittest.TestCase):
 
 
 if __name__ == "__main__":
-
     comp = DeepComp(comp=None)
     sys = DeepSys(comp=comp)
     # sys.change_all_log_lvl(1)

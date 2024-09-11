@@ -23,12 +23,19 @@ log = PropertyLog()
 
 
 class engforge_prop:
-    """an interface for extension and identification and class return support"""
+    """
+    an interface for extension and identification and class return support
+
+    Use as follows:
+        @engforge_prop
+        def our_custom_function(self):
+            pass
+    """
 
     must_return = False
 
     def __init__(self, fget=None, fset=None, fdel=None, *args, **kwargs):
-        """ """
+        """call with the function you want to wrap in a decorator"""
 
         self.fget = fget
         if fget:

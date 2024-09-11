@@ -206,8 +206,6 @@ class Solver(ATTR_BASE):
     active: bool
     instance_class = SolverInstance
 
-    define = None
-
     @classmethod
     def configure_for_system(cls, name, config_class, cb=None, **kwargs):
         """add the config class, and perform checks with `class_validate)

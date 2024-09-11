@@ -3,7 +3,7 @@ virtualenv
 wheel
 
 #methodtools==0.4.2
-attrs>=23.1.0
+attrs~=23.2.0
 arrow
 deepdiff>=6.3.1
 
@@ -57,7 +57,7 @@ recommonmark>=0.6.0
 sphinx-rtd-theme>=1.0.0
 networkx-query==1.0.1
 networkx>=2.5.1
-
+black~=24.8.0
 randomname~=0.2.1
 termcolor
 pyee
