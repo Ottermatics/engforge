@@ -3,7 +3,7 @@ virtualenv
 wheel
 
 #methodtools==0.4.2
-attrs>=23.1.0
+attrs~=23.2.0
 arrow
 deepdiff>=6.3.1
 
