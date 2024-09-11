@@ -69,7 +69,9 @@ class System(SolverMixin, SolveableInterface, PlottingMixin, GlobalDynamics):
     dynamic_output_vars: list = attrs.field(factory=list)
 
     _anything_changed_ = True
-    _solver_override: bool = False  # this comp will run with run_internal_systems when True, otherwise it resolves to global solver behavior, also prevents the solver from reaching into this system
+    _solver_override: bool = (
+        False  # this comp will run with run_internal_systems when True, otherwise it resolves to global solver behavior, also prevents the solver from reaching into this system
+    )
 
     # Properties!
     @system_property
