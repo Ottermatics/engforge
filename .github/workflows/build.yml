@@ -46,5 +46,6 @@ jobs:
 
     - uses: psf/black@stable
       with:
+        version: "24.8.0"
         options: "--check --verbose"
         src: "./engforge"
