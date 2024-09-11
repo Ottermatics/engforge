@@ -632,6 +632,7 @@ class ProblemExec:
         sesh._all_refs = sesh.system.system_references(
             recache=True, check_config=False, ignore_none_comp=False
         )
+        #sesh._attr_sys_key_map = sesh.attribute_sys_key_map
 
         # Problem Variable Definitions
         sesh.Xref = sesh.all_problem_vars
@@ -1624,8 +1625,9 @@ class ProblemExec:
         #only get used refs modified no need for properties
         #TODO: more elegant solution
         chk = self.temp_state if self.temp_state else {}
-        refs = {k:v for k,v in sesh.all_comps_and_vars.items() if k in chk}
-        #refs = {k:v for k,v in sesh.all_comps_and_vars}
+        #FIXME: only record state as it changes
+        #refs = {k:v for k,v in sesh.all_comps_and_vars.items()} # if k in chk 
+        refs = {k:v for k,v in sesh.all_comps_and_vars.items()}
         return Ref.refset_get(refs, sys=sesh.system, prob=self)
 
     @property
@@ -1666,10 +1668,19 @@ class ProblemExec:
             refs = sesh.all_comps_and_vars
         return Ref.refset_input(refs, values)
 
-    def change_sys_var(self,key,value,refs=None):
-        """use this function to change the value of a system var and update the start state, multiple uses in the same context will not change the record preserving the start value"""
+    def change_sys_var(self,key,value,refs=None,doset=True,attr_key_map=None):
+        """use this function to change the value of a system var and update the start state, multiple uses in the same context will not change the record preserving the start value
+        
+        :param key: a string corresponding to a ref, or an `attrs.Attribute` of one of the system or its component's.
+        """
         if self.log_level < 5:
             self.msg(f'setting var: {key} <= {value}')
+
+        #if isinstance(key,attrs.Attribute):
+        #    if attr_key_map is None:
+        #        attr_key_map = self.attribute_sys_key_map
+        #    key = attr_key_map[key] #change to system key format
+
         if refs is None:
             refs = self.sesh.all_comps_and_vars
         if key in refs:
@@ -1679,11 +1690,11 @@ class ProblemExec:
                 self.x_start[key] = cur_value
                 if self.log_level < 5:
                     self.msg(f'setting var: {key} <= {value} from {cur_value}')
-            ref.set_value(value)
+            if doset: ref.set_value(value)
         elif isinstance(key,Ref):
             ref = key
             self.x_start[key] = key.value()
-            ref.set_value(value)
+            if doset: ref.set_value(value)
         
 
     def set_checkpoint(self):
@@ -2102,6 +2113,14 @@ class ProblemExec:
         return attrs
 
     @property
+    def attribute_sys_key_map(self)->dict:
+        """returns an attribute:key mapping to lookup the key from the attribute"""
+        sesh = self.sesh
+        attrvars = sesh.all_refs['attributes']
+        comps = {c:k for k,c in self.all_components.items()}
+        return {refget_attr(v):refget_key(v,sesh.system,comps) for k,v in attrvars.items()}
+
+    @property
     def all_system_references(self) -> dict:
         sesh = self.sesh
         refs = sesh.all_refs
@@ -2114,6 +2133,11 @@ class ProblemExec:
         # TODO: expand this
         return f"ProblemContext[{self.level_name:^12}][{str(self.session_id)[0:8]}-{str(self._problem_id)[0:8]}][{self.system.identity}]"
 
+
+
+refget_attr = lambda ref: getattr(ref.comp.__class__.__attrs_attrs__,ref.key)
+###FIXME: ref.comp needs to be reliablly in comps
+refget_key = lambda ref,slf,comps: f'{comps[ref.comp]+"." if slf != ref.comp else ""}{ref.key}'
 
 # TODO: move all system_reference concept inside problem context, remove from system/tabulation ect.
 # TODO: use prob.register/change(comp,key='') to add components to the problem context, mapping subcomponents to the problem context

@@ -166,7 +166,15 @@ def property_changed(instance, variable, value):
         if log.log_level <= 2:
             log.debug(f"already property changed {instance}{variable.name} {value}")
         return value
-    # log.info(f'property changed {variable.name} {value}')
+
+    #elif session:
+        #notify session that this variable has changed
+        #log.info(f'property changed {variable.name} {value}')
+        #TODO: notify change input system here, perhaps with & without a session
+        #session.change_sys_var(variable,value,doset=False)
+        
+
+
 
     attrs = attr.fields(instance.__class__)  # check identity of variable
     cur = getattr(instance, variable.name)
@@ -178,8 +186,6 @@ def property_changed(instance, variable, value):
         log.debug(f"checking property changed {instance}{variable.name} {value}|invar: {is_var}| nteqval: {is_different}")
 
     # Check if should be updated
-    
-    
     if not chgnw and is_var and is_different:
         if log.log_level < 5:
             log.debug(f"changing variables: {variable.name} {value}")
@@ -190,7 +196,6 @@ def property_changed(instance, variable, value):
 
     # If active session in dynamic mode and the component is dynamic, flag for matrix update
     # TODO: determine if dynamic matricies affected by this.
-
     if session and session.dynamic_solve and instance.is_dynamic:
         # log.info(f'dynamics changed')
         session.dynamics_updated = True  # flag for update
