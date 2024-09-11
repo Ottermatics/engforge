@@ -28,23 +28,23 @@ class TestFilterSystem(unittest.TestCase):
 
     def test_plot(self):
         N = 10
-        self.af.run(throttle=np.linspace(0, 1, N),combos='*',slv_vars='*')
+        self.af.run(throttle=np.linspace(0, 1, N), combos="*", slv_vars="*")
         fig = self.af.flow_curve()
         self.assertIsNotNone(fig)
 
         df = self.af.dataframe
-        self.assertEqual(df.shape[0],N)
+        self.assertEqual(df.shape[0], N)
 
         dfv = self.af.dataframe_variants
-        self.assertEqual(dfv.shape[0],N)
-        self.assertIn('w',dfv.columns)
-        self.assertIn('throttle',dfv.columns)
-
+        self.assertEqual(dfv.shape[0], N)
+        self.assertIn("w", dfv.columns)
+        self.assertIn("throttle", dfv.columns)
 
         dfc = self.af.dataframe_constants
-        self.assertIsInstance(dfc,dict)
+        self.assertIsInstance(dfc, dict)
 
-        self.assertEqual(df.shape[1],len(dfc)+dfv.shape[1])
+        self.assertEqual(df.shape[1], len(dfc) + dfv.shape[1])
+
 
 class TestAnalysis(unittest.TestCase):
     def setUp(self):
@@ -61,22 +61,21 @@ class TestAnalysis(unittest.TestCase):
         self.assertIsNotNone(ofig)
 
 
-
 # #Run the system
 # from matplotlib.pylab import *
-# 
-# 
-# 
+#
+#
+#
 # fan = Fan()
 # filt = Filter()
 # af = Airfilter(fan=fan,filt=filt)
-# 
+#
 # change_all_log_levels(af,20) #info
-# 
+#
 # af.run(throttle=list(np.arange(0.1,1.1,0.1)),combos='*')
-# 
+#
 # df = af.dataframe
-# 
+#
 # fig,(ax,ax2) = subplots(2,1)
 # ax.plot(df.throttle*100,df.w,'k--',label='flow')
 # ax2.plot(df.throttle*100,df.filt_dp_filter,label='filter')

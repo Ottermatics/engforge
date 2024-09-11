@@ -1,7 +1,9 @@
 from engforge.env_var import EnvVariable
 import os
 
-FORGE_ROOT_VAR = EnvVariable("FORGE_ROOT", default=None, dontovrride=True,type_conv=os.path.expanduser)
+FORGE_ROOT_VAR = EnvVariable(
+    "FORGE_ROOT", default=None, dontovrride=True, type_conv=os.path.expanduser
+)
 
 
 def client_path(alternate_path=None, **kw):

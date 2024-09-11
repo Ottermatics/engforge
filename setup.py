@@ -9,7 +9,8 @@ Created on Sat May 11 22:38:11 2019
 from setuptools import setup
 import setuptools
 
-__version__ = '0.0.9'
+__version__ = "0.0.9"
+
 
 def parse_requirements(filename):
     """load requirements from a pip requirements file"""
@@ -32,12 +33,12 @@ setup(
     entry_points={
         "console_scripts": [
             # command = package.module:function
-            #"condaenvset=engforge.common:main_cli",
-            #"ollymakes=engforge.locations:main_cli",
-            #"engforgedrive=engforge.gdocs:main_cli",
-            #TODO: inspect folders / list / display components + solver options
-            #TODO: test adhoc modules with 
-            #TODO: run analysis adhoc on components with cli options
+            # "condaenvset=engforge.common:main_cli",
+            # "ollymakes=engforge.locations:main_cli",
+            # "engforgedrive=engforge.gdocs:main_cli",
+            # TODO: inspect folders / list / display components + solver options
+            # TODO: test adhoc modules with
+            # TODO: run analysis adhoc on components with cli options
         ]
     },
     install_requires=install_reqs,

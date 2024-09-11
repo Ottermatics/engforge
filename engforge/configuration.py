@@ -167,23 +167,22 @@ def property_changed(instance, variable, value):
             log.debug(f"already property changed {instance}{variable.name} {value}")
         return value
 
-    #elif session:
-        #notify session that this variable has changed
-        #log.info(f'property changed {variable.name} {value}')
-        #TODO: notify change input system here, perhaps with & without a session
-        #session.change_sys_var(variable,value,doset=False)
-        
-
-
+    # elif session:
+    # notify session that this variable has changed
+    # log.info(f'property changed {variable.name} {value}')
+    # TODO: notify change input system here, perhaps with & without a session
+    # session.change_sys_var(variable,value,doset=False)
 
     attrs = attr.fields(instance.__class__)  # check identity of variable
     cur = getattr(instance, variable.name)
     is_different = value != cur
     is_var = variable in attrs
     chgnw = instance._anything_changed
-        
+
     if log.log_level <= 6:
-        log.debug(f"checking property changed {instance}{variable.name} {value}|invar: {is_var}| nteqval: {is_different}")
+        log.debug(
+            f"checking property changed {instance}{variable.name} {value}|invar: {is_var}| nteqval: {is_different}"
+        )
 
     # Check if should be updated
     if not chgnw and is_var and is_different:
@@ -220,11 +219,11 @@ def signals_slots_handler(
 
     log.debug(f"transforming signals and slots for {cls.__name__}")
 
-    #add attrs attributes from mro parent class 
-    #TODO: work on this to allow attrs from non attrs classes
+    # add attrs attributes from mro parent class
+    # TODO: work on this to allow attrs from non attrs classes
     # fd = {f.name:f for f in fields}
     # has_fields = set(list(fd.keys()))
-    # 
+    #
     # if cls._inherit_parent_attributres:
     #     non_dec_attrs = {} #get all attrs variables from non-decorated mixins
     #     for icls in cls.mro():
@@ -236,8 +235,7 @@ def signals_slots_handler(
     #         log.info(f'adding non decorated attrs: {list(non_dec_attrs.keys())}')
     #         fields = fields + list(non_dec_attrs.values())
 
-
-    #Fields
+    # Fields
     for t in fields:
         if t.name in PROTECTED_NAMES:
             raise Exception(f"cannot use {t.name} as a field name, its protected")
@@ -558,13 +556,13 @@ class Configuration(AttributedBaseMixin):
 
         # subclass instance instance init causes conflicts in structures
         self.__on_init__()
-        runs = set((self.__class__.__on_init__,)) #keep track of unique functions
+        runs = set((self.__class__.__on_init__,))  # keep track of unique functions
         if self._subclass_init:
             try:
                 for comp in self.__class__.mro():
                     if (
                         hasattr(comp, "__on_init__")
-                        and comp.__on_init__ != Configuration.__on_init__ 
+                        and comp.__on_init__ != Configuration.__on_init__
                         and comp.__on_init__ not in runs
                     ):
                         comp.__on_init__(self)

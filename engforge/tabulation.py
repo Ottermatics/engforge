@@ -53,12 +53,12 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
     def __getstate__(self):
         """remove references and storage of properties, be sure to call super if overwriting this function in your subclass"""
         vs = super().__getstate__()
-        pir = vs.pop('_prv_internal_references',None)
-        pir = vs.pop('_system_properties_def',None)
-        pir = vs.pop('parent',None)
+        pir = vs.pop("_prv_internal_references", None)
+        pir = vs.pop("_system_properties_def", None)
+        pir = vs.pop("parent", None)
 
         return vs
-    
+
     @property
     def anything_changed(self):
         """use the on_setattr method to determine if anything changed,
@@ -79,9 +79,9 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
         """Returns the last context"""
         raise NotImplemented("this should be implemented in the solvable class")
 
-    #TODO: create an intelligent graph informed anything_changed alerting system (pyee?) and trigger solver_cache expirations appropriately
-    #@solver_cached #FIXME: not caching correctly
-    @property #FIXME: this is slow
+    # TODO: create an intelligent graph informed anything_changed alerting system (pyee?) and trigger solver_cache expirations appropriately
+    # @solver_cached #FIXME: not caching correctly
+    @property  # FIXME: this is slow
     def dataframe(self):
         if hasattr(self, "last_context") and hasattr(self.last_context, "dataframe"):
             return self.last_context.dataframe

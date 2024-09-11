@@ -271,31 +271,31 @@ class AttributedBaseMixin(LoggingMixin):
         return o
 
     # Hashes
-    #TODO: issue with logging sub-items
-    def hash_with(self,**input_kw):
+    # TODO: issue with logging sub-items
+    def hash_with(self, **input_kw):
         d = self.as_dict
         d.update(input_kw)
-        return deepdiff.DeepHash(d,ignore_encoding_errors=True)[d]
+        return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
 
-    def hash_numeric_with(self,**input_kw):
+    def hash_numeric_with(self, **input_kw):
         d = self.numeric_as_dict
         d.update(input_kw)
-        return deepdiff.DeepHash(d,ignore_encoding_errors=True)[d]        
+        return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
 
     @property
     def unique_hash(self):
         d = self.as_dict
-        return deepdiff.DeepHash(d,ignore_encoding_errors=True)[d]
+        return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
 
     @property
     def input_hash(self):
         d = self.input_as_dict
-        return deepdiff.DeepHash(d,ignore_encoding_errors=True)[d]
+        return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
 
     @property
     def numeric_hash(self):
         d = self.numeric_as_dict
-        return deepdiff.DeepHash(d,ignore_encoding_errors=True)[d]
+        return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
 
     # Configuration Push/Pop methods
     def setattrs(self, dict):

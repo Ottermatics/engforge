@@ -25,10 +25,10 @@ log = RefLog()
 def refset_input(refs, delta_dict, chk=True, fail=True, warn=True):
     """change a set of refs with a dictionary of values. If chk is True k will be checked for membership in refs"""
     for k, v in delta_dict.items():
-        if isinstance(k,Ref):
+        if isinstance(k, Ref):
             k.set_value(v)
             continue
-            
+
         memb = k in refs
         if not chk or memb:
             refs[k].set_value(v)
@@ -135,7 +135,7 @@ class Ref:
         "_log_func",
         "hxd",
         "_name",
-        "attr_type"
+        "attr_type",
     ]
     comp: "TabulationMixin"
     key: str
@@ -154,6 +154,7 @@ class Ref:
     def set(self, comp, key, use_call=True, allow_set=True, eval_f=None):
         # key can be a ref, in which case this ref will be identical to the other ref except for the component provided if it is not None
         from engforge.engforge_attributes import AttributedBaseMixin
+
         if isinstance(key, Ref):
             self.__dict__.update(key.__dict__)
             if comp is not None:
@@ -184,10 +185,10 @@ class Ref:
                 self._name = self.comp.classname
 
         self.attr_type = None
-        if self.allow_set and isinstance(self.comp,AttributedBaseMixin):
+        if self.allow_set and isinstance(self.comp, AttributedBaseMixin):
             fieldz = self.comp.__class__.cls_all_attrs_fields()
-            atr_canidate = fieldz.get(self.key,None)
-            if isinstance(atr_canidate,attrs.Attribute):
+            atr_canidate = fieldz.get(self.key, None)
+            if isinstance(atr_canidate, attrs.Attribute):
                 self.attr_type = atr_canidate.type
 
         if not hasattr(self, "_name"):
@@ -255,9 +256,9 @@ class Ref:
 
     def set_value(self, val):
         if self.allow_set:
-            if self.attr_type not in (str,float,int,bool):
+            if self.attr_type not in (str, float, int, bool):
                 if self.comp and self.comp.log_level < 10:
-                    self.comp.msg(f"REF[set] {self} <- {val}")                
+                    self.comp.msg(f"REF[set] {self} <- {val}")
                 return setattr(self.comp, self.key, val)
             elif self.value() != val:  # this increases perf. by reducing writes
                 if self.comp and self.comp.log_level < 10:
@@ -269,9 +270,9 @@ class Ref:
     @property
     def full_key(self):
         if self.key_override:
-            return f'{self._name}.{self.key.__name__}'
+            return f"{self._name}.{self.key.__name__}"
         else:
-            return f'{self._name}.{self.key}'
+            return f"{self._name}.{self.key}"
 
     def __str__(self) -> str:
         if self.use_dict:

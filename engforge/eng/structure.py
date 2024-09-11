@@ -45,6 +45,7 @@ from engforge.eng.structure_beams import Beam, rotation_matrix_from_vectors
 ray_ok = False
 try:
     import ray
+
     ray_ok = True
 except Exception as e:
     pass
@@ -124,7 +125,9 @@ def check_est_failures(failures: dict, top=True) -> bool:
 
 
 # Mesh Utils
-def quad_stress_tensor(quad, r=0, s=0, combo="gravity",inf_val=1E24,filter_infeasable=True):
+def quad_stress_tensor(
+    quad, r=0, s=0, combo="gravity", inf_val=1e24, filter_infeasable=True
+):
     """determines stresses from a plate or quad"""
     q = quad
     S_xx, S_yy, Txy = q.membrane(r, s, combo)
@@ -138,14 +141,14 @@ def quad_stress_tensor(quad, r=0, s=0, combo="gravity",inf_val=1E24,filter_infea
     out = np.array([[S_xx, Txy, T_zx], [Txy, S_yy, T_yz], [T_zx, T_yz, 0.0]])
 
     if filter_infeasable:
-        #nan converted to zero
+        # nan converted to zero
         out[np.isnan(out)] = 0
 
-        #convert infite value to a maximum
-        infinx =np.isinf(out)
+        # convert infite value to a maximum
+        infinx = np.isinf(out)
         infs = out[infinx]
-        out[infinx] = np.sign(infs)*inf_val
-        
+        out[infinx] = np.sign(infs) * inf_val
+
     return out
 
 
@@ -213,8 +216,8 @@ class Structure(System, CostModel, PredictionMixin):
     1) Structure Motion (free body ie vehicle , multi-strucutre ie robots)
     """
 
-    frame = None #pynite.FEModel3D
-    
+    frame = None  # pynite.FEModel3D
+
     # _beams: dict = None
     _materials: dict = None
 
@@ -270,7 +273,7 @@ class Structure(System, CostModel, PredictionMixin):
 
     def __on_init__(self):
         self.current_failure_summary = None
-        self._current_combo_failure_analysis = None        
+        self._current_combo_failure_analysis = None
         self._materials = weakref.WeakValueDictionary()
         self._meshes = weakref.WeakValueDictionary()
         self.initalize_structure()
@@ -278,7 +281,7 @@ class Structure(System, CostModel, PredictionMixin):
             self.default_combo, {self.gravity_name: 1.0}, "gravity"
         )
 
-        #turn on prediction of failures with these models
+        # turn on prediction of failures with these models
         if self.prediction:
             d = {
                 "fails": {
@@ -291,7 +294,7 @@ class Structure(System, CostModel, PredictionMixin):
             }
             self._prediction_models = d
 
-        #finally create the structure
+        # finally create the structure
         self.create_structure()
 
     def create_structure(self):
@@ -839,19 +842,26 @@ class Structure(System, CostModel, PredictionMixin):
 
         df = self.dataframe
 
-        #determine the possible beam names
-        beams = set([f'beams_{k}' for k in self.members])
+        # determine the possible beam names
+        beams = set([f"beams_{k}" for k in self.members])
         beam_cols = df.columns[df.columns.str.startswith("beams_")].tolist()
-        beam_parms = set([col.replace(k+'_','') for col in beam_cols for k in beams if col.startswith(k+'_')])
+        beam_parms = set(
+            [
+                col.replace(k + "_", "")
+                for col in beam_cols
+                for k in beams
+                if col.startswith(k + "_")
+            ]
+        )
 
         if univ_parms is None:
-            univ_parms = beam_parms #do not filter parms
-            
+            univ_parms = beam_parms  # do not filter parms
+
         if add_columns is None:
             add_columns = []
 
-        #loop through parms and beams reorganizing the data:
-        #TODO: look up potential multi-index or pivot method for pandas
+        # loop through parms and beams reorganizing the data:
+        # TODO: look up potential multi-index or pivot method for pandas
         beam_data = []
         for i in range(len(df)):
             row = df.iloc[i]
@@ -1454,8 +1464,8 @@ class Structure(System, CostModel, PredictionMixin):
         return summary
 
     # Failure Analysis Properties
-    #FIXME: needs a complete rethink as far as caching and reporting properties, consider removing or replacing
-    #@system_property
+    # FIXME: needs a complete rethink as far as caching and reporting properties, consider removing or replacing
+    # @system_property
     @property
     def max_est_fail_frac(self) -> float:
         """estimated failure fraction for the current result"""
@@ -1465,7 +1475,7 @@ class Structure(System, CostModel, PredictionMixin):
         self.warning(f"could not get estimated beam failure frac")
         return fc
 
-    #@system_property
+    # @system_property
     @property
     def max_beam_est_fail_frac(self) -> float:
         fc = self._current_failures
@@ -1474,7 +1484,7 @@ class Structure(System, CostModel, PredictionMixin):
         self.warning(f"could not get estimated beam failure frac")
         return fc
 
-    #@system_property
+    # @system_property
     @property
     def max_mesh_est_fail_frac(self) -> float:
         fc = self._current_failures
@@ -1483,7 +1493,7 @@ class Structure(System, CostModel, PredictionMixin):
         self.warning(f"could not get estimated failure frac")
         return fc
 
-    #@system_property
+    # @system_property
     @property
     def estimated_failure_count(self) -> float:
         fc = self._current_failures
@@ -1492,7 +1502,7 @@ class Structure(System, CostModel, PredictionMixin):
         self.warning("could not get estimated failure count")
         return fc
 
-    #@system_property
+    # @system_property
     @property
     def estimated_beam_failure_count(self) -> float:
         fc = self._current_failures
@@ -1501,7 +1511,7 @@ class Structure(System, CostModel, PredictionMixin):
         self.warning(f"could not get estimated beam failure count")
         return fc
 
-    #@system_property
+    # @system_property
     @property
     def estimated_mesh_failure_count(self) -> float:
         fc = self._current_failures
@@ -1510,7 +1520,7 @@ class Structure(System, CostModel, PredictionMixin):
         self.warning(f"could not get estimated mesh failure count")
         return fc
 
-    #@system_property
+    # @system_property
     @property
     def actual_failure_count(self) -> float:
         if not self.calculate_actual_failure:
@@ -1522,7 +1532,7 @@ class Structure(System, CostModel, PredictionMixin):
         self.warning(f"could not get actual failure count")
         return afc
 
-    #@system_property
+    # @system_property
     @property
     def actual_beam_failure_count(self) -> float:
         if not self.calculate_actual_failure:
@@ -1534,7 +1544,7 @@ class Structure(System, CostModel, PredictionMixin):
         self.warning(f"could not get actual beam failure count")
         return afc
 
-    #@system_property
+    # @system_property
     @property
     def actual_mesh_failure_count(self) -> float:
         if not self.calculate_actual_failure:
@@ -1869,9 +1879,7 @@ def purge_combo(struct, combo):
         node.RZ.pop(combo, None)
 
 
-
 if ray_ok:
-
     # Remote Capabilities
     @ray.remote(max_calls=5)
     def remote_run_combo(ref_structure, combo):
@@ -1905,7 +1913,6 @@ if ray_ok:
         except Exception as e:
             log.error(e, "issue with remote run")
             raise e
-
 
     @ray.remote(max_retries=-1, retry_exceptions=True)
     def remote_section(
@@ -1953,7 +1960,6 @@ if ray_ok:
         d = sync.put_failure.remote(combo, fail, run_full)
         log.info(f"failure analysis done {combo}")
         return ray.get(d)
-
 
     #
     # @ray.remote
@@ -2090,7 +2096,6 @@ if ray_ok:
     #
     #         return self.report  # tada!
 
-
     # Remote Sync Util
     def remote_combo_failure_analysis(
         ref_structure, combo, run_full: bool = False, SF: float = 1.0
@@ -2124,7 +2129,6 @@ if ray_ok:
             log.info(f"no estimated failures found")
 
         return out
-
 
     def remote_failure_sections(
         sync,
