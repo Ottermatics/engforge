@@ -1,5 +1,5 @@
-[![build](https://github.com/Ottermatics/engforge/actions/workflows/build.yml/badge.svg)](https://github.com/Ottermatics/engforge/actions/workflows/build.yml)
-[![docs](https://github.com/Ottermatics/engforge/actions/workflows/docs.yml/badge.svg)](https://github.com/Ottermatics/engforge/actions/workflows/docs.yml)
+[![build](https://github.com/Ottermatics/engforge/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/Ottermatics/engforge/actions/workflows/build.yml)
+[![docs](https://github.com/Ottermatics/engforge/actions/workflows/docs.yml/badge.svg?branch=main)](https://github.com/Ottermatics/engforge/actions/workflows/docs.yml)
 # EngForge
 A library to tabulate information from complex systems with various ways to store data and act as glue code for complex systems & engineering problems.
 
