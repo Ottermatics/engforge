@@ -199,6 +199,8 @@ class ProblemExitAtLevel(ProblemExit):
 # TODO: develop subproblem strategy (multiple root cache problem in class cache)
 # TODO: determine when components are updated, and refresh the system references accordingly.
 # TODO: Map attributes/properties by component key and then autofix refs! (this is a big one), no refresh required. Min work
+# TODO: component graph with pyee anything changed system to make a lazy observer system.
+# TODO: plot levels to manage report output (with pdf graph publishing)
 class ProblemExec:
     """
     Represents the execution context for a problem in the system. The ProblemExec class provides a uniform set of options for managing the state of the system and its solvables, establishing the selection of combos or de/active attributes to Solvables. Once once created any further entracnces to ProblemExec will return the same instance until finally the last exit is called.
@@ -546,6 +548,43 @@ class ProblemExec:
         if out:
             self.inst_sesh = out
         return out
+
+    # @classmethod
+    # def cls_get_sesh(cls, sesh=None):
+    #     """get the session"""
+    #     out = sesh
+    #     if not sesh:
+    #         if hasattr(cls.class_cache, "session"):
+    #             out = self.class_cache.session
+    #         elif self._problem_id == True:
+    #             out = self
+    #     if out:
+    #         self.inst_sesh = out
+    #     return out
+    
+#     @property
+#     def index(self):
+#         sesh = self.get_sesh()
+#         if not sesh._data:
+#             return 0
+#         else:
+#             return max(list(sesh._data.keys()))
+# 
+#     @property
+#     def last_index(self):
+#         sesh = self.index
+#         if sesh == 0:
+#             return None
+#         else:
+#             return sesh - 1
+# 
+#     @property
+#     def next_index(self):
+#         sesh = self.index
+#         if sesh == 0:
+#             return 1
+#         else:
+#             return sesh + 1            
 
     # Update Methods
     def refresh_references(self, sesh=None):
@@ -1095,7 +1134,7 @@ class ProblemExec:
             output = dflt
 
         if len(Xref) == 0:
-            self.info(f"no variables found for solver: {kw}")
+            self.debug(f"no variables found for solver: {kw}")
             # None for `ans` will not trigger optimization failure
             return output
 
@@ -1958,11 +1997,18 @@ class ProblemExec:
     # Dataframe support
 
     @property
+    def numeric_data(self):
+        """return a list of sorted data rows by item and filter each row to remove invalid data"""
+        sesh = self.sesh
+        filter_non_numeric = lambda kv: False if isinstance(kv[1],(list,dict,tuple)) else True
+        f_numrow = lambda in_dict: dict(filter(filter_non_numeric,in_dict.items()))
+        return [f_numrow(kv[-1]) for kv in sorted(sesh.data.items(), key=lambda kv: kv[0])]
+    
+    @property
     def dataframe(self) -> pd.DataFrame:
         """returns the dataframe of the system"""
-        sesh = self.sesh
         res = pd.DataFrame(
-            [kv[-1] for kv in sorted(sesh.data.items(), key=lambda kv: kv[0])]
+            self.numeric_data
         )
         self.system.format_columns(res)
         return res

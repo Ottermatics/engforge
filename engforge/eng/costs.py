@@ -711,8 +711,10 @@ class Economics(Component):
             elif kbase and kbase in comps:
                 child = comps[kbase]
                 if (
-                    isinstance(child, CostModel)
-                    and comp_key in child.parent._slot_costs
+                    isinstance(child, CostModel) and 
+                    hasattr(child.parent,'_slot_costs') and
+                    child.parent._slot_costs and
+                    comp_key in child.parent._slot_costs
                 ):
                     self.debug(f"adding cost for {kbase}.{comp_key}")
                     compcanidate = child._slot_costs[comp_key]

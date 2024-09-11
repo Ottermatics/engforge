@@ -541,7 +541,7 @@ class Configuration(AttributedBaseMixin):
         for compnm, comp in self.internal_configurations(False).items():
             if isinstance(comp, Component):
                 # TODO: allow multiple parents
-                if (not hasattr(comp, "parent")) and (comp.parent is not None):
+                if (hasattr(comp, "parent")) and (comp.parent is not None):
                     self.warning(
                         f"Component {compnm} already has a parent {comp.parent} copying, and assigning to {self}"
                     )
@@ -553,14 +553,18 @@ class Configuration(AttributedBaseMixin):
 
         # subclass instance instance init causes conflicts in structures
         self.__on_init__()
+        runs = set((self.__class__.__on_init__,)) #keep track of unique functions
         if self._subclass_init:
             try:
                 for comp in self.__class__.mro():
                     if (
                         hasattr(comp, "__on_init__")
-                        and comp.__on_init__ != Configuration.__on_init__
+                        and comp.__on_init__ != Configuration.__on_init__ 
+                        and comp.__on_init__ not in runs
                     ):
                         comp.__on_init__(self)
+                        runs.add(comp.__on_init__)
+
             except Exception as e:
                 self.error(e, f"error in __on_init__")
 
