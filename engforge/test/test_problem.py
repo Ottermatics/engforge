@@ -287,9 +287,9 @@ class TestContextExits(unittest.TestCase):
                     self.assertTrue(pb3.entered)
                     self.assertFalse(pb3.exited)
                     pb3.exit_to_level("top", revert=True)
-                    raise Exception("Wrong Level 1")
-                raise Exception("Wrong Level 2")
-            raise Exception("Wrong Level 3")
+                    raise Exception("Wrong Level")
+                raise Exception("Wrong Level")
+            raise Exception("Wrong Level")
         self.assertEqual(pb1, tst.last_context)
         self.assertTrue(pb1.entered)
         self.assertTrue(pb1.exited)
@@ -304,9 +304,9 @@ class TestContextExits(unittest.TestCase):
                 with ProblemExec(tst) as pb3:
                     tst.set_rand()
                     pb3.exit_to_level("top", revert=True)
-                    raise Exception("Wrong Level 1")
-                raise Exception("Wrong Level 2")
-            raise Exception("Wrong Level 3")
+                    raise Exception("Wrong Level")
+                raise Exception("Wrong Level")
+            raise Exception("Wrong Level")
         self.assertEqual(tst.one, 1)
         self.assertEqual(tst.two, 2)
 
@@ -322,9 +322,9 @@ class TestContextExits(unittest.TestCase):
                     final_one = tst.one
                     final_two = tst.two
                     pb3.exit_to_level("top", revert=False)
-                    raise Exception("Wrong Level 1")
-                raise Exception("Wrong Level 2")
-            raise Exception("Wrong Level 3")
+                    raise Exception("Wrong Level")
+                raise Exception("Wrong Level")
+            raise Exception("Wrong Level")
         self.assertEqual(tst.one, final_one)
         self.assertEqual(tst.two, final_two)
 
