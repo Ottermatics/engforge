@@ -78,7 +78,7 @@ if __name__ == "__main__":
     this_dir = str(pathlib.Path(__file__).parent)
     this_dir = os.path.join(this_dir, "airfilter_report")
     if not os.path.exists(this_dir):
-        os.makedirs(this_dir, 754, exist_ok=True)
+        os.makedirs(this_dir, 0o754, exist_ok=True)
 
     csv = CSVReporter(path=this_dir, report_mode="daily")
     csv_latest = CSVReporter(path=this_dir, report_mode="single")

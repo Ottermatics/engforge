@@ -246,6 +246,7 @@ class AttributedBaseMixin(LoggingMixin):
         o = {k: getattr(self, k, None) for k, v in inputs.items()}
         return o
 
+    #TODO: refactor this, allowing a nesting return option for sub components, by default True (later to be reverted to False, as a breaking change). this messes up hashing and we can just the other object hash
     @property
     def input_as_dict(self):
         """returns values as they are in the class instance, but converts classes inputs to their input_as_dict"""
@@ -257,6 +258,13 @@ class AttributedBaseMixin(LoggingMixin):
             for k, v in o.items()
         }
         return o
+
+    @property
+    def table_row_dict(self):
+        """returns values as they would be put in a table row from this instance ignoring any sub components"""
+        from engforge.configuration import Configuration
+        o = {k: getattr(self, k, None) for k in self.table_fields()}
+        return o        
 
     @property
     def numeric_as_dict(self):
@@ -272,7 +280,22 @@ class AttributedBaseMixin(LoggingMixin):
 
     # Hashes
     # TODO: issue with logging sub-items
+    def hash(self,*args, **input_kw):
+        """hash by parm or by input_kw"""
+        d = {k:v for k,v in self.as_dict.items() if k in args}
+        d.update(input_kw)
+        return d,deepdiff.DeepHash(d, ignore_encoding_errors=True,significant_digits = 6)
+        
     def hash_with(self, **input_kw):
+        """
+        Generates a hash for the object's dictionary representation, updated with additional keyword arguments.
+        Args:
+            **input_kw: Arbitrary keyword arguments to update the object's dictionary representation.
+        Returns:
+            The hash value of the updated dictionary.
+        Raises:
+            Any exceptions raised by deepdiff.DeepHash if hashing fails.
+        """
         d = self.as_dict
         d.update(input_kw)
         return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
@@ -292,6 +315,11 @@ class AttributedBaseMixin(LoggingMixin):
         d = self.input_as_dict
         return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
 
+    @property
+    def table_hash(self):
+        d,hsh = self.hash(**self.table_row_dict)
+        return hsh[d]
+    
     @property
     def numeric_hash(self):
         d = self.numeric_as_dict

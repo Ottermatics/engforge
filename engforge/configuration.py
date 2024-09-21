@@ -546,9 +546,9 @@ class Configuration(AttributedBaseMixin):
                 # TODO: allow multiple parents
                 if (hasattr(comp, "parent")) and (comp.parent is not None):
                     self.warning(
-                        f"Component {compnm} already has a parent {comp.parent} copying, and assigning to {self}"
+                        f"Component {compnm} already has a parent {comp.parent} #copying, and assigning to {self}"
                     )
-                    setattr(self, compnm, attrs.evolve(comp, parent=self))
+                    #setattr(self, compnm, attrs.evolve(comp, parent=self))
                 else:
                     comp.parent = self
 

@@ -19,7 +19,7 @@ from engforge.properties import system_property
 from engforge.system import System
 from engforge.eng.solid_materials import *
 from engforge.common import *
-import engforge.eng.geometry as ottgeo
+import engforge.eng.geometry as enggeo
 from engforge.eng.costs import CostModel, cost_property
 
 import sectionproperties
@@ -69,7 +69,7 @@ class Beam(Component, CostModel):
         validator=attr.validators.instance_of(
             (
                 geometry.Geometry,
-                ottgeo.Profile2D,
+                enggeo.Profile2D,
                 type(None),
             )
         )
@@ -109,7 +109,7 @@ class Beam(Component, CostModel):
     def __on_init__(self):
         self.debug("initalizing...")
         # update material
-        if isinstance(self.section, ottgeo.ShapelySection):
+        if isinstance(self.section, enggeo.ShapelySection):
             if self.section.material is None:
                 raise Exception("No Section Material")
             else:
@@ -126,11 +126,11 @@ class Beam(Component, CostModel):
                 material = self.material
             else:
                 material = self.section.material
-            self.section = ottgeo.ShapelySection(
+            self.section = enggeo.ShapelySection(
                 shape=self.section, material=self.material
             )
 
-        if isinstance(self.section, ottgeo.ShapelySection):
+        if isinstance(self.section, enggeo.ShapelySection):
             self.debug(f"determining profile {section} properties...")
             self.in_Ix = self.section.Ixx
             self.in_Iy = self.section.Iyy
@@ -138,7 +138,7 @@ class Beam(Component, CostModel):
             self.in_A = self.section.A
             self.in_Ixy = self.section.Ixy
 
-        elif isinstance(self.section, ottgeo.Profile2D):
+        elif isinstance(self.section, enggeo.Profile2D):
             self.warning(f"use shapely section instead {section} properties...")
             # raise Exception("use shapely section instead")
             self.in_Ix = self.section.Ixx
@@ -220,7 +220,7 @@ class Beam(Component, CostModel):
     @property
     def Ao(self):
         """outside area, over ride for hallow sections"""
-        if isinstance(self.section, ottgeo.Profile2D):
+        if isinstance(self.section, enggeo.Profile2D):
             return self.section.Ao
         return self.A
 
@@ -389,7 +389,7 @@ class Beam(Component, CostModel):
 
     def estimate_stress(self, force_calc=True, **forces):
         """uses the best available method to determine max stress in the beam, for ShapelySections this is done through a learning process, for other sections it is done through a simple calculation aimed at providing a conservative estimate"""
-        if isinstance(self.section, ottgeo.ShapelySection):
+        if isinstance(self.section, enggeo.ShapelySection):
             return self.section.estimate_stress(**forces, force_calc=force_calc)
         else:
             return self._fallback_estimate_stress(**forces)
