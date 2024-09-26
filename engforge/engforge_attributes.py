@@ -281,9 +281,9 @@ class AttributedBaseMixin(LoggingMixin):
     # Hashes
     # TODO: issue with logging sub-items
     def hash(self,*args, **input_kw):
-        """hash by parm or by input_kw"""
-        d = {k:v for k,v in self.as_dict.items() if k in args}
-        d.update(input_kw)
+        """hash by parm or by input_kw, only input can be hashed by lookup as system properties can create a recursive loop and should be deterministic from input"""
+        d = {k:v for k,v in self.input_as_dict.items() if k in args}
+        d.update(input_kw) #override with input_kw
         return d,deepdiff.DeepHash(d, ignore_encoding_errors=True,significant_digits = 6)
         
     def hash_with(self, **input_kw):
