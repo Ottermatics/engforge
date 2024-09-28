@@ -83,9 +83,30 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
     # @solver_cached #FIXME: not caching correctly
     @property  # FIXME: this is slow
     def dataframe(self):
+        """
+        Returns a pandas DataFrame based on the current context.
+
+        This method checks for the presence of `last_context` and its `dataframe` attribute.
+        If they exist, it returns the `dataframe` from `last_context`.
+        If not, it checks for the `_patch_dataframe` attribute and returns it if it exists.
+        If neither condition is met, it returns an empty DataFrame.
+
+        :return: A pandas DataFrame based on the current context or an empty DataFrame if no context is available.
+        :rtype: pandas.DataFrame
+        """
+        """"""
         if hasattr(self, "last_context") and hasattr(self.last_context, "dataframe"):
             return self.last_context.dataframe
+        if hasattr(self,'_patch_dataframe') and self._patch_dataframe is not None:
+            return self._patch_dataframe
         return pandas.DataFrame([])
+
+    @dataframe.setter
+    def dataframe(self,input_dataframe):
+        if hasattr(self, "last_context") and hasattr(self.last_context, "dataframe"):
+                raise Exception(f'may not set dataframe on run component')
+        self._patch_dataframe = input_dataframe
+
 
     @property
     def plotable_variables(self):
