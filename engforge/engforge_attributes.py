@@ -198,6 +198,7 @@ class AttributedBaseMixin(LoggingMixin):
 
     @classmethod
     def input_attrs(cls):
+        """Lists all input attributes for class"""
         return attr.fields_dict(cls)
 
     @classmethod
@@ -215,6 +216,7 @@ class AttributedBaseMixin(LoggingMixin):
 
     @classmethod
     def numeric_fields(cls):
+        """no tuples,lists, dicts, strings, or attr base types"""
         ignore_types = (
             ATTR_BASE,
             str,
@@ -227,7 +229,9 @@ class AttributedBaseMixin(LoggingMixin):
 
     @classmethod
     def table_fields(cls):
-        keeps = (str, float, int)  # TODO: add numpy fields
+        """the table attributes corresponding to """
+        #TODO: add list/numpy fields with vector stats
+        keeps = (str, float, int)  
         typ = cls._get_init_attrs_data(keeps)
         return {k: v for k, v in typ.items()}
 

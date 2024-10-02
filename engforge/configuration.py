@@ -170,12 +170,12 @@ def property_changed(instance, variable, value):
     # elif session:
     # notify session that this variable has changed
     # log.info(f'property changed {variable.name} {value}')
+
     # TODO: notify change input system here, perhaps with & without a session
     # session.change_sys_var(variable,value,doset=False)
-
     attrs = attr.fields(instance.__class__)  # check identity of variable
     cur = getattr(instance, variable.name)
-    is_different = value != cur
+    is_different = value != cur if isinstance(value, (int, float, str)) else True
     is_var = variable in attrs
     chgnw = instance._anything_changed
 
@@ -183,6 +183,7 @@ def property_changed(instance, variable, value):
         log.debug(
             f"checking property changed {instance}{variable.name} {value}|invar: {is_var}| nteqval: {is_different}"
         )
+        print(f"checking property changed {instance}{variable.name} {value}|invar: {is_var}| nteqval: {is_different}")
 
     # Check if should be updated
     if not chgnw and is_var and is_different:

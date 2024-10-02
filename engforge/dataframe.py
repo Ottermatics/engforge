@@ -166,8 +166,9 @@ class DataframeMixin:
         return o
 
     def format_columns(self, dataframe: pandas.DataFrame):
+        #replace(".", "_") 
         dataframe.rename(
-            lambda x: x.replace(".", "_").lower(), axis="columns", inplace=True
+            lambda x: x.lower(), axis="columns", inplace=True
         )
 
     # Plotting Interface

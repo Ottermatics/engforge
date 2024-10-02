@@ -269,7 +269,9 @@ class ProblemExec:
     )
 
     def __getattr__(self, name):
-        """This is a special method that is called when an attribute is not found in the usual places, like when interior contexts (anything not the root (session_id=True)) are created that dont have the top level's attributes. some attributes will look to the parent session"""
+        """
+        This is a special method that is called when an attribute is not found in the usual places, like when interior contexts (anything not the root (session_id=True)) are created that dont have the top level's attributes. some attributes will look to the parent session
+        """
 
         # interior context lookup (when in active context, ie session exists)
         if hasattr(self.class_cache, "session") and name in root_possible:
@@ -333,8 +335,8 @@ class ProblemExec:
         if opts.pop("persist", False) or kw_dict.pop("persist", False):
             self.persist_contexts()
 
-        # temp solver storage
-        self.solver_hist = expiringdict.ExpiringDict(100, 60)
+        # temp solver storage #TODO
+        #self.solver_hist = expiringdict.ExpiringDict(100, 60)
 
         if self.log_level < 5:
             if hasattr(self.class_cache, "session"):
@@ -425,6 +427,8 @@ class ProblemExec:
             self.class_cache.session._prob_levels[self.level_name] = self
             # error if the system is different (it shouldn't be!)
             if self.system is not system:
+                #TODO: subproblems allow different systems, but the top level should be the same
+                #idea - use (system,pid) as key for problems_dict, (system,True) would be root problem. This breaks checking for `class_cache.session` though one could gather that from the root problem key`
                 raise IllegalArgument(
                     f"somethings wrong! change of comp! {self.system} -> {system}"
                 )
