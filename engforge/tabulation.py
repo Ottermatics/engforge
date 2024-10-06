@@ -233,9 +233,10 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
         """Combine other parent-classes table properties into this one, in the case of subclassed system_properties"""
         from engforge.tabulation import TabulationMixin
 
+        cls_key =f"_{cls.__name__}_system_properties"
         # Use a cache for deep recursion
-        if not recache and hasattr(cls, "_{cls.__name__}_system_properties"):
-            res = getattr(cls, "_{cls.__name__}_system_properties")
+        if not recache and hasattr(cls, cls_key):
+            res = getattr(cls, cls_key)
             if res is not None:
                 return res
 
@@ -269,7 +270,7 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
                             __system_properties[k] = prop
                             log.msg(f"adding system property {mrv.__name__}.{k}")
 
-        setattr(cls, "_{cls.__name__}_system_properties", __system_properties)
+        setattr(cls,cls_key, __system_properties)
 
         return __system_properties
 

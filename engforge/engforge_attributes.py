@@ -71,7 +71,7 @@ class AttributedBaseMixin(LoggingMixin):
         return out
 
     @classmethod
-    def _get_init_attrs_data(cls, subclass_of: type, exclude=False):
+    def _get_init_attrs_data(cls, subclass_of: type, exclude=False,attr_type=False):
         choose = issubclass
         if exclude:
             choose = lambda ty, type_set: not issubclass(ty, type_set)
@@ -80,7 +80,7 @@ class AttributedBaseMixin(LoggingMixin):
         if "__attrs_attrs__" in cls.__dict__:  # Handle Attrs Class
             for k, v in attrs.fields_dict(cls).items():
                 if isinstance(v.type, type) and choose(v.type, subclass_of):
-                    attrval[k] = v
+                    attrval[k] = v.type if attr_type else v
 
         # else:  # Handle Pre-Attrs Class
         # FIXME: should this run first?
@@ -167,9 +167,9 @@ class AttributedBaseMixin(LoggingMixin):
         return o
 
     @classmethod
-    def slots_attributes(cls) -> typing.Dict[str, "Attribute"]:
+    def slots_attributes(cls,attr_type=False) -> typing.Dict[str, "Attribute"]:
         """Lists all slots attributes for class"""
-        return cls._get_init_attrs_data(Slot)
+        return cls._get_init_attrs_data(Slot,attr_type=attr_type)
 
     @classmethod
     def signals_attributes(cls) -> typing.Dict[str, "Attribute"]:

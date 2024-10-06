@@ -334,8 +334,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         #FIXME: by instance recache on iterative component change or other signals
         """
         out = {}
-        for key, lvl, comp in self.go_through_configurations(parent_level=1, **kw):
+        for key,lvl,comp in self.go_through_configurations(parent_level=1,**kw):
             if ignore_none_comp and not isinstance(comp, SolveableMixin):
+                self.warning(f"ignoring {key} {lvl}|{comp}")
                 continue
             out[key] = comp
         return out
@@ -530,7 +531,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             args = key.split(".")
             comp, sub = args[0], ".".join(args[1:])
             assert comp in cls.slots_attributes(), f"invalid {comp} in {key}"
-            comp_cls = cls.slots_attributes()[comp].type.accepted[0]
+            comp_cls = cls.slots_attributes(attr_type=True)[comp].accepted[0]
             val = comp_cls.locate(sub, fail=True)
 
         elif key in cls.input_fields():
@@ -606,6 +607,8 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         ):
             return self._prv_system_references
 
+        #TODO: system references are really important and nesting them together complicates the refresh process. Each component should be able to refresh itself and its children on set_state, as well as alert parents to change. Ideally the `Ref` objects could stay the same and no `recache` would need to occur. This would be a huge performance boost and fix a lot of the issues with the current system.
+
         out = self.internal_references(recache, numeric_only=numeric_only)
         tatr = out["attributes"]
         tprp = out["properties"]
@@ -614,6 +617,8 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
 
         # component iternals
         for key, comp in self.comp_references(**kw).items():
+            if comp is None:
+                continue
             sout = comp.internal_references(recache, numeric_only=numeric_only)
             satr = sout["attributes"]
             sprp = sout["properties"]

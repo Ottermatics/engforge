@@ -318,6 +318,7 @@ def signals_slots_handler(
         cls_properties = cls.system_properties_classdef(True)
     else:
         cls_properties = {}
+    
     cls_dict = cls.__dict__.copy()
     cls.__anony_store = {}
     # print(f'tab found!! {cls_properties.keys()}')
@@ -461,6 +462,7 @@ class Configuration(AttributedBaseMixin):
             new_sys.system_references(recache=True)
 
         # update the parents
+        #TODO: use pyee to broadcast change
         if hasattr(self, "parent"):
             if self.parent in changed:
                 new_sys.parent = changed[self.parent]
@@ -481,6 +483,8 @@ class Configuration(AttributedBaseMixin):
 
         :return: level,config"""
         from engforge.configuration import Configuration
+
+        #TODO: instead of a recursive loop a global map per problem context should be used, with a static map of slots, updating with every change per note in system_references. This function could be a part of that but each system shouldn't be responsible for it.
 
         should_yield_level = lambda level: all(
             [

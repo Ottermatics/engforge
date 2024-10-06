@@ -123,7 +123,7 @@ class TestEconomicsAccounting(unittest.TestCase):
         d = er.data_dict
         self.assertEqual(78, d["econ.summary.total_cost"])
         self.assertEqual(78, d["econ.lifecycle.annualized.term_cost"])
-        self.assertEqual(78, d["econ.lifecycle.annualized.levalized_cost"])
+        self.assertEqual(78, d["econ.lifecycle.annualized.levelized_cost"])
         self.assertEqual(78, d["econ.lifecycle.term_cost"])
 
     def test_recursive_null(self, ANS=75):

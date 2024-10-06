@@ -126,7 +126,7 @@ dflt_parse_kw = dict(
     save_mode="all",
     x_start=None,
     save_on_exit=False,
-    enter_refresh=False,
+    enter_refresh=True,
 )
 # can be found on session._<parm> or session.<parm>
 root_defined = dict(
@@ -209,6 +209,7 @@ class ProblemExec:
     -  _problem_id: uuid for subproblems, or True for top level, None means uninitialized
 
     """
+    full_update = True #TODO: cant justify setting this to false for performance gains. accuracy comes first. see event based update
 
     # TODO: convert this to a system based cache where there is a unique problem for each system instance. On subprobem copy a system and add o dictionary.
     class_cache = None  # ProblemExec is assigned below
@@ -244,7 +245,7 @@ class ProblemExec:
     _converged: bool
 
     # Interior Context Options
-    enter_refresh: bool = False
+    enter_refresh: bool = True #TODO: allow this off with event system
     save_on_exit: bool = False
     save_mode: str = "all"
     level_name: str = None  # target this context with the level name
@@ -593,19 +594,14 @@ class ProblemExec:
     # Update Methods
     def refresh_references(self, sesh=None):
         """refresh the system references"""
-        sesh = self.sesh
+        
+        if sesh is None:
+            sesh = self.sesh
 
         if self.log_level < 5:
             self.warning(f"refreshing system references")
-        check_dynamics = sesh.check_dynamics
-        sesh._num_refs = sesh.system.system_references(numeric_only=True)
-        sesh._sys_refs = sesh.system.solver_vars(
-            check_dynamics=check_dynamics,
-            addable=sesh._num_refs,
-            **sesh._slv_kw,
-        )
 
-        sesh.update_methods(sesh=sesh)
+        sesh.full_refresh(sesh=sesh)
         sesh.min_refresh(sesh=sesh)
 
     def update_methods(self, sesh=None):
@@ -625,16 +621,36 @@ class ProblemExec:
             self.info(f"update dynamics")
             self.system.setup_global_dynamics()
 
+    def full_refresh(self,sesh=None):
+        """a more time consuming but throughout refresh of the system"""
+        if self.log_level < 5:
+            self.info(f"full refresh")
+
+        check_dynamics = sesh.check_dynamics
+        sesh._num_refs = sesh.system.system_references(numeric_only=True,none_ok=True, only_inst=False,ignore_none_comp=False,recache=True)
+        sesh._sys_refs = sesh.system.solver_vars(
+            check_dynamics=check_dynamics,
+            addable=sesh._num_refs,
+            **sesh._slv_kw,
+        )
+        sesh.update_methods(sesh=sesh)        
+        
     def min_refresh(self, sesh=None):
+        """what things need to be refreshed per execution, this is important whenever items are replaced"""
+        #TODO: replace this function with an event based responsiblity model.
         sesh = sesh if sesh is not None else self.sesh
 
         if self.log_level < 5:
             self.info(f"min refresh")
 
+        if sesh.full_update:
+            #TODO: dont require this 
+            sesh.full_refresh(sesh=sesh)
+            
         # final ref's after update
         # after updates
         sesh._all_refs = sesh.system.system_references(
-            recache=True, check_config=False, ignore_none_comp=False
+            recache=True, check_config=False, ignore_none_comp=False,none_ok=True, only_inst=False
         )
         # sesh._attr_sys_key_map = sesh.attribute_sys_key_map
 
@@ -642,7 +658,7 @@ class ProblemExec:
         sesh.Xref = sesh.all_problem_vars
         sesh.Yref = sesh.sys_solver_objectives()
 
-        cons = {}  # TODO: parse additional constraints
+        cons = {}  #TODO: parse additional constraints
         sesh.constraints = sesh.sys_solver_constraints(cons)
 
     @property
@@ -676,7 +692,6 @@ class ProblemExec:
         # transients wont update components/ methods dynamically (or shouldn't) so we can just update the system references once and be done with it for other cases, but that is not necessary unless a component changes or a component has in general a unique reference update system (economics / component-iterators)
         sesh = self.sesh
         if not sesh._dxdt is True and self.enter_refresh:
-            sesh.update_methods(sesh=sesh)
             sesh.min_refresh(sesh=sesh)
 
         elif sesh.dynamics_updated:
@@ -806,6 +821,7 @@ class ProblemExec:
             raise IllegalArgument(f"no session available")
 
     # Multi Context Exiting:
+    #TODO: rethink this
     def persist_contexts(self):
         """convert all contexts to a new storage format"""
         self.info(f"persisting contexts!")
