@@ -245,7 +245,7 @@ class ProblemExec:
     _converged: bool
 
     # Interior Context Options
-    enter_refresh: bool = True #TODO: allow this off with event system
+    enter_refresh: bool = True #TODO: allow this off (or lower impact) with event system
     save_on_exit: bool = False
     save_mode: str = "all"
     level_name: str = None  # target this context with the level name

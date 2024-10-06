@@ -55,6 +55,7 @@ import collections
 import pandas
 import collections
 
+
 class CostLog(LoggingMixin):
     pass
 
@@ -73,6 +74,14 @@ category_type = typing.Union[str, list]
 COST_CATEGORIES = set(("misc",))
 
 
+def get_num_from_cost_prop(ref):
+    """analyzes the reference and returns the number of items"""
+    if isinstance(ref,(float,int)):
+        return ref
+    co = getattr(ref.comp.__class__,ref.key,None)
+    return co.get_num_items(ref.comp)
+
+
 class cost_property(system_property):
     """A thin wrapper over `system_property` that will be accounted by `Economics` Components and apply term & categorization
 
@@ -86,6 +95,7 @@ class cost_property(system_property):
     Categories are a way to report cost categories and multiple can be applied to a cost. Categories are grouped by the Economics system at reported in bulk by term and over the term_length
 
     """
+
     valild_types = (int, float)
     cost_categories: list = None
     term_mode: str = None
@@ -112,7 +122,7 @@ class cost_property(system_property):
         """
         super().__init__(fget, fset, fdel, doc, desc, label, stochastic)
 
-        self.valild_types = (int, str) #only numerics
+        self.valild_types = (int, str)  # only numerics
         if isinstance(mode, str):
             mode = mode.lower()
             assert (
@@ -126,7 +136,7 @@ class cost_property(system_property):
         else:
             raise ValueError(f"mode: {mode} must be cost term str or callable")
 
-        #cost categories
+        # cost categories
         if category is not None:
             if isinstance(category, str):
                 self.cost_categories = category.split(",")
@@ -139,7 +149,7 @@ class cost_property(system_property):
         else:
             self.cost_categories = ["misc"]
 
-        #number of items override
+        # number of items override
         if num_items is not None:
             self.num_items = num_items
 
@@ -161,19 +171,24 @@ class cost_property(system_property):
         else:
             self.return_type = float
 
+    def get_num_items(self,obj):
+        """applies the num_items override or the costmodel default if not set"""
+        if self.num_items is not None:
+            k = self.num_items
+        else:
+            k = obj.num_items if isinstance(obj, CostModel) else 1
+        return k            
         
     def __get__(self, obj, objtype=None):
         if obj is None:
             return self  # class support
         if self.fget is None:
             raise AttributeError("unreadable attribute")
-        
-        #apply the costmodel with the item multiplier
-        if self.num_items is not None:
-            k = self.num_items
-        else:
-            k = obj.num_items if isinstance(obj, CostModel) else 1
+
+        # apply the costmodel with the item multiplier
+        k = self.get_num_items(obj)
         return k * self.fget(obj)
+
 
 @forge
 class CostModel(Configuration, TabulationMixin):
@@ -184,13 +199,13 @@ class CostModel(Configuration, TabulationMixin):
     `sub_items_cost` system_property summarizes the costs of any component in a Slot that has a `CostModel` or for SlotS which CostModel.declare_cost(`slot`,default=numeric|CostModelInst|dict[str,float])
     """
 
-    #TODO: remove "default costs" concept and just use cost_properties since thats declarative and doesn't create a "phantom" representation to maintain
-    #TODO: it might be a good idea to add a "castable" namespace for components so they can all reference a common dictionary. Maybe all problem variables are merged into a single namespace to solve issues of "duplication"
+    # TODO: remove "default costs" concept and just use cost_properties since thats declarative and doesn't create a "phantom" representation to maintain
+    # TODO: it might be a good idea to add a "castable" namespace for components so they can all reference a common dictionary. Maybe all problem variables are merged into a single namespace to solve issues of "duplication"
     _slot_costs: dict  # TODO: insantiate per class
 
-    #basic attribute interface returns the item cost as `N x cost_per_item``
+    # basic attribute interface returns the item cost as `N x cost_per_item``
     cost_per_item: float = attrs.field(default=numpy.nan)
-    num_items: int = attrs.field(default=1) #set to 0 to disable the item cost
+    num_items: int = attrs.field(default=1)  # set to 0 to disable the item cost
 
     def __on_init__(self):
         self.set_default_costs()
@@ -206,7 +221,9 @@ class CostModel(Configuration, TabulationMixin):
             for k, v in self._slot_costs.items():
                 # Check if the cost model will  be accessed
                 no_comp = k not in current_comps
-                is_cost = not no_comp and isinstance(current_comps[k], CostModel)
+                is_cost = not no_comp and isinstance(
+                    current_comps[k], CostModel
+                )
                 dflt_is_cost_comp = all(
                     [isinstance(v, CostModel), isinstance(v, Component)]
                 )
@@ -235,7 +252,9 @@ class CostModel(Configuration, TabulationMixin):
 
     @classmethod
     def subcls_compile(cls):
-        assert not issubclass(cls, ComponentIter), "component iter not supported"
+        assert not issubclass(
+            cls, ComponentIter
+        ), "component iter not supported"
         log.debug(f"compiling costs {cls}")
         cls.reset_cls_costs()
 
@@ -254,7 +273,9 @@ class CostModel(Configuration, TabulationMixin):
         assert not isinstance(
             cost, type
         ), f"insantiate classes before adding as a cost!"
-        assert slot_name in cls.slots_attributes(), f"slot {slot_name} doesnt exist"
+        assert (
+            slot_name in cls.slots_attributes()
+        ), f"slot {slot_name} doesnt exist"
         assert isinstance(cost, (float, int, dict)) or isinstance(
             cost, CostModel
         ), "only numeric types or CostModel instances supported"
@@ -264,7 +285,9 @@ class CostModel(Configuration, TabulationMixin):
         if warn_on_non_costmodel and not any(
             [issubclass(at, CostModel) for at in atypes]
         ):
-            log.warning(f"assigning cost to non CostModel based slot {slot_name}")
+            log.warning(
+                f"assigning cost to non CostModel based slot {slot_name}"
+            )
 
         cls._slot_costs[slot_name] = cost
 
@@ -280,7 +303,9 @@ class CostModel(Configuration, TabulationMixin):
         assert not isinstance(
             cost, type
         ), f"insantiate classes before adding as a cost!"
-        assert slot_name in self.slots_attributes(), f"slot {slot_name} doesnt exist"
+        assert (
+            slot_name in self.slots_attributes()
+        ), f"slot {slot_name} doesnt exist"
         assert isinstance(cost, (float, int, dict)) or isinstance(
             cost, CostModel
         ), "only numeric types or CostModel instances supported"
@@ -290,7 +315,9 @@ class CostModel(Configuration, TabulationMixin):
         if warn_on_non_costmodel and not any(
             [issubclass(at, CostModel) for at in atypes]
         ):
-            self.warning(f"assigning cost to non CostModel based slot {slot_name}")
+            self.warning(
+                f"assigning cost to non CostModel based slot {slot_name}"
+            )
 
         # convert from classinfo
         if self._slot_costs is self.__class__._slot_costs:
@@ -308,7 +335,7 @@ class CostModel(Configuration, TabulationMixin):
 
     def calculate_item_cost(self) -> float:
         """override this with a parametric model related to this systems attributes and properties"""
-        return self.num_items*self.cost_per_item
+        return self.num_items * self.cost_per_item
 
     @system_property
     def sub_items_cost(self) -> float:
@@ -342,7 +369,9 @@ class CostModel(Configuration, TabulationMixin):
             saved = set((self,))  # item cost included!
         elif self not in saved:
             saved.add(self)
-        itemcst = list(self.dict_itemized_costs(saved, categories, term).values())
+        itemcst = list(
+            self.dict_itemized_costs(saved, categories, term).values()
+        )
         csts = [self.sub_costs(saved, categories, term), numpy.nansum(itemcst)]
         return numpy.nansum(csts)
 
@@ -351,7 +380,11 @@ class CostModel(Configuration, TabulationMixin):
     ) -> dict:
         ccp = self.class_cost_properties()
         costs = {
-            k: obj.__get__(self) if obj.apply_at_term(self, term) == test_val else 0
+            k: (
+                obj.__get__(self)
+                if obj.apply_at_term(self, term) == test_val
+                else 0
+            )
             for k, obj in ccp.items()
             if categories is None
             or any([cc in categories for cc in obj.cost_categories])
@@ -421,7 +454,11 @@ class CostModel(Configuration, TabulationMixin):
         function returns False at that term"""
         ccp = self.class_cost_properties()
         return {
-            k: obj.__get__(self) if obj.apply_at_term(self, term) == test_val else 0
+            k: (
+                obj.__get__(self)
+                if obj.apply_at_term(self, term) == test_val
+                else 0
+            )
             for k, obj in ccp.items()
         }
 
@@ -462,8 +499,6 @@ class CostModel(Configuration, TabulationMixin):
         return COST_CATEGORIES
 
 
-
-
 cost_type = typing.Union[float, int, CostModel, dict]
 
 
@@ -491,6 +526,7 @@ def gend(deect: dict):
                 yield f"{k}.{kk}", v
         else:
             yield k, v
+
 
 parent_types = typing.Union[Component, "System"]
 
@@ -571,35 +607,35 @@ class Economics(Component):
 
         self._anything_changed = True
 
-    #TODO: expand this...
+    # TODO: expand this...
     @solver_cached
     def econ_output(self):
         return self.lifecycle_output
 
-    @system_property(label='cost/output')
-    def levelized_cost(self)->float:
+    @system_property(label="cost/output")
+    def levelized_cost(self) -> float:
         """Price per kwh"""
         eco = self.econ_output
-        return eco['summary.levelized_cost']
-    
-    @system_property
-    def total_cost(self)->float:
-        eco = self.econ_output
-        return eco['summary.total_cost']
+        return eco["summary.levelized_cost"]
 
     @system_property
-    def levelized_output(self)->float:
+    def total_cost(self) -> float:
+        eco = self.econ_output
+        return eco["summary.total_cost"]
+
+    @system_property
+    def levelized_output(self) -> float:
         """ouput per dollar (KW/$)"""
         eco = self.econ_output
-        return eco['summary.levelized_output']
+        return eco["summary.levelized_output"]
 
     @system_property
-    def term_years(self)->float:
+    def term_years(self) -> float:
         """ouput per dollar (KW/$)"""
         eco = self.econ_output
-        return eco['summary.years']        
+        return eco["summary.years"]
 
-    #Calculate Output
+    # Calculate Output
     def calculate_production(self, parent, term) -> float:
         """must override this function and set economic_output"""
         return numpy.nansum([0, self.fixed_output])
@@ -608,8 +644,8 @@ class Economics(Component):
         """recursively accounts for costs in the parent, its children recursively."""
         return self.sum_cost_references()
 
-    #Reference Utilitly Functions
-    #Set Costs over time "flat" through ref trickery...
+    # Reference Utilitly Functions
+    # Set Costs over time "flat" through ref trickery...
     def sum_cost_references(self):
         cst = 0
         for k, v in self._cost_references.items():
@@ -639,18 +675,22 @@ class Economics(Component):
     def term_fgen(self, comp, prop):
         if isinstance(comp, dict):
             return lambda term: comp[prop] if term == 0 else 0
-        return lambda term: prop.__get__(comp) if prop.apply_at_term(comp, term) else 0
+        return lambda term: (
+            prop.__get__(comp) if prop.apply_at_term(comp, term) else 0
+        )
 
     def sum_term_fgen(self, ref_group):
-        term_funs = [self.term_fgen(ref.comp, self.get_prop(ref)) for ref in ref_group]
+        term_funs = [
+            self.term_fgen(ref.comp, self.get_prop(ref)) for ref in ref_group
+        ]
         return lambda term: numpy.nansum([t(term) for t in term_funs])
 
     # Gather & Set References (the magic!)
     # TODO: update internal_references callback to problem
     def internal_references(self, recache=True, numeric_only=False):
         """standard component references are"""
-        
-        recache=True #override
+
+        recache = True  # override
 
         d = self._gather_references()
         self._create_term_eval_functions()
@@ -690,7 +730,7 @@ class Economics(Component):
 
     def cost_summary(self, annualized=False, do_print=True, ignore_zero=True):
         """
-        Generate a summary of costs, optionally annualized, and print the summary.
+        Generate a summary of costs, optionally annualized, and optionally print the summary.
         :param annualized: If True, include only annualized costs in the summary. Default is False.
         :type annualized: bool
         :param do_print: If True, print the summary to the console. Default is True.
@@ -700,52 +740,81 @@ class Economics(Component):
         :return: A dictionary containing component costs, skipped costs, and summary.
         :rtype: dict
         """
-        
+
         dct = self.lifecycle_output
         cols = list(dct.keys())
 
         skippd = set()
         comp_costs = collections.defaultdict(dict)
+        comp_nums = collections.defaultdict(dict)
         summary = {}
-        costs = {'comps':comp_costs,'skip':skippd,'summary':summary}
+        costs = {
+            "comps": comp_costs,
+            "skip": skippd,
+            "summary": summary,
+        }
 
         def abriv(val):
-            if val > 1E6:
-                return f'{val/1E6:^12.4f}M'
-            elif val > 1E3:
-                return f'{val/1E3:^12.2f}k'
-            return f'{val:^12.2f}'
-            
+            if val > 1e6:
+                return f"{val/1E6:>12.4f} M"
+            elif val > 1e3:
+                return f"{val/1E3:>12.2f} k"
+            return f"{val:>12.2f}"
+
         for col in cols:
-            is_ann = '.annualized.' in col
+            is_ann = ".annualized." in col
             val = dct[col]
-            
-            #handle no value case
+
+            # handle no value case
             if val == 0 and ignore_zero:
                 continue
 
-            if '.cost.' in col and is_ann == annualized:
-                base,cst = col.split('.cost.')
-                comp_costs[base][cst]= val
-            elif col.startswith('summary.'):
-                summary[col.replace('summary.','')]=val
-                
-        total_cost = sum([sum(list(cc.values())) for cc in comp_costs.values()])
-        
-        if do_print:
-            self.info('_'*80)
-            for key,val in summary.items():
-                self.info(f' {key:<35}| {val:^12.10f}')
-            self.info('-'*80)
+            if ".cost." in col and is_ann == annualized:
+                base, cst = col.split(".cost.")
+                ckey = f"{base.replace('lifecycle.','')}.cost.{cst}"
+                #print(ckey,str(self._comp_costs.keys()))
+                comp_costs[base][cst] = val
+                comp_nums[base][cst] = get_num_from_cost_prop(self._comp_costs[ckey])
+            elif col.startswith("summary."):
+                summary[col.replace("summary.", "")] = val
 
-            for base,items in comp_costs.items():
-                if (subtot:=sum(list(items.values()))) > 0:
-                    self.info(f' {base:<35}| total ---> {abriv(subtot)} | {subtot*100/total_cost:3.0f}%')
-                    for key,val in sorted(items.items(),lambda kv:[0]):
-                        self.info(f' \t{key:<32}|{abriv(val)}             | {val*100/total_cost:^3.0f}%')
-                    self.info('-'*80)
+        total_cost = sum([sum(list(cc.values())) for cc in comp_costs.values()])
+
+        # provide consistent format
+        hdr = "{key:<32}|\t{value:12.10f}"
+        fmt = "{key:<32}|\t{fmt:<24} | {total:^12} | {pct:3.0f}%"
+        title = f'COST SUMMARY: {self.parent.identity}'
+        if do_print:
+            self.info('#'*80)
+            self.info(f'{title:^80}')
             self.info('_'*80)
-        return costs     
+            #summary items
+            for key,val in summary.items():
+                self.info(hdr.format(key=key,value=val))
+                itcst = '{val:>24}'.format(val='TOTAL----->')
+            self.info('='*80)
+            self.info(fmt.format(key='COMBINED',fmt=itcst,total=abriv(total_cost),pct=100))
+            self.info('-'*80)    
+            #itemization
+            sgroups = lambda kv:sum(list(kv[-1].values()))
+            for base,items in sorted(comp_costs.items(),key=sgroups,reverse=True):
+                if (subtot:=sum(list(items.values()))) > 0:
+                    #self.info(f' {base:<35}| total ---> {abriv(subtot)} | {subtot*100/total_cost:3.0f}%')
+                    pct = subtot*100/total_cost
+                    itcst = '{val:>24}'.format(val='TOTAL----->')
+                    #todo; add number of items for cost comp
+                    self.info(fmt.format(key=base,fmt=itcst,total=abriv(subtot),pct=pct))
+                    #Sort costs by value
+                    for key,val in sorted(items.items(),key=lambda kv:kv[-1],reverse=True):
+                        #self.info(f' \t{key:<32}|{abriv(val)}             | {val*100/total_cost:^3.0f}%')
+                        tot = abriv(val)
+                        pct = val*100/total_cost
+                        num = comp_nums[base][key]
+                        itcst = f'{abriv(val/num):^18} x {num:3.0f}' if num != 0 else '0'
+                        self.info(fmt.format(key='-'+key,fmt=itcst,total=tot,pct=pct))
+                    self.info('-'*80) #section break
+            self.info('#'*80)
+            return costs
 
     @property
     def lifecycle_output(self) -> dict:
@@ -804,7 +873,9 @@ class Economics(Component):
             )
             row["levelized_cost"] = tc * (1 + self.discount_rate) ** (-1 * t)
             row["output"] = output = self.calculate_production(self.parent, t)
-            row["levelized_output"] = output * (1 + self.discount_rate) ** (-1 * t)
+            row["levelized_output"] = output * (1 + self.discount_rate) ** (
+                -1 * t
+            )
 
         return pandas.DataFrame(out)
 
@@ -836,11 +907,14 @@ class Economics(Component):
         comp_set = set()
 
         # reset data
+        # groupings of components, categories, and pairs of components and categories
         self._cost_categories = collections.defaultdict(list)
         self._comp_categories = collections.defaultdict(list)
         self._comp_costs = dict()
 
-        for key, level, conf in parent.go_through_configurations(check_config=False):
+        for key, level, conf in parent.go_through_configurations(
+            check_config=False
+        ):
             # skip self
             if conf is self:
                 continue
@@ -861,7 +935,7 @@ class Economics(Component):
 
             self.debug(f"checking {key} {comp_key} {kbase}")
 
-            #0. Get Costs Directly From the cost model instance
+            # 0. Get Costs Directly From the cost model instance
             if isinstance(conf, CostModel):
                 comps[key] = conf
                 self.debug(f"adding cost model for {kbase}.{comp_key}")
@@ -881,7 +955,9 @@ class Economics(Component):
                     compcanidate = child._slot_costs[comp_key]
                     if isinstance(compcanidate, CostModel):
                         self.debug(f"dflt child costmodel {kbase}.{comp_key}")
-                        self._extract_cost_references(compcanidate, bse + "cost.")
+                        self._extract_cost_references(
+                            compcanidate, bse + "cost."
+                        )
                     else:
                         _key = bse + "cost.item_cost"
                         self.debug(f"dflt child cost for {kbase}.{comp_key}")
@@ -895,7 +971,9 @@ class Economics(Component):
                         cc = "unit"
                         self._comp_costs[_key] = ref
                         self._cost_categories["category." + cc].append(ref)
-                        self._comp_categories[bse + "category." + cc].append(ref)
+                        self._comp_categories[bse + "category." + cc].append(
+                            ref
+                        )
 
             # 2. try looking at the parent
             elif (
@@ -960,6 +1038,7 @@ class Economics(Component):
                 lvl=5,
             )
         # add slot costs with current items (skip class defaults)
+        # TODO: remove defaults costs
         for slot_name, slot_value in conf._slot_costs.items():
             # Skip items that are internal components
             if slot_name in comps_act:
@@ -987,25 +1066,35 @@ class Economics(Component):
             elif _key in CST:
                 self.debug(f"skipping key {_key}")
 
-        # add base class slot values when comp was none
-        for compnm, comp in conf.internal_configurations(False, none_ok=True).items():
+        # add base class slot values when comp was none (recursively)
+        for compnm, comp in conf.internal_configurations(
+            False, none_ok=True
+        ).items():
             if comp is None:
                 if self.log_level < 5:
                     self.msg(
                         f"{conf} looking up base class costs for {compnm}",
                         lvl=5,
                     )
-                comp_cls = conf.slots_attributes(attr_type=True)[compnm].accepted
+                comp_cls = conf.slots_attributes(attr_type=True)[
+                    compnm
+                ].accepted
                 for cc in comp_cls:
                     if issubclass(cc, CostModel):
                         if cc._slot_costs:
                             if self.log_level < 5:
-                                self.msg(f"{conf} looking up base slot cost for {cc}")
+                                self.msg(
+                                    f"{conf} looking up base slot cost for {cc}"
+                                )
                             for k, v in cc._slot_costs.items():
-                                _key = bse + compnm + "." + k + ".cost.item_cost"
+                                _key = (
+                                    bse + compnm + "." + k + ".cost.item_cost"
+                                )
                                 if _key in CST:
                                     if self.log_level < 10:
-                                        self.debug(f"{conf} skipping dflt key {_key}")
+                                        self.debug(
+                                            f"{conf} skipping dflt key {_key}"
+                                        )
                                     # break #skip if already added
                                     continue
 
@@ -1028,7 +1117,9 @@ class Economics(Component):
 
                                     cc = "unit"
                                     self._comp_costs[_key] = ref
-                                    self._cost_categories["category." + cc].append(ref)
+                                    self._cost_categories[
+                                        "category." + cc
+                                    ].append(ref)
                                     self._comp_categories[
                                         bse + "category." + cc
                                     ].append(ref)
