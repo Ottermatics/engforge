@@ -268,7 +268,8 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
                         prop = getattr(cls, k, None)
                         if prop and isinstance(prop, system_property):
                             __system_properties[k] = prop
-                            log.msg(f"adding system property {mrv.__name__}.{k}")
+                            if log.log_level <= 3:
+                                log.msg(f"adding system property {mrv.__name__}.{k}")
 
         setattr(cls,cls_key, __system_properties)
 

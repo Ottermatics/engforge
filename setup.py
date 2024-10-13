@@ -9,7 +9,7 @@ Created on Sat May 11 22:38:11 2019
 from setuptools import setup
 import setuptools
 
-__version__ = "0.0.9"
+__version__ = "0.1.0"
 
 
 def parse_requirements(filename):

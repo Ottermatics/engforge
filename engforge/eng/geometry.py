@@ -622,7 +622,7 @@ class ShapelySection(Profile2D):
         self.calculate_bounds()
 
     def calculate_bounds(self):
-        self.info(f"calculating shape bounds!")
+        self.debug(f"calculating shape bounds!")
         xcg, ycg = self._geo.calculate_centroid()
         minx, maxx, miny, maxy = self._geo.calculate_extents()
         self.y_bounds = (miny - ycg, maxy - ycg)

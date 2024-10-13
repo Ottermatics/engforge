@@ -661,6 +661,38 @@ class ProblemExec:
         cons = {}  #TODO: parse additional constraints
         sesh.constraints = sesh.sys_solver_constraints(cons)
 
+    def print_all_info(self,keys:str=None,comps:str=None):
+        """
+        Print all the information of each component's dictionary.
+        Parameters:
+        key_sch (str, optional): A pattern to match dictionary keys. Only keys matching this pattern will be included in the output.
+        comps (list, optional): A list of component sys names to filter. Only information of these components will be printed.
+        Returns: None (except stdout :)
+        """
+        from pprint import pprint
+        keys = keys.split(',')
+        comps = (comps+',').split(',') #always top level
+        print(f'CONTEXT: {self}')
+        
+        mtch = lambda key,ptrns: any([fnmatch.fnmatch(key.lower(),ptn.lower()) for ptn in ptrns])
+
+        #check your comps
+        itrs = self.all_comps.copy()
+        itrs[''] = Ref(self.system,'',True,False)
+
+        #check your comps
+        for cn,comp in itrs.items():
+            if comps is not None and not mtch(cn,comps):
+                continue
+            
+            dct = comp.value().as_dict
+            if keys: #filter keys
+                dct = {k:v for k,v in dct.items() if mtch(k,keys)}
+            if dct:
+                print(f'INFO: {cn if cn else "<problem.system>"}')
+                pprint(dct)
+                print('-'*80)
+
     @property
     def check_dynamics(self):
         sesh = self.sesh
@@ -1086,7 +1118,7 @@ class ProblemExec:
                             self.info(
                                 f'exiting solver {t} {ss_out["Xans"]} {ss_out["Xstart"]}'
                             )
-                        pbx.set_ref_values(ss_out["Xans"])
+                        pbx.set_ref_values(ss_out["Xans"],scope='intgrl')
                         pbx.exit_to_level("ss_slvr", False)
                     else:
                         self.warning(
@@ -1191,7 +1223,7 @@ class ProblemExec:
         # Output Results
         Xa = {p: answer.x[i] for i, p in enumerate(vars)}
         output["Xans"] = Xa
-        Ref.refset_input(Xref, Xa)
+        Ref.refset_input(Xref, Xa,scope='solvd')
 
         Yout = {p: yit.value(yit.comp, self) for p, yit in Yref.items()}
         output["Yobj"] = Yout
@@ -1680,13 +1712,13 @@ class ProblemExec:
             refs = sesh.all_system_references
         return Ref.refset_get(refs, sys=self.system, prob=self)
 
-    def set_ref_values(self, values, refs=None):
+    def set_ref_values(self, values, refs=None,scope='sref'):
         """returns the values of the refs"""
         # TODO: add checks for the refs
         if refs is None:
             sesh = self.sesh
             refs = sesh.all_comps_and_vars
-        return Ref.refset_input(refs, values)
+        return Ref.refset_input(refs, values,scope=scope)
 
     def change_sys_var(self, key, value, refs=None, doset=True, attr_key_map=None):
         """use this function to change the value of a system var and update the start state, multiple uses in the same context will not change the record preserving the start value
@@ -1731,7 +1763,7 @@ class ProblemExec:
             rs = list(self.record_state.values())
             self.debug(f"reverting to start: {xs} -> {rs}")
         # TODO: STRICT MODE Fail for refset_input
-        Ref.refset_input(sesh.all_comps_and_vars, self.x_start, fail=False)
+        Ref.refset_input(sesh.all_comps_and_vars, self.x_start, fail=False,scope='rvtst')
 
     def activate_temp_state(self, new_state=None):
         # TODO: determine when components change, and update refs accordingly!
@@ -1740,11 +1772,11 @@ class ProblemExec:
         if new_state:
             if self.log_level < 3:
                 self.debug(f"new-state: {self.temp_state}")
-            Ref.refset_input(sesh.all_comps_and_vars, new_state, fail=False)
+            Ref.refset_input(sesh.all_comps_and_vars, new_state, fail=False,scope='ntemp')
         elif self.temp_state:
             if self.log_level < 3:
                 self.debug(f"act-state: {self.temp_state}")
-            Ref.refset_input(sesh.all_comps_and_vars, self.temp_state, fail=False)
+            Ref.refset_input(sesh.all_comps_and_vars, self.temp_state, fail=False,scope='atemp')
         elif self.log_level < 3:
             self.debug(f"no-state: {new_state}")
 
@@ -1993,6 +2025,13 @@ class ProblemExec:
     def is_active(self):
         """checks if the context has been entered and not exited"""
         return self.entered and not self.exited
+
+    @classmethod
+    def cls_is_active(cls):
+        """checks if the cache has a session"""
+        if cls.class_cache and hasattr(cls.class_cache, "session"):
+            return True
+        return False
 
     @property
     def solveable(self):

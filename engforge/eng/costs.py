@@ -349,6 +349,7 @@ class CostModel(Configuration, TabulationMixin):
 
     @system_property
     def combine_cost(self) -> float:
+        """the sum of all cost properties"""
         return self.sum_costs()
 
     @system_property
@@ -782,7 +783,7 @@ class Economics(Component):
 
         # provide consistent format
         hdr = "{key:<32}|\t{value:12.10f}"
-        fmt = "{key:<32}|\t{fmt:<24} | {total:^12} | {pct:3.0f}%"
+        fmt = "{key:<32}|\t{fmt:<24} | {total:^12} | {pct:3.3f}%"
         title = f'COST SUMMARY: {self.parent.identity}'
         if do_print:
             self.info('#'*80)

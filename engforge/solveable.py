@@ -352,6 +352,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         force_solve=False,
         return_results=False,
         method_kw: dict = None,
+        print_kw:dict=None,
         **kwargs,
     ):
         """applies a permutation of input vars for vars. runs the system instance by applying input to the system and its slot-components, ensuring that the targeted attributes actualy exist.
@@ -361,6 +362,8 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         :param sequence: a list of dictionaries that should be run in order per the outer-product of kwargs
         :param eval_kw: a dictionary of keyword arguments to pass to the eval function of each component by their name and a set of keyword args. Use this to set values in the component that are not inputs to the system. No iteration occurs upon these values, they are static and irrevertable
         :param sys_kw: a dictionary of keyword arguments to pass to the eval function of each system by their name and a set of keyword args. Use this to set values in the component that are not inputs to the system. No iteration occurs upon these values, they are static and irrevertable
+        :param print_kw: a dictionary of keyword arguments to pass to the print_all_info function of the current context
+        
         :param kwargs: inputs are run on a product basis asusming they correspond to actual scoped vars (system.var or system.slot.var)
 
 
@@ -415,6 +418,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
 
                         # Run The Method with inputs provisioned
                         out = method(icur, eval_kw, sys_kw, cb=cb, **method_kw)
+
+                        if print_kw and hasattr(self, "last_context") and self.last_context:
+                            self.last_context.print_all_info(**print_kw)
 
                         if return_results:
                             # store the output

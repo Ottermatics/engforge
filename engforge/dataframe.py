@@ -32,9 +32,11 @@ log = DataFrameLog()
 # Dataframe interrogation functions
 def is_uniform(s: pandas.Series):
     a = s.to_numpy()  # s.values (pandas<0.24)
-    if (a[0] == a).all():
+
+    if numpy.all(a == a[0]):
         return True
     try:
+        #
         if not numpy.isfinite(a).any():
             return True
     except:

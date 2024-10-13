@@ -284,7 +284,7 @@ class SolverMixin(SolveableMixin):
             # depending on the solver success, failure or no solution, we can exit the solver
             if has_ans and out["ans"] and out["ans"].success:
                 # this is where you want to be! <<<
-                pbx.set_ref_values(out["Xans"])
+                pbx.set_ref_values(out["Xans"],scope='solvr')
                 pbx.exit_to_level("sys_slvr", False)
 
             elif has_ans and out["ans"] is None:
