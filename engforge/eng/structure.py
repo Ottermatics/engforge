@@ -835,6 +835,7 @@ class Structure(System, CostModel, PredictionMixin):
         return beam
 
     # OUTPUT
+
     def beam_dataframe(self, univ_parms: list = None, add_columns: list = None):
         """creates a dataframe entry for each beam and combo
         :param univ_parms: keys represent the dataframe parm, and the values represent the lookup value
@@ -923,8 +924,18 @@ class Structure(System, CostModel, PredictionMixin):
         """sum of all panels cost"""
         return sum([sum(self.costs["quads"].values())])
 
-    @cost_property(category="mfg,material,structure")
-    def structure_cost(self):
+    @cost_property(category="mfg,material,panels")
+    def panels_cost(self):
+        return self.structure_cost_panels
+
+    @cost_property(category="mfg,material,beams")
+    def beam_cost(self) -> float:
+        """sum of all beams cost"""
+        return sum([bm.cost for bm in self.beams.values()])
+    
+    @system_property
+    def structure_cost(self) -> float:
+        """sum of all beams and quad cost"""
         return self.structure_cost_beams + self.structure_cost_panels
 
     @solver_cached

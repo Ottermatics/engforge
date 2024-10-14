@@ -468,7 +468,7 @@ class CostModel(Configuration, TabulationMixin):
         """returns cost_property objects from this class & subclasses"""
         return {
             k: v
-            for k, v in cls.system_properties_classdef().items()
+            for k, v in cls.system_properties_classdef(True).items()
             if isinstance(v, cost_property)
         }
 

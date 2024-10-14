@@ -55,7 +55,7 @@ def rotation_matrix_from_vectors(vec1, vec2):
 
 
 @forge
-class Beam(Component, CostModel):
+class Beam(Component):
     """Beam is a wrapper for emergent useful properties of the structure"""
 
     # parent structure, will be in its _beams
@@ -302,7 +302,8 @@ class Beam(Component, CostModel):
     def mass(self) -> float:
         return self.material.density * self.Vol
 
-    @cost_property(category="mfg,material,beams")
+    #@system_property(category="mfg,material,beams")
+    @system_property
     def cost(self) -> float:
         return self.mass * self.material.cost_per_kg
 
