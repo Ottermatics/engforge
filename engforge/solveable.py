@@ -36,12 +36,12 @@ log = SolvableLog()
 def _update_func(comp, eval_kw):
     def updt(*args, **kw):
         eval_kw.update(kw)
-        if log.log_level <= 5:
-            log.msg(f"update| {comp.name} ", lvl=5)
+        if log.log_level <= 12:
+            log.info(f"update| {comp.name} ")#=5)
         return comp.update(comp.parent, *args, **eval_kw)
 
-    if log.log_level <= 5:
-        log.msg(f"create method| {comp.name}| {eval_kw}")
+    if log.log_level <= 12:
+        log.info(f"create method| {comp.name}| {eval_kw}")
     updt.__name__ = f"{comp.name}_update"
     return updt
 
@@ -51,8 +51,8 @@ def _post_update_func(comp, eval_kw):
         eval_kw.update(kw)
         return comp.post_update(comp.parent, *args, **eval_kw)
 
-    if log.log_level <= 5:
-        log.msg(f"create post method| {comp.name}| {eval_kw}")
+    if log.log_level <= 12:
+        log.info(f"create post method| {comp.name}| {eval_kw}")
     updt.__name__ = f"{comp.name}_post_update"
     return updt
 
@@ -63,24 +63,25 @@ def _cost_update(comp):
     if isinstance(comp, Economics):
 
         def updt(*args, **kw):
-            if log.log_level <= 8:
-                log.debug(f"update economics {comp.name} | {comp.term_length} ")
+            if log.log_level <= 12:
+                log.info(f"update economics {comp.name} | {comp.term_length} ")
             comp.system_properties_classdef(True)
             comp.update(comp.parent, *args, **kw)
 
-        if log.log_level <= 8:
-            log.debug(f"economics update cb {comp.name} | {comp.term_length} ")
+        if log.log_level <= 12:
+            log.info(f"economics update cb {comp.name} | {comp.term_length} ")
         updt.__name__ = f"{comp.name}_econ_update"
     else:
 
         def updt(*args, **kw):
-            if log.log_level <= 7:
-                log.msg(f"update costs {comp.name} ", lvl=5)
+            if log.log_level <= 12:
+                log.info(f"update costs {comp.name} ")#=5)
             comp.system_properties_classdef(True)
+            #comp.update(comp.parent, *args, **kw) #called as update without cm
             return comp.update_dflt_costs()
 
-        if log.log_level <= 7:
-            log.debug(f"cost update cb {comp.name} ")
+        if log.log_level <= 12:
+            log.info(f"cost update cb {comp.name} ")
         updt.__name__ = f"{comp.name}_cost_update"
 
     return updt
@@ -123,13 +124,13 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
     # TODO: pass the problem vs the parent component, then locate this component in the problem and update any references
     def update(self, parent, *args, **kwargs):
         """Kwargs comes from eval_kw in solver"""
-        if log.log_level <= 5:
-            log.debug(f"void updating {self.__class__.__name__}.{self}")
+        if log.log_level <= 12:
+            log.info(f"void updating {self.__class__.__name__}.{self}")
 
     def post_update(self, parent, *args, **kwargs):
         """Kwargs comes from eval_kw in solver"""
-        if log.log_level <= 5:
-            log.debug(f"void post-updating {self.__class__.__name__}.{self}")
+        if log.log_level <= 12:
+            log.info(f"void post-updating {self.__class__.__name__}.{self}")
 
     def collect_update_refs(self, eval_kw=None, ignore=None):
         """checks all methods and creates ref's to execute them later"""
@@ -146,6 +147,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             return
 
         for key, comp in self.internal_configurations(False).items():
+        #for key,lvl,comp in self.go_through_configurations(check_config=False):
             if ignore is not None and comp in ignore:
                 continue
 
@@ -164,7 +166,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
                 ref = Ref(comp, _cost_update(comp))
                 updt_refs[key + "._cost_model_"] = ref
 
-            elif comp.__class__.update != SolveableMixin.update:
+            if comp.__class__.update != SolveableMixin.update:
                 ref = Ref(comp, _update_func(comp, ekw))
                 updt_refs[key] = ref
 
@@ -186,6 +188,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             return
 
         for key, comp in self.internal_configurations(False).items():
+        #for key,lvl,comp in self.go_through_configurations(check_config=False):
             if ignore is not None and comp in ignore:
                 continue
 
