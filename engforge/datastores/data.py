@@ -195,10 +195,16 @@ class DiskCacheStore(LoggingMixin, metaclass=SingletonMeta):
     _current_keys = None
     expire_threshold = 60.0
 
-    retries = 3
+    retries = 1
     sleep_time = 0.1
 
-    def __init__(self, **kwargs):
+    proj_dir: str = None #avoid using implicit determinination
+    cache_path: str = None #override for implicit path, a recommended practice
+
+    def __init__(self,root_path=None, **kwargs):
+        if root_path is not None:
+            self.cache_path = root_path
+
         if kwargs:
             self.cache_init_kwargs = kwargs
         else:
@@ -207,12 +213,22 @@ class DiskCacheStore(LoggingMixin, metaclass=SingletonMeta):
         self.cache
 
     @property
+    def proj_root(self):
+        if self.proj_dir is not None:
+            return self.proj_dir
+        return client_path(skip_wsl=False)
+
+    @property
     def cache_root(self):
         # TODO: CHECK CACHE IS NOT SYNCED TO DROPBOX
+        if self.cache_path is not None:
+            return self.cache_path
+
         if self.alt_path is not None:
-            return os.path.join(client_path(skip_wsl=False), "cache", self.alt_path)
+            return os.path.join(self.proj_root, "cache", self.alt_path)
+        
         return os.path.join(
-            client_path(skip_wsl=False),
+            self.proj_root,
             "cache",
             "{}".format(type(self).__name__).lower(),
         )
@@ -247,7 +263,7 @@ class DiskCacheStore(LoggingMixin, metaclass=SingletonMeta):
                 time.sleep(self.sleep_time * (self.retries - ttl))
                 return self.set(key=key, data=data, retry=True, ttl=ttl)
             else:
-                self.error(e, "Issue Getting Item From Cache")
+                self.error(e, "Issue Setting Item In Cache")
 
     # @ray_cache
     def get(self, key=None, on_missing=None, retry=True, ttl=None):

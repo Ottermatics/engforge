@@ -145,6 +145,15 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             ignore = set()
         elif self in ignore:
             return
+        
+        key= 'top'
+        if self.__class__.update != SolveableMixin.update:
+            ref = Ref(self, _update_func(self, eval_kw if eval_kw else {}))
+            updt_refs[key]  = ref     
+
+        if isinstance(self, (CostModel, Economics)):
+            ref = Ref(self, _cost_update(self))
+            updt_refs[key + "._cost_model_"] = ref               
 
         for key, comp in self.internal_configurations(False).items():
         #for key,lvl,comp in self.go_through_configurations(check_config=False):
@@ -186,6 +195,10 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             ignore = set()
         elif self in ignore:
             return
+        
+        if self.__class__.post_update != SolveableMixin.post_update:
+            ref = Ref(self, _post_update_func(self, eval_kw if eval_kw else {}))
+            updt_refs['top']  = ref
 
         for key, comp in self.internal_configurations(False).items():
         #for key,lvl,comp in self.go_through_configurations(check_config=False):
