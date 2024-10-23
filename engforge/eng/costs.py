@@ -65,9 +65,14 @@ log = CostLog()
 # Cost Term Modes are a quick lookup for cost term support
 global COST_TERM_MODES, COST_CATEGORIES
 COST_TERM_MODES = {
-    "initial": lambda inst, term: True if term < 1 else False,
-    "maintenance": lambda inst, term: True if term >= 1 else False,
-    "always": lambda inst, term: True,
+    "initial": lambda inst, term, econ: True if term < 1 else False,
+    "maintenance": lambda inst, term, econ: True if term >= 1 else False,
+    "always": lambda inst, term, econ: True,
+    "end": lambda inst, term, econ: (
+        True
+        if hasattr(econ, "term_length") and term == econ.term_length
+        else False
+    ),
 }
 
 category_type = typing.Union[str, list]
@@ -76,9 +81,9 @@ COST_CATEGORIES = set(("misc",))
 
 def get_num_from_cost_prop(ref):
     """analyzes the reference and returns the number of items"""
-    if isinstance(ref,(float,int)):
+    if isinstance(ref, (float, int)):
         return ref
-    co = getattr(ref.comp.__class__,ref.key,None)
+    co = getattr(ref.comp.__class__, ref.key, None)
     return co.get_num_items(ref.comp)
 
 
@@ -118,7 +123,7 @@ class cost_property(system_property):
         num_items: int = None,
     ):
         """extends system_property interface with mode & category keywords
-        :param mode: can be one of `initial`,`maintenance`,`always` or a function with signature f(inst,term) as an integer and returning a boolean True if it is to be applied durring that term.
+        :param mode: can be one of `initial`,`maintenance`,`always` or a function with signature f(inst,term,econ) as an integer and returning a boolean True if it is to be applied durring that term.
         """
         super().__init__(fget, fset, fdel, doc, desc, label, stochastic)
 
@@ -153,10 +158,10 @@ class cost_property(system_property):
         if num_items is not None:
             self.num_items = num_items
 
-    def apply_at_term(self, inst, term):
+    def apply_at_term(self, inst, term, econ=None):
         if term < 0:
             raise ValueError(f"negative term!")
-        if self.__class__._all_modes[self.term_mode](inst, term):
+        if self.__class__._all_modes[self.term_mode](inst, term, econ):
             return True
         return False
 
@@ -171,14 +176,14 @@ class cost_property(system_property):
         else:
             self.return_type = float
 
-    def get_num_items(self,obj):
+    def get_num_items(self, obj):
         """applies the num_items override or the costmodel default if not set"""
         if self.num_items is not None:
             k = self.num_items
         else:
             k = obj.num_items if isinstance(obj, CostModel) else 1
-        return k            
-        
+        return k
+
     def __get__(self, obj, objtype=None):
         if obj is None:
             return self  # class support
@@ -364,26 +369,35 @@ class CostModel(Configuration, TabulationMixin):
         initial_costs = self.costs_at_term(0, False)
         return numpy.nansum(list(initial_costs.values()))
 
-    def sum_costs(self, saved: set = None, categories: tuple = None, term=0):
+    def sum_costs(
+        self, saved: set = None, categories: tuple = None, term=0, econ=None
+    ):
         """sums costs of cost_property's in this item that are present at term=0, and by category if define as input"""
         if saved is None:
             saved = set((self,))  # item cost included!
         elif self not in saved:
             saved.add(self)
         itemcst = list(
-            self.dict_itemized_costs(saved, categories, term).values()
+            self.dict_itemized_costs(
+                saved, categories, term, econ=econ
+            ).values()
         )
         csts = [self.sub_costs(saved, categories, term), numpy.nansum(itemcst)]
         return numpy.nansum(csts)
 
     def dict_itemized_costs(
-        self, saved: set = None, categories: tuple = None, term=0, test_val=True
+        self,
+        saved: set = None,
+        categories: tuple = None,
+        term=0,
+        test_val=True,
+        econ=None,
     ) -> dict:
         ccp = self.class_cost_properties()
         costs = {
             k: (
                 obj.__get__(self)
-                if obj.apply_at_term(self, term) == test_val
+                if obj.apply_at_term(self, term, econ) == test_val
                 else 0
             )
             for k, obj in ccp.items()
@@ -392,7 +406,9 @@ class CostModel(Configuration, TabulationMixin):
         }
         return costs
 
-    def sub_costs(self, saved: set = None, categories: tuple = None, term=0):
+    def sub_costs(
+        self, saved: set = None, categories: tuple = None, term=0, econ=None
+    ):
         """gets items from CostModel's defined in a Slot attribute or in a slot default, tolerrant to nan's in cost definitions"""
         if saved is None:
             saved = set()
@@ -410,7 +426,7 @@ class CostModel(Configuration, TabulationMixin):
                 saved.add(comp)
 
             if isinstance(comp, CostModel):
-                sub = comp.sum_costs(saved, categories, term)
+                sub = comp.sum_costs(saved, categories, term, econ=econ)
                 log.debug(
                     f"{self.identity} adding: {comp.identity if comp else comp}: {sub}+{sub_tot}"
                 )
@@ -450,14 +466,17 @@ class CostModel(Configuration, TabulationMixin):
         return sub_tot
 
     # Cost Term & Category Reporting
-    def costs_at_term(self, term: int, test_val=True) -> dict:
+    def costs_at_term(self, term: int, test_val=True, econ=None) -> dict:
         """returns a dictionary of all costs at term i, with zero if the mode
-        function returns False at that term"""
+        function returns False at that term
+
+        :param econ: the economics component to apply "end" term mode
+        """
         ccp = self.class_cost_properties()
         return {
             k: (
                 obj.__get__(self)
-                if obj.apply_at_term(self, term) == test_val
+                if obj.apply_at_term(self, term, econ) == test_val
                 else 0
             )
             for k, obj in ccp.items()
@@ -487,10 +506,10 @@ class CostModel(Configuration, TabulationMixin):
                 base[cc] += obj.__get__(self)
         return base
 
-    def cost_categories_at_term(self, term: int):
+    def cost_categories_at_term(self, term: int, econ=None):
         base = {cc: 0 for cc in self.all_categories()}
         for k, obj in self.class_cost_properties().items():
-            if obj.apply_at_term(self, term):
+            if obj.apply_at_term(self, term, econ):
                 for cc in obj.cost_categories:
                     base[cc] += obj.__get__(self)
         return base
@@ -677,7 +696,7 @@ class Economics(Component):
         if isinstance(comp, dict):
             return lambda term: comp[prop] if term == 0 else 0
         return lambda term: (
-            prop.__get__(comp) if prop.apply_at_term(comp, term) else 0
+            prop.__get__(comp) if prop.apply_at_term(comp, term, self) else 0
         )
 
     def sum_term_fgen(self, ref_group):
@@ -756,9 +775,10 @@ class Economics(Component):
         }
 
         def abriv(val):
-            if val > 1e6:
+            evall = abs(val)
+            if evall > 1e6:
                 return f"{val/1E6:>12.4f} M"
-            elif val > 1e3:
+            elif evall > 1e3:
                 return f"{val/1E3:>12.2f} k"
             return f"{val:>12.2f}"
 
@@ -772,49 +792,92 @@ class Economics(Component):
 
             if ".cost." in col and is_ann == annualized:
                 base, cst = col.split(".cost.")
-                ckey = f"{base.replace('lifecycle.','')}.cost.{cst}"
-                #print(ckey,str(self._comp_costs.keys()))
+                if base == "lifecycle":
+                    ckey = f"cost.{cst}"  # you're at the top bby
+                else:
+                    ckey = f"{base.replace('lifecycle.','')}.cost.{cst}"
+                # print(ckey,str(self._comp_costs.keys()))
                 comp_costs[base][cst] = val
-                comp_nums[base][cst] = get_num_from_cost_prop(self._comp_costs[ckey])
+                comp_nums[base][cst] = get_num_from_cost_prop(
+                    self._comp_costs[ckey]
+                )
             elif col.startswith("summary."):
                 summary[col.replace("summary.", "")] = val
+            else:
+                self.msg(f"skipping: {col}")
 
         total_cost = sum([sum(list(cc.values())) for cc in comp_costs.values()])
 
         # provide consistent format
         hdr = "{key:<32}|\t{value:12.10f}"
         fmt = "{key:<32}|\t{fmt:<24} | {total:^12} | {pct:3.3f}%"
-        title = f'COST SUMMARY: {self.parent.identity}'
+        title = f"COST SUMMARY: {self.parent.identity}"
         if do_print:
-            self.info('#'*80)
-            self.info(f'{title:^80}')
-            self.info('_'*80)
-            #summary items
-            for key,val in summary.items():
-                self.info(hdr.format(key=key,value=val))
-                itcst = '{val:>24}'.format(val='TOTAL----->')
-            self.info('='*80)
-            self.info(fmt.format(key='COMBINED',fmt=itcst,total=abriv(total_cost),pct=100))
-            self.info('-'*80)    
-            #itemization
-            sgroups = lambda kv:sum(list(kv[-1].values()))
-            for base,items in sorted(comp_costs.items(),key=sgroups,reverse=True):
-                if (subtot:=sum(list(items.values()))) > 0:
-                    #self.info(f' {base:<35}| total ---> {abriv(subtot)} | {subtot*100/total_cost:3.0f}%')
-                    pct = subtot*100/total_cost
-                    itcst = '{val:>24}'.format(val='TOTAL----->')
-                    #todo; add number of items for cost comp
-                    self.info(fmt.format(key=base,fmt=itcst,total=abriv(subtot),pct=pct))
-                    #Sort costs by value
-                    for key,val in sorted(items.items(),key=lambda kv:kv[-1],reverse=True):
-                        #self.info(f' \t{key:<32}|{abriv(val)}             | {val*100/total_cost:^3.0f}%')
+            self.info("#" * 80)
+            self.info(f"{title:^80}")
+            self.info("_" * 80)
+            # possible core values
+            if NI := getattr(self, "num_items", None):  # num items
+                self.info(hdr.format(key="num_items", value=NI))
+            if TI := getattr(self, "term_length", None):
+                self.info(hdr.format(key="term_length", value=TI))
+            if DR := getattr(self, "discount_rate", None):
+                self.info(hdr.format(key="discount_rate", value=DR))
+            if DR := getattr(self, "output", None):
+                self.info(hdr.format(key="output", value=DR))
+            # summary items
+            for key, val in summary.items():
+                self.info(hdr.format(key=key, value=val))
+                itcst = "{val:>24}".format(val="TOTAL----->")
+            self.info("=" * 80)
+            self.info(
+                fmt.format(
+                    key="COMBINED", fmt=itcst, total=abriv(total_cost), pct=100
+                )
+            )
+            self.info("-" * 80)
+            # itemization
+            sgroups = lambda kv: sum(list(kv[-1].values()))
+            for base, items in sorted(
+                comp_costs.items(), key=sgroups, reverse=True
+            ):
+                # skip if all zeros (allow for net negative costs)
+                if (subtot := sum([abs(v) for v in items.values()])) > 0:
+                    # self.info(f' {base:<35}| total ---> {abriv(subtot)} | {subtot*100/total_cost:3.0f}%')
+                    pct = subtot * 100 / total_cost
+                    itcst = "{val:>24}".format(val="TOTAL----->")
+                    # todo; add number of items for cost comp
+                    adj_base = base.replace("lifecycle.", "")
+                    self.info(
+                        fmt.format(
+                            key=adj_base,
+                            fmt=itcst,
+                            total=abriv(subtot),
+                            pct=pct,
+                        )
+                    )
+                    # Sort costs by value
+                    for key, val in sorted(
+                        items.items(), key=lambda kv: kv[-1], reverse=True
+                    ):
+                        if val == 0 or numpy.isnan(val):
+                            continue  # skip zero costs
+                        # self.info(f' \t{key:<32}|{abriv(val)}             | {val*100/total_cost:^3.0f}%')
                         tot = abriv(val)
-                        pct = val*100/total_cost
+                        pct = val * 100 / total_cost
                         num = comp_nums[base][key]
-                        itcst = f'{abriv(val/num):^18} x {num:3.0f}' if num != 0 else '0'
-                        self.info(fmt.format(key='-'+key,fmt=itcst,total=tot,pct=pct))
-                    self.info('-'*80) #section break
-            self.info('#'*80)
+                        itcst = (
+                            f"{abriv(val/num):^18} x {num:3.0f}"
+                            if num != 0
+                            else "0"
+                        )
+                        self.info(
+                            fmt.format(
+                                key="-" + key, fmt=itcst, total=tot, pct=pct
+                            )
+                        )
+                    self.info("-" * 80)  # section break
+            self.info("#" * 80)
             return costs
 
     @property
