@@ -96,7 +96,8 @@ class TestCategoriesAndTerms(unittest.TestCase):
 
         df = er.dataframe
         tc = (
-            df["econ.summary.total_cost"] == np.array([161.0, 220.0, 305.0, 390.0])
+            df["econ.summary.total_cost"]
+            == np.array([161.0, 220.0, 305.0, 390.0])
         ).all()
         self.assertTrue(tc)
 

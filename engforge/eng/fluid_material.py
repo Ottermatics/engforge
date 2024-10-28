@@ -254,7 +254,9 @@ class CoolPropMixture(CoolPropMaterial):
     @classmethod
     def setup(cls):
         try:
-            CoolProp.apply_simple_mixing_rule(cls.material, cls.material2, "linear")
+            CoolProp.apply_simple_mixing_rule(
+                cls.material, cls.material2, "linear"
+            )
         except Exception as e:
             pass
             # self.error(e,'issue setting mixing rule, but continuting.')

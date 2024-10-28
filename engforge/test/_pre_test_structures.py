@@ -40,7 +40,9 @@ class test_cantilever(unittest.TestCase):
         self.subtest_assert_near(self.bm.section_mass, 41.9)
 
         self.subtest_assert_near(self.bm.max_von_mises(), 27.4e6)
-        self.subtest_assert_near(float(self.bm.data_dict["min_deflection_y"]), -0.0076)
+        self.subtest_assert_near(
+            float(self.bm.data_dict["min_deflection_y"]), -0.0076
+        )
         # self.subtest_assert_near(float(self.bm.data_dict["max_shear_y"]), 3000)
         self.subtest_assert_near(float(self.bm.data_dict["max_shear_y"]), 3000)
 
@@ -62,7 +64,9 @@ class test_cantilever(unittest.TestCase):
 
     def subtest_assert_near(self, value, truth, pct=0.025, **kw):
         with self.subTest(**kw):
-            self.assertAlmostEqual(value, truth, delta=max(abs(truth * pct), abs(pct)))
+            self.assertAlmostEqual(
+                value, truth, delta=max(abs(truth * pct), abs(pct))
+            )
 
 
 class test_truss(unittest.TestCase):
@@ -86,7 +90,9 @@ class test_truss(unittest.TestCase):
         for n1 in self.st.nodes.values():
             for n2 in self.st.nodes.values():
                 L = numpy.sqrt(
-                    (n1.X - n2.X) ** 2.0 + (n1.Y - n2.Y) ** 2.0 + (n1.Z - n2.Z) ** 2.0
+                    (n1.X - n2.X) ** 2.0
+                    + (n1.Y - n2.Y) ** 2.0
+                    + (n1.Z - n2.Z) ** 2.0
                 )
 
                 if (
@@ -197,7 +203,9 @@ class test_truss(unittest.TestCase):
             dopasst = abs(value - truth) <= abs(truth) * pct
 
             if not dopasst:
-                print(f"fails {key} {result_key}| {value:3.5f} == {truth:3.5f}?")
+                print(
+                    f"fails {key} {result_key}| {value:3.5f} == {truth:3.5f}?"
+                )
             self.subtest_assert_near(value, truth, pct=pct)
 
     def subtest_assert_near(self, value, truth, pct=0.025):

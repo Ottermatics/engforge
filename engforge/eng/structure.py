@@ -61,7 +61,9 @@ SECTIONS = {
     k: v
     for k, v in filter(
         lambda kv: (
-            issubclass(kv[1], geometry.Geometry) if type(kv[1]) is type else False
+            issubclass(kv[1], geometry.Geometry)
+            if type(kv[1]) is type
+            else False
         ),
         sections.__dict__.items(),
     )
@@ -325,7 +327,9 @@ class Structure(System, CostModel, PredictionMixin):
         pass
 
     # Execution
-    def execute(self, combos: list = None, save=True, record=True, *args, **kwargs):
+    def execute(
+        self, combos: list = None, save=True, record=True, *args, **kwargs
+    ):
         """wrapper allowing saving of data by load combo"""
 
         # the string input case, with csv support
@@ -348,7 +352,9 @@ class Structure(System, CostModel, PredictionMixin):
 
                 # run the analysis
                 # self.index += 1
-                combo_possible = self.struct_pre_execute(combo)  # can change combo
+                combo_possible = self.struct_pre_execute(
+                    combo
+                )  # can change combo
                 if combo_possible:
                     self.current_combo = combo_possible
                 else:
@@ -420,7 +426,9 @@ class Structure(System, CostModel, PredictionMixin):
             res = target - ff
 
         if sols is not None:
-            sols.append({"x": x, "ff": ff, "obj": res, "kw": bkw, "mf": mf, "bf": bf})
+            sols.append(
+                {"x": x, "ff": ff, "obj": res, "kw": bkw, "mf": mf, "bf": bf}
+            )
 
         self.info(f"ran: {bkw} -> {ff:5.4f} | {res:5.4f}")
         return res
@@ -746,7 +754,9 @@ class Structure(System, CostModel, PredictionMixin):
         elif hasattr(section, "material"):
             material = section.material
         else:
-            raise ValueError("material not defined as input or from default sources!")
+            raise ValueError(
+                "material not defined as input or from default sources!"
+            )
 
         uid = material.unique_id
         if uid not in self._materials:
@@ -756,7 +766,9 @@ class Structure(System, CostModel, PredictionMixin):
             )
             self._materials[uid] = material
 
-        beam_attrs = {k: v for k, v in kwargs.items() if k in Beam.input_attrs()}
+        beam_attrs = {
+            k: v for k, v in kwargs.items() if k in Beam.input_attrs()
+        }
         kwargs = {k: v for k, v in kwargs.items() if k not in beam_attrs}
 
         B = beam = Beam(
@@ -780,7 +792,9 @@ class Structure(System, CostModel, PredictionMixin):
         )
 
         if self.add_gravity_force:
-            beam.apply_gravity_force(z_dir=self.gravity_dir, z_mag=self.gravity_scalar)
+            beam.apply_gravity_force(
+                z_dir=self.gravity_dir, z_mag=self.gravity_scalar
+            )
 
         return beam
 
@@ -818,7 +832,9 @@ class Structure(System, CostModel, PredictionMixin):
         self.beams[name] = beam
 
         if self.add_gravity_force:
-            beam.apply_gravity_force(z_dir=self.gravity_dir, z_mag=self.gravity_scalar)
+            beam.apply_gravity_force(
+                z_dir=self.gravity_dir, z_mag=self.gravity_scalar
+            )
 
         self.frame.add_member(
             name,
@@ -932,7 +948,7 @@ class Structure(System, CostModel, PredictionMixin):
     def beam_cost(self) -> float:
         """sum of all beams cost"""
         return sum([bm.cost for bm in self.beams.values()])
-    
+
     @system_property
     def structure_cost(self) -> float:
         """sum of all beams and quad cost"""
@@ -1431,7 +1447,9 @@ class Structure(System, CostModel, PredictionMixin):
         summary["mesh_stable"] = mesh_success
 
         # update failures
-        mesh_failures_count = len([v for k, v in mesh_failures.items() if v > 0.99])
+        mesh_failures_count = len(
+            [v for k, v in mesh_failures.items() if v > 0.99]
+        )
 
         max_fail_frac = max(
             [0]
@@ -1694,7 +1712,10 @@ class Structure(System, CostModel, PredictionMixin):
             d_["stress_results"] = sss = s.get_stress()
             d_["stress_vm_max"] = max([max(ss["sig_vm"]) for ss in sss])
             d_["fail_frac"] = ff = max(
-                [max(ss["sig_vm"] / beam.material.allowable_stress) for ss in sss]
+                [
+                    max(ss["sig_vm"] / beam.material.allowable_stress)
+                    for ss in sss
+                ]
             )
             d_["fails"] = fail = ff > 1 / SF
 
@@ -1722,7 +1743,9 @@ class Structure(System, CostModel, PredictionMixin):
 
 
 # Remote Sync Util (locally run with section)
-def run_combo_failure_analysis(inst, combo, run_full: bool = False, SF: float = 1.0):
+def run_combo_failure_analysis(
+    inst, combo, run_full: bool = False, SF: float = 1.0
+):
     """runs a single load combo and adds 2d section failures"""
     inst.resetSystemLogs()
     # use parallel failure section
@@ -1835,7 +1858,9 @@ def run_failure_sections(
 
 
 # Remote Analysis
-def parallel_run_failure_analysis(struct, SF=1.0, run_full=False, purge=False, **kw):
+def parallel_run_failure_analysis(
+    struct, SF=1.0, run_full=False, purge=False, **kw
+):
     """
     Failure Determination:
     Beam Stress Estiates are used to determine if a 2D FEA beam/combo analysis should be run. The maximum beam vonmises stress is compared the the beam material allowable stress / saftey factor.
@@ -1946,7 +1971,9 @@ if ray_ok:
             d_["stress_analysis"] = s
             d_["stress_results"] = sss
         d_["stress_vm_max"] = max([max(ss["sig_vm"]) for ss in sss])
-        d_["fail_frac"] = ff = max([max(ss["sig_vm"] / allowable_stress) for ss in sss])
+        d_["fail_frac"] = ff = max(
+            [max(ss["sig_vm"] / allowable_stress) for ss in sss]
+        )
         d_["fails"] = fail = ff > 1 / SF
 
         return d_
@@ -2176,7 +2203,9 @@ if ray_ok:
             allowable = r["allowable"]
 
             cur.append(
-                remote_section.remote(beam_ref, beamnm, forces, allowable, c, x, SF=SF)
+                remote_section.remote(
+                    beam_ref, beamnm, forces, allowable, c, x, SF=SF
+                )
             )
 
             # run the damn thing
@@ -2192,7 +2221,9 @@ if ray_ok:
                     secton_results[res["beam"]][(combo, x)] = res
 
                     if fail:
-                        log.warning(f"beam {beamnm} failed @ {x*100:3.0f}%| {c}")
+                        log.warning(
+                            f"beam {beamnm} failed @ {x*100:3.0f}%| {c}"
+                        )
                         if fail_fast:
                             return secton_results
                         if not run_full:

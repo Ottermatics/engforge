@@ -198,10 +198,10 @@ class DiskCacheStore(LoggingMixin, metaclass=SingletonMeta):
     retries = 1
     sleep_time = 0.1
 
-    proj_dir: str = None #avoid using implicit determinination
-    cache_path: str = None #override for implicit path, a recommended practice
+    proj_dir: str = None  # avoid using implicit determinination
+    cache_path: str = None  # override for implicit path, a recommended practice
 
-    def __init__(self,root_path=None, **kwargs):
+    def __init__(self, root_path=None, **kwargs):
         if root_path is not None:
             self.cache_path = root_path
 
@@ -226,7 +226,7 @@ class DiskCacheStore(LoggingMixin, metaclass=SingletonMeta):
 
         if self.alt_path is not None:
             return os.path.join(self.proj_root, "cache", self.alt_path)
-        
+
         return os.path.join(
             self.proj_root,
             "cache",
@@ -289,7 +289,9 @@ class DiskCacheStore(LoggingMixin, metaclass=SingletonMeta):
             ttl -= 1
             if ttl > 0:
                 time.sleep(self.sleep_time * (self.retries - ttl))
-                return self.get(key=key, on_missing=on_missing, retry=True, ttl=ttl)
+                return self.get(
+                    key=key, on_missing=on_missing, retry=True, ttl=ttl
+                )
             else:
                 self.error(e, "Issue Getting Item From Cache")
 
@@ -297,7 +299,10 @@ class DiskCacheStore(LoggingMixin, metaclass=SingletonMeta):
         """wrapper for diskcache expire method that only permits expiration on a certain interval
         :return: bool, True if expired called"""
         now = time.time()
-        if self.last_expire is None or now - self.last_expire > self.expire_threshold:
+        if (
+            self.last_expire is None
+            or now - self.last_expire > self.expire_threshold
+        ):
             self.cache.expire()
             self.last_expire = now
             return True
@@ -336,7 +341,9 @@ class DBConnection(LoggingMixin, metaclass=InputSingletonMeta):
 
     # TODO: Make Threadsafe W/ ThreadPoolExecutor!
     # we love postgres!
-    _connection_template = "postgresql://{user}:{passd}@{host}:{port}/{database}"
+    _connection_template = (
+        "postgresql://{user}:{passd}@{host}:{port}/{database}"
+    )
 
     pool_size = 20
     max_overflow = 0
@@ -359,7 +366,9 @@ class DBConnection(LoggingMixin, metaclass=InputSingletonMeta):
 
     connect_args = {"connect_timeout": 5}
 
-    def __init__(self, database_name=None, host=None, user=None, passd=None, **kwargs):
+    def __init__(
+        self, database_name=None, host=None, user=None, passd=None, **kwargs
+    ):
         """On the Singleton DBconnection.instance(): __init__(*args,**kwargs) will get called, technically you
         could do it this way but won't be thread safe, or a single instance
         :param database_name: the name for the database inside the db server
@@ -434,7 +443,9 @@ class DBConnection(LoggingMixin, metaclass=InputSingletonMeta):
 
         # self.scopefunc = functools.partial(context.get, "uuid")
 
-        self.session_factory = sessionmaker(bind=self.engine, expire_on_commit=True)
+        self.session_factory = sessionmaker(
+            bind=self.engine, expire_on_commit=True
+        )
         self.Session = scoped_session(self.session_factory)
 
     @contextmanager

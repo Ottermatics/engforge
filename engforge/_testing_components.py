@@ -95,15 +95,23 @@ class SpaceMixin(SolveableInterface):
     lenP = Solver.con_ineq("edge_margin", combos="ineq_length", active=False)
 
     # Objectives
-    size_goal = Solver.objective("goal", combos="prop_goal", kind="min", active=False)
+    size_goal = Solver.objective(
+        "goal", combos="prop_goal", kind="min", active=False
+    )
 
-    size = Solver.objective("volume", combos="obj_size", kind="max", active=False)
+    size = Solver.objective(
+        "volume", combos="obj_size", kind="max", active=False
+    )
     sizeF = Solver.objective(
         wrap_f(Fun_size), combos="obj_size", kind="max", active=False
     )
 
-    eff = Solver.objective("cost_to_volume", combos="obj_eff", kind="min", active=False)
-    effF = Solver.objective(wrap_f(Fun_eff), combos="obj_eff", kind="min", active=False)
+    eff = Solver.objective(
+        "cost_to_volume", combos="obj_eff", kind="min", active=False
+    )
+    effF = Solver.objective(
+        wrap_f(Fun_eff), combos="obj_eff", kind="min", active=False
+    )
 
     @system_property
     def combine_length(self) -> float:
@@ -176,9 +184,13 @@ class CubeSystem(System, SpaceMixin):
 
     goal_vol_frac: float = 0.5
 
-    sys_budget = Solver.con_ineq("total_budget", "system_cost", combos="total_budget")
+    sys_budget = Solver.con_ineq(
+        "total_budget", "system_cost", combos="total_budget"
+    )
 
-    sys_length = Solver.con_ineq("total_length", "system_length", combos="total_length")
+    sys_length = Solver.con_ineq(
+        "total_length", "system_length", combos="total_length"
+    )
 
     volfrac = Solver.con_eq(
         "goal_vol_frac", "vol_frac", combos="vol_frac_eq", active=False
@@ -319,7 +331,8 @@ class DynamicSystem(System):
     def spring_accel(self) -> float:
         # print(self.comp.v,self.comp.x,self.comp.a)
         return (
-            -self.comp.v * self.comp.b - (self.comp.x - self.comp.x0) * self.comp.K
+            -self.comp.v * self.comp.b
+            - (self.comp.x - self.comp.x0) * self.comp.K
         ) / self.comp.M
 
     @system_property
@@ -333,7 +346,9 @@ class DynamicSystem(System):
 
     def create_state_matrix(self, *args, **kwargs) -> np.ndarray:
         """creates the state matrix for the system"""
-        return np.array([[0, 1.0], [-self.K / self.Mass, -1 * self.Damp / self.Mass]])
+        return np.array(
+            [[0, 1.0], [-self.K / self.Mass, -1 * self.Damp / self.Mass]]
+        )
 
     def create_state_constants(self, *args, **kwargs) -> np.ndarray:
         """creates the input matrix for the system, called B"""
@@ -341,7 +356,9 @@ class DynamicSystem(System):
 
     def update_state(self, *args, **kwargs) -> np.ndarray:
         """creates the state matrix for the system"""
-        return np.array([[0, 1.0], [-self.K / self.Mass, -1 * self.Damp / self.Mass]])
+        return np.array(
+            [[0, 1.0], [-self.K / self.Mass, -1 * self.Damp / self.Mass]]
+        )
 
     def update_state_constants(self, *args, **kwargs) -> np.ndarray:
         """creates the input matrix for the system, called B"""
@@ -449,7 +466,9 @@ class Airfilter(System):
 
     pr_eq = Solver.constraint_equality("sum_dP", 0, combos="flow")
 
-    flow_curve = Plot.define("throttle", "w", kind="lineplot", title="Flow Curve")
+    flow_curve = Plot.define(
+        "throttle", "w", kind="lineplot", title="Flow Curve"
+    )
 
     @system_property
     def dP_parasitic(self) -> float:
@@ -530,7 +549,9 @@ class SliderCrank(System, CostModel):
     rg_slv.add_var_constraint(0.0125, "min")
 
     rg_slv = Solver.declare_var("Lo", combos="design")
-    rg_slv.add_var_constraint(lambda s, p: s.Rc * s.Lo_factor, "min", combos="design")
+    rg_slv.add_var_constraint(
+        lambda s, p: s.Rc * s.Lo_factor, "min", combos="design"
+    )
 
     offy_slv = Solver.declare_var("y_offset", combos="design")
     offx_slv = Solver.declare_var("x_offset", combos="design")
@@ -620,7 +641,8 @@ class SliderCrank(System, CostModel):
     def motion_curve(self) -> np.ndarray:
         x = (
             self.Rc * np.cos(theta)
-            + (self.Lo**2 - (self.Rc * np.sin(theta) - self.y_offset) ** 2) ** 0.5
+            + (self.Lo**2 - (self.Rc * np.sin(theta) - self.y_offset) ** 2)
+            ** 0.5
         )
         return x
 
@@ -679,7 +701,12 @@ class SliderCrank(System, CostModel):
 
     @system_property
     def mass_main_gear(self) -> float:
-        return np.pi * self.gear_material.density * self.Ro**2 * self.gear_thickness
+        return (
+            np.pi
+            * self.gear_material.density
+            * self.Ro**2
+            * self.gear_thickness
+        )
 
     @system_property
     def Imain_gear(self) -> float:
@@ -687,7 +714,12 @@ class SliderCrank(System, CostModel):
 
     @system_property
     def mass_pwr_gear(self) -> float:
-        return np.pi * self.gear_material.density * self.Rg**2 * self.gear_thickness
+        return (
+            np.pi
+            * self.gear_material.density
+            * self.Rg**2
+            * self.gear_thickness
+        )
 
     @system_property
     def Ipwr_gear(self) -> float:
@@ -777,7 +809,9 @@ class TermCosts(Comp1, CostModel):
     def cost_tax(self):
         return 1
 
-    @cost_property(mode=quarterly, category="opex,tax", label="quarterly wage tax")
+    @cost_property(
+        mode=quarterly, category="opex,tax", label="quarterly wage tax"
+    )
     def cost_wage_tax(self):
         return 5 * 3
 
@@ -852,7 +886,9 @@ class SysEcon(Economics):
 
 @forge
 class FanSystem(System, CostModel):
-    base = Slot.define(Component) #FIXME: not showing in "econ" (due to base default cost?)
+    base = Slot.define(
+        Component
+    )  # FIXME: not showing in "econ" (due to base default cost?)
     fan = Slot.define(Fan)
     motor = Slot.define(Motor)
 

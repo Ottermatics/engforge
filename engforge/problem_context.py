@@ -152,7 +152,9 @@ root_defined = dict(
 save_modes = ["vars", "nums", "all", "prob"]
 transfer_kw = ["system", "_dxdt"]
 
-root_possible = list(root_defined.keys()) + list("_" + k for k in root_defined.keys())
+root_possible = list(root_defined.keys()) + list(
+    "_" + k for k in root_defined.keys()
+)
 
 # TODO: output options extend_dataframe=True,return_dataframe=True,condensed_dataframe=True,return_system=True,return_problem=True,return_df=True,return_data=True
 # TODO: connect save_data() output to _data table.
@@ -209,7 +211,8 @@ class ProblemExec:
     -  _problem_id: uuid for subproblems, or True for top level, None means uninitialized
 
     """
-    full_update = True #TODO: cant justify setting this to false for performance gains. accuracy comes first. see event based update
+
+    full_update = True  # TODO: cant justify setting this to false for performance gains. accuracy comes first. see event based update
 
     # TODO: convert this to a system based cache where there is a unique problem for each system instance. On subprobem copy a system and add o dictionary.
     class_cache = None  # ProblemExec is assigned below
@@ -245,7 +248,9 @@ class ProblemExec:
     _converged: bool
 
     # Interior Context Options
-    enter_refresh: bool = True #TODO: allow this off (or lower impact) with event system
+    enter_refresh: bool = (
+        True  # TODO: allow this off (or lower impact) with event system
+    )
     save_on_exit: bool = False
     save_mode: str = "all"
     level_name: str = None  # target this context with the level name
@@ -292,7 +297,9 @@ class ProblemExec:
         # Default behaviour
         return self.__getattribute__(name)
 
-    def __init__(self, system, kw_dict=None, Xnew=None, ctx_fail_new=False, **opts):
+    def __init__(
+        self, system, kw_dict=None, Xnew=None, ctx_fail_new=False, **opts
+    ):
         """
         Initializes the ProblemExec.
 
@@ -337,7 +344,7 @@ class ProblemExec:
             self.persist_contexts()
 
         # temp solver storage #TODO
-        #self.solver_hist = expiringdict.ExpiringDict(100, 60)
+        # self.solver_hist = expiringdict.ExpiringDict(100, 60)
 
         if self.log_level < 5:
             if hasattr(self.class_cache, "session"):
@@ -428,8 +435,8 @@ class ProblemExec:
             self.class_cache.session._prob_levels[self.level_name] = self
             # error if the system is different (it shouldn't be!)
             if self.system is not system:
-                #TODO: subproblems allow different systems, but the top level should be the same
-                #idea - use (system,pid) as key for problems_dict, (system,True) would be root problem. This breaks checking for `class_cache.session` though one could gather that from the root problem key`
+                # TODO: subproblems allow different systems, but the top level should be the same
+                # idea - use (system,pid) as key for problems_dict, (system,True) would be root problem. This breaks checking for `class_cache.session` though one could gather that from the root problem key`
                 raise IllegalArgument(
                     f"somethings wrong! change of comp! {self.system} -> {system}"
                 )
@@ -476,7 +483,9 @@ class ProblemExec:
             self.set_checkpoint()
 
         if log.log_level < 10:
-            self.info(f"new execution context for {system}| {opts} | {self._slv_kw}")
+            self.info(
+                f"new execution context for {system}| {opts} | {self._slv_kw}"
+            )
 
         elif log.log_level <= 3:
             self.msg(f"new execution context for {system}| {self._slv_kw}")
@@ -594,7 +603,7 @@ class ProblemExec:
     # Update Methods
     def refresh_references(self, sesh=None):
         """refresh the system references"""
-        
+
         if sesh is None:
             sesh = self.sesh
 
@@ -621,36 +630,46 @@ class ProblemExec:
             self.info(f"update dynamics")
             self.system.setup_global_dynamics()
 
-    def full_refresh(self,sesh=None):
+    def full_refresh(self, sesh=None):
         """a more time consuming but throughout refresh of the system"""
         if self.log_level < 5:
             self.info(f"full refresh")
 
         check_dynamics = sesh.check_dynamics
-        sesh._num_refs = sesh.system.system_references(numeric_only=True,none_ok=True, only_inst=False,ignore_none_comp=False,recache=True)
+        sesh._num_refs = sesh.system.system_references(
+            numeric_only=True,
+            none_ok=True,
+            only_inst=False,
+            ignore_none_comp=False,
+            recache=True,
+        )
         sesh._sys_refs = sesh.system.solver_vars(
             check_dynamics=check_dynamics,
             addable=sesh._num_refs,
             **sesh._slv_kw,
         )
-        sesh.update_methods(sesh=sesh)        
-        
+        sesh.update_methods(sesh=sesh)
+
     def min_refresh(self, sesh=None):
         """what things need to be refreshed per execution, this is important whenever items are replaced"""
-        #TODO: replace this function with an event based responsiblity model.
+        # TODO: replace this function with an event based responsiblity model.
         sesh = sesh if sesh is not None else self.sesh
 
         if self.log_level < 5:
             self.info(f"min refresh")
 
         if sesh.full_update:
-            #TODO: dont require this 
+            # TODO: dont require this
             sesh.full_refresh(sesh=sesh)
-            
+
         # final ref's after update
         # after updates
         sesh._all_refs = sesh.system.system_references(
-            recache=True, check_config=False, ignore_none_comp=False,none_ok=True, only_inst=False
+            recache=True,
+            check_config=False,
+            ignore_none_comp=False,
+            none_ok=True,
+            only_inst=False,
         )
         # sesh._attr_sys_key_map = sesh.attribute_sys_key_map
 
@@ -658,10 +677,10 @@ class ProblemExec:
         sesh.Xref = sesh.all_problem_vars
         sesh.Yref = sesh.sys_solver_objectives()
 
-        cons = {}  #TODO: parse additional constraints
+        cons = {}  # TODO: parse additional constraints
         sesh.constraints = sesh.sys_solver_constraints(cons)
 
-    def print_all_info(self,keys:str=None,comps:str=None):
+    def print_all_info(self, keys: str = None, comps: str = None):
         """
         Print all the information of each component's dictionary.
         Parameters:
@@ -670,28 +689,31 @@ class ProblemExec:
         Returns: None (except stdout :)
         """
         from pprint import pprint
-        keys = keys.split(',')
-        comps = (comps+',').split(',') #always top level
-        print(f'CONTEXT: {self}')
-        
-        mtch = lambda key,ptrns: any([fnmatch.fnmatch(key.lower(),ptn.lower()) for ptn in ptrns])
 
-        #check your comps
+        keys = keys.split(",")
+        comps = (comps + ",").split(",")  # always top level
+        print(f"CONTEXT: {self}")
+
+        mtch = lambda key, ptrns: any(
+            [fnmatch.fnmatch(key.lower(), ptn.lower()) for ptn in ptrns]
+        )
+
+        # check your comps
         itrs = self.all_comps.copy()
-        itrs[''] = Ref(self.system,'',True,False)
+        itrs[""] = Ref(self.system, "", True, False)
 
-        #check your comps
-        for cn,comp in itrs.items():
-            if comps is not None and not mtch(cn,comps):
+        # check your comps
+        for cn, comp in itrs.items():
+            if comps is not None and not mtch(cn, comps):
                 continue
-            
+
             dct = comp.value().as_dict
-            if keys: #filter keys
-                dct = {k:v for k,v in dct.items() if mtch(k,keys)}
+            if keys:  # filter keys
+                dct = {k: v for k, v in dct.items() if mtch(k, keys)}
             if dct:
                 print(f'INFO: {cn if cn else "<problem.system>"}')
                 pprint(dct)
-                print('-'*80)
+                print("-" * 80)
 
     @property
     def check_dynamics(self):
@@ -746,7 +768,11 @@ class ProblemExec:
         self.class_cache.level_number = 0
 
         if self.log_level < 10:
-            refs = {k: v for k, v in self.sesh._sys_refs.get("attrs", {}).items() if v}
+            refs = {
+                k: v
+                for k, v in self.sesh._sys_refs.get("attrs", {}).items()
+                if v
+            }
             self.debug(
                 f"creating execution context for {self.system}| {self._slv_kw}| {refs}"
             )
@@ -819,7 +845,9 @@ class ProblemExec:
                     if type(self.problems_dict) is not dict:
                         self.problems_dict.pop(self._problem_id, None)
                     del self.class_cache.session
-                    raise KeyError(f"cant exit to level! {exc_value.level} not found!!")
+                    raise KeyError(
+                        f"cant exit to level! {exc_value.level} not found!!"
+                    )
 
             else:
                 if self.log_level <= 18:
@@ -853,7 +881,7 @@ class ProblemExec:
             raise IllegalArgument(f"no session available")
 
     # Multi Context Exiting:
-    #TODO: rethink this
+    # TODO: rethink this
     def persist_contexts(self):
         """convert all contexts to a new storage format"""
         self.info(f"persisting contexts!")
@@ -961,7 +989,10 @@ class ProblemExec:
             self.warning(f"no data saved, nothing changed")
 
     def clean_context(self):
-        if hasattr(self.class_cache, "session") and self.class_cache.session is self:
+        if (
+            hasattr(self.class_cache, "session")
+            and self.class_cache.session is self
+        ):
             if self.log_level <= 8:
                 self.debug(f"closing execution session")
             self.class_cache.level_number = 0
@@ -1005,7 +1036,9 @@ class ProblemExec:
             dt = max_step_dt
 
         if self.log_level < 15:
-            self.info(f"simulating {system},{sesh}| int:{intl_refs} | refs: {refs}")
+            self.info(
+                f"simulating {system},{sesh}| int:{intl_refs} | refs: {refs}"
+            )
 
         if not intl_refs:
             raise Exception(f"no transient parameters found")
@@ -1118,7 +1151,7 @@ class ProblemExec:
                             self.info(
                                 f'exiting solver {t} {ss_out["Xans"]} {ss_out["Xstart"]}'
                             )
-                        pbx.set_ref_values(ss_out["Xans"],scope='intgrl')
+                        pbx.set_ref_values(ss_out["Xans"], scope="intgrl")
                         pbx.exit_to_level("ss_slvr", False)
                     else:
                         self.warning(
@@ -1223,7 +1256,7 @@ class ProblemExec:
         # Output Results
         Xa = {p: answer.x[i] for i, p in enumerate(vars)}
         output["Xans"] = Xa
-        Ref.refset_input(Xref, Xa,scope='solvd')
+        Ref.refset_input(Xref, Xa, scope="solvd")
 
         Yout = {p: yit.value(yit.comp, self) for p, yit in Yref.items()}
         output["Yobj"] = Yout
@@ -1231,7 +1264,9 @@ class ProblemExec:
         Ycon = {}
         if sesh.constraints["constraints"]:
             x_in = answer.x
-            for c, k in zip(sesh.constraints["constraints"], sesh.constraints["info"]):
+            for c, k in zip(
+                sesh.constraints["constraints"], sesh.constraints["info"]
+            ):
                 cv = c["fun"](x_in, self, {})
                 Ycon[k] = cv
         output["Ycon"] = Ycon
@@ -1344,7 +1379,9 @@ class ProblemExec:
         )
 
         slv_inst = sys_refs.get("type", {}).get("solver", {})
-        trv_inst = {v.var: v for v in sys_refs.get("type", {}).get("time", {}).values()}
+        trv_inst = {
+            v.var: v for v in sys_refs.get("type", {}).get("time", {}).values()
+        }
         sys_refs = sys_refs.get("attrs", {})
 
         if add_con is None:
@@ -1419,12 +1456,22 @@ class ProblemExec:
                         combo_var = ctype["combo_var"]
                         active = ctype.get("active", True)
                         in_activate = (
-                            any([arg_var_compare(combo_var, v) for v in activated])
+                            any(
+                                [
+                                    arg_var_compare(combo_var, v)
+                                    for v in activated
+                                ]
+                            )
                             if activated
                             else False
                         )
                         in_deactivate = (
-                            any([arg_var_compare(combo_var, v) for v in deactivated])
+                            any(
+                                [
+                                    arg_var_compare(combo_var, v)
+                                    for v in deactivated
+                                ]
+                            )
                             if deactivated
                             else False
                         )
@@ -1435,12 +1482,16 @@ class ProblemExec:
                         # Check active or activated
                         if not active and not activated:
                             if log.log_level < 3:
-                                self.msg(f"skip con: inactive {var} {slvr} {ctype}")
+                                self.msg(
+                                    f"skip con: inactive {var} {slvr} {ctype}"
+                                )
                             continue
 
                         elif not active and not in_activate:
                             if log.log_level < 3:
-                                self.msg(f"skip con: inactive {var} {slvr} {ctype}")
+                                self.msg(
+                                    f"skip con: inactive {var} {slvr} {ctype}"
+                                )
                             continue
 
                         elif active and in_deactivate:
@@ -1458,7 +1509,9 @@ class ProblemExec:
                             continue
 
                     if log.log_level < 10:
-                        self.debug(f"adding var constraint {var,slvr,ctype,combos}")
+                        self.debug(
+                            f"adding var constraint {var,slvr,ctype,combos}"
+                        )
 
                     # get the index of the variable
                     x_inx = Xvars.index(slvr)
@@ -1522,7 +1575,9 @@ class ProblemExec:
                                 cval,
                                 **kw,
                             )
-                            con_info.append(f"val_{ref.comp.classname}_{kind}_{slvr}")
+                            con_info.append(
+                                f"val_{ref.comp.classname}_{kind}_{slvr}"
+                            )
                             con_list.append(ccst)
 
                         else:
@@ -1534,7 +1589,9 @@ class ProblemExec:
         for slvr, ref in self.problem_ineq.items():
             slv = slv_inst[slvr]
             slv_constraints = slv.constraints
-            parent = self.get_parent_key(slvr, look_back_num=2)  # get the parent comp
+            parent = self.get_parent_key(
+                slvr, look_back_num=2
+            )  # get the parent comp
             for ctype in slv_constraints:
                 cval = ctype["value"]
                 kind = ctype["type"]
@@ -1556,7 +1613,9 @@ class ProblemExec:
                     )
 
         for slvr, ref in self.problem_eq.items():
-            parent = self.get_parent_key(slvr, look_back_num=2)  # get the parent comp
+            parent = self.get_parent_key(
+                slvr, look_back_num=2
+            )  # get the parent comp
             if slvr in slv_inst and slvr in all_refz.get("solver.eq", {}):
                 slv = slv_inst[slvr]
                 slv_constraints = slv.constraints
@@ -1603,7 +1662,9 @@ class ProblemExec:
 
     # General method to distribute input to internal components
     @classmethod
-    def parse_default(self, key, defaults, input_dict, rmv=False, empty_str=True):
+    def parse_default(
+        self, key, defaults, input_dict, rmv=False, empty_str=True
+    ):
         """splits strings or lists and returns a list of options for the key, if nothing found returns None if fail set to True raises an exception, otherwise returns the default value"""
         if key in input_dict:
             # kwargs will no longer have key!
@@ -1696,7 +1757,9 @@ class ProblemExec:
         elif "prob" == sesh.save_mode:
             raise NotImplementedError(f"problem save mode not implemented")
         else:
-            raise KeyError(f"unknown save mode {sesh.save_mode}, not in {save_modes}")
+            raise KeyError(
+                f"unknown save mode {sesh.save_mode}, not in {save_modes}"
+            )
 
         out = Ref.refset_get(refs, sys=sesh.system, prob=self)
         # Integration
@@ -1712,15 +1775,17 @@ class ProblemExec:
             refs = sesh.all_system_references
         return Ref.refset_get(refs, sys=self.system, prob=self)
 
-    def set_ref_values(self, values, refs=None,scope='sref'):
+    def set_ref_values(self, values, refs=None, scope="sref"):
         """returns the values of the refs"""
         # TODO: add checks for the refs
         if refs is None:
             sesh = self.sesh
             refs = sesh.all_comps_and_vars
-        return Ref.refset_input(refs, values,scope=scope)
+        return Ref.refset_input(refs, values, scope=scope)
 
-    def change_sys_var(self, key, value, refs=None, doset=True, attr_key_map=None):
+    def change_sys_var(
+        self, key, value, refs=None, doset=True, attr_key_map=None
+    ):
         """use this function to change the value of a system var and update the start state, multiple uses in the same context will not change the record preserving the start value
 
         :param key: a string corresponding to a ref, or an `attrs.Attribute` of one of the system or its component's.
@@ -1763,7 +1828,9 @@ class ProblemExec:
             rs = list(self.record_state.values())
             self.debug(f"reverting to start: {xs} -> {rs}")
         # TODO: STRICT MODE Fail for refset_input
-        Ref.refset_input(sesh.all_comps_and_vars, self.x_start, fail=False,scope='rvtst')
+        Ref.refset_input(
+            sesh.all_comps_and_vars, self.x_start, fail=False, scope="rvtst"
+        )
 
     def activate_temp_state(self, new_state=None):
         # TODO: determine when components change, and update refs accordingly!
@@ -1772,11 +1839,18 @@ class ProblemExec:
         if new_state:
             if self.log_level < 3:
                 self.debug(f"new-state: {self.temp_state}")
-            Ref.refset_input(sesh.all_comps_and_vars, new_state, fail=False,scope='ntemp')
+            Ref.refset_input(
+                sesh.all_comps_and_vars, new_state, fail=False, scope="ntemp"
+            )
         elif self.temp_state:
             if self.log_level < 3:
                 self.debug(f"act-state: {self.temp_state}")
-            Ref.refset_input(sesh.all_comps_and_vars, self.temp_state, fail=False,scope='atemp')
+            Ref.refset_input(
+                sesh.all_comps_and_vars,
+                self.temp_state,
+                fail=False,
+                scope="atemp",
+            )
         elif self.log_level < 3:
             self.debug(f"no-state: {new_state}")
 
@@ -2074,9 +2148,12 @@ class ProblemExec:
         filter_non_numeric = lambda kv: (
             False if isinstance(kv[1], (list, dict, tuple)) else True
         )
-        f_numrow = lambda in_dict: dict(filter(filter_non_numeric, in_dict.items()))
+        f_numrow = lambda in_dict: dict(
+            filter(filter_non_numeric, in_dict.items())
+        )
         return [
-            f_numrow(kv[-1]) for kv in sorted(sesh.data.items(), key=lambda kv: kv[0])
+            f_numrow(kv[-1])
+            for kv in sorted(sesh.data.items(), key=lambda kv: kv[0])
         ]
 
     @property
@@ -2225,4 +2302,6 @@ class Problem(ProblemExec, DataframeMixin):
 
     @level_name.setter
     def level_name(self, value):
-        raise AttributeError(f"cannot set level_name of top level problem context")
+        raise AttributeError(
+            f"cannot set level_name of top level problem context"
+        )

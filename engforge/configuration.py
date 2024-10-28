@@ -56,7 +56,9 @@ def name_generator(instance):
     """a name generator for the instance"""
     base = str(instance.__class__.__name__).lower() + "-"
     if instance.__class__._use_random_name:
-        out = base + randomname.get_name(adj=NAME_ADJ.secret, noun=NAME_NOUN.secret)
+        out = base + randomname.get_name(
+            adj=NAME_ADJ.secret, noun=NAME_NOUN.secret
+        )
     else:
         out = base
     log.debug(f"generated name: {out}")
@@ -164,7 +166,9 @@ def property_changed(instance, variable, value):
     if not session and instance._anything_changed:
         # Bypass Check since we've already flagged for an update
         if log.log_level <= 2:
-            log.debug(f"already property changed {instance}{variable.name} {value}")
+            log.debug(
+                f"already property changed {instance}{variable.name} {value}"
+            )
         return value
 
     # elif session:
@@ -175,7 +179,9 @@ def property_changed(instance, variable, value):
     # session.change_sys_var(variable,value,doset=False)
     attrs = attr.fields(instance.__class__)  # check identity of variable
     cur = getattr(instance, variable.name)
-    is_different = value != cur if isinstance(value, (int, float, str)) else True
+    is_different = (
+        value != cur if isinstance(value, (int, float, str)) else True
+    )
     is_var = variable in attrs
     chgnw = instance._anything_changed
 
@@ -183,7 +189,9 @@ def property_changed(instance, variable, value):
         log.debug(
             f"checking property changed {instance}{variable.name} {value}|invar: {is_var}| nteqval: {is_different}"
         )
-        print(f"checking property changed {instance}{variable.name} {value}|invar: {is_var}| nteqval: {is_different}")
+        print(
+            f"checking property changed {instance}{variable.name} {value}|invar: {is_var}| nteqval: {is_different}"
+        )
 
     # Check if should be updated
     if not chgnw and is_var and is_different:
@@ -239,7 +247,9 @@ def signals_slots_handler(
     # Fields
     for t in fields:
         if t.name in PROTECTED_NAMES:
-            raise Exception(f"cannot use {t.name} as a field name, its protected")
+            raise Exception(
+                f"cannot use {t.name} as a field name, its protected"
+            )
         if t.type is None:
             log.warning(f"{cls.__name__}.{t.name} has no type")
 
@@ -318,7 +328,7 @@ def signals_slots_handler(
         cls_properties = cls.system_properties_classdef(True)
     else:
         cls_properties = {}
-    
+
     cls_dict = cls.__dict__.copy()
     cls.__anony_store = {}
     # print(f'tab found!! {cls_properties.keys()}')
@@ -409,7 +419,9 @@ class Configuration(AttributedBaseMixin):
         if not use_dict:  # slots
             obj = {k: obj.get(k, None) for k in slots}
 
-        return {k: v for k, v in obj.items() if chk(k, v) and not k.startswith("_")}
+        return {
+            k: v for k, v in obj.items() if chk(k, v) and not k.startswith("_")
+        }
 
     def copy_config_at_state(
         self, level=None, levels_deep: int = -1, changed: dict = None, **kw
@@ -449,7 +461,9 @@ class Configuration(AttributedBaseMixin):
             if config in changed:
                 ccomp = changed[config]
             else:
-                ccomp = config.copy_config_at_state(level + 1, levels_deep, changed)
+                ccomp = config.copy_config_at_state(
+                    level + 1, levels_deep, changed
+                )
             kwcomps[key] = ccomp
 
         # Finally make the new system with changed internals
@@ -462,7 +476,7 @@ class Configuration(AttributedBaseMixin):
             new_sys.system_references(recache=True)
 
         # update the parents
-        #TODO: use pyee to broadcast change
+        # TODO: use pyee to broadcast change
         if hasattr(self, "parent"):
             if self.parent in changed:
                 new_sys.parent = changed[self.parent]
@@ -484,7 +498,7 @@ class Configuration(AttributedBaseMixin):
         :return: level,config"""
         from engforge.configuration import Configuration
 
-        #TODO: instead of a recursive loop a global map per problem context should be used, with a static map of slots, updating with every change per note in system_references. This function could be a part of that but each system shouldn't be responsible for it.
+        # TODO: instead of a recursive loop a global map per problem context should be used, with a static map of slots, updating with every change per note in system_references. This function could be a part of that but each system shouldn't be responsible for it.
 
         should_yield_level = lambda level: all(
             [
@@ -553,7 +567,7 @@ class Configuration(AttributedBaseMixin):
                     self.warning(
                         f"Component {compnm} already has a parent {comp.parent} #copying, and assigning to {self}"
                     )
-                    #setattr(self, compnm, attrs.evolve(comp, parent=self))
+                    # setattr(self, compnm, attrs.evolve(comp, parent=self))
                 else:
                     comp.parent = self
 
@@ -561,7 +575,9 @@ class Configuration(AttributedBaseMixin):
 
         # subclass instance instance init causes conflicts in structures
         self.__on_init__()
-        runs = set((self.__class__.__on_init__,))  # keep track of unique functions
+        runs = set(
+            (self.__class__.__on_init__,)
+        )  # keep track of unique functions
         if self._subclass_init:
             try:
                 for comp in self.__class__.mro():
@@ -622,7 +638,11 @@ class Configuration(AttributedBaseMixin):
             .title()
         )
         filename = "".join(
-            [c for c in fil if c.isalpha() or c.isdigit() or c == "_" or c == "-"]
+            [
+                c
+                for c in fil
+                if c.isalpha() or c.isdigit() or c == "_" or c == "-"
+            ]
         ).rstrip()
         return filename
 

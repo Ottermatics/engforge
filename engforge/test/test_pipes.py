@@ -22,16 +22,32 @@ class TestPipes(unittest.TestCase):
         n4za = PipeNode(x=10, y=10, z=10)
         n2zoa = FlowInput(x=10, y=5, z=15, flow_in=0.6)
 
-        pipe1 = Pipe(v=random.random(), D=0.1 * random.random(), node_s=n1, node_e=n2)
-        pipe2 = Pipe(v=random.random(), D=0.1 * random.random(), node_s=n1, node_e=n3)
+        pipe1 = Pipe(
+            v=random.random(), D=0.1 * random.random(), node_s=n1, node_e=n2
+        )
+        pipe2 = Pipe(
+            v=random.random(), D=0.1 * random.random(), node_s=n1, node_e=n3
+        )
         pipe3 = Pipe(v=random.random(), D=0.1, node_s=n2, node_e=n4)
-        pipe4 = Pipe(v=random.random(), D=0.1 * random.random(), node_s=n3, node_e=n4)
-        pipe5 = Pipe(v=random.random(), D=0.1 * random.random(), node_s=n4, node_e=n5)
+        pipe4 = Pipe(
+            v=random.random(), D=0.1 * random.random(), node_s=n3, node_e=n4
+        )
+        pipe5 = Pipe(
+            v=random.random(), D=0.1 * random.random(), node_s=n4, node_e=n5
+        )
 
-        pipe5 = Pipe(v=random.random(), D=0.1 * random.random(), node_s=n2z, node_e=n2)
-        pipe6 = Pipe(v=random.random(), D=0.1 * random.random(), node_s=n3, node_e=n3z)
-        pipe7 = Pipe(v=random.random(), D=0.1 * random.random(), node_s=n4, node_e=n4z)
-        pipe8 = Pipe(v=random.random(), D=0.1 * random.random(), node_s=n2, node_e=n4z)
+        pipe5 = Pipe(
+            v=random.random(), D=0.1 * random.random(), node_s=n2z, node_e=n2
+        )
+        pipe6 = Pipe(
+            v=random.random(), D=0.1 * random.random(), node_s=n3, node_e=n3z
+        )
+        pipe7 = Pipe(
+            v=random.random(), D=0.1 * random.random(), node_s=n4, node_e=n4z
+        )
+        pipe8 = Pipe(
+            v=random.random(), D=0.1 * random.random(), node_s=n2, node_e=n4z
+        )
         pipe9 = Pipe(
             v=random.random(), D=0.1 * random.random(), node_s=n4zo, node_e=n4z
         )

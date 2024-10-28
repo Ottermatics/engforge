@@ -156,7 +156,9 @@ def ref_to_val_constraint(
         return ref
 
     # Make Objective
-    return create_constraint(system, comp, Xrefs, contype, ref, ctx, *args, **kwargs)
+    return create_constraint(
+        system, comp, Xrefs, contype, ref, ctx, *args, **kwargs
+    )
 
 
 def create_constraint(
@@ -173,7 +175,9 @@ def create_constraint(
     ), f"bad constraint type: {contype}"
 
     if comp.log_level < 5:
-        comp.debug(f"create constraint {contype} {ref} {args} {kwargs}| {con_args}")
+        comp.debug(
+            f"create constraint {contype} {ref} {args} {kwargs}| {con_args}"
+        )
 
     # its a function
     _fun = lambda *args, **kw: ref.value(*args, **kw)
@@ -316,7 +320,9 @@ SLVR_SCOPE_PARM = [
 ]
 
 
-def combo_filter(attr_name, var_name, solver_inst, extra_kw, combos=None) -> bool:
+def combo_filter(
+    attr_name, var_name, solver_inst, extra_kw, combos=None
+) -> bool:
     # TODO: allow solver_inst to be None for dyn-classes
     # proceed to filter active items if vars / combos inputs is '*' select all, otherwise discard if not active
     # corresondes to problem_context.slv_dflt_options
@@ -481,7 +487,9 @@ def filt_active(var, inst, extra_kw=None, dflt=False):
     from engforge.attr_signals import SignalInstance
 
     # not considered
-    if not isinstance(inst, (SolverInstance, IntegratorInstance, SignalInstance)):
+    if not isinstance(
+        inst, (SolverInstance, IntegratorInstance, SignalInstance)
+    ):
         return True
 
     activate = ext_str_list(extra_kw, "activate", [])

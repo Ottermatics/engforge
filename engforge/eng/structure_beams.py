@@ -47,11 +47,15 @@ def rotation_matrix_from_vectors(vec1, vec2):
     if any(v):  # if not all zeros then
         c = numpy.dot(a, b)
         s = numpy.linalg.norm(v)
-        kmat = numpy.array([[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]])
+        kmat = numpy.array(
+            [[0, -v[2], v[1]], [v[2], 0, -v[0]], [-v[1], v[0], 0]]
+        )
         return numpy.eye(3) + kmat + kmat.dot(kmat) * ((1 - c) / (s**2))
 
     else:
-        return numpy.eye(3)  # cross of all zeros only occurs on identical directions
+        return numpy.eye(
+            3
+        )  # cross of all zeros only occurs on identical directions
 
 
 @forge
@@ -150,7 +154,10 @@ class Beam(Component):
 
         self.debug(f"checking input values")
         assert all(
-            [val is not None for val in (self.in_Iy, self.in_Ix, self.in_J, self.in_A)]
+            [
+                val is not None
+                for val in (self.in_Iy, self.in_Ix, self.in_J, self.in_A)
+            ]
         )
 
         # Assemble tensor
@@ -302,7 +309,7 @@ class Beam(Component):
     def mass(self) -> float:
         return self.material.density * self.Vol
 
-    #@system_property(category="mfg,material,beams")
+    # @system_property(category="mfg,material,beams")
     @system_property
     def cost(self) -> float:
         return self.mass * self.material.cost_per_kg
@@ -395,7 +402,9 @@ class Beam(Component):
         else:
             return self._fallback_estimate_stress(**forces)
 
-    def _fallback_estimate_stress(self, n, vx, vy, mxx, myy, mzz, SM=5, **extra):
+    def _fallback_estimate_stress(
+        self, n, vx, vy, mxx, myy, mzz, SM=5, **extra
+    ):
         """sum the absolute value of each stress component. This isn't accurate but each value here should represent the worst sections, and take the 1-norm to max for each type of stress"""
 
         if self.section.x_bounds is None:
@@ -604,7 +613,9 @@ class Beam(Component):
         return self.member.max_moment("My", self.structure.current_combo)
 
     # Load Application
-    def get_valid_force_choices(only_local=False, only_global=False, use_moment=True):
+    def get_valid_force_choices(
+        only_local=False, only_global=False, use_moment=True
+    ):
         if only_local or only_global:
             assert only_global != only_local, "choose local or global"
 
@@ -646,7 +657,9 @@ class Beam(Component):
                     self.member.name, Fkey, Fval, x, case=case
                 )
 
-    def apply_distributed_load(self, start_factor=1, end_factor=1, case=None, **kwargs):
+    def apply_distributed_load(
+        self, start_factor=1, end_factor=1, case=None, **kwargs
+    ):
         """add forces in global vector"""
         if case is None:
             case = self.structure.default_case
@@ -695,7 +708,9 @@ class Beam(Component):
                     case=case,
                 )
 
-    def apply_gravity_force_distribution(self, sv=1, ev=1, z_dir="FZ", z_mag=-1):
+    def apply_gravity_force_distribution(
+        self, sv=1, ev=1, z_dir="FZ", z_mag=-1
+    ):
         # TODO: ensure that integral of sv, ev is 1, and all positive
         self.debug(f"applying gravity distribution to {self.name}")
         for case in self.structure.gravity_cases:

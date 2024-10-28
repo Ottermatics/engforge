@@ -21,7 +21,8 @@ class PropertyLog(LoggingMixin):
 
 log = PropertyLog()
 
-_basic_valild_types = (int, str, float) #check for return_type
+_basic_valild_types = (int, str, float)  # check for return_type
+
 
 class engforge_prop:
     """
@@ -32,12 +33,13 @@ class engforge_prop:
         def our_custom_function(self) -> return_type:
             pass
     """
+
     valid_types = _basic_valild_types
     must_return = False
 
     def __init__(self, fget=None, fset=None, fdel=None, *args, **kwargs):
         """call with the function you want to wrap in a decorator"""
-        self.valild_types = (int, str, float) #check for return_type
+        self.valild_types = (int, str, float)  # check for return_type
         self.fget = fget
         if fget:
             self.gname = fget.__name__
@@ -45,7 +47,9 @@ class engforge_prop:
         self.fset = fset
         self.fdel = fdel
 
-    def __call__(self, fget=None, fset=None, fdel=None, doc=None, *args, **kwargs):
+    def __call__(
+        self, fget=None, fset=None, fdel=None, doc=None, *args, **kwargs
+    ):
         """this will be called when input is provided before property is set"""
         if fget and self.fget is None:
             self.gname = fget.__name__
@@ -99,11 +103,13 @@ class engforge_prop:
 
 
 class cache_prop(engforge_prop):
-    allow_set: bool = False  # keep this flag false to maintain current persistent value
+    allow_set: bool = (
+        False  # keep this flag false to maintain current persistent value
+    )
 
     def __init__(self, *args, **kwargs):
         self.allow_set = True
-        self.valild_types = (int, str, float) #check for return_type
+        self.valild_types = (int, str, float)  # check for return_type
         super().__init__(*args, **kwargs)
 
     def __set__(self, instance, value):
@@ -157,7 +163,7 @@ class system_property(engforge_prop):
         @system_property(desc='really nice',label='funky function')
         def function(...):    < this uses __call__ to assign function
         """
-        self.valild_types = (int, str, float) #check for return_type
+        self.valild_types = (int, str, float)  # check for return_type
         self.fget = fget
         if fget:
             self.get_func_return(fget)
@@ -342,7 +348,9 @@ class instance_cached(cache_prop):
         if not hasattr(instance, self.private_var):
             from engforge.tabulation import TabulationMixin
 
-            if instance.__class__ is not None and not IS_BUILD:  # its an instance
+            if (
+                instance.__class__ is not None and not IS_BUILD
+            ):  # its an instance
                 assert issubclass(
                     instance.__class__, TabulationMixin
                 ), f"incorrect class: {instance.__class__.__name__}"

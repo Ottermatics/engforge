@@ -25,7 +25,9 @@ class AttributeInstance:
     # TODO: universal slots method
     # __slots__ = ["system", "class_attr"]
 
-    def __init__(self, class_attr: "CLASS_ATTR", system: "System", **kwargs) -> None:
+    def __init__(
+        self, class_attr: "CLASS_ATTR", system: "System", **kwargs
+    ) -> None:
         self.class_attr = class_attr
         self.system = system
         self.compile(**kwargs)
@@ -186,14 +188,14 @@ class ATTR_BASE(attrs.Attribute):
     def _setup_cls(cls, name, new_dict, **kwargs):
         # randomize name for specifics reasons
         uid = str(uuid.uuid4())
-        #base info
+        # base info
         name = name + "_" + uid.replace("-", "")[0:16]
         new_dict["uuid"] = uid
         new_dict["default_options"] = cls.default_options.copy()
         new_dict["template_class"] = False
         new_dict["name"] = name
-        
-        #create a new type of attribute
+
+        # create a new type of attribute
         new_slot = type(name, (cls,), new_dict)
         new_slot.default_options["default"] = new_slot.make_factory()
         new_slot.default_options["validator"] = new_slot.configure_instance
@@ -235,7 +237,9 @@ class ATTR_BASE(attrs.Attribute):
         """collects all the attributes for a system"""
         if not isinstance(system, type):
             system = system.__class__
-        return {k: at.type for k, at in system._get_init_attrs_data(cls).items()}
+        return {
+            k: at.type for k, at in system._get_init_attrs_data(cls).items()
+        }
 
     @classmethod
     def collect_attr_inst(cls, system, handle_inst=True) -> dict:
@@ -244,7 +248,9 @@ class ATTR_BASE(attrs.Attribute):
         out = {}
         for k, v in cattr.items():
             inst = getattr(system, k)
-            if (inst is None and getattr(cls.instance_class, "none_ok", False)) or (
+            if (
+                inst is None and getattr(cls.instance_class, "none_ok", False)
+            ) or (
                 cls.instance_class is not None
                 and not isinstance(inst, cls.instance_class)
             ):

@@ -213,7 +213,9 @@ class TableBase(MappedDictMixin, ReportBase):
 
                 elif isinstance(val, (float, int)):  # dynamic mapping
                     if not numpy.isnan(val):
-                        atobj = self.attr_class(result_id_in, key=key, value=val)
+                        atobj = self.attr_class(
+                            result_id_in, key=key, value=val
+                        )
                         self.attr_store[key] = atobj
                         # self[key] = atobj #dont use orm for upload!
 
@@ -244,7 +246,10 @@ class TableBase(MappedDictMixin, ReportBase):
         if cls._mapped_component is None:
             return []
         all_table_fields = set(
-            [attr.lower() for attr in cls._mapped_component.cls_all_property_labels()]
+            [
+                attr.lower()
+                for attr in cls._mapped_component.cls_all_property_labels()
+            ]
         )
         all_attr_fields = set(
             [
@@ -337,7 +342,9 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
         self.db.ensure_database_exists(create_meta=False)
 
         self.base.metadata.bind = self.db.engine
-        self.base.metadata.reflect(self.db.engine, autoload=True, keep_existing=True)
+        self.base.metadata.reflect(
+            self.db.engine, autoload=True, keep_existing=True
+        )
 
         self._component_cls_table_mapping = {}
         self.initalize()
@@ -390,7 +397,9 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
             [gtype in attr_obj.validator.type for gtype in (str, float, int)]
         ):
             return True
-        if any([gtype is attr_obj.validator.type for gtype in (str, float, int)]):
+        if any(
+            [gtype is attr_obj.validator.type for gtype in (str, float, int)]
+        ):
             return True
         return False
 
@@ -399,7 +408,10 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
             [gtype in attr_obj.validator.type for gtype in (float, int)]
         ):
             return Column(Numeric, default=attr_obj.default, nullable=True)
-        if type(attr_obj.validator.type) is tuple and str in attr_obj.validator.type:
+        if (
+            type(attr_obj.validator.type) is tuple
+            and str in attr_obj.validator.type
+        ):
             return Column(
                 String(DEFAULT_STRING_LENGTH),
                 default=attr_obj.default,
@@ -431,9 +443,15 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
             "__abstract__": False,
         }
 
-        if results_table is not None and not is_analysis:  # analysis won't be mapped
-            default_attr["__tablename__"] = f"{results_table}_{table_abrv}{name}"
-            root_obj, _ = self.mapped_tables[results_table]  # analysis won't be mapped
+        if (
+            results_table is not None and not is_analysis
+        ):  # analysis won't be mapped
+            default_attr["__tablename__"] = (
+                f"{results_table}_{table_abrv}{name}"
+            )
+            root_obj, _ = self.mapped_tables[
+                results_table
+            ]  # analysis won't be mapped
             backref_name = f"db_comp_attr_{name}"
             default_attr["result_id"] = Column(
                 Integer, ForeignKey(f"{results_table}.id"), primary_key=True
@@ -474,7 +492,9 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
             tbl_name = f"{results_table}_{table_abrv}{name}"
             backref_name = f"db_comp_{name}"
             root_obj, _ = self.mapped_tables[results_table]
-            default_attr["__tablename__"] = f"{results_table}_{table_abrv}{name}"
+            default_attr["__tablename__"] = (
+                f"{results_table}_{table_abrv}{name}"
+            )
             default_attr["result_id"] = Column(
                 Integer, ForeignKey(f"{results_table}.id"), primary_key=True
             )
@@ -483,7 +503,9 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
             )
 
         else:  # its an analysis
-            default_attr["created"] = Column(DateTime, server_default=func.now())
+            default_attr["created"] = Column(
+                DateTime, server_default=func.now()
+            )
             default_attr["active"] = Column(Boolean(), server_default="t")
             default_attr["run_id"] = Column(
                 String(36)
@@ -495,7 +517,9 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
 
     # These use keys of system_property or attr and lower() so no spaces or capitals
     def all_possible_component_fields(self, cls):
-        all_table_fields = set([attr.lower() for attr in cls.cls_all_property_keys()])
+        all_table_fields = set(
+            [attr.lower() for attr in cls.cls_all_property_keys()]
+        )
         all_attr_fields = set(
             [attr.lower() for attr in cls.cls_all_attrs_fields().keys()]
         )
@@ -519,10 +543,14 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
             }
         )
 
-        component_attr.update(self.default_attr(comp_cls, results_table=results_table))
+        component_attr.update(
+            self.default_attr(comp_cls, results_table=results_table)
+        )
         return component_attr
 
-    def db_component_dict(self, comp_cls, results_table=None, is_analysis=False):
+    def db_component_dict(
+        self, comp_cls, results_table=None, is_analysis=False
+    ):
         """returns the nessicary table types to make for reflection of input component class
 
         this method represents the dynamic creation of SQLA typing and attributes via __dict__
@@ -628,7 +656,9 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
             return cls_db
 
     def map_component(self, dbcomponent, component):
-        self.debug(f"mapping {dbcomponent},{component} -> {dbcomponent.__tablename__}")
+        self.debug(
+            f"mapping {dbcomponent},{component} -> {dbcomponent.__tablename__}"
+        )
         # add to internal mapping
         self._component_cls_table_mapping[dbcomponent.__tablename__] = (
             dbcomponent,
@@ -645,16 +675,22 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
             if isinstance(component, Analysis):
                 component = component.__class__
             if dbcomponent.__tablename__ not in atables:
-                self.info(f"adding analysis record { dbcomponent.__tablename__}")
+                self.info(
+                    f"adding analysis record { dbcomponent.__tablename__}"
+                )
                 with self.db.session_scope() as sesh:
                     rec = AnalysisRegistry(dbcomponent, component)
                     sesh.add(rec)
 
-        elif isinstance(component, Component) or issubclass(component, Component):
+        elif isinstance(component, Component) or issubclass(
+            component, Component
+        ):
             if isinstance(component, Component):
                 component = component.__class__
             if dbcomponent.__tablename__ not in ctables:
-                self.info(f"adding comonent record { dbcomponent.__tablename__}")
+                self.info(
+                    f"adding comonent record { dbcomponent.__tablename__}"
+                )
                 with self.db.session_scope() as sesh:
                     rec = ComponentRegistry(dbcomponent, component)
                     sesh.add(rec)
@@ -733,7 +769,9 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
         elif issubclass(analysis, Analysis):
             analysis_cls = analysis
         else:
-            self.warning("ensure-analysis: analysis not mapped, using direct input")
+            self.warning(
+                "ensure-analysis: analysis not mapped, using direct input"
+            )
             analysis_cls = analysis
         return analysis_cls
 
@@ -782,7 +820,9 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
                 if lvl > 0:
                     for comp in comps:
                         cmp = comp["conf"]
-                        data_gens[self.mapped_classes[cmp.__class__]] = gen(cmp.TABLE)
+                        data_gens[self.mapped_classes[cmp.__class__]] = gen(
+                            cmp.TABLE
+                        )
 
             # with self.db.scoped_session() as sesh:
             any_succeeded = True
@@ -832,7 +872,9 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
                         others.append(cmp_result)
 
                     else:
-                        any_succeeded = True  # here's ur fricken evidence ur honor
+                        any_succeeded = (
+                            True  # here's ur fricken evidence ur honor
+                        )
 
                 # the scoped session rolls back anything created this time :)
                 if not any_succeeded:
@@ -842,14 +884,14 @@ class ResultsRegistry(Configuration, metaclass=SingletonMeta):
                     add_list = (
                         main_attrs
                         + others
-                        + flatten([list(item.attr_store.values()) for item in others])
+                        + flatten(
+                            [list(item.attr_store.values()) for item in others]
+                        )
                     )
 
                     sesh.add_all(add_list)
 
-                inx += (
-                    1  # index += 1 is done at end of analysis so we should model that
-                )
+                inx += 1  # index += 1 is done at end of analysis so we should model that
 
         except AvoidDuplicateAbortUpload:
             pass  # this is fine
@@ -901,7 +943,10 @@ class MappedItem(ReportBase):
     @classmethod
     def all_fields(cls):
         all_table_fields = set(
-            [attr.lower() for attr in cls._mapped_component.cls_all_property_labels()]
+            [
+                attr.lower()
+                for attr in cls._mapped_component.cls_all_property_labels()
+            ]
         )
         all_attr_fields = set(
             [

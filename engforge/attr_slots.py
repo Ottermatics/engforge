@@ -190,7 +190,9 @@ class Slot(ATTR_BASE):
 
         log.debug(f"slot factory: {accepted},{cls.dflt_kw},{cls.default_ok}")
         if cls.dflt_kw:
-            return attrs.Factory(cls.make_accepted(accepted, **cls.dflt_kw), False)
+            return attrs.Factory(
+                cls.make_accepted(accepted, **cls.dflt_kw), False
+            )
         elif cls.default_ok:
             return attrs.Factory(accepted, False)
         else:

@@ -37,7 +37,7 @@ def _update_func(comp, eval_kw):
     def updt(*args, **kw):
         eval_kw.update(kw)
         if log.log_level <= 12:
-            log.info(f"update| {comp.name} ")#=5)
+            log.info(f"update| {comp.name} ")  # =5)
         return comp.update(comp.parent, *args, **eval_kw)
 
     if log.log_level <= 12:
@@ -75,9 +75,9 @@ def _cost_update(comp):
 
         def updt(*args, **kw):
             if log.log_level <= 12:
-                log.info(f"update costs {comp.name} ")#=5)
+                log.info(f"update costs {comp.name} ")  # =5)
             comp.system_properties_classdef(True)
-            #comp.update(comp.parent, *args, **kw) #called as update without cm
+            # comp.update(comp.parent, *args, **kw) #called as update without cm
             return comp.update_dflt_costs()
 
         if log.log_level <= 12:
@@ -145,18 +145,18 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             ignore = set()
         elif self in ignore:
             return
-        
-        key= 'top'
+
+        key = "top"
         if self.__class__.update != SolveableMixin.update:
             ref = Ref(self, _update_func(self, eval_kw if eval_kw else {}))
-            updt_refs[key]  = ref     
+            updt_refs[key] = ref
 
         if isinstance(self, (CostModel, Economics)):
             ref = Ref(self, _cost_update(self))
-            updt_refs[key + "._cost_model_"] = ref               
+            updt_refs[key + "._cost_model_"] = ref
 
         for key, comp in self.internal_configurations(False).items():
-        #for key,lvl,comp in self.go_through_configurations(check_config=False):
+            # for key,lvl,comp in self.go_through_configurations(check_config=False):
             if ignore is not None and comp in ignore:
                 continue
 
@@ -195,13 +195,13 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             ignore = set()
         elif self in ignore:
             return
-        
+
         if self.__class__.post_update != SolveableMixin.post_update:
             ref = Ref(self, _post_update_func(self, eval_kw if eval_kw else {}))
-            updt_refs['top']  = ref
+            updt_refs["top"] = ref
 
         for key, comp in self.internal_configurations(False).items():
-        #for key,lvl,comp in self.go_through_configurations(check_config=False):
+            # for key,lvl,comp in self.go_through_configurations(check_config=False):
             if ignore is not None and comp in ignore:
                 continue
 
@@ -332,7 +332,8 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
                     yield compkey, itemkey
 
             iter_vals = {
-                cn: _gen(comp._item_gen(), cn) for cn, comp in components.items()
+                cn: _gen(comp._item_gen(), cn)
+                for cn, comp in components.items()
             }
 
             for out in itertools.product(*list(iter_vals.values())):
@@ -350,7 +351,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         #FIXME: by instance recache on iterative component change or other signals
         """
         out = {}
-        for key,lvl,comp in self.go_through_configurations(parent_level=1,**kw):
+        for key, lvl, comp in self.go_through_configurations(
+            parent_level=1, **kw
+        ):
             if ignore_none_comp and not isinstance(comp, SolveableMixin):
                 self.warning(f"ignoring {key} {lvl}|{comp}")
                 continue
@@ -368,7 +371,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         force_solve=False,
         return_results=False,
         method_kw: dict = None,
-        print_kw:dict=None,
+        print_kw: dict = None,
         **kwargs,
     ):
         """applies a permutation of input vars for vars. runs the system instance by applying input to the system and its slot-components, ensuring that the targeted attributes actualy exist.
@@ -379,7 +382,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         :param eval_kw: a dictionary of keyword arguments to pass to the eval function of each component by their name and a set of keyword args. Use this to set values in the component that are not inputs to the system. No iteration occurs upon these values, they are static and irrevertable
         :param sys_kw: a dictionary of keyword arguments to pass to the eval function of each system by their name and a set of keyword args. Use this to set values in the component that are not inputs to the system. No iteration occurs upon these values, they are static and irrevertable
         :param print_kw: a dictionary of keyword arguments to pass to the print_all_info function of the current context
-        
+
         :param kwargs: inputs are run on a product basis asusming they correspond to actual scoped vars (system.var or system.slot.var)
 
 
@@ -388,8 +391,12 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         from engforge.system import System
         from engforge.problem_context import ProblemExec
 
-        self.debug(f"running [Solver].{method} {self.identity} with input {kwargs}")
-        assert hasattr(ProblemExec.class_cache, "session"), "must be active context!"
+        self.debug(
+            f"running [Solver].{method} {self.identity} with input {kwargs}"
+        )
+        assert hasattr(
+            ProblemExec.class_cache, "session"
+        ), "must be active context!"
         # create iterable null for sequence
         if sequence is None or not sequence:
             sequence = [{}]
@@ -435,7 +442,11 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
                         # Run The Method with inputs provisioned
                         out = method(icur, eval_kw, sys_kw, cb=cb, **method_kw)
 
-                        if print_kw and hasattr(self, "last_context") and self.last_context:
+                        if (
+                            print_kw
+                            and hasattr(self, "last_context")
+                            and self.last_context
+                        ):
                             self.last_context.print_all_info(**print_kw)
 
                         if return_results:
@@ -501,7 +512,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         comp_args = {k: v for k, v in kwargs.items() if "." in k}
 
         # check vars
-        inpossible = set.union(set(self.input_fields()), set(self.slots_attributes()))
+        inpossible = set.union(
+            set(self.input_fields()), set(self.slots_attributes())
+        )
         argdiff = set(var_args).difference(inpossible)
         assert not argdiff, f"bad input {argdiff}"
 
@@ -511,7 +524,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         assert not compdiff, f"bad slot references {compdiff}"
 
         _input = {}
-        test = lambda v, add: isinstance(v, (int, float, str, *add)) or v is None
+        test = (
+            lambda v, add: isinstance(v, (int, float, str, *add)) or v is None
+        )
 
         # vars input
         for k, v in kwargs.items():
@@ -531,7 +546,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
                 assert test(v, addty), f"bad values {k}:{v}"
                 v = [v]
             else:
-                assert all([test(vi, addty) for vi in v]), f"bad values: {k}:{v}"
+                assert all(
+                    [test(vi, addty) for vi in v]
+                ), f"bad values: {k}:{v}"
 
             if k not in _input:
                 _input[k] = v
@@ -585,7 +602,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             func = copy.copy(key)
             return Ref(comp, func, **kw)
         else:
-            assert "comp" not in kw, f"comp kwarg not allowed with string key {key}"
+            assert (
+                "comp" not in kw
+            ), f"comp kwarg not allowed with string key {key}"
 
         if "." in key:
             args = key.split(".")
@@ -608,7 +627,10 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             # val= cls.system_properties_classdef()[key]
             return Ref(self, key, **kw)
 
-        elif key in self.internal_configurations() or key in self.slots_attributes():
+        elif (
+            key in self.internal_configurations()
+            or key in self.slots_attributes()
+        ):
             return Ref(self, key, **kw)
 
         # Fail on comand but otherwise return val
@@ -629,7 +651,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         ):
             return self._prv_system_references
 
-        #TODO: system references are really important and nesting them together complicates the refresh process. Each component should be able to refresh itself and its children on set_state, as well as alert parents to change. Ideally the `Ref` objects could stay the same and no `recache` would need to occur. This would be a huge performance boost and fix a lot of the issues with the current system.
+        # TODO: system references are really important and nesting them together complicates the refresh process. Each component should be able to refresh itself and its children on set_state, as well as alert parents to change. Ideally the `Ref` objects could stay the same and no `recache` would need to occur. This would be a huge performance boost and fix a lot of the issues with the current system.
 
         out = self.internal_references(recache, numeric_only=numeric_only)
         tatr = out["attributes"]
@@ -656,7 +678,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             comp_dict[key] = comp
             if parent in comp_dict:
                 attr_name = key.split(".")[-1]
-                comp_set_ref[key] = Ref(comp_dict[parent], attr_name, False, True)
+                comp_set_ref[key] = Ref(
+                    comp_dict[parent], attr_name, False, True
+                )
 
             # Fill in
             for k, v in satr.items():
@@ -753,7 +777,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
                             _var = getattr(conf, pre_var)
                             if isinstance(_var, AttributeInstance):
                                 slv_type = _var
-                            conf.msg(f"slv type: {conf.classname}.{pre_var} -> {_var}")
+                            conf.msg(
+                                f"slv type: {conf.classname}.{pre_var} -> {_var}"
+                            )
 
                         val_type = ck_type[pre_var]
 
@@ -767,7 +793,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
                         cls_dict[atype][scope_name] = val_type
 
                         if conf.log_level <= 5:
-                            conf.msg(f"rec: {var_name} {k} {pre} {val} {slv_type}")
+                            conf.msg(
+                                f"rec: {var_name} {k} {pre} {val} {slv_type}"
+                            )
 
                         # Check to skip this item
                         # keep references even if null
@@ -788,7 +816,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
                             pre, scope_name, val_type, check_kw
                         ):
                             if conf.log_level <= 5:
-                                conf.msg(f"chk skip {scope_name} {k} {pre} {val}")
+                                conf.msg(
+                                    f"chk skip {scope_name} {k} {pre} {val}"
+                                )
                             if pre not in skipped:
                                 skipped[pre] = []
 
@@ -835,7 +865,11 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
                     # eval each ref for inclusion
                     for var, ref in refs.items():
                         key_segs = var.split(".")
-                        key = "" if len(key_segs) == 1 else ".".join(key_segs[:-1])
+                        key = (
+                            ""
+                            if len(key_segs) == 1
+                            else ".".join(key_segs[:-1])
+                        )
                         scoped_name = f"{var}"
                         conf = dyn_comp.get(key)
 
@@ -934,7 +968,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
                 if p in SKIP_REF and not all:
                     continue
                 if all:
-                    refs[(f"{ckey}." if ckey else "") + p] = Ref(comp, p, False, True)
+                    refs[(f"{ckey}." if ckey else "") + p] = Ref(
+                        comp, p, False, True
+                    )
                     continue
                 elif atr.type:
                     ty = atr.type

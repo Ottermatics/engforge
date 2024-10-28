@@ -85,7 +85,9 @@ class PredictionMixin:
                 and std != 0
                 and not near_zero
             ):
-                g = 3 * min((abs(avg) - std) / abs(std), 1)  # negative when std > avg
+                g = 3 * min(
+                    (abs(avg) - std) / abs(std), 1
+                )  # negative when std > avg
                 a = min(abs(dev) / std / J, 1)
                 # prob accept should be based on difference from average
                 prob_deny = np.e**g
@@ -93,7 +95,9 @@ class PredictionMixin:
                 std_choice = std
                 avg_choice = avg
                 dev_choice = dev
-                choice = random.choices([True, False], [prob_accept, prob_deny])[0]
+                choice = random.choices(
+                    [True, False], [prob_accept, prob_deny]
+                )[0]
             cur_stat["avg"] = avg + dev / N
             cur_stat["var"] = var + (dev**2 - var) / N
 
@@ -149,7 +153,9 @@ class PredictionMixin:
             std = var**0.5
             std_err = std / len(self.prediction_records)
             # check out of bounds
-            g = 3 * min((abs(avg) - std) / abs(std), 1)  # negative when std > avg
+            g = 3 * min(
+                (abs(avg) - std) / abs(std), 1
+            )  # negative when std > avg
             a = min(abs(dev) / std / J, 1)
             near_zero = abs(rec_val) / max(abs(avg), 1) <= 1e-3
             prob_deny = np.e**g
@@ -302,7 +308,9 @@ class PredictionMixin:
             model = mod_dict["mod"]
             if parm not in row:
                 continue
-            X = pandas.DataFrame([{parm: row[parm] for parm in self._prediction_parms}])
+            X = pandas.DataFrame(
+                [{parm: row[parm] for parm in self._prediction_parms}]
+            )
             y = row[parm]
             x = abs(model.predict(X))
             if y == 0:
@@ -356,7 +364,10 @@ class PredictionMixin:
             model = mod_dict["mod"]
             N = mod_dict["N"]
             #
-            if Nrec > N * self._re_train_frac or (Nrec - N) > self._re_train_maxiter:
+            if (
+                Nrec > N * self._re_train_frac
+                or (Nrec - N) > self._re_train_maxiter
+            ):
                 self.train_compare(df)
                 return
 

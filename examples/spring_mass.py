@@ -68,5 +68,7 @@ class SpringMass(System):
 if __name__ == "__main__":
     # Run The System, Compare damping `u`=0 & 0.1
     sm = SpringMass(x=0.0)
-    trdf = sm.simulate(dt=0.01, endtime=10, u=[0.0, 0.1], combos="*", slv_vars="*")
+    trdf = sm.simulate(
+        dt=0.01, endtime=10, u=[0.0, 0.1], combos="*", slv_vars="*"
+    )
     trdf.groupby("run_id").plot("time", "x")

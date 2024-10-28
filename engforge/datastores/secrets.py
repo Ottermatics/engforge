@@ -61,7 +61,9 @@ class Secrets(Configuration, metaclass=InputSingletonMeta):
     credential_key = attr.ib()  # What to refer to this credential as
     credential_location = attr.ib()  # Where to find the credential file
 
-    _aws_kms: pysecret.AWSSecret = None  # a storage for the aws key managment object
+    _aws_kms: pysecret.AWSSecret = (
+        None  # a storage for the aws key managment object
+    )
 
     public_up_level = True  # makes the public cred record one level up (creds are stored protected). Yes its hacky but we have deadlines
 
@@ -317,7 +319,9 @@ class ClientSecrets(Secrets, ClientInfoMixin):
 
         paths = [
             os.path.join(root, acc)
-            for acc in itertools.accumulate(rel_paths, func=os.path.join, initial=root)
+            for acc in itertools.accumulate(
+                rel_paths, func=os.path.join, initial=root
+            )
         ]
 
         creds_paths = {}
@@ -385,7 +389,9 @@ class ClientSecrets(Secrets, ClientInfoMixin):
             def decredential_file(filepath):
                 for cred in self.creds_folders:
                     if filepath.endswith(cred):
-                        return str(pathlib.Path(filepath).parent)  # Can't be dtwo types
+                        return str(
+                            pathlib.Path(filepath).parent
+                        )  # Can't be dtwo types
 
             raw_dict = {
                 decredential_file(key): creds
@@ -397,10 +403,16 @@ class ClientSecrets(Secrets, ClientInfoMixin):
             # assert all(list(map(  )))
 
             paths_contains_creds = lambda path: [
-                cred for key, creds in raw_dict.items() for cred in creds if key in path
+                cred
+                for key, creds in raw_dict.items()
+                for cred in creds
+                if key in path
             ]
 
-            output = {key: paths_contains_creds(key) for key, creds in raw_dict.items()}
+            output = {
+                key: paths_contains_creds(key)
+                for key, creds in raw_dict.items()
+            }
             stage_packages[stage] = output
 
         return stage_packages
@@ -489,7 +501,10 @@ class ClientSecrets(Secrets, ClientInfoMixin):
         else:
             self._ident = f"secrets-{self.stage_name}"
 
-        if self.stored_client_name and not self.stored_client_name in self._ident:
+        if (
+            self.stored_client_name
+            and not self.stored_client_name in self._ident
+        ):
             self._log = None  # lazy cycle log name
 
         return self._ident
@@ -504,7 +519,9 @@ class ClientSecrets(Secrets, ClientInfoMixin):
 
         if "CLIENT_GDRIVE_SYNC" in os.environ:
             self.info("got CLIENT_GDRIVE_SYNC")
-            CLIENT_GDRIVE_SYNC = self.bool_from(os.environ["CLIENT_GDRIVE_SYNC"])
+            CLIENT_GDRIVE_SYNC = self.bool_from(
+                os.environ["CLIENT_GDRIVE_SYNC"]
+            )
 
         if "CLIENT_GMAIL" in os.environ:
             self.info("got CLIENT_GMAIL")
@@ -539,7 +556,9 @@ class ClientSecrets(Secrets, ClientInfoMixin):
             and "SLACK_WEBHOOK_NOTIFICATION" in os.environ
         ):
             self.info("getting slack webhook")
-            self.SLACK_WEBHOOK_NOTIFICATION = os.environ["SLACK_WEBHOOK_NOTIFICATION"]
+            self.SLACK_WEBHOOK_NOTIFICATION = os.environ[
+                "SLACK_WEBHOOK_NOTIFICATION"
+            ]
 
 
 # TODO: Add CLI Method

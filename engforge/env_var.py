@@ -139,7 +139,9 @@ class EnvVariable(LoggingMixin):
             # Provide warning that the secret is being replaced
             if not self._upgrd_warn:
                 self._upgrd_warn = True
-                self.info(f"upgrading: {self.var_name} from {id(self)}->{id(sec)}")
+                self.info(
+                    f"upgrading: {self.var_name} from {id(self)}->{id(sec)}"
+                )
 
             # Monkeypatch dictionary
             self.__dict__ = sec.__dict__
@@ -162,7 +164,9 @@ class EnvVariable(LoggingMixin):
             secval = self.default
         else:
             if self.fail_on_missing:
-                raise FileNotFoundError(f"Could Not Find Env Variable {self.var_name}")
+                raise FileNotFoundError(
+                    f"Could Not Find Env Variable {self.var_name}"
+                )
             else:
                 if self.var_name not in warned:
                     self.debug(f"Env Var: {self.var_name} Not Found!")
@@ -208,7 +212,9 @@ except:
 
 global HOSTNAME, SLACK_WEBHOOK
 
-HOSTNAME = EnvVariable("FORGE_HOSTNAME", default=host, obscure=False, dontovrride=True)
+HOSTNAME = EnvVariable(
+    "FORGE_HOSTNAME", default=host, obscure=False, dontovrride=True
+)
 SLACK_WEBHOOK = EnvVariable(
     "FORGE_SLACK_LOG_WEBHOOK", default=None, obscure=False, dontovrride=True
 )

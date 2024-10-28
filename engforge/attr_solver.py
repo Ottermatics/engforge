@@ -212,7 +212,9 @@ class Solver(ATTR_BASE):
         :returns: [optional] a dictionary of options to be used in the make_attribute method
         """
         pre_name = cls.name  # random attr name
-        super(Solver, cls).configure_for_system(name, config_class, cb, **kwargs)
+        super(Solver, cls).configure_for_system(
+            name, config_class, cb, **kwargs
+        )
 
         # change name of constraint  var if
         if cls.slvtype == "var":
@@ -399,7 +401,9 @@ class Solver(ATTR_BASE):
 
         var = cls.var
         assert var is not None, "must provide var on non-var solvers"
-        assert cls.slvtype == "var", "only Solver.declare_var can have constraints"
+        assert (
+            cls.slvtype == "var"
+        ), "only Solver.declare_var can have constraints"
         assert kind in ("min", "max")
 
         combo_dflt = "default,lim"

@@ -57,7 +57,9 @@ class Test(unittest.TestCase):
     #                 rfil = os.path.join(self.test_dir, fil)
 
     def test_property_labels(self):
-        ans = set(["four", "test_two", "test_one", "three", "converged", "run_id"])
+        ans = set(
+            ["four", "test_two", "test_one", "three", "converged", "run_id"]
+        )
         self.assertEqual(set(self.test_config.system_properties_labels), ans)
 
     def test_property_types(self):
@@ -121,7 +123,9 @@ class Test(unittest.TestCase):
             # Change Something
             cur_val = self.test_config.attrs_prop
             new_val = 6 + cur_val
-            self.test_config.info(f"setting attrs prop on in {cur_val } => {new_val}")
+            self.test_config.info(
+                f"setting attrs prop on in {cur_val } => {new_val}"
+            )
 
             self.test_config.attrs_prop = new_val
             px.save_data()
@@ -135,7 +139,9 @@ class Test(unittest.TestCase):
                 with ProblemExec(self.test_config, {}) as px:
                     cur_val = self.test_config.attrs_prop
                     attr_in[i] = val = cur_val + i**2.0
-                    self.test_config.info(f"setting attrs prop df {cur_val } => {val}")
+                    self.test_config.info(
+                        f"setting attrs prop df {cur_val } => {val}"
+                    )
                     self.test_config.attrs_prop = val
                     px.save_data()
                     px.exit_with_state()
@@ -225,7 +231,9 @@ class TestStatic(unittest.TestCase):
         with ProblemExec(self.test_config, {}) as px:
             for i in range(num):
                 with ProblemExec(self.test_config, {}) as px:
-                    self.test_config.attrs_prop = i + self.test_config.attrs_prop
+                    self.test_config.attrs_prop = (
+                        i + self.test_config.attrs_prop
+                    )
                     px.save_data()
                 postdict = self.test_config.data_dict
                 self.assertDictEqual(cur_dict, postdict)

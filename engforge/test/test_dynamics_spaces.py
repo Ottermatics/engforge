@@ -28,7 +28,9 @@ class TestDynamics(unittest.TestCase):
 
         # TODO: check dxdt=0 combo results (dynamics/rates==states)
 
-        ans = ds.run(dxdt=0, combos="time", revert_last=False, revert_every=False)
+        ans = ds.run(
+            dxdt=0, combos="time", revert_last=False, revert_every=False
+        )
         output = ans["output"][0]
         self.assertTrue(output["success"])
 
