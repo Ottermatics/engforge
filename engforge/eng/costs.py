@@ -54,7 +54,7 @@ import numpy
 import collections
 import pandas
 import collections
-
+import re
 
 class CostLog(LoggingMixin):
     pass
@@ -70,7 +70,7 @@ COST_TERM_MODES = {
     "always": lambda inst, term, econ: True,
     "end": lambda inst, term, econ: (
         True
-        if hasattr(econ, "term_length") and term == econ.term_length
+        if hasattr(econ, "term_length") and term == econ.term_length - 1
         else False
     ),
 }
@@ -723,6 +723,7 @@ class Economics(Component):
         if self._cost_references:
             props.update(**self._cost_references)
 
+        #lookup ref from the cost categories dictionary, recreate every time
         if self._cost_categories:
             for key, refs in self._cost_categories.items():
                 props[key] = Ref(
@@ -893,7 +894,7 @@ class Economics(Component):
         for c in lc.columns:
             if "category" not in c and "cost" not in c:
                 continue
-            tot = lc[c].sum()
+            tot = lc[c].sum()#lifecycle cost
             if "category" in c:
                 c_ = c.replace("category.", "")
                 lifecat[c_] = tot
@@ -1210,6 +1211,242 @@ class Economics(Component):
             return 0
         return self._calc_output
 
+    @property
+    def cost_category_store(self):
+        D = collections.defaultdict(list)
+        Acat = set()
+        for catkey,cdict in self._cost_categories.items():
+            for ci in cdict:
+                cprop = getattr(ci.comp.__class__,ci.key)
+                ccat = set(cprop.cost_categories.copy())
+                Acat = Acat.union(ccat)
+                D[f'{ci.comp.classname}|{ci.key:>36}'] = ccat
+        return D,Acat
+    
+    def create_cost_graph(self,plot=True):
+        """creates a graph of the cost model using network X and display it"""
+        import collections
+        import networkx as nx
+
+        D = collections.defaultdict(dict)
+        for catkey,cdict in self._cost_categories.items():
+            for ci in cdict:
+                D[catkey][(ci.comp.classname,ci.key)] = ci
+
+        G = nx.Graph()
+
+        for d,dk in D.items():
+            print(d.upper())
+            cat = d.replace('category.','')
+            G.add_node(cat,category=cat)
+            for kk,r in dk.items():
+                cmp = kk[0]
+                edge = kk[1]
+                if cmp not in G.nodes: 
+                    G.add_node(cmp,component=cmp)
+                G.add_edge(cmp,cat,cost=edge)
+                #print(kk)
+
+        #pos = nx.nx_agraph.graphviz_layout(G)
+        #nx.draw(G, pos=pos)
+        #nx.draw(G,with_labels=True)
+
+        if plot:
+            categories = nx.get_node_attributes(G, 'category').keys()
+            components = nx.get_node_attributes(G, 'component').keys()
+
+            cm = []
+            for nd in G:
+                if nd in categories:
+                    cm.append('cyan')
+                else:
+                    cm.append('pink')
+            
+            pos = nx.spring_layout(G,k=0.2, iterations=20,scale=1)        
+            nx.draw(G,node_color=cm,with_labels=True,pos=pos,arrows=True,font_size=10,font_color='0.09',font_weight='bold',node_size=200)
+
+        return G
+    
+    def cost_matrix(self):
+        D,Cats = self.cost_category_store
+        X = list(sorted(Cats))
+        C = list(sorted(D.keys()))
+        M = []
+        for k in C:
+            cats = D[k]
+            M.append([True if x in cats else numpy.nan for x in X])
+
+        Mx = numpy.array(M)
+        X = numpy.array(X)
+        C = numpy.array(C)
+        return Mx,X,C        
+    
+    def create_cost_category_table(self):
+        """creates a table of costs and categories"""
+        Mx,X,C = self.cost_matrix()
+
+        fig,ax = subplots(figsize=(12,12))
+
+        Mc = numpy.nansum(Mx,axis=0)
+        x = numpy.argsort(Mc)
+
+        Xs = X[x]
+        ax.imshow(Mx[:,x])
+        ax.set_yticklabels(C,fontdict={'family':'monospace','size':8})
+        ax.set_yticks(numpy.arange(len(C)))
+        ax.set_xticklabels(Xs,fontdict={'family':'monospace','size':8})
+        ax.set_xticks(numpy.arange(len(Xs)))
+        ax.grid(which='major',linestyle=':',color='k',zorder=0)
+        xticks(rotation=90)
+        fig.tight_layout()
+
+    def determine_exclusive_cost_categories(self,include_categories=None,ignore_categories:set=None,min_groups:int=2,max_group_size=None,min_score=0.95,include_item_cost=False):
+        """looks at all possible combinations of cost categories, scoring them based on coverage of costs, and not allowing any double accounting of costs. This is an NP-complete problem and will take a long time for large numbers of items. You can add ignore_categories to ignore certain categories"""
+        import itertools
+
+        Mx,X,C = self.cost_matrix()
+
+        bad = []
+        solutions = []
+        inx = {k:i for i,k in enumerate(X)}
+
+
+
+        assert include_categories is None or set(X).issuperset(include_categories), 'include_categories must be subset of cost categories'
+
+        #ignore categories
+        if ignore_categories:
+            X = [x for x in X if x not in ignore_categories]
+
+        if include_categories:
+            #dont include them in pair since they are added to the group explicitly
+            X = [x for x in X if x not in include_categories]
+
+        if not include_item_cost:
+            C = [c for c in C if 'item_cost' not in c]
+
+        Num_Costs = len(C)
+        goal_score = Num_Costs * min_score
+        NumCats = len(X)//2
+        GroupSize = NumCats if max_group_size is None else max_group_size
+        for ni in range(min_groups,GroupSize):
+            print(f'level {ni}/{GroupSize}| {len(solutions)} answers')
+            for cgs in itertools.combinations(X,ni):
+                val = None
+
+                #make the set with included if needed
+                scg = set(cgs)
+                if include_categories:
+                    scg = scg.union(include_categories)
+
+                #skip bad groups
+                if any([b.issubset(scg) for b in bad]):
+                    #print(f'skipping {cgs}')
+                    #sys.stdout.write('.')
+                    continue
+
+                good = True #innocent till guilty
+                for cg in cgs:
+                    xi = Mx[:,inx[cg]].copy()
+                    xi[np.isnan(xi)] = 0                
+                    if val is None:
+                        val = xi
+                    else:
+                        val = val + xi
+                    #determine if any overlap (only pair level)
+                    if np.nanmax(val) > 1:
+                        print(f'bad {cgs}')
+                        bad.append(scg)
+                        good = False
+                        break
+
+                score = np.nansum(val)
+                if good and score > goal_score:
+                    print(f'found good: {scg}')
+                    solutions.append({'grp':scg,'score':score,'gsize':ni})
+
+        return solutions     
+
+    def cost_categories_from_df(self,df):
+        categories = set()
+        for val in df.columns:
+            m = re.match(re.compile('economics\.lifecycle\.category\.(?s:[a-z]*)$'),val)
+            if m:
+                categories.add(val)
+        return categories        
+
+    def plot_cost_categories(self,df,group,cmap='tab20c',make_title=None,ax=None):
+        categories = self.cost_categories_from_df(df)
+        from matplotlib import cm
+        #if grps:
+            #assert len(grps) == len(y_vars), 'groups and y_vars must be same length'
+            #assert all([g in categories for g in grps]), 'all groups must be in categories'
+        #TODO: project costs onto y_vars
+        #TODO: ensure groups and y_vars are same length
+
+
+        color = cm.get_cmap(cmap)
+        styles = {c.replace('economics.lifecycle.category.',''):{'color': color(i/ len(categories))} for i,c in enumerate(categories)}
+
+        if make_title is None:
+            def make_title(row):
+                return f'{row["name"]}x{row["num_items"]} @{"floating" if row["ldepth"]>50 else "fixed"}'
+
+        #for j,grp in enumerate(groups):
+        figgen = False
+        if ax is None:
+            figgen = True
+            fig,ax = subplots(figsize=(12,8))
+        else:
+            fig = ax.get_figure()
+
+        titles = []
+        xticks = []
+        data = {}
+        i = 0
+
+
+        for inx,row in df.iterrows():
+            i += 1
+            tc = row['economics.summary.total_cost']
+            cat_costs = {k.replace('economics.lifecycle.category.',''):row[k] for k in categories}
+            #print(i,cat_costs)
+
+            spec_costs = {k:v for k,v in cat_costs.items() if k in group}
+            pos_costs = {k:v for k,v in spec_costs.items() if v>=0}
+            neg_costs = {k:v for k,v in spec_costs.items() if k not in pos_costs}
+            neg_amt = sum(list(neg_costs.values()))
+            pos_amt = sum(list(pos_costs.values()))
+
+            data[i] = spec_costs.copy()
+
+            com = {'x':i,'width':0.5,'linewidth':0}
+            cur = neg_amt
+            for k,v in neg_costs.items():
+                opt = {} if i != 1 else {'label':k}
+                ax.bar(height=abs(v),bottom=cur,**com,**styles[k],**opt)
+                cur += abs(v)
+            for k,v in pos_costs.items():
+                opt = {} if i != 1 else {'label':k}
+                ax.bar(height=abs(v),bottom=cur,**com,**styles[k],**opt)
+                cur += abs(v)
+            xticks.append(com['x'])
+            titles.append(make_title(row))
+
+        #Format the chart
+        ax.legend(loc='upper right')
+        ax.set_xlim([0,i+max(2,0.2*i)])
+        ax.set_xticks(xticks)
+
+        ax.set_xticklabels(titles,rotation=90)
+        ylim = ax.get_ylim()
+        ylim = ylim[0]-0.05*abs(ylim[0]),ylim[1]+0.05*abs(ylim[1])
+        ax.set_yticks(numpy.linspace(*ylim,50),minor=True)
+        ax.grid(which='major',linestyle='--',color='k',zorder=0)
+        ax.grid(which='minor',linestyle=':',color='k',zorder=0)
+        if figgen: fig.tight_layout()
+        return {'fig':fig,'ax':ax,'data':data}
+        
 
 # TODO: add costs for iterable components (wide/narrow modes)
 # if isinstance(conf,ComponentIter):
