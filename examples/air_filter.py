@@ -48,9 +48,7 @@ class Airfilter(System):
 
     pr_eq = Solver.constraint_equality("sum_dP", 0, combos="flow")
 
-    flow_curve = Plot.define(
-        "throttle", "w", kind="lineplot", title="Flow Curve"
-    )
+    flow_curve = Plot.define("throttle", "w", kind="lineplot", title="Flow Curve")
 
     @system_property
     def dP_parasitic(self) -> float:

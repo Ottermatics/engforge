@@ -52,9 +52,7 @@ class OtherComponent(Component):
 
     if suprise:
         ones = attr.ib(default=1111)
-        wacky = attr.ib(
-            default="one hundred and 111", validator=STR_VALIDATOR()
-        )
+        wacky = attr.ib(default="one hundred and 111", validator=STR_VALIDATOR())
         more = attr.ib(default="other stuff", validator=STR_VALIDATOR())
 
     always_save_data = True
@@ -139,9 +137,7 @@ if __name__ == "__main__":
     tc = analysis.internal_component
 
     # 1) Ensure exists Reflect The Database
-    db = DBConnection(
-        "reports", host="localhost", user="postgres", passd="dumbpass"
-    )
+    db = DBConnection("reports", host="localhost", user="postgres", passd="dumbpass")
     db.ensure_database_exists()
     # db.engine.echo = True
 

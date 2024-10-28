@@ -77,9 +77,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-a", "--all", action="store_true", dest="all", help="run all tests"
     )
-    parser.add_argument(
-        "-b", "--base", action="store_true", help="run all tests"
-    )
+    parser.add_argument("-b", "--base", action="store_true", help="run all tests")
 
     args = parser.parse_args()
 

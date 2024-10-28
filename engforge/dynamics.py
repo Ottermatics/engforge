@@ -50,9 +50,7 @@ class INDEX_MAP:
     oppo = {str: int, int: str}
 
     def __init__(self, datas: list):
-        self.data = [
-            data if not data.startswith(".") else data[1:] for data in datas
-        ]
+        self.data = [data if not data.startswith(".") else data[1:] for data in datas]
         self.index = {}
 
     def get(self, key):
@@ -74,25 +72,17 @@ class INDEX_MAP:
 
     @staticmethod
     def indify(arr, *args):
-        return [
-            arr[arg] if isinstance(arg, int) else arr.index(arg) for arg in args
-        ]
+        return [arr[arg] if isinstance(arg, int) else arr.index(arg) for arg in args]
 
     def remap_indexes_to(self, new_index, *args, invert=False, old_data=None):
         if old_data is None:
             old_data = self.data
         opt1 = {arg: self.indify(old_data, arg)[0] for arg in args}
         opt2 = {
-            arg: (
-                self.indify(old_data, val)[0]
-                if (not isinstance(val, str))
-                else val
-            )
+            arg: (self.indify(old_data, val)[0] if (not isinstance(val, str)) else val)
             for arg, val in opt1.items()
         }
-        oop1 = {
-            arg: self.indify(new_index, val)[0] for arg, val in opt2.items()
-        }
+        oop1 = {arg: self.indify(new_index, val)[0] for arg, val in opt2.items()}
         oop2 = {
             arg: (
                 self.indify(new_index, val)[0]
@@ -188,15 +178,11 @@ class DynamicsMixin(Configuration, SolveableMixin):
 
     @property
     def dynamic_state(self) -> np.array:
-        return np.array(
-            [getattr(self, var, np.nan) for var in self.dynamic_state_vars]
-        )
+        return np.array([getattr(self, var, np.nan) for var in self.dynamic_state_vars])
 
     @property
     def dynamic_input(self) -> np.array:
-        return np.array(
-            [getattr(self, var, np.nan) for var in self.dynamic_input_vars]
-        )
+        return np.array([getattr(self, var, np.nan) for var in self.dynamic_input_vars])
 
     @property
     def dynamic_output(self) -> np.array:
@@ -210,15 +196,11 @@ class DynamicsMixin(Configuration, SolveableMixin):
 
     def create_input_matrix(self, **kwargs) -> np.ndarray:
         """creates the input matrix for the system, called B"""
-        return np.zeros(
-            (self.dynamic_state_size, max(self.dynamic_input_size, 1))
-        )
+        return np.zeros((self.dynamic_state_size, max(self.dynamic_input_size, 1)))
 
     def create_output_matrix(self, **kwargs) -> np.ndarray:
         """creates the input matrix for the system, called C"""
-        return np.zeros(
-            (max(self.dynamic_output_size, 1), self.dynamic_state_size)
-        )
+        return np.zeros((max(self.dynamic_output_size, 1), self.dynamic_state_size))
 
     def create_feedthrough_matrix(self, **kwargs) -> np.ndarray:
         """creates the input matrix for the system, called D"""
@@ -531,9 +513,7 @@ class DynamicsMixin(Configuration, SolveableMixin):
         accss.__name__ = f"ref_dXdt_{name}"
         return Ref(self, accss)
 
-    def determine_nearest_stationary_state(
-        self, t=0, X=None, U=None
-    ) -> np.ndarray:
+    def determine_nearest_stationary_state(self, t=0, X=None, U=None) -> np.ndarray:
         """determine the nearest stationary state"""
 
         if X is None:

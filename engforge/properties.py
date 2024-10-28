@@ -47,9 +47,7 @@ class engforge_prop:
         self.fset = fset
         self.fdel = fdel
 
-    def __call__(
-        self, fget=None, fset=None, fdel=None, doc=None, *args, **kwargs
-    ):
+    def __call__(self, fget=None, fset=None, fdel=None, doc=None, *args, **kwargs):
         """this will be called when input is provided before property is set"""
         if fget and self.fget is None:
             self.gname = fget.__name__
@@ -103,9 +101,7 @@ class engforge_prop:
 
 
 class cache_prop(engforge_prop):
-    allow_set: bool = (
-        False  # keep this flag false to maintain current persistent value
-    )
+    allow_set: bool = False  # keep this flag false to maintain current persistent value
 
     def __init__(self, *args, **kwargs):
         self.allow_set = True
@@ -348,9 +344,7 @@ class instance_cached(cache_prop):
         if not hasattr(instance, self.private_var):
             from engforge.tabulation import TabulationMixin
 
-            if (
-                instance.__class__ is not None and not IS_BUILD
-            ):  # its an instance
+            if instance.__class__ is not None and not IS_BUILD:  # its an instance
                 assert issubclass(
                     instance.__class__, TabulationMixin
                 ), f"incorrect class: {instance.__class__.__name__}"

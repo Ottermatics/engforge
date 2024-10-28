@@ -37,9 +37,7 @@ class SignalInstance(AttributeInstance):
         """sets `target` from `source`"""
         val = self.source.value()
         if self.system.log_level < 10:
-            self.system.msg(
-                f"Signal| applying {self.source}|{val} to {self.target}"
-            )
+            self.system.msg(f"Signal| applying {self.source}|{val} to {self.target}")
         self.target.set_value(val)
 
     @property

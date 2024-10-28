@@ -56,9 +56,7 @@ class FourBar(System):
     def r3_x(self) -> float:
         """length defined by gamma/theta"""
         return (
-            self.x2
-            + self.ra * numpy.cos(self.theta)
-            - self.r1 * numpy.cos(self.gamma)
+            self.x2 + self.ra * numpy.cos(self.theta) - self.r1 * numpy.cos(self.gamma)
         )
 
     @system_prop
@@ -70,9 +68,7 @@ class FourBar(System):
     def y(self) -> float:
         """length defined by gamma/theta"""
         return (
-            self.x2
-            + self.ra * numpy.sin(self.theta)
-            - self.r1 * numpy.sin(self.gamma)
+            self.x2 + self.ra * numpy.sin(self.theta) - self.r1 * numpy.sin(self.gamma)
         )
 
     @system_prop

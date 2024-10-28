@@ -40,9 +40,7 @@ def refset_input(refs, delta_dict, chk=True, fail=True, warn=True, scope="ref"):
 
         elif fail and chk and not memb:
             close = get_close_matches(k, keys)
-            raise KeyError(
-                f"{scope}| key {k} not in refs. did you mean {close}?"
-            )
+            raise KeyError(f"{scope}| key {k} not in refs. did you mean {close}?")
         elif warn and chk and not memb:
             close = get_close_matches(k, keys)
             log.warning(f"{scope}| key {k} not in refs. did you mean {close}")

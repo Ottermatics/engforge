@@ -56,9 +56,7 @@ def name_generator(instance):
     """a name generator for the instance"""
     base = str(instance.__class__.__name__).lower() + "-"
     if instance.__class__._use_random_name:
-        out = base + randomname.get_name(
-            adj=NAME_ADJ.secret, noun=NAME_NOUN.secret
-        )
+        out = base + randomname.get_name(adj=NAME_ADJ.secret, noun=NAME_NOUN.secret)
     else:
         out = base
     log.debug(f"generated name: {out}")
@@ -166,9 +164,7 @@ def property_changed(instance, variable, value):
     if not session and instance._anything_changed:
         # Bypass Check since we've already flagged for an update
         if log.log_level <= 2:
-            log.debug(
-                f"already property changed {instance}{variable.name} {value}"
-            )
+            log.debug(f"already property changed {instance}{variable.name} {value}")
         return value
 
     # elif session:
@@ -179,9 +175,7 @@ def property_changed(instance, variable, value):
     # session.change_sys_var(variable,value,doset=False)
     attrs = attr.fields(instance.__class__)  # check identity of variable
     cur = getattr(instance, variable.name)
-    is_different = (
-        value != cur if isinstance(value, (int, float, str)) else True
-    )
+    is_different = value != cur if isinstance(value, (int, float, str)) else True
     is_var = variable in attrs
     chgnw = instance._anything_changed
 
@@ -247,9 +241,7 @@ def signals_slots_handler(
     # Fields
     for t in fields:
         if t.name in PROTECTED_NAMES:
-            raise Exception(
-                f"cannot use {t.name} as a field name, its protected"
-            )
+            raise Exception(f"cannot use {t.name} as a field name, its protected")
         if t.type is None:
             log.warning(f"{cls.__name__}.{t.name} has no type")
 
@@ -419,9 +411,7 @@ class Configuration(AttributedBaseMixin):
         if not use_dict:  # slots
             obj = {k: obj.get(k, None) for k in slots}
 
-        return {
-            k: v for k, v in obj.items() if chk(k, v) and not k.startswith("_")
-        }
+        return {k: v for k, v in obj.items() if chk(k, v) and not k.startswith("_")}
 
     def copy_config_at_state(
         self, level=None, levels_deep: int = -1, changed: dict = None, **kw
@@ -461,9 +451,7 @@ class Configuration(AttributedBaseMixin):
             if config in changed:
                 ccomp = changed[config]
             else:
-                ccomp = config.copy_config_at_state(
-                    level + 1, levels_deep, changed
-                )
+                ccomp = config.copy_config_at_state(level + 1, levels_deep, changed)
             kwcomps[key] = ccomp
 
         # Finally make the new system with changed internals
@@ -575,9 +563,7 @@ class Configuration(AttributedBaseMixin):
 
         # subclass instance instance init causes conflicts in structures
         self.__on_init__()
-        runs = set(
-            (self.__class__.__on_init__,)
-        )  # keep track of unique functions
+        runs = set((self.__class__.__on_init__,))  # keep track of unique functions
         if self._subclass_init:
             try:
                 for comp in self.__class__.mro():
@@ -638,11 +624,7 @@ class Configuration(AttributedBaseMixin):
             .title()
         )
         filename = "".join(
-            [
-                c
-                for c in fil
-                if c.isalpha() or c.isdigit() or c == "_" or c == "-"
-            ]
+            [c for c in fil if c.isalpha() or c.isdigit() or c == "_" or c == "-"]
         ).rstrip()
         return filename
 

@@ -71,9 +71,7 @@ class AttributedBaseMixin(LoggingMixin):
         return out
 
     @classmethod
-    def _get_init_attrs_data(
-        cls, subclass_of: type, exclude=False, attr_type=False
-    ):
+    def _get_init_attrs_data(cls, subclass_of: type, exclude=False, attr_type=False):
         choose = issubclass
         if exclude:
             choose = lambda ty, type_set: not issubclass(ty, type_set)
@@ -145,9 +143,7 @@ class AttributedBaseMixin(LoggingMixin):
                 sub_clss = cls._extract_type(slts[fst].type)
                 out = []
                 for acpt in sub_clss:
-                    if isinstance(acpt, type) and issubclass(
-                        acpt, Configuration
-                    ):
+                    if isinstance(acpt, type) and issubclass(acpt, Configuration):
                         vals = acpt.check_ref_slot_type(".".join(rem))
                         # print(f'recursive find {acpt}.{rem} = {vals}')
                         if vals:
