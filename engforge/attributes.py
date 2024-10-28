@@ -186,11 +186,14 @@ class ATTR_BASE(attrs.Attribute):
     def _setup_cls(cls, name, new_dict, **kwargs):
         # randomize name for specifics reasons
         uid = str(uuid.uuid4())
+        # base info
         name = name + "_" + uid.replace("-", "")[0:16]
         new_dict["uuid"] = uid
         new_dict["default_options"] = cls.default_options.copy()
         new_dict["template_class"] = False
         new_dict["name"] = name
+
+        # create a new type of attribute
         new_slot = type(name, (cls,), new_dict)
         new_slot.default_options["default"] = new_slot.make_factory()
         new_slot.default_options["validator"] = new_slot.configure_instance

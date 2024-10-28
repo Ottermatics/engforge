@@ -53,7 +53,10 @@ def Options(*choices, **kwargs):
     :param kwargs: keyword args passed to attrs field"""
     assert choices, f"must have some choices!"
     assert "type" not in kwargs, "options type set is str"
-    assert set([type(c) for c in choices]) == set((str,)), "choices must be str"
+    valids = set((str, int, float, bool, type(None)))
+    assert set([type(c) for c in choices]).issubset(
+        valids
+    ), f"choices must be in {valids}"
     assert "on_setattr" not in kwargs
 
     validators = [attrs.validators.in_(choices)]

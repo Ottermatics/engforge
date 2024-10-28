@@ -71,7 +71,7 @@ class AttributedBaseMixin(LoggingMixin):
         return out
 
     @classmethod
-    def _get_init_attrs_data(cls, subclass_of: type, exclude=False):
+    def _get_init_attrs_data(cls, subclass_of: type, exclude=False, attr_type=False):
         choose = issubclass
         if exclude:
             choose = lambda ty, type_set: not issubclass(ty, type_set)
@@ -80,7 +80,7 @@ class AttributedBaseMixin(LoggingMixin):
         if "__attrs_attrs__" in cls.__dict__:  # Handle Attrs Class
             for k, v in attrs.fields_dict(cls).items():
                 if isinstance(v.type, type) and choose(v.type, subclass_of):
-                    attrval[k] = v
+                    attrval[k] = v.type if attr_type else v
 
         # else:  # Handle Pre-Attrs Class
         # FIXME: should this run first?
@@ -167,9 +167,9 @@ class AttributedBaseMixin(LoggingMixin):
         return o
 
     @classmethod
-    def slots_attributes(cls) -> typing.Dict[str, "Attribute"]:
+    def slots_attributes(cls, attr_type=False) -> typing.Dict[str, "Attribute"]:
         """Lists all slots attributes for class"""
-        return cls._get_init_attrs_data(Slot)
+        return cls._get_init_attrs_data(Slot, attr_type=attr_type)
 
     @classmethod
     def signals_attributes(cls) -> typing.Dict[str, "Attribute"]:
@@ -198,6 +198,7 @@ class AttributedBaseMixin(LoggingMixin):
 
     @classmethod
     def input_attrs(cls):
+        """Lists all input attributes for class"""
         return attr.fields_dict(cls)
 
     @classmethod
@@ -215,6 +216,7 @@ class AttributedBaseMixin(LoggingMixin):
 
     @classmethod
     def numeric_fields(cls):
+        """no tuples,lists, dicts, strings, or attr base types"""
         ignore_types = (
             ATTR_BASE,
             str,
@@ -227,7 +229,9 @@ class AttributedBaseMixin(LoggingMixin):
 
     @classmethod
     def table_fields(cls):
-        keeps = (str, float, int)  # TODO: add numpy fields
+        """the table attributes corresponding to"""
+        # TODO: add list/numpy fields with vector stats
+        keeps = (str, float, int)
         typ = cls._get_init_attrs_data(keeps)
         return {k: v for k, v in typ.items()}
 
@@ -246,6 +250,7 @@ class AttributedBaseMixin(LoggingMixin):
         o = {k: getattr(self, k, None) for k, v in inputs.items()}
         return o
 
+    # TODO: refactor this, allowing a nesting return option for sub components, by default True (later to be reverted to False, as a breaking change). this messes up hashing and we can just the other object hash
     @property
     def input_as_dict(self):
         """returns values as they are in the class instance, but converts classes inputs to their input_as_dict"""
@@ -256,6 +261,14 @@ class AttributedBaseMixin(LoggingMixin):
             k: v if not isinstance(v, Configuration) else v.input_as_dict
             for k, v in o.items()
         }
+        return o
+
+    @property
+    def table_row_dict(self):
+        """returns values as they would be put in a table row from this instance ignoring any sub components"""
+        from engforge.configuration import Configuration
+
+        o = {k: getattr(self, k, None) for k in self.table_fields()}
         return o
 
     @property
@@ -272,7 +285,24 @@ class AttributedBaseMixin(LoggingMixin):
 
     # Hashes
     # TODO: issue with logging sub-items
+    def hash(self, *args, **input_kw):
+        """hash by parm or by input_kw, only input can be hashed by lookup as system properties can create a recursive loop and should be deterministic from input"""
+        d = {k: v for k, v in self.input_as_dict.items() if k in args}
+        d.update(input_kw)  # override with input_kw
+        return d, deepdiff.DeepHash(
+            d, ignore_encoding_errors=True, significant_digits=6
+        )
+
     def hash_with(self, **input_kw):
+        """
+        Generates a hash for the object's dictionary representation, updated with additional keyword arguments.
+        Args:
+            **input_kw: Arbitrary keyword arguments to update the object's dictionary representation.
+        Returns:
+            The hash value of the updated dictionary.
+        Raises:
+            Any exceptions raised by deepdiff.DeepHash if hashing fails.
+        """
         d = self.as_dict
         d.update(input_kw)
         return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
@@ -291,6 +321,11 @@ class AttributedBaseMixin(LoggingMixin):
     def input_hash(self):
         d = self.input_as_dict
         return deepdiff.DeepHash(d, ignore_encoding_errors=True)[d]
+
+    @property
+    def table_hash(self):
+        d, hsh = self.hash(**self.table_row_dict)
+        return hsh[d]
 
     @property
     def numeric_hash(self):

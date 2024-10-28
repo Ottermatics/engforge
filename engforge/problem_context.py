@@ -126,7 +126,7 @@ dflt_parse_kw = dict(
     save_mode="all",
     x_start=None,
     save_on_exit=False,
-    enter_refresh=False,
+    enter_refresh=True,
 )
 # can be found on session._<parm> or session.<parm>
 root_defined = dict(
@@ -210,6 +210,8 @@ class ProblemExec:
 
     """
 
+    full_update = True  # TODO: cant justify setting this to false for performance gains. accuracy comes first. see event based update
+
     # TODO: convert this to a system based cache where there is a unique problem for each system instance. On subprobem copy a system and add o dictionary.
     class_cache = None  # ProblemExec is assigned below
 
@@ -244,7 +246,9 @@ class ProblemExec:
     _converged: bool
 
     # Interior Context Options
-    enter_refresh: bool = False
+    enter_refresh: bool = (
+        True  # TODO: allow this off (or lower impact) with event system
+    )
     save_on_exit: bool = False
     save_mode: str = "all"
     level_name: str = None  # target this context with the level name
@@ -269,7 +273,9 @@ class ProblemExec:
     )
 
     def __getattr__(self, name):
-        """This is a special method that is called when an attribute is not found in the usual places, like when interior contexts (anything not the root (session_id=True)) are created that dont have the top level's attributes. some attributes will look to the parent session"""
+        """
+        This is a special method that is called when an attribute is not found in the usual places, like when interior contexts (anything not the root (session_id=True)) are created that dont have the top level's attributes. some attributes will look to the parent session
+        """
 
         # interior context lookup (when in active context, ie session exists)
         if hasattr(self.class_cache, "session") and name in root_possible:
@@ -333,8 +339,8 @@ class ProblemExec:
         if opts.pop("persist", False) or kw_dict.pop("persist", False):
             self.persist_contexts()
 
-        # temp solver storage
-        self.solver_hist = expiringdict.ExpiringDict(100, 60)
+        # temp solver storage #TODO
+        # self.solver_hist = expiringdict.ExpiringDict(100, 60)
 
         if self.log_level < 5:
             if hasattr(self.class_cache, "session"):
@@ -425,6 +431,8 @@ class ProblemExec:
             self.class_cache.session._prob_levels[self.level_name] = self
             # error if the system is different (it shouldn't be!)
             if self.system is not system:
+                # TODO: subproblems allow different systems, but the top level should be the same
+                # idea - use (system,pid) as key for problems_dict, (system,True) would be root problem. This breaks checking for `class_cache.session` though one could gather that from the root problem key`
                 raise IllegalArgument(
                     f"somethings wrong! change of comp! {self.system} -> {system}"
                 )
@@ -589,19 +597,14 @@ class ProblemExec:
     # Update Methods
     def refresh_references(self, sesh=None):
         """refresh the system references"""
-        sesh = self.sesh
+
+        if sesh is None:
+            sesh = self.sesh
 
         if self.log_level < 5:
             self.warning(f"refreshing system references")
-        check_dynamics = sesh.check_dynamics
-        sesh._num_refs = sesh.system.system_references(numeric_only=True)
-        sesh._sys_refs = sesh.system.solver_vars(
-            check_dynamics=check_dynamics,
-            addable=sesh._num_refs,
-            **sesh._slv_kw,
-        )
 
-        sesh.update_methods(sesh=sesh)
+        sesh.full_refresh(sesh=sesh)
         sesh.min_refresh(sesh=sesh)
 
     def update_methods(self, sesh=None):
@@ -621,16 +624,46 @@ class ProblemExec:
             self.info(f"update dynamics")
             self.system.setup_global_dynamics()
 
+    def full_refresh(self, sesh=None):
+        """a more time consuming but throughout refresh of the system"""
+        if self.log_level < 5:
+            self.info(f"full refresh")
+
+        check_dynamics = sesh.check_dynamics
+        sesh._num_refs = sesh.system.system_references(
+            numeric_only=True,
+            none_ok=True,
+            only_inst=False,
+            ignore_none_comp=False,
+            recache=True,
+        )
+        sesh._sys_refs = sesh.system.solver_vars(
+            check_dynamics=check_dynamics,
+            addable=sesh._num_refs,
+            **sesh._slv_kw,
+        )
+        sesh.update_methods(sesh=sesh)
+
     def min_refresh(self, sesh=None):
+        """what things need to be refreshed per execution, this is important whenever items are replaced"""
+        # TODO: replace this function with an event based responsiblity model.
         sesh = sesh if sesh is not None else self.sesh
 
         if self.log_level < 5:
             self.info(f"min refresh")
 
+        if sesh.full_update:
+            # TODO: dont require this
+            sesh.full_refresh(sesh=sesh)
+
         # final ref's after update
         # after updates
         sesh._all_refs = sesh.system.system_references(
-            recache=True, check_config=False, ignore_none_comp=False
+            recache=True,
+            check_config=False,
+            ignore_none_comp=False,
+            none_ok=True,
+            only_inst=False,
         )
         # sesh._attr_sys_key_map = sesh.attribute_sys_key_map
 
@@ -640,6 +673,41 @@ class ProblemExec:
 
         cons = {}  # TODO: parse additional constraints
         sesh.constraints = sesh.sys_solver_constraints(cons)
+
+    def print_all_info(self, keys: str = None, comps: str = None):
+        """
+        Print all the information of each component's dictionary.
+        Parameters:
+        key_sch (str, optional): A pattern to match dictionary keys. Only keys matching this pattern will be included in the output.
+        comps (list, optional): A list of component sys names to filter. Only information of these components will be printed.
+        Returns: None (except stdout :)
+        """
+        from pprint import pprint
+
+        keys = keys.split(",")
+        comps = (comps + ",").split(",")  # always top level
+        print(f"CONTEXT: {self}")
+
+        mtch = lambda key, ptrns: any(
+            [fnmatch.fnmatch(key.lower(), ptn.lower()) for ptn in ptrns]
+        )
+
+        # check your comps
+        itrs = self.all_comps.copy()
+        itrs[""] = Ref(self.system, "", True, False)
+
+        # check your comps
+        for cn, comp in itrs.items():
+            if comps is not None and not mtch(cn, comps):
+                continue
+
+            dct = comp.value().as_dict
+            if keys:  # filter keys
+                dct = {k: v for k, v in dct.items() if mtch(k, keys)}
+            if dct:
+                print(f'INFO: {cn if cn else "<problem.system>"}')
+                pprint(dct)
+                print("-" * 80)
 
     @property
     def check_dynamics(self):
@@ -672,7 +740,6 @@ class ProblemExec:
         # transients wont update components/ methods dynamically (or shouldn't) so we can just update the system references once and be done with it for other cases, but that is not necessary unless a component changes or a component has in general a unique reference update system (economics / component-iterators)
         sesh = self.sesh
         if not sesh._dxdt is True and self.enter_refresh:
-            sesh.update_methods(sesh=sesh)
             sesh.min_refresh(sesh=sesh)
 
         elif sesh.dynamics_updated:
@@ -802,6 +869,7 @@ class ProblemExec:
             raise IllegalArgument(f"no session available")
 
     # Multi Context Exiting:
+    # TODO: rethink this
     def persist_contexts(self):
         """convert all contexts to a new storage format"""
         self.info(f"persisting contexts!")
@@ -1066,7 +1134,7 @@ class ProblemExec:
                             self.info(
                                 f'exiting solver {t} {ss_out["Xans"]} {ss_out["Xstart"]}'
                             )
-                        pbx.set_ref_values(ss_out["Xans"])
+                        pbx.set_ref_values(ss_out["Xans"], scope="intgrl")
                         pbx.exit_to_level("ss_slvr", False)
                     else:
                         self.warning(
@@ -1171,7 +1239,7 @@ class ProblemExec:
         # Output Results
         Xa = {p: answer.x[i] for i, p in enumerate(vars)}
         output["Xans"] = Xa
-        Ref.refset_input(Xref, Xa)
+        Ref.refset_input(Xref, Xa, scope="solvd")
 
         Yout = {p: yit.value(yit.comp, self) for p, yit in Yref.items()}
         output["Yobj"] = Yout
@@ -1660,13 +1728,13 @@ class ProblemExec:
             refs = sesh.all_system_references
         return Ref.refset_get(refs, sys=self.system, prob=self)
 
-    def set_ref_values(self, values, refs=None):
+    def set_ref_values(self, values, refs=None, scope="sref"):
         """returns the values of the refs"""
         # TODO: add checks for the refs
         if refs is None:
             sesh = self.sesh
             refs = sesh.all_comps_and_vars
-        return Ref.refset_input(refs, values)
+        return Ref.refset_input(refs, values, scope=scope)
 
     def change_sys_var(self, key, value, refs=None, doset=True, attr_key_map=None):
         """use this function to change the value of a system var and update the start state, multiple uses in the same context will not change the record preserving the start value
@@ -1711,7 +1779,9 @@ class ProblemExec:
             rs = list(self.record_state.values())
             self.debug(f"reverting to start: {xs} -> {rs}")
         # TODO: STRICT MODE Fail for refset_input
-        Ref.refset_input(sesh.all_comps_and_vars, self.x_start, fail=False)
+        Ref.refset_input(
+            sesh.all_comps_and_vars, self.x_start, fail=False, scope="rvtst"
+        )
 
     def activate_temp_state(self, new_state=None):
         # TODO: determine when components change, and update refs accordingly!
@@ -1720,11 +1790,18 @@ class ProblemExec:
         if new_state:
             if self.log_level < 3:
                 self.debug(f"new-state: {self.temp_state}")
-            Ref.refset_input(sesh.all_comps_and_vars, new_state, fail=False)
+            Ref.refset_input(
+                sesh.all_comps_and_vars, new_state, fail=False, scope="ntemp"
+            )
         elif self.temp_state:
             if self.log_level < 3:
                 self.debug(f"act-state: {self.temp_state}")
-            Ref.refset_input(sesh.all_comps_and_vars, self.temp_state, fail=False)
+            Ref.refset_input(
+                sesh.all_comps_and_vars,
+                self.temp_state,
+                fail=False,
+                scope="atemp",
+            )
         elif self.log_level < 3:
             self.debug(f"no-state: {new_state}")
 
@@ -1973,6 +2050,13 @@ class ProblemExec:
     def is_active(self):
         """checks if the context has been entered and not exited"""
         return self.entered and not self.exited
+
+    @classmethod
+    def cls_is_active(cls):
+        """checks if the cache has a session"""
+        if cls.class_cache and hasattr(cls.class_cache, "session"):
+            return True
+        return False
 
     @property
     def solveable(self):

@@ -852,7 +852,9 @@ class SysEcon(Economics):
 
 @forge
 class FanSystem(System, CostModel):
-    base = Slot.define(Component)
+    base = Slot.define(
+        Component
+    )  # FIXME: not showing in "econ" (due to base default cost?)
     fan = Slot.define(Fan)
     motor = Slot.define(Motor)
 

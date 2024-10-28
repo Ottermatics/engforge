@@ -36,14 +36,16 @@ import json
 
 # generic cross sections from
 # https://mechanicalbase.com/area-moment-of-inertia-calculator-of-certain-cross-sectional-shapes/
-temp_path = os.path.join(tempfile.gettempdir(), "shapely_sections")
+_temp = os.path.join(os.path.expanduser("~"), ".forge_tmp")
+temp_path = os.path.join(_temp, "shapely_sections")
+
 section_cache = EnvVariable(
-    "FORGE_SECTION_CACHE",
+    "FORGE_CACHE",
     default=temp_path,
     desc="directory to cache section properties",
 )
-if "FORGE_SECTION_CACHE" not in os.environ and not os.path.exists(temp_path):
-    os.mkdir(temp_path)
+if "FORGE_CACHE" not in os.environ and not os.path.exists(temp_path):
+    os.makedirs(temp_path, 0o741, exist_ok=True)
 
 section_cache.info(f"loading section from {section_cache.secret}")
 
@@ -620,7 +622,7 @@ class ShapelySection(Profile2D):
         self.calculate_bounds()
 
     def calculate_bounds(self):
-        self.info(f"calculating shape bounds!")
+        self.debug(f"calculating shape bounds!")
         xcg, ycg = self._geo.calculate_centroid()
         minx, maxx, miny, maxy = self._geo.calculate_extents()
         self.y_bounds = (miny - ycg, maxy - ycg)

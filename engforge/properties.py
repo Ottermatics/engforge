@@ -21,6 +21,8 @@ class PropertyLog(LoggingMixin):
 
 log = PropertyLog()
 
+_basic_valild_types = (int, str, float)  # check for return_type
+
 
 class engforge_prop:
     """
@@ -28,15 +30,16 @@ class engforge_prop:
 
     Use as follows:
         @engforge_prop
-        def our_custom_function(self):
+        def our_custom_function(self) -> return_type:
             pass
     """
 
+    valid_types = _basic_valild_types
     must_return = False
 
     def __init__(self, fget=None, fset=None, fdel=None, *args, **kwargs):
         """call with the function you want to wrap in a decorator"""
-
+        self.valild_types = (int, str, float)  # check for return_type
         self.fget = fget
         if fget:
             self.gname = fget.__name__
@@ -63,7 +66,7 @@ class engforge_prop:
         """ensures that the function has a return annotation, and that return annotation is in valid sort types"""
         anno = func.__annotations__
         typ = anno.get("return", None)
-        if not typ in (int, str, float) and self.must_return:
+        if not typ in self.valid_types and self.must_return:
             raise Exception(
                 f"system_property input: function {func.__name__} must have valid return annotation of type: {(int,str,float)}"
             )
@@ -102,6 +105,7 @@ class cache_prop(engforge_prop):
 
     def __init__(self, *args, **kwargs):
         self.allow_set = True
+        self.valild_types = (int, str, float)  # check for return_type
         super().__init__(*args, **kwargs)
 
     def __set__(self, instance, value):
@@ -155,7 +159,7 @@ class system_property(engforge_prop):
         @system_property(desc='really nice',label='funky function')
         def function(...):    < this uses __call__ to assign function
         """
-
+        self.valild_types = (int, str, float)  # check for return_type
         self.fget = fget
         if fget:
             self.get_func_return(fget)

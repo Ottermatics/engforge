@@ -244,8 +244,6 @@ class SolverMixin(SolveableMixin):
         """
         runs the system solver using the current system state and modifying it. This is the default solver for the system, and it is recommended to add additional options or methods via the execute method.
 
-
-
         :param obj: the objective function to minimize, by default will minimize the sum of the squares of the residuals. Objective function should be a function(system,Xs,Xt) where Xs is the system state and Xt is the system transient state. The objective function will be argmin(X)|(1+custom_objective)*residual_RSS when `add_obj` is True in kw otherwise argmin(X)|custom_objective with constraints on the system as balances instead of first objective being included.
         :param cons: the constraints to be used in the solver, by default will use the system's constraints will be enabled when True. If a dictionary is passed the solver will use the dictionary as the constraints in addition to system constraints. These can be individually disabled by key=None in the dictionary.
 
@@ -286,7 +284,7 @@ class SolverMixin(SolveableMixin):
             # depending on the solver success, failure or no solution, we can exit the solver
             if has_ans and out["ans"] and out["ans"].success:
                 # this is where you want to be! <<<
-                pbx.set_ref_values(out["Xans"])
+                pbx.set_ref_values(out["Xans"], scope="solvr")
                 pbx.exit_to_level("sys_slvr", False)
 
             elif has_ans and out["ans"] is None:

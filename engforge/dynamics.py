@@ -79,7 +79,7 @@ class INDEX_MAP:
             old_data = self.data
         opt1 = {arg: self.indify(old_data, arg)[0] for arg in args}
         opt2 = {
-            arg: self.indify(old_data, val)[0] if (not isinstance(val, str)) else val
+            arg: (self.indify(old_data, val)[0] if (not isinstance(val, str)) else val)
             for arg, val in opt1.items()
         }
         oop1 = {arg: self.indify(new_index, val)[0] for arg, val in opt2.items()}

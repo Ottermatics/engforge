@@ -32,9 +32,11 @@ log = DataFrameLog()
 # Dataframe interrogation functions
 def is_uniform(s: pandas.Series):
     a = s.to_numpy()  # s.values (pandas<0.24)
-    if (a[0] == a).all():
+
+    if numpy.all(a == a[0]):
         return True
     try:
+        #
         if not numpy.isfinite(a).any():
             return True
     except:
@@ -107,8 +109,8 @@ def split_dataframe(df: pandas.DataFrame) -> tuple:
 class DataframeMixin:
     dataframe: pandas.DataFrame
 
-    _split_dataframe_func = split_dataframe
-    _determine_split_func = determine_split
+    _split_dataframe_func = staticmethod(split_dataframe)
+    _determine_split_func = staticmethod(determine_split)
 
     def smart_split_dataframe(self, df=None, split_groups=0, key_f=key_func):
         """splits dataframe between constant values and variants"""
@@ -166,9 +168,8 @@ class DataframeMixin:
         return o
 
     def format_columns(self, dataframe: pandas.DataFrame):
-        dataframe.rename(
-            lambda x: x.replace(".", "_").lower(), axis="columns", inplace=True
-        )
+        # replace(".", "_")
+        dataframe.rename(lambda x: x.lower(), axis="columns", inplace=True)
 
     # Plotting Interface
     @property

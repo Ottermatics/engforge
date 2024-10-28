@@ -96,7 +96,7 @@ class TestCategoriesAndTerms(unittest.TestCase):
 
         df = er.dataframe
         tc = (
-            df["econ_summary_total_cost"] == np.array([161.0, 220.0, 305.0, 390.0])
+            df["econ.summary.total_cost"] == np.array([161.0, 220.0, 305.0, 390.0])
         ).all()
         self.assertTrue(tc)
 
@@ -123,7 +123,7 @@ class TestEconomicsAccounting(unittest.TestCase):
         d = er.data_dict
         self.assertEqual(78, d["econ.summary.total_cost"])
         self.assertEqual(78, d["econ.lifecycle.annualized.term_cost"])
-        self.assertEqual(78, d["econ.lifecycle.annualized.levalized_cost"])
+        self.assertEqual(78, d["econ.lifecycle.annualized.levelized_cost"])
         self.assertEqual(78, d["econ.lifecycle.term_cost"])
 
     def test_recursive_null(self, ANS=75):
@@ -273,14 +273,14 @@ class TestFanSystemDataFrame(unittest.TestCase):
 
         dfc = df_complete
         match = (
-            dfc["fan_blade_cost"] + dfc["motor_motor_cost"]
-            == dfc["econ_lifecycle_category_capex"]
+            dfc["fan.blade_cost"] + dfc["motor.motor_cost"]
+            == dfc["econ.lifecycle.category.capex"]
         ).all()
         self.assertTrue(match)
 
         match = (
-            df_complete["fan_area"] * df_complete["fan_v"]
-            == df_complete["fan_volumetric_flow"]
+            df_complete["fan.area"] * df_complete["fan.v"]
+            == df_complete["fan.volumetric_flow"]
         ).all()
         self.assertTrue(match)
 

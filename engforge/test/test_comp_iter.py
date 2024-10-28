@@ -102,7 +102,7 @@ class TestWide(unittest.TestCase):
                 for p in props:
                     tkn = f"{ck}.{v}.{p}"
                     should_keys.add(tkn)
-                    dataframe_keys.add(tkn.replace(".", "_"))
+                    dataframe_keys.add(tkn)
 
         sys_key = set(self.system.data_dict.keys())
         mtch = should_keys.issubset(sys_key)
@@ -161,7 +161,7 @@ class TestNarrow(unittest.TestCase):
             for p in props:
                 tkn = f"{ck}.{p}"
                 should_keys.add(tkn)
-                dataframe_keys.add(tkn.replace(".", "_"))
+                dataframe_keys.add(tkn)
 
         sys_key = set(self.system.data_dict.keys())
         mtch = should_keys.issubset(sys_key)
@@ -177,18 +177,18 @@ class TestNarrow(unittest.TestCase):
         self.assertTrue(dataframe_keys.issubset(set(df.keys())))
 
         # test item existence
-        v1 = set(self.system.dataframe["cdict_current_item"])
+        v1 = set(self.system.dataframe["cdict.current_item"])
         v2 = set(comps["cdict"])
 
         self.assertEqual(v1, v2)
 
-        d1 = set(self.system.dataframe["citer_current_item"])
+        d1 = set(self.system.dataframe["citer.current_item"])
         d2 = set(comps["citer"])
 
         self.assertEqual(d1, d2)
 
-        dvs = self.system.dataframe["cdict_current_item"]
-        cvs = self.system.dataframe["citer_current_item"]
+        dvs = self.system.dataframe["cdict.current_item"]
+        cvs = self.system.dataframe["citer.current_item"]
 
         al = set(zip(dvs, cvs))
         sh = set(itertools.product(v2, d2))

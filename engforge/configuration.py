@@ -170,17 +170,20 @@ def property_changed(instance, variable, value):
     # elif session:
     # notify session that this variable has changed
     # log.info(f'property changed {variable.name} {value}')
+
     # TODO: notify change input system here, perhaps with & without a session
     # session.change_sys_var(variable,value,doset=False)
-
     attrs = attr.fields(instance.__class__)  # check identity of variable
     cur = getattr(instance, variable.name)
-    is_different = value != cur
+    is_different = value != cur if isinstance(value, (int, float, str)) else True
     is_var = variable in attrs
     chgnw = instance._anything_changed
 
     if log.log_level <= 6:
         log.debug(
+            f"checking property changed {instance}{variable.name} {value}|invar: {is_var}| nteqval: {is_different}"
+        )
+        print(
             f"checking property changed {instance}{variable.name} {value}|invar: {is_var}| nteqval: {is_different}"
         )
 
@@ -317,6 +320,7 @@ def signals_slots_handler(
         cls_properties = cls.system_properties_classdef(True)
     else:
         cls_properties = {}
+
     cls_dict = cls.__dict__.copy()
     cls.__anony_store = {}
     # print(f'tab found!! {cls_properties.keys()}')
@@ -460,6 +464,7 @@ class Configuration(AttributedBaseMixin):
             new_sys.system_references(recache=True)
 
         # update the parents
+        # TODO: use pyee to broadcast change
         if hasattr(self, "parent"):
             if self.parent in changed:
                 new_sys.parent = changed[self.parent]
@@ -480,6 +485,8 @@ class Configuration(AttributedBaseMixin):
 
         :return: level,config"""
         from engforge.configuration import Configuration
+
+        # TODO: instead of a recursive loop a global map per problem context should be used, with a static map of slots, updating with every change per note in system_references. This function could be a part of that but each system shouldn't be responsible for it.
 
         should_yield_level = lambda level: all(
             [
@@ -546,9 +553,9 @@ class Configuration(AttributedBaseMixin):
                 # TODO: allow multiple parents
                 if (hasattr(comp, "parent")) and (comp.parent is not None):
                     self.warning(
-                        f"Component {compnm} already has a parent {comp.parent} copying, and assigning to {self}"
+                        f"Component {compnm} already has a parent {comp.parent} #copying, and assigning to {self}"
                     )
-                    setattr(self, compnm, attrs.evolve(comp, parent=self))
+                    # setattr(self, compnm, attrs.evolve(comp, parent=self))
                 else:
                     comp.parent = self
 

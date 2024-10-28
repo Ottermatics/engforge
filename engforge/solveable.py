@@ -36,12 +36,12 @@ log = SolvableLog()
 def _update_func(comp, eval_kw):
     def updt(*args, **kw):
         eval_kw.update(kw)
-        if log.log_level <= 5:
-            log.msg(f"update| {comp.name} ", lvl=5)
+        if log.log_level <= 12:
+            log.info(f"update| {comp.name} ")  # =5)
         return comp.update(comp.parent, *args, **eval_kw)
 
-    if log.log_level <= 5:
-        log.msg(f"create method| {comp.name}| {eval_kw}")
+    if log.log_level <= 12:
+        log.info(f"create method| {comp.name}| {eval_kw}")
     updt.__name__ = f"{comp.name}_update"
     return updt
 
@@ -51,8 +51,8 @@ def _post_update_func(comp, eval_kw):
         eval_kw.update(kw)
         return comp.post_update(comp.parent, *args, **eval_kw)
 
-    if log.log_level <= 5:
-        log.msg(f"create post method| {comp.name}| {eval_kw}")
+    if log.log_level <= 12:
+        log.info(f"create post method| {comp.name}| {eval_kw}")
     updt.__name__ = f"{comp.name}_post_update"
     return updt
 
@@ -63,24 +63,25 @@ def _cost_update(comp):
     if isinstance(comp, Economics):
 
         def updt(*args, **kw):
-            if log.log_level <= 8:
-                log.debug(f"update economics {comp.name} | {comp.term_length} ")
+            if log.log_level <= 12:
+                log.info(f"update economics {comp.name} | {comp.term_length} ")
             comp.system_properties_classdef(True)
             comp.update(comp.parent, *args, **kw)
 
-        if log.log_level <= 8:
-            log.debug(f"economics update cb {comp.name} | {comp.term_length} ")
+        if log.log_level <= 12:
+            log.info(f"economics update cb {comp.name} | {comp.term_length} ")
         updt.__name__ = f"{comp.name}_econ_update"
     else:
 
         def updt(*args, **kw):
-            if log.log_level <= 7:
-                log.msg(f"update costs {comp.name} ", lvl=5)
+            if log.log_level <= 12:
+                log.info(f"update costs {comp.name} ")  # =5)
             comp.system_properties_classdef(True)
+            # comp.update(comp.parent, *args, **kw) #called as update without cm
             return comp.update_dflt_costs()
 
-        if log.log_level <= 7:
-            log.debug(f"cost update cb {comp.name} ")
+        if log.log_level <= 12:
+            log.info(f"cost update cb {comp.name} ")
         updt.__name__ = f"{comp.name}_cost_update"
 
     return updt
@@ -123,13 +124,13 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
     # TODO: pass the problem vs the parent component, then locate this component in the problem and update any references
     def update(self, parent, *args, **kwargs):
         """Kwargs comes from eval_kw in solver"""
-        if log.log_level <= 5:
-            log.debug(f"void updating {self.__class__.__name__}.{self}")
+        if log.log_level <= 12:
+            log.info(f"void updating {self.__class__.__name__}.{self}")
 
     def post_update(self, parent, *args, **kwargs):
         """Kwargs comes from eval_kw in solver"""
-        if log.log_level <= 5:
-            log.debug(f"void post-updating {self.__class__.__name__}.{self}")
+        if log.log_level <= 12:
+            log.info(f"void post-updating {self.__class__.__name__}.{self}")
 
     def collect_update_refs(self, eval_kw=None, ignore=None):
         """checks all methods and creates ref's to execute them later"""
@@ -145,7 +146,17 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         elif self in ignore:
             return
 
+        key = "top"
+        if self.__class__.update != SolveableMixin.update:
+            ref = Ref(self, _update_func(self, eval_kw if eval_kw else {}))
+            updt_refs[key] = ref
+
+        if isinstance(self, (CostModel, Economics)):
+            ref = Ref(self, _cost_update(self))
+            updt_refs[key + "._cost_model_"] = ref
+
         for key, comp in self.internal_configurations(False).items():
+            # for key,lvl,comp in self.go_through_configurations(check_config=False):
             if ignore is not None and comp in ignore:
                 continue
 
@@ -164,7 +175,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
                 ref = Ref(comp, _cost_update(comp))
                 updt_refs[key + "._cost_model_"] = ref
 
-            elif comp.__class__.update != SolveableMixin.update:
+            if comp.__class__.update != SolveableMixin.update:
                 ref = Ref(comp, _update_func(comp, ekw))
                 updt_refs[key] = ref
 
@@ -185,7 +196,12 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         elif self in ignore:
             return
 
+        if self.__class__.post_update != SolveableMixin.post_update:
+            ref = Ref(self, _post_update_func(self, eval_kw if eval_kw else {}))
+            updt_refs["top"] = ref
+
         for key, comp in self.internal_configurations(False).items():
+            # for key,lvl,comp in self.go_through_configurations(check_config=False):
             if ignore is not None and comp in ignore:
                 continue
 
@@ -336,6 +352,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         out = {}
         for key, lvl, comp in self.go_through_configurations(parent_level=1, **kw):
             if ignore_none_comp and not isinstance(comp, SolveableMixin):
+                self.warning(f"ignoring {key} {lvl}|{comp}")
                 continue
             out[key] = comp
         return out
@@ -351,6 +368,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         force_solve=False,
         return_results=False,
         method_kw: dict = None,
+        print_kw: dict = None,
         **kwargs,
     ):
         """applies a permutation of input vars for vars. runs the system instance by applying input to the system and its slot-components, ensuring that the targeted attributes actualy exist.
@@ -360,6 +378,8 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         :param sequence: a list of dictionaries that should be run in order per the outer-product of kwargs
         :param eval_kw: a dictionary of keyword arguments to pass to the eval function of each component by their name and a set of keyword args. Use this to set values in the component that are not inputs to the system. No iteration occurs upon these values, they are static and irrevertable
         :param sys_kw: a dictionary of keyword arguments to pass to the eval function of each system by their name and a set of keyword args. Use this to set values in the component that are not inputs to the system. No iteration occurs upon these values, they are static and irrevertable
+        :param print_kw: a dictionary of keyword arguments to pass to the print_all_info function of the current context
+
         :param kwargs: inputs are run on a product basis asusming they correspond to actual scoped vars (system.var or system.slot.var)
 
 
@@ -414,6 +434,13 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
 
                         # Run The Method with inputs provisioned
                         out = method(icur, eval_kw, sys_kw, cb=cb, **method_kw)
+
+                        if (
+                            print_kw
+                            and hasattr(self, "last_context")
+                            and self.last_context
+                        ):
+                            self.last_context.print_all_info(**print_kw)
 
                         if return_results:
                             # store the output
@@ -530,7 +557,7 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             args = key.split(".")
             comp, sub = args[0], ".".join(args[1:])
             assert comp in cls.slots_attributes(), f"invalid {comp} in {key}"
-            comp_cls = cls.slots_attributes()[comp].type.accepted[0]
+            comp_cls = cls.slots_attributes(attr_type=True)[comp].accepted[0]
             val = comp_cls.locate(sub, fail=True)
 
         elif key in cls.input_fields():
@@ -606,6 +633,8 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         ):
             return self._prv_system_references
 
+        # TODO: system references are really important and nesting them together complicates the refresh process. Each component should be able to refresh itself and its children on set_state, as well as alert parents to change. Ideally the `Ref` objects could stay the same and no `recache` would need to occur. This would be a huge performance boost and fix a lot of the issues with the current system.
+
         out = self.internal_references(recache, numeric_only=numeric_only)
         tatr = out["attributes"]
         tprp = out["properties"]
@@ -614,6 +643,8 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
 
         # component iternals
         for key, comp in self.comp_references(**kw).items():
+            if comp is None:
+                continue
             sout = comp.internal_references(recache, numeric_only=numeric_only)
             satr = sout["attributes"]
             sprp = sout["properties"]

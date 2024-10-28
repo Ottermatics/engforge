@@ -13,6 +13,7 @@ import scipy.optimize as sciopt
 from contextlib import contextmanager
 from engforge.properties import *
 import copy
+from difflib import get_close_matches
 
 
 class RefLog(LoggingMixin):
@@ -22,32 +23,39 @@ class RefLog(LoggingMixin):
 log = RefLog()
 
 
-def refset_input(refs, delta_dict, chk=True, fail=True, warn=True):
+def refset_input(refs, delta_dict, chk=True, fail=True, warn=True, scope="ref"):
     """change a set of refs with a dictionary of values. If chk is True k will be checked for membership in refs"""
+    keys = set(refs.keys())
     for k, v in delta_dict.items():
         if isinstance(k, Ref):
             k.set_value(v)
             continue
 
         memb = k in refs
+        # if a match or not checking go ahead.
         if not chk or memb:
             refs[k].set_value(v)
+
+        # TODO: handle setting non-ref values such as dictionaries
+
         elif fail and chk and not memb:
-            raise KeyError(f"key {k} not in refs {refs.keys()}")
+            close = get_close_matches(k, keys)
+            raise KeyError(f"{scope}| key {k} not in refs. did you mean {close}?")
         elif warn and chk and not memb:
-            log.warning(f"key {k} not in refs {refs.keys()}")
+            close = get_close_matches(k, keys)
+            log.warning(f"{scope}| key {k} not in refs. did you mean {close}")
 
 
 def refset_get(refs, *args, **kw):
     out = {}
+    scope = kw.get("scope", "ref")
     for k in refs:
         try:
             # print(k,refs[k])
-
             out[k] = refs[k].value(refs[k].comp, **kw)
         except Exception as e:
             rf = refs[k]
-            log.error(e, f"issue with ref: {rf}|{rf.key}|{rf.comp}")
+            log.error(e, f"{scope}| issue with ref: {rf}|{rf.key}|{rf.comp}")
 
     return out
 
@@ -196,6 +204,7 @@ class Ref:
 
         self.hxd = str(hex(id(self)))[-6:]
 
+        # TODO: update with change (pyee?)
         self.setup_calls()
 
     def setup_calls(self):
@@ -215,7 +224,10 @@ class Ref:
             self._value_eval = lambda *a, **kw: self.key(*a, **kw)
         else:
             # do not cross reference vars!
-            if self.use_dict:
+            # TODO: allo for comp/key changes with events
+            if self.key == "":  # return the component
+                p = lambda *a, **kw: self.comp
+            elif self.use_dict:
                 p = lambda *a, **kw: self.comp.get(self.key)
             elif self.key in self.comp.__dict__:
                 p = lambda *a, **kw: self.comp.__dict__[self.key]
