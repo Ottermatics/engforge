@@ -9,11 +9,13 @@ on:
       - reopened
     paths:
       - '**.py'
+      - 'pyproject.toml'
   push:
     branches:
       - main
     paths:
       - '**.py'
+      - 'pyproject.toml'
 
 jobs:
   test:
@@ -21,31 +23,56 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: [ "3.9", "3.10" ]
+        python-version: [ "3.9", "3.10", "3.11" ]
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Install Python
-      uses: actions/setup-python@v1
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi 
+        pip install flake8 pytest black
+        pip install -e .
         if [ -f ./engforge/datastores/datastores_requirements.txt ]; then pip install -r ./engforge/datastores/datastores_requirements.txt; fi    
 
     - name: Display Python Version
       run: python -c "import sys; print(sys.version)"
 
-    - name: Run tests
-      run: python -m unittest discover ./test/
+    - name: Check for existing release
+      if: github.event_name == 'pull_request'
+      run: |
+        VERSION=$(python -c "import tomllib; print(tomllib.load(open('pyproject.toml', 'rb'))['project']['version'])")
+        echo "Checking for existing release v$VERSION"
+        if gh release view "v$VERSION" >/dev/null 2>&1; then
+          echo "::error::Release v$VERSION already exists. Please bump the version in pyproject.toml"
+          exit 1
+        else
+          echo "Version v$VERSION is available"
+        fi
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - uses: psf/black@stable
-      with:
-        version: "24.8.0"
-        options: "--check --verbose"
-        src: "./engforge"
+    - name: Auto-format with Black
+      if: github.event_name == 'pull_request'
+      run: |
+        black ./engforge
+        if ! git diff --quiet; then
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Auto-format code with Black [skip ci]" || exit 0
+          git push
+        fi
+
+    - name: Run tests
+      run: python -m unittest discover -s engforge/test -p "test_*.py" -v
+
+    - name: Verify Black formatting
+      run: black --check --verbose ./engforge

@@ -1,6 +1,0 @@
-engforge.configuration.name\_generator
-======================================
-
-.. currentmodule:: engforge.configuration
-
-.. autofunction:: name_generator

@@ -1,6 +1,0 @@
-engforge.solver\_utils.filter\_combos
-=====================================
-
-.. currentmodule:: engforge.solver_utils
-
-.. autofunction:: filter_combos

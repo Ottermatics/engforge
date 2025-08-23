@@ -1,6 +1,0 @@
-engforge.eng.thermodynamics.dp\_he\_core
-========================================
-
-.. currentmodule:: engforge.eng.thermodynamics
-
-.. autofunction:: dp_he_core

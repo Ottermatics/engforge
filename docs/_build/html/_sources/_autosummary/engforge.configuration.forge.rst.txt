@@ -1,6 +1,0 @@
-engforge.configuration.forge
-============================
-
-.. currentmodule:: engforge.configuration
-
-.. autofunction:: forge

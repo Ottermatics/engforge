@@ -1,6 +1,0 @@
-engforge.configuration.comp\_transform
-======================================
-
-.. currentmodule:: engforge.configuration
-
-.. autofunction:: comp_transform

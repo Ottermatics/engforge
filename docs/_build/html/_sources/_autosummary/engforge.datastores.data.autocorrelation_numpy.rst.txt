@@ -1,6 +1,0 @@
-engforge.datastores.data.autocorrelation\_numpy
-===============================================
-
-.. currentmodule:: engforge.datastores.data
-
-.. autofunction:: autocorrelation_numpy

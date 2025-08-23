@@ -1,6 +1,0 @@
-engforge.configuration.property\_changed
-========================================
-
-.. currentmodule:: engforge.configuration
-
-.. autofunction:: property_changed

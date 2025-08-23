@@ -1,6 +1,0 @@
-engforge.eng.structure\_beams.rotation\_matrix\_from\_vectors
-=============================================================
-
-.. currentmodule:: engforge.eng.structure_beams
-
-.. autofunction:: rotation_matrix_from_vectors

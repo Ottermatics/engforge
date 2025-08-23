@@ -1,6 +1,0 @@
-engforge.system\_reference.eval\_ref
-====================================
-
-.. currentmodule:: engforge.system_reference
-
-.. autofunction:: eval_ref

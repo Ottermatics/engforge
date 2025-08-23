@@ -1,6 +1,0 @@
-engforge.typing.STR\_VALIDATOR
-==============================
-
-.. currentmodule:: engforge.typing
-
-.. autofunction:: STR_VALIDATOR

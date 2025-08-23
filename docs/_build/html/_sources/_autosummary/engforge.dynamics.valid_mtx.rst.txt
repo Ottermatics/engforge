@@ -1,6 +1,0 @@
-engforge.dynamics.valid\_mtx
-============================
-
-.. currentmodule:: engforge.dynamics
-
-.. autofunction:: valid_mtx
