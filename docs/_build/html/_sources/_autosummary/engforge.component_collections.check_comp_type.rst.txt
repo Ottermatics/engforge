@@ -1,6 +1,0 @@
-engforge.component\_collections.check\_comp\_type
-=================================================
-
-.. currentmodule:: engforge.component_collections
-
-.. autofunction:: check_comp_type

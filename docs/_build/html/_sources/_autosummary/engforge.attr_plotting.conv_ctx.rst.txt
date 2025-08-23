@@ -1,6 +1,0 @@
-engforge.attr\_plotting.conv\_ctx
-=================================
-
-.. currentmodule:: engforge.attr_plotting
-
-.. autofunction:: conv_ctx

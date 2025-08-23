@@ -1,6 +1,0 @@
-engforge.datastores.data.addapt\_numpy\_int64
-=============================================
-
-.. currentmodule:: engforge.datastores.data
-
-.. autofunction:: addapt_numpy_int64

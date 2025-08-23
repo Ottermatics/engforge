@@ -1,6 +1,0 @@
-engforge.common.get\_size
-=========================
-
-.. currentmodule:: engforge.common
-
-.. autofunction:: get_size

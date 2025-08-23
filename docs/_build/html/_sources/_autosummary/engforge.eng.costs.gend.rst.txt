@@ -1,6 +1,0 @@
-engforge.eng.costs.gend
-=======================
-
-.. currentmodule:: engforge.eng.costs
-
-.. autofunction:: gend

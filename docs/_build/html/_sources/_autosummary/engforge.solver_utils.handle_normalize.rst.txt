@@ -1,6 +1,0 @@
-engforge.solver\_utils.handle\_normalize
-========================================
-
-.. currentmodule:: engforge.solver_utils
-
-.. autofunction:: handle_normalize

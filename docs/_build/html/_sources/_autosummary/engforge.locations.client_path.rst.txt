@@ -1,6 +1,0 @@
-engforge.locations.client\_path
-===============================
-
-.. currentmodule:: engforge.locations
-
-.. autofunction:: client_path
