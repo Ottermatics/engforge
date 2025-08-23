@@ -184,6 +184,77 @@ The `Analysis` class provides:
 - **Maintain property caching**: Ensure expensive calculations are properly cached
 - **Preserve signal-slot architecture**: Data flow should use defined patterns
 
+### Build-Test-Fix Process
+The project uses a comprehensive CI/CD pipeline that can be validated locally:
+
+#### Local Validation Steps
+1. **Create clean test environment:**
+   ```bash
+   cd /tmp && python -m venv test_engforge_env
+   source test_engforge_env/bin/activate
+   pip install --upgrade pip
+   ```
+
+2. **Install package and dependencies:**
+   ```bash
+   cd <project_root>
+   source /tmp/test_engforge_env/bin/activate
+   pip install -e .                    # Core dependencies only
+   pip install -e .[all]               # All optional dependencies
+   pip install -e .[database]          # Database functionality only
+   pip install -e .[google,cloud]      # Specific optional groups
+   ```
+
+3. **Test version extraction (CI compatibility):**
+   ```bash
+   python -c "
+   try:
+       import tomllib
+   except ImportError:
+       import tomli as tomllib
+   with open('pyproject.toml', 'rb') as f:
+       print('✅ Version:', tomllib.load(f)['project']['version'])
+   "
+   ```
+
+4. **Run tests:**
+   ```bash
+   python -m unittest discover -s engforge/test -p "test_*.py" -v
+   ```
+
+5. **Check code formatting:**
+   ```bash
+   black --check --verbose ./engforge
+   ```
+
+#### Common Issues and Solutions
+- **tomllib ImportError**: Fixed with `tomli>=1.2.0;python_version<'3.11'` dependency
+- **SQLAlchemy missing**: Auto-installation will prompt when importing datastores, or install manually with `pip install engforge[database]`
+- **Black formatting**: All files should pass formatting checks; use `black ./engforge` to auto-format
+
+#### Optional Dependencies & Auto-Installation
+The project uses modern pyproject.toml optional dependencies with intelligent auto-installation:
+
+**Dependency Groups:**
+- **`[database]`**: SQLAlchemy, PostgreSQL, disk caching
+- **`[google]`**: Google Sheets and Drive integration
+- **`[cloud]`**: AWS boto3 integration  
+- **`[distributed]`**: Ray distributed computing
+- **`[all]`**: All optional dependencies combined
+
+**Auto-Installation Behavior:**
+- When importing `engforge.datastores`, missing dependencies trigger an auto-install prompt
+- Reads pyproject.toml directly to determine required packages
+- Works in development mode (editable installs) by detecting project root
+- Graceful fallback to manual installation instructions
+
+**Manual Installation:**
+```bash
+pip install engforge[database,cloud]  # Specific groups
+pip install engforge[all]             # All optional dependencies
+pip install -e .[all]                 # Development mode with all deps
+```
+
 ### Key Files to Understand
 1. `configuration.py` - Core class configuration system
 2. `components.py` - Component base classes  
