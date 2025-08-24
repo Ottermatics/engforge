@@ -80,8 +80,17 @@ distributed = [
     "ray[default]~=2.35.0",
     "ray[tune]~=2.35.0",
 ]
+docs = [
+    "sphinx>=7.0.0",
+    "sphinx-rtd-theme",
+    "pydata-sphinx-theme", 
+    "sphinx-autodoc-typehints",
+    "myst-parser",
+    "sphinx_autodoc_typehints",
+    "toml~=0.10.2",
+]
 all = [
-    "engforge[database,google,cloud,distributed]",
+    "engforge[database,google,cloud,distributed,docs]",
 ]
 
 [tool.setuptools]

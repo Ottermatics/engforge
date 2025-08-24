@@ -11,4 +11,4 @@ Tests
    :toctree: _autosummary
    :recursive:
 
-   test
+   engforge.test

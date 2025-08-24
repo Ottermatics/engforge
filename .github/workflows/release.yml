@@ -10,6 +10,9 @@ on:
       - '**.md'
       - '**.rst'
       - '**.yml'
+  workflow_dispatch:
+
+  workflow_call:
 
 permissions:
   contents: write
@@ -34,7 +37,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install build twine
         pip install -e .[all]
-        pip install -r ./docs/requirements.txt
 
     - name: Get version
       id: version

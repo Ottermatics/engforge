@@ -16,7 +16,8 @@ on:
     paths:
       - '**.py'
       - 'pyproject.toml'
-
+  workflow_dispatch:
+  workflow_call:
 jobs:
   test:
     runs-on: ubuntu-latest
