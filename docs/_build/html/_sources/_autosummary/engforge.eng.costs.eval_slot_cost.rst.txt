@@ -1,6 +1,0 @@
-engforge.eng.costs.eval\_slot\_cost
-===================================
-
-.. currentmodule:: engforge.eng.costs
-
-.. autofunction:: eval_slot_cost

@@ -1,6 +1,0 @@
-engforge.typing.NUMERIC\_NAN\_VALIDATOR
-=======================================
-
-.. currentmodule:: engforge.typing
-
-.. autofunction:: NUMERIC_NAN_VALIDATOR

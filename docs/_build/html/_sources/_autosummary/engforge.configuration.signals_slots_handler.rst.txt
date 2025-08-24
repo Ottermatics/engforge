@@ -1,6 +1,0 @@
-engforge.configuration.signals\_slots\_handler
-==============================================
-
-.. currentmodule:: engforge.configuration
-
-.. autofunction:: signals_slots_handler

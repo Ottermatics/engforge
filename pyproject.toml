@@ -1,0 +1,119 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "engforge"
+version = "0.2.0"
+description = "The Engineer's Framework"
+readme = "README.md"
+license = "MIT"
+authors = [
+    {name = "Kevin Russell", email = "kevin@ottermatics.com"}
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "virtualenv",
+    "wheel",
+    "attrs~=23.2.0",
+    "arrow",
+    "deepdiff>=6.3.1",
+    "numpy==1.24.3",
+    "scipy",
+    "matplotlib~=3.8.1",
+    "jupyter",
+    "pandas",
+    "scikit-learn~=1.3.2",
+    "seaborn",
+    "tabulate",
+    "sectionproperties~=3.1.2",
+    "PyNiteFEA @ git+https://github.com/Ottermatics/PyNite.git@v2nept",
+    "control",
+    "fluids",
+    "CoolProp",
+    "expiringdict~=1.2.2",
+    "zipp==3.1.0",
+    "jinja2>=2.11.3",
+    "freezegun>=0.3.12",
+    "sphinx>=3.2.1",
+    "recommonmark>=0.6.0",
+    "sphinx-rtd-theme>=1.0.0",
+    "networkx-query==1.0.1",
+    "networkx>=2.5.1",
+    "black~=24.8.0",
+    "randomname~=0.2.1",
+    "termcolor",
+    "pyee",
+    "methodtools~=0.4.7",
+    "tomli>=1.2.0;python_version<'3.11'"
+]
+
+[project.urls]
+Homepage = "https://github.com/Ottermatics/engforge"
+Repository = "https://github.com/Ottermatics/engforge"
+Documentation = "https://ottermatics.github.io/engforge/"
+
+[project.optional-dependencies]
+database = [
+    "SQLAlchemy~=1.3.17",
+    "SQLAlchemy-Utils", 
+    "psycopg2-binary",
+    "diskcache>=5.6.1",
+    "sqlalchemy-batch-inserts",
+]
+google = [
+    "pygsheets==2.0.4",
+    "pydrive2==1.8.1",
+]
+cloud = [
+    "boto3",
+]
+distributed = [
+    "ray[default]~=2.35.0",
+    "ray[tune]~=2.35.0",
+]
+docs = [
+    "sphinx>=7.0.0",
+    "sphinx-rtd-theme",
+    "pydata-sphinx-theme", 
+    "sphinx-autodoc-typehints",
+    "myst-parser",
+    "sphinx_autodoc_typehints",
+    "toml~=0.10.2",
+]
+all = [
+    "engforge[database,google,cloud,distributed,docs]",
+]
+
+[tool.setuptools]
+include-package-data = true
+zip-safe = false
+
+[tool.setuptools.packages.find]
+include = ["engforge*"]
+
+[tool.black]
+line-length = 88
+target-version = ["py39", "py310", "py311"]
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''

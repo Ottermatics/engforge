@@ -1,6 +1,0 @@
-engforge.system\_reference.maybe\_attr\_inst
-============================================
-
-.. currentmodule:: engforge.system_reference
-
-.. autofunction:: maybe_attr_inst

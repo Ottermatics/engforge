@@ -1,6 +1,0 @@
-engforge.patterns.chunks
-========================
-
-.. currentmodule:: engforge.patterns
-
-.. autofunction:: chunks

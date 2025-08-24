@@ -1,6 +1,0 @@
-engforge.datastores.data.addapt\_numpy\_array
-=============================================
-
-.. currentmodule:: engforge.datastores.data
-
-.. autofunction:: addapt_numpy_array

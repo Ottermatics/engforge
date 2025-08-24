@@ -265,7 +265,7 @@ class TestFanSystemDataFrame(unittest.TestCase):
                 "fan.V": [1, 5, 10],
                 "fan.area": [1, 5, 10],
             },
-            base=[None, MetalBase()]
+            base=[None, MetalBase()],
         )
 
         # Get the dataframe

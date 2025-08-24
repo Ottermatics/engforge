@@ -8,15 +8,28 @@
 
 import os
 import sys
+import toml
 
-sys.path.insert(0, os.path.abspath(".."))
-# Source code dir relative to this file
+
+# Ensure _static and _build folders exist in the same directory as conf.py
+conf_dir = os.path.dirname(os.path.abspath(__file__))
+for folder in ["_static", "_build","_autosummary"]:
+    folder_path = os.path.join(conf_dir, folder)
+    if os.path.exists(folder_path):
+        if os.path.isdir(folder_path):
+            os.rmdir(folder_path)
+        else:
+            os.remove(folder_path)
+    os.makedirs(folder_path,exist_ok=True)
 
 project = "engforge"
 copyright = "2024, Kevin Russell"
 author = "Kevin Russell"
 
-release = "1.0"
+pyproject_path = os.path.join(conf_dir, "..", "pyproject.toml")
+with open(pyproject_path, "r") as f:
+    pyproject_data = toml.load(f)
+release = pyproject_data.get("project", {}).get("version")
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

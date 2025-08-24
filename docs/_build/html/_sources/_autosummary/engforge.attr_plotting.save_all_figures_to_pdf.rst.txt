@@ -1,6 +1,0 @@
-engforge.attr\_plotting.save\_all\_figures\_to\_pdf
-===================================================
-
-.. currentmodule:: engforge.attr_plotting
-
-.. autofunction:: save_all_figures_to_pdf

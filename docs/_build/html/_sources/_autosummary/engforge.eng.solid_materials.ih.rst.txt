@@ -1,6 +1,0 @@
-engforge.eng.solid\_materials.ih
-================================
-
-.. currentmodule:: engforge.eng.solid_materials
-
-.. autofunction:: ih

@@ -8,4 +8,18 @@ dist/*
 *.profile
 *.log
 
+# Build artifacts and packaging
+*.egg-info/
+*.egg
+.eggs/
+MANIFEST
+.installed.cfg
+
+# Claude Code tracking files
+*.claude.rar
+.claude/
+claude_session_*
+
+# Documentation build
 docs/_autosummary*
+docs/_build/

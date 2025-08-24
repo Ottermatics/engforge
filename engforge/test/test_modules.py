@@ -8,9 +8,6 @@ log = logging.getLogger("neptunya-test")
 
 import sys
 
-run_path = "{}/../analysis/".format(testpath)
-log.info("adding neptunya path: {}".format(run_path))
-sys.path.append(run_path)
 
 from matplotlib import pylab
 import numpy as n
@@ -23,8 +20,6 @@ import copy, traceback
 import random, json
 import time
 
-
-log.info("testing with path: {}".format(sys.path))
 
 
 class ImportTest(unittest.TestCase):
