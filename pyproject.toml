@@ -34,8 +34,6 @@ dependencies = [
     "scikit-learn~=1.3.2",
     "seaborn",
     "tabulate",
-    "sectionproperties~=3.1.2",
-    "PyNiteFEA @ git+https://github.com/Ottermatics/PyNite.git@v2nept",
     "control",
     "fluids",
     "CoolProp",
@@ -62,6 +60,12 @@ Repository = "https://github.com/Ottermatics/engforge"
 Documentation = "https://ottermatics.github.io/engforge/"
 
 [project.optional-dependencies]
+structures = [
+    "sectionproperties~=3.1.2",
+    "PyNiteFEA",
+    #"PyNiteFEA @ git+https://github.com/Ottermatics/PyNite.git@v2nept",
+
+]
 database = [
     "SQLAlchemy~=1.3.17",
     "SQLAlchemy-Utils", 
@@ -90,7 +94,7 @@ docs = [
     "toml~=0.10.2",
 ]
 all = [
-    "engforge[database,google,cloud,distributed,docs]",
+    "engforge[database,google,cloud,distributed,docs,structures]",
 ]
 
 [tool.setuptools]
