@@ -1,0 +1,103 @@
+engforge.test.test\_dynamics.TestDynamics
+=========================================
+
+.. currentmodule:: engforge.test.test_dynamics
+
+.. autoclass:: TestDynamics
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestDynamics.addClassCleanup
+      ~TestDynamics.addCleanup
+      ~TestDynamics.addTypeEqualityFunc
+      ~TestDynamics.assertAlmostEqual
+      ~TestDynamics.assertAlmostEquals
+      ~TestDynamics.assertCountEqual
+      ~TestDynamics.assertDictContainsSubset
+      ~TestDynamics.assertDictEqual
+      ~TestDynamics.assertEqual
+      ~TestDynamics.assertEquals
+      ~TestDynamics.assertFalse
+      ~TestDynamics.assertGreater
+      ~TestDynamics.assertGreaterEqual
+      ~TestDynamics.assertIn
+      ~TestDynamics.assertIs
+      ~TestDynamics.assertIsInstance
+      ~TestDynamics.assertIsNone
+      ~TestDynamics.assertIsNot
+      ~TestDynamics.assertIsNotNone
+      ~TestDynamics.assertLess
+      ~TestDynamics.assertLessEqual
+      ~TestDynamics.assertListEqual
+      ~TestDynamics.assertLogs
+      ~TestDynamics.assertMultiLineEqual
+      ~TestDynamics.assertNoLogs
+      ~TestDynamics.assertNotAlmostEqual
+      ~TestDynamics.assertNotAlmostEquals
+      ~TestDynamics.assertNotEqual
+      ~TestDynamics.assertNotEquals
+      ~TestDynamics.assertNotIn
+      ~TestDynamics.assertNotIsInstance
+      ~TestDynamics.assertNotRegex
+      ~TestDynamics.assertNotRegexpMatches
+      ~TestDynamics.assertRaises
+      ~TestDynamics.assertRaisesRegex
+      ~TestDynamics.assertRaisesRegexp
+      ~TestDynamics.assertRegex
+      ~TestDynamics.assertRegexpMatches
+      ~TestDynamics.assertSequenceEqual
+      ~TestDynamics.assertSetEqual
+      ~TestDynamics.assertTrue
+      ~TestDynamics.assertTupleEqual
+      ~TestDynamics.assertWarns
+      ~TestDynamics.assertWarnsRegex
+      ~TestDynamics.assert_
+      ~TestDynamics.countTestCases
+      ~TestDynamics.debug
+      ~TestDynamics.defaultTestResult
+      ~TestDynamics.doClassCleanups
+      ~TestDynamics.doCleanups
+      ~TestDynamics.enterClassContext
+      ~TestDynamics.enterContext
+      ~TestDynamics.fail
+      ~TestDynamics.failIf
+      ~TestDynamics.failIfAlmostEqual
+      ~TestDynamics.failIfEqual
+      ~TestDynamics.failUnless
+      ~TestDynamics.failUnlessAlmostEqual
+      ~TestDynamics.failUnlessEqual
+      ~TestDynamics.failUnlessRaises
+      ~TestDynamics.id
+      ~TestDynamics.run
+      ~TestDynamics.setUp
+      ~TestDynamics.setUpClass
+      ~TestDynamics.shortDescription
+      ~TestDynamics.skipTest
+      ~TestDynamics.subTest
+      ~TestDynamics.tearDown
+      ~TestDynamics.tearDownClass
+      ~TestDynamics.test_damping
+      ~TestDynamics.test_forcing
+      ~TestDynamics.test_sim
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestDynamics.longMessage
+      ~TestDynamics.maxDiff
+   
+   

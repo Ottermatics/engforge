@@ -1,0 +1,6 @@
+engforge.eng.structure.remote\_failure\_sections
+================================================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autofunction:: remote_failure_sections

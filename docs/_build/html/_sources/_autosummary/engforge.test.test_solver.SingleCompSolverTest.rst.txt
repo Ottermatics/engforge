@@ -1,0 +1,108 @@
+engforge.test.test\_solver.SingleCompSolverTest
+===============================================
+
+.. currentmodule:: engforge.test.test_solver
+
+.. autoclass:: SingleCompSolverTest
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~SingleCompSolverTest.addClassCleanup
+      ~SingleCompSolverTest.addCleanup
+      ~SingleCompSolverTest.addTypeEqualityFunc
+      ~SingleCompSolverTest.assertAlmostEqual
+      ~SingleCompSolverTest.assertAlmostEquals
+      ~SingleCompSolverTest.assertCountEqual
+      ~SingleCompSolverTest.assertDictContainsSubset
+      ~SingleCompSolverTest.assertDictEqual
+      ~SingleCompSolverTest.assertEqual
+      ~SingleCompSolverTest.assertEquals
+      ~SingleCompSolverTest.assertFalse
+      ~SingleCompSolverTest.assertGreater
+      ~SingleCompSolverTest.assertGreaterEqual
+      ~SingleCompSolverTest.assertIn
+      ~SingleCompSolverTest.assertIs
+      ~SingleCompSolverTest.assertIsInstance
+      ~SingleCompSolverTest.assertIsNone
+      ~SingleCompSolverTest.assertIsNot
+      ~SingleCompSolverTest.assertIsNotNone
+      ~SingleCompSolverTest.assertLess
+      ~SingleCompSolverTest.assertLessEqual
+      ~SingleCompSolverTest.assertListEqual
+      ~SingleCompSolverTest.assertLogs
+      ~SingleCompSolverTest.assertMultiLineEqual
+      ~SingleCompSolverTest.assertNoLogs
+      ~SingleCompSolverTest.assertNotAlmostEqual
+      ~SingleCompSolverTest.assertNotAlmostEquals
+      ~SingleCompSolverTest.assertNotEqual
+      ~SingleCompSolverTest.assertNotEquals
+      ~SingleCompSolverTest.assertNotIn
+      ~SingleCompSolverTest.assertNotIsInstance
+      ~SingleCompSolverTest.assertNotRegex
+      ~SingleCompSolverTest.assertNotRegexpMatches
+      ~SingleCompSolverTest.assertRaises
+      ~SingleCompSolverTest.assertRaisesRegex
+      ~SingleCompSolverTest.assertRaisesRegexp
+      ~SingleCompSolverTest.assertRegex
+      ~SingleCompSolverTest.assertRegexpMatches
+      ~SingleCompSolverTest.assertSequenceEqual
+      ~SingleCompSolverTest.assertSetEqual
+      ~SingleCompSolverTest.assertTrue
+      ~SingleCompSolverTest.assertTupleEqual
+      ~SingleCompSolverTest.assertWarns
+      ~SingleCompSolverTest.assertWarnsRegex
+      ~SingleCompSolverTest.assert_
+      ~SingleCompSolverTest.countTestCases
+      ~SingleCompSolverTest.debug
+      ~SingleCompSolverTest.defaultTestResult
+      ~SingleCompSolverTest.doClassCleanups
+      ~SingleCompSolverTest.doCleanups
+      ~SingleCompSolverTest.enterClassContext
+      ~SingleCompSolverTest.enterContext
+      ~SingleCompSolverTest.fail
+      ~SingleCompSolverTest.failIf
+      ~SingleCompSolverTest.failIfAlmostEqual
+      ~SingleCompSolverTest.failIfEqual
+      ~SingleCompSolverTest.failUnless
+      ~SingleCompSolverTest.failUnlessAlmostEqual
+      ~SingleCompSolverTest.failUnlessEqual
+      ~SingleCompSolverTest.failUnlessRaises
+      ~SingleCompSolverTest.id
+      ~SingleCompSolverTest.run
+      ~SingleCompSolverTest.setUp
+      ~SingleCompSolverTest.setUpClass
+      ~SingleCompSolverTest.shortDescription
+      ~SingleCompSolverTest.skipTest
+      ~SingleCompSolverTest.subTest
+      ~SingleCompSolverTest.tearDown
+      ~SingleCompSolverTest.tearDownClass
+      ~SingleCompSolverTest.test_comp_method_equivalence
+      ~SingleCompSolverTest.test_exec_results
+      ~SingleCompSolverTest.test_run_results
+      ~SingleCompSolverTest.test_system_eval
+      ~SingleCompSolverTest.test_system_execute
+      ~SingleCompSolverTest.test_system_run
+      ~SingleCompSolverTest.test_system_solver
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SingleCompSolverTest.inequality_min
+      ~SingleCompSolverTest.longMessage
+      ~SingleCompSolverTest.maxDiff
+   
+   

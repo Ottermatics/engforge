@@ -1,0 +1,179 @@
+engforge.test.test\_problem\_deepscoping.DeepComp
+=================================================
+
+.. currentmodule:: engforge.test.test_problem_deepscoping
+
+.. autoclass:: DeepComp
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~DeepComp.add_fields
+      ~DeepComp.change_all_log_lvl
+      ~DeepComp.check_ref_slot_type
+      ~DeepComp.cls_all_attrs_fields
+      ~DeepComp.cls_all_property_keys
+      ~DeepComp.cls_all_property_labels
+      ~DeepComp.cls_compile
+      ~DeepComp.collect_all_attributes
+      ~DeepComp.collect_comp_refs
+      ~DeepComp.collect_dynamic_refs
+      ~DeepComp.collect_inst_attributes
+      ~DeepComp.collect_post_update_refs
+      ~DeepComp.collect_solver_refs
+      ~DeepComp.collect_update_refs
+      ~DeepComp.comp_references
+      ~DeepComp.compile_classes
+      ~DeepComp.copy_config_at_state
+      ~DeepComp.create_dynamic_matricies
+      ~DeepComp.create_feedthrough_matrix
+      ~DeepComp.create_input_matrix
+      ~DeepComp.create_output_constants
+      ~DeepComp.create_output_matrix
+      ~DeepComp.create_state_constants
+      ~DeepComp.create_state_matrix
+      ~DeepComp.critical
+      ~DeepComp.debug
+      ~DeepComp.determine_nearest_stationary_state
+      ~DeepComp.difference
+      ~DeepComp.error
+      ~DeepComp.extract_message
+      ~DeepComp.filter
+      ~DeepComp.format_columns
+      ~DeepComp.get_system_input_refs
+      ~DeepComp.go_through_configurations
+      ~DeepComp.hash
+      ~DeepComp.hash_numeric_with
+      ~DeepComp.hash_with
+      ~DeepComp.info
+      ~DeepComp.input_attrs
+      ~DeepComp.input_fields
+      ~DeepComp.installSTDLogger
+      ~DeepComp.internal_components
+      ~DeepComp.internal_configurations
+      ~DeepComp.internal_references
+      ~DeepComp.internal_systems
+      ~DeepComp.internal_tabulations
+      ~DeepComp.linear_output
+      ~DeepComp.linear_step
+      ~DeepComp.locate
+      ~DeepComp.locate_ref
+      ~DeepComp.message_with_identiy
+      ~DeepComp.msg
+      ~DeepComp.nonlinear_output
+      ~DeepComp.nonlinear_step
+      ~DeepComp.numeric_fields
+      ~DeepComp.parent_configurations_cls
+      ~DeepComp.parse_run_kwargs
+      ~DeepComp.parse_simulation_input
+      ~DeepComp.plot_attributes
+      ~DeepComp.post_update
+      ~DeepComp.pre_compile
+      ~DeepComp.print_info
+      ~DeepComp.rate
+      ~DeepComp.rate_linear
+      ~DeepComp.rate_nonlinear
+      ~DeepComp.ref_dXdt
+      ~DeepComp.resetLog
+      ~DeepComp.resetSystemLogs
+      ~DeepComp.set_attr
+      ~DeepComp.set_time
+      ~DeepComp.setattrs
+      ~DeepComp.signals_attributes
+      ~DeepComp.slack_notification
+      ~DeepComp.slot_refs
+      ~DeepComp.slots_attributes
+      ~DeepComp.smart_split_dataframe
+      ~DeepComp.solvers_attributes
+      ~DeepComp.step
+      ~DeepComp.subclasses
+      ~DeepComp.subcls_compile
+      ~DeepComp.system_properties_classdef
+      ~DeepComp.system_references
+      ~DeepComp.table_fields
+      ~DeepComp.trace_attributes
+      ~DeepComp.transients_attributes
+      ~DeepComp.update
+      ~DeepComp.update_dynamics
+      ~DeepComp.update_feedthrough
+      ~DeepComp.update_input
+      ~DeepComp.update_output_constants
+      ~DeepComp.update_output_matrix
+      ~DeepComp.update_state
+      ~DeepComp.update_state_constants
+      ~DeepComp.validate_class
+      ~DeepComp.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DeepComp.Ut_ref
+      ~DeepComp.Xt_ref
+      ~DeepComp.Yt_ref
+      ~DeepComp.anything_changed
+      ~DeepComp.as_dict
+      ~DeepComp.attrs_fields
+      ~DeepComp.classname
+      ~DeepComp.dXtdt_ref
+      ~DeepComp.data_dict
+      ~DeepComp.dataframe
+      ~DeepComp.dataframe_constants
+      ~DeepComp.dataframe_variants
+      ~DeepComp.displayname
+      ~DeepComp.dynamic_A
+      ~DeepComp.dynamic_B
+      ~DeepComp.dynamic_C
+      ~DeepComp.dynamic_D
+      ~DeepComp.dynamic_F
+      ~DeepComp.dynamic_K
+      ~DeepComp.dynamic_input
+      ~DeepComp.dynamic_input_vars
+      ~DeepComp.dynamic_output
+      ~DeepComp.dynamic_output_vars
+      ~DeepComp.dynamic_state
+      ~DeepComp.dynamic_state_vars
+      ~DeepComp.filename
+      ~DeepComp.identity
+      ~DeepComp.input_as_dict
+      ~DeepComp.input_hash
+      ~DeepComp.last_context
+      ~DeepComp.log_fmt
+      ~DeepComp.log_level
+      ~DeepComp.log_on
+      ~DeepComp.log_silo
+      ~DeepComp.logger
+      ~DeepComp.nonlinear
+      ~DeepComp.numeric_as_dict
+      ~DeepComp.numeric_hash
+      ~DeepComp.plotable_variables
+      ~DeepComp.skip_plot_vars
+      ~DeepComp.slack_webhook_url
+      ~DeepComp.static_A
+      ~DeepComp.static_B
+      ~DeepComp.static_C
+      ~DeepComp.static_D
+      ~DeepComp.static_F
+      ~DeepComp.static_K
+      ~DeepComp.system_id
+      ~DeepComp.table_hash
+      ~DeepComp.table_row_dict
+      ~DeepComp.time
+      ~DeepComp.unique_hash
+      ~DeepComp.update_interval
+      ~DeepComp.parent
+      ~DeepComp.name
+   
+   

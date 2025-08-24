@@ -1,0 +1,6 @@
+engforge.eng.structure.quad\_stress\_tensor
+===========================================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autofunction:: quad_stress_tensor

@@ -1,0 +1,179 @@
+engforge.test.test\_problem\_deepscoping.TestComp
+=================================================
+
+.. currentmodule:: engforge.test.test_problem_deepscoping
+
+.. autoclass:: TestComp
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestComp.add_fields
+      ~TestComp.change_all_log_lvl
+      ~TestComp.check_ref_slot_type
+      ~TestComp.cls_all_attrs_fields
+      ~TestComp.cls_all_property_keys
+      ~TestComp.cls_all_property_labels
+      ~TestComp.cls_compile
+      ~TestComp.collect_all_attributes
+      ~TestComp.collect_comp_refs
+      ~TestComp.collect_dynamic_refs
+      ~TestComp.collect_inst_attributes
+      ~TestComp.collect_post_update_refs
+      ~TestComp.collect_solver_refs
+      ~TestComp.collect_update_refs
+      ~TestComp.comp_references
+      ~TestComp.compile_classes
+      ~TestComp.copy_config_at_state
+      ~TestComp.create_dynamic_matricies
+      ~TestComp.create_feedthrough_matrix
+      ~TestComp.create_input_matrix
+      ~TestComp.create_output_constants
+      ~TestComp.create_output_matrix
+      ~TestComp.create_state_constants
+      ~TestComp.create_state_matrix
+      ~TestComp.critical
+      ~TestComp.debug
+      ~TestComp.determine_nearest_stationary_state
+      ~TestComp.difference
+      ~TestComp.error
+      ~TestComp.extract_message
+      ~TestComp.filter
+      ~TestComp.format_columns
+      ~TestComp.get_system_input_refs
+      ~TestComp.go_through_configurations
+      ~TestComp.hash
+      ~TestComp.hash_numeric_with
+      ~TestComp.hash_with
+      ~TestComp.info
+      ~TestComp.input_attrs
+      ~TestComp.input_fields
+      ~TestComp.installSTDLogger
+      ~TestComp.internal_components
+      ~TestComp.internal_configurations
+      ~TestComp.internal_references
+      ~TestComp.internal_systems
+      ~TestComp.internal_tabulations
+      ~TestComp.linear_output
+      ~TestComp.linear_step
+      ~TestComp.locate
+      ~TestComp.locate_ref
+      ~TestComp.message_with_identiy
+      ~TestComp.msg
+      ~TestComp.nonlinear_output
+      ~TestComp.nonlinear_step
+      ~TestComp.numeric_fields
+      ~TestComp.parent_configurations_cls
+      ~TestComp.parse_run_kwargs
+      ~TestComp.parse_simulation_input
+      ~TestComp.plot_attributes
+      ~TestComp.post_update
+      ~TestComp.pre_compile
+      ~TestComp.print_info
+      ~TestComp.rate
+      ~TestComp.rate_linear
+      ~TestComp.rate_nonlinear
+      ~TestComp.ref_dXdt
+      ~TestComp.resetLog
+      ~TestComp.resetSystemLogs
+      ~TestComp.set_attr
+      ~TestComp.set_time
+      ~TestComp.setattrs
+      ~TestComp.signals_attributes
+      ~TestComp.slack_notification
+      ~TestComp.slot_refs
+      ~TestComp.slots_attributes
+      ~TestComp.smart_split_dataframe
+      ~TestComp.solvers_attributes
+      ~TestComp.step
+      ~TestComp.subclasses
+      ~TestComp.subcls_compile
+      ~TestComp.system_properties_classdef
+      ~TestComp.system_references
+      ~TestComp.table_fields
+      ~TestComp.trace_attributes
+      ~TestComp.transients_attributes
+      ~TestComp.update
+      ~TestComp.update_dynamics
+      ~TestComp.update_feedthrough
+      ~TestComp.update_input
+      ~TestComp.update_output_constants
+      ~TestComp.update_output_matrix
+      ~TestComp.update_state
+      ~TestComp.update_state_constants
+      ~TestComp.validate_class
+      ~TestComp.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestComp.Ut_ref
+      ~TestComp.Xt_ref
+      ~TestComp.Yt_ref
+      ~TestComp.anything_changed
+      ~TestComp.as_dict
+      ~TestComp.attrs_fields
+      ~TestComp.classname
+      ~TestComp.dXtdt_ref
+      ~TestComp.data_dict
+      ~TestComp.dataframe
+      ~TestComp.dataframe_constants
+      ~TestComp.dataframe_variants
+      ~TestComp.displayname
+      ~TestComp.dynamic_A
+      ~TestComp.dynamic_B
+      ~TestComp.dynamic_C
+      ~TestComp.dynamic_D
+      ~TestComp.dynamic_F
+      ~TestComp.dynamic_K
+      ~TestComp.dynamic_input
+      ~TestComp.dynamic_input_vars
+      ~TestComp.dynamic_output
+      ~TestComp.dynamic_output_vars
+      ~TestComp.dynamic_state
+      ~TestComp.dynamic_state_vars
+      ~TestComp.filename
+      ~TestComp.identity
+      ~TestComp.input_as_dict
+      ~TestComp.input_hash
+      ~TestComp.last_context
+      ~TestComp.log_fmt
+      ~TestComp.log_level
+      ~TestComp.log_on
+      ~TestComp.log_silo
+      ~TestComp.logger
+      ~TestComp.nonlinear
+      ~TestComp.numeric_as_dict
+      ~TestComp.numeric_hash
+      ~TestComp.plotable_variables
+      ~TestComp.skip_plot_vars
+      ~TestComp.slack_webhook_url
+      ~TestComp.static_A
+      ~TestComp.static_B
+      ~TestComp.static_C
+      ~TestComp.static_D
+      ~TestComp.static_F
+      ~TestComp.static_K
+      ~TestComp.system_id
+      ~TestComp.table_hash
+      ~TestComp.table_row_dict
+      ~TestComp.time
+      ~TestComp.unique_hash
+      ~TestComp.update_interval
+      ~TestComp.parent
+      ~TestComp.name
+   
+   

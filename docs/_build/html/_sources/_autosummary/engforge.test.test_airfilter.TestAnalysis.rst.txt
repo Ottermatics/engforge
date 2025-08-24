@@ -1,0 +1,101 @@
+engforge.test.test\_airfilter.TestAnalysis
+==========================================
+
+.. currentmodule:: engforge.test.test_airfilter
+
+.. autoclass:: TestAnalysis
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestAnalysis.addClassCleanup
+      ~TestAnalysis.addCleanup
+      ~TestAnalysis.addTypeEqualityFunc
+      ~TestAnalysis.assertAlmostEqual
+      ~TestAnalysis.assertAlmostEquals
+      ~TestAnalysis.assertCountEqual
+      ~TestAnalysis.assertDictContainsSubset
+      ~TestAnalysis.assertDictEqual
+      ~TestAnalysis.assertEqual
+      ~TestAnalysis.assertEquals
+      ~TestAnalysis.assertFalse
+      ~TestAnalysis.assertGreater
+      ~TestAnalysis.assertGreaterEqual
+      ~TestAnalysis.assertIn
+      ~TestAnalysis.assertIs
+      ~TestAnalysis.assertIsInstance
+      ~TestAnalysis.assertIsNone
+      ~TestAnalysis.assertIsNot
+      ~TestAnalysis.assertIsNotNone
+      ~TestAnalysis.assertLess
+      ~TestAnalysis.assertLessEqual
+      ~TestAnalysis.assertListEqual
+      ~TestAnalysis.assertLogs
+      ~TestAnalysis.assertMultiLineEqual
+      ~TestAnalysis.assertNoLogs
+      ~TestAnalysis.assertNotAlmostEqual
+      ~TestAnalysis.assertNotAlmostEquals
+      ~TestAnalysis.assertNotEqual
+      ~TestAnalysis.assertNotEquals
+      ~TestAnalysis.assertNotIn
+      ~TestAnalysis.assertNotIsInstance
+      ~TestAnalysis.assertNotRegex
+      ~TestAnalysis.assertNotRegexpMatches
+      ~TestAnalysis.assertRaises
+      ~TestAnalysis.assertRaisesRegex
+      ~TestAnalysis.assertRaisesRegexp
+      ~TestAnalysis.assertRegex
+      ~TestAnalysis.assertRegexpMatches
+      ~TestAnalysis.assertSequenceEqual
+      ~TestAnalysis.assertSetEqual
+      ~TestAnalysis.assertTrue
+      ~TestAnalysis.assertTupleEqual
+      ~TestAnalysis.assertWarns
+      ~TestAnalysis.assertWarnsRegex
+      ~TestAnalysis.assert_
+      ~TestAnalysis.countTestCases
+      ~TestAnalysis.debug
+      ~TestAnalysis.defaultTestResult
+      ~TestAnalysis.doClassCleanups
+      ~TestAnalysis.doCleanups
+      ~TestAnalysis.enterClassContext
+      ~TestAnalysis.enterContext
+      ~TestAnalysis.fail
+      ~TestAnalysis.failIf
+      ~TestAnalysis.failIfAlmostEqual
+      ~TestAnalysis.failIfEqual
+      ~TestAnalysis.failUnless
+      ~TestAnalysis.failUnlessAlmostEqual
+      ~TestAnalysis.failUnlessEqual
+      ~TestAnalysis.failUnlessRaises
+      ~TestAnalysis.id
+      ~TestAnalysis.run
+      ~TestAnalysis.setUp
+      ~TestAnalysis.setUpClass
+      ~TestAnalysis.shortDescription
+      ~TestAnalysis.skipTest
+      ~TestAnalysis.subTest
+      ~TestAnalysis.tearDown
+      ~TestAnalysis.tearDownClass
+      ~TestAnalysis.test_plot
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestAnalysis.longMessage
+      ~TestAnalysis.maxDiff
+   
+   

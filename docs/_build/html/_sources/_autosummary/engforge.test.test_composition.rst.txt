@@ -1,0 +1,42 @@
+engforge.test.test\_composition
+===============================
+
+.. automodule:: engforge.test.test_composition
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      limit_max
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      MockComponent
+      MockSystem
+      TestComposition
+   
+   
+
+   
+   
+   
+
+
+

@@ -1,0 +1,6 @@
+engforge.test.test\_dynamics.fit
+================================
+
+.. currentmodule:: engforge.test.test_dynamics
+
+.. autofunction:: fit

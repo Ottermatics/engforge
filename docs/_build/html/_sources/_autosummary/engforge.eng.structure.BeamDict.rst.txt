@@ -1,0 +1,195 @@
+engforge.eng.structure.BeamDict
+===============================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autoclass:: BeamDict
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~BeamDict.add_fields
+      ~BeamDict.change_all_log_lvl
+      ~BeamDict.check_ref_slot_type
+      ~BeamDict.clear
+      ~BeamDict.cls_all_attrs_fields
+      ~BeamDict.cls_all_property_keys
+      ~BeamDict.cls_all_property_labels
+      ~BeamDict.cls_compile
+      ~BeamDict.collect_all_attributes
+      ~BeamDict.collect_comp_refs
+      ~BeamDict.collect_dynamic_refs
+      ~BeamDict.collect_inst_attributes
+      ~BeamDict.collect_post_update_refs
+      ~BeamDict.collect_solver_refs
+      ~BeamDict.collect_update_refs
+      ~BeamDict.comp_references
+      ~BeamDict.compile_classes
+      ~BeamDict.copy
+      ~BeamDict.copy_config_at_state
+      ~BeamDict.create_dynamic_matricies
+      ~BeamDict.create_feedthrough_matrix
+      ~BeamDict.create_input_matrix
+      ~BeamDict.create_output_constants
+      ~BeamDict.create_output_matrix
+      ~BeamDict.create_state_constants
+      ~BeamDict.create_state_matrix
+      ~BeamDict.critical
+      ~BeamDict.debug
+      ~BeamDict.determine_nearest_stationary_state
+      ~BeamDict.difference
+      ~BeamDict.error
+      ~BeamDict.extract_message
+      ~BeamDict.filter
+      ~BeamDict.format_columns
+      ~BeamDict.fromkeys
+      ~BeamDict.get
+      ~BeamDict.get_system_input_refs
+      ~BeamDict.go_through_configurations
+      ~BeamDict.hash
+      ~BeamDict.hash_numeric_with
+      ~BeamDict.hash_with
+      ~BeamDict.info
+      ~BeamDict.input_attrs
+      ~BeamDict.input_fields
+      ~BeamDict.installSTDLogger
+      ~BeamDict.internal_components
+      ~BeamDict.internal_configurations
+      ~BeamDict.internal_references
+      ~BeamDict.internal_systems
+      ~BeamDict.internal_tabulations
+      ~BeamDict.items
+      ~BeamDict.keys
+      ~BeamDict.linear_output
+      ~BeamDict.linear_step
+      ~BeamDict.locate
+      ~BeamDict.locate_ref
+      ~BeamDict.message_with_identiy
+      ~BeamDict.msg
+      ~BeamDict.nonlinear_output
+      ~BeamDict.nonlinear_step
+      ~BeamDict.numeric_fields
+      ~BeamDict.parent_configurations_cls
+      ~BeamDict.parse_run_kwargs
+      ~BeamDict.parse_simulation_input
+      ~BeamDict.plot_attributes
+      ~BeamDict.pop
+      ~BeamDict.popitem
+      ~BeamDict.post_update
+      ~BeamDict.pre_compile
+      ~BeamDict.print_info
+      ~BeamDict.rate
+      ~BeamDict.rate_linear
+      ~BeamDict.rate_nonlinear
+      ~BeamDict.ref_dXdt
+      ~BeamDict.reset
+      ~BeamDict.resetLog
+      ~BeamDict.resetSystemLogs
+      ~BeamDict.set_attr
+      ~BeamDict.set_time
+      ~BeamDict.setattrs
+      ~BeamDict.setdefault
+      ~BeamDict.signals_attributes
+      ~BeamDict.slack_notification
+      ~BeamDict.slot_refs
+      ~BeamDict.slots_attributes
+      ~BeamDict.smart_split_dataframe
+      ~BeamDict.solvers_attributes
+      ~BeamDict.step
+      ~BeamDict.subclasses
+      ~BeamDict.subcls_compile
+      ~BeamDict.system_properties_classdef
+      ~BeamDict.system_references
+      ~BeamDict.table_fields
+      ~BeamDict.trace_attributes
+      ~BeamDict.transients_attributes
+      ~BeamDict.update
+      ~BeamDict.update_dynamics
+      ~BeamDict.update_feedthrough
+      ~BeamDict.update_input
+      ~BeamDict.update_output_constants
+      ~BeamDict.update_output_matrix
+      ~BeamDict.update_state
+      ~BeamDict.update_state_constants
+      ~BeamDict.validate_class
+      ~BeamDict.values
+      ~BeamDict.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~BeamDict.Ut_ref
+      ~BeamDict.Xt_ref
+      ~BeamDict.Yt_ref
+      ~BeamDict.anything_changed
+      ~BeamDict.as_dict
+      ~BeamDict.attrs_fields
+      ~BeamDict.classname
+      ~BeamDict.current
+      ~BeamDict.dXtdt_ref
+      ~BeamDict.data_dict
+      ~BeamDict.dataframe
+      ~BeamDict.dataframe_constants
+      ~BeamDict.dataframe_variants
+      ~BeamDict.displayname
+      ~BeamDict.dynamic_A
+      ~BeamDict.dynamic_B
+      ~BeamDict.dynamic_C
+      ~BeamDict.dynamic_D
+      ~BeamDict.dynamic_F
+      ~BeamDict.dynamic_K
+      ~BeamDict.dynamic_input
+      ~BeamDict.dynamic_input_vars
+      ~BeamDict.dynamic_output
+      ~BeamDict.dynamic_output_vars
+      ~BeamDict.dynamic_state
+      ~BeamDict.dynamic_state_vars
+      ~BeamDict.filename
+      ~BeamDict.identity
+      ~BeamDict.input_as_dict
+      ~BeamDict.input_hash
+      ~BeamDict.last_context
+      ~BeamDict.log_fmt
+      ~BeamDict.log_level
+      ~BeamDict.log_on
+      ~BeamDict.log_silo
+      ~BeamDict.logger
+      ~BeamDict.nonlinear
+      ~BeamDict.numeric_as_dict
+      ~BeamDict.numeric_hash
+      ~BeamDict.plotable_variables
+      ~BeamDict.skip_plot_vars
+      ~BeamDict.slack_webhook_url
+      ~BeamDict.static_A
+      ~BeamDict.static_B
+      ~BeamDict.static_C
+      ~BeamDict.static_D
+      ~BeamDict.static_F
+      ~BeamDict.static_K
+      ~BeamDict.system_id
+      ~BeamDict.table_hash
+      ~BeamDict.table_row_dict
+      ~BeamDict.time
+      ~BeamDict.unique_hash
+      ~BeamDict.update_interval
+      ~BeamDict.wide
+      ~BeamDict.component_type
+      ~BeamDict.data
+      ~BeamDict.current_item
+      ~BeamDict.parent
+      ~BeamDict.name
+   
+   

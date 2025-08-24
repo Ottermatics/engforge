@@ -1,0 +1,106 @@
+engforge.test.test\_solver.SolverRefSelection
+=============================================
+
+.. currentmodule:: engforge.test.test_solver
+
+.. autoclass:: SolverRefSelection
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~SolverRefSelection.addClassCleanup
+      ~SolverRefSelection.addCleanup
+      ~SolverRefSelection.addTypeEqualityFunc
+      ~SolverRefSelection.assertAlmostEqual
+      ~SolverRefSelection.assertAlmostEquals
+      ~SolverRefSelection.assertCountEqual
+      ~SolverRefSelection.assertDictContainsSubset
+      ~SolverRefSelection.assertDictEqual
+      ~SolverRefSelection.assertEqual
+      ~SolverRefSelection.assertEquals
+      ~SolverRefSelection.assertFalse
+      ~SolverRefSelection.assertGreater
+      ~SolverRefSelection.assertGreaterEqual
+      ~SolverRefSelection.assertIn
+      ~SolverRefSelection.assertIs
+      ~SolverRefSelection.assertIsInstance
+      ~SolverRefSelection.assertIsNone
+      ~SolverRefSelection.assertIsNot
+      ~SolverRefSelection.assertIsNotNone
+      ~SolverRefSelection.assertLess
+      ~SolverRefSelection.assertLessEqual
+      ~SolverRefSelection.assertListEqual
+      ~SolverRefSelection.assertLogs
+      ~SolverRefSelection.assertMultiLineEqual
+      ~SolverRefSelection.assertNoLogs
+      ~SolverRefSelection.assertNotAlmostEqual
+      ~SolverRefSelection.assertNotAlmostEquals
+      ~SolverRefSelection.assertNotEqual
+      ~SolverRefSelection.assertNotEquals
+      ~SolverRefSelection.assertNotIn
+      ~SolverRefSelection.assertNotIsInstance
+      ~SolverRefSelection.assertNotRegex
+      ~SolverRefSelection.assertNotRegexpMatches
+      ~SolverRefSelection.assertRaises
+      ~SolverRefSelection.assertRaisesRegex
+      ~SolverRefSelection.assertRaisesRegexp
+      ~SolverRefSelection.assertRegex
+      ~SolverRefSelection.assertRegexpMatches
+      ~SolverRefSelection.assertSequenceEqual
+      ~SolverRefSelection.assertSetEqual
+      ~SolverRefSelection.assertTrue
+      ~SolverRefSelection.assertTupleEqual
+      ~SolverRefSelection.assertWarns
+      ~SolverRefSelection.assertWarnsRegex
+      ~SolverRefSelection.assert_
+      ~SolverRefSelection.countTestCases
+      ~SolverRefSelection.debug
+      ~SolverRefSelection.defaultTestResult
+      ~SolverRefSelection.doClassCleanups
+      ~SolverRefSelection.doCleanups
+      ~SolverRefSelection.enterClassContext
+      ~SolverRefSelection.enterContext
+      ~SolverRefSelection.fail
+      ~SolverRefSelection.failIf
+      ~SolverRefSelection.failIfAlmostEqual
+      ~SolverRefSelection.failIfEqual
+      ~SolverRefSelection.failUnless
+      ~SolverRefSelection.failUnlessAlmostEqual
+      ~SolverRefSelection.failUnlessEqual
+      ~SolverRefSelection.failUnlessRaises
+      ~SolverRefSelection.id
+      ~SolverRefSelection.run
+      ~SolverRefSelection.setUp
+      ~SolverRefSelection.setUpClass
+      ~SolverRefSelection.shortDescription
+      ~SolverRefSelection.skipTest
+      ~SolverRefSelection.subTest
+      ~SolverRefSelection.tearDown
+      ~SolverRefSelection.tearDownClass
+      ~SolverRefSelection.test_comps_solver_act
+      ~SolverRefSelection.test_comps_solver_obj
+      ~SolverRefSelection.test_sys_solver
+      ~SolverRefSelection.test_xyz_act_nocombo
+      ~SolverRefSelection.test_xyz_combo_only
+      ~SolverRefSelection.test_xyz_var_only
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SolverRefSelection.longMessage
+      ~SolverRefSelection.maxDiff
+   
+   

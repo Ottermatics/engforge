@@ -1,0 +1,6 @@
+engforge.datastores.install\_optional\_dependencies
+===================================================
+
+.. currentmodule:: engforge.datastores
+
+.. autofunction:: install_optional_dependencies

@@ -1,0 +1,101 @@
+engforge.test.test\_pipes.TestPipes
+===================================
+
+.. currentmodule:: engforge.test.test_pipes
+
+.. autoclass:: TestPipes
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestPipes.addClassCleanup
+      ~TestPipes.addCleanup
+      ~TestPipes.addTypeEqualityFunc
+      ~TestPipes.assertAlmostEqual
+      ~TestPipes.assertAlmostEquals
+      ~TestPipes.assertCountEqual
+      ~TestPipes.assertDictContainsSubset
+      ~TestPipes.assertDictEqual
+      ~TestPipes.assertEqual
+      ~TestPipes.assertEquals
+      ~TestPipes.assertFalse
+      ~TestPipes.assertGreater
+      ~TestPipes.assertGreaterEqual
+      ~TestPipes.assertIn
+      ~TestPipes.assertIs
+      ~TestPipes.assertIsInstance
+      ~TestPipes.assertIsNone
+      ~TestPipes.assertIsNot
+      ~TestPipes.assertIsNotNone
+      ~TestPipes.assertLess
+      ~TestPipes.assertLessEqual
+      ~TestPipes.assertListEqual
+      ~TestPipes.assertLogs
+      ~TestPipes.assertMultiLineEqual
+      ~TestPipes.assertNoLogs
+      ~TestPipes.assertNotAlmostEqual
+      ~TestPipes.assertNotAlmostEquals
+      ~TestPipes.assertNotEqual
+      ~TestPipes.assertNotEquals
+      ~TestPipes.assertNotIn
+      ~TestPipes.assertNotIsInstance
+      ~TestPipes.assertNotRegex
+      ~TestPipes.assertNotRegexpMatches
+      ~TestPipes.assertRaises
+      ~TestPipes.assertRaisesRegex
+      ~TestPipes.assertRaisesRegexp
+      ~TestPipes.assertRegex
+      ~TestPipes.assertRegexpMatches
+      ~TestPipes.assertSequenceEqual
+      ~TestPipes.assertSetEqual
+      ~TestPipes.assertTrue
+      ~TestPipes.assertTupleEqual
+      ~TestPipes.assertWarns
+      ~TestPipes.assertWarnsRegex
+      ~TestPipes.assert_
+      ~TestPipes.countTestCases
+      ~TestPipes.debug
+      ~TestPipes.defaultTestResult
+      ~TestPipes.doClassCleanups
+      ~TestPipes.doCleanups
+      ~TestPipes.enterClassContext
+      ~TestPipes.enterContext
+      ~TestPipes.fail
+      ~TestPipes.failIf
+      ~TestPipes.failIfAlmostEqual
+      ~TestPipes.failIfEqual
+      ~TestPipes.failUnless
+      ~TestPipes.failUnlessAlmostEqual
+      ~TestPipes.failUnlessEqual
+      ~TestPipes.failUnlessRaises
+      ~TestPipes.id
+      ~TestPipes.run
+      ~TestPipes.setUp
+      ~TestPipes.setUpClass
+      ~TestPipes.shortDescription
+      ~TestPipes.skipTest
+      ~TestPipes.subTest
+      ~TestPipes.tearDown
+      ~TestPipes.tearDownClass
+      ~TestPipes.test_pipe_analysis
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestPipes.longMessage
+      ~TestPipes.maxDiff
+   
+   

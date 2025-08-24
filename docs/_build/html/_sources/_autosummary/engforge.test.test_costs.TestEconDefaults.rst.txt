@@ -1,0 +1,102 @@
+engforge.test.test\_costs.TestEconDefaults
+==========================================
+
+.. currentmodule:: engforge.test.test_costs
+
+.. autoclass:: TestEconDefaults
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestEconDefaults.addClassCleanup
+      ~TestEconDefaults.addCleanup
+      ~TestEconDefaults.addTypeEqualityFunc
+      ~TestEconDefaults.assertAlmostEqual
+      ~TestEconDefaults.assertAlmostEquals
+      ~TestEconDefaults.assertCountEqual
+      ~TestEconDefaults.assertDictContainsSubset
+      ~TestEconDefaults.assertDictEqual
+      ~TestEconDefaults.assertEqual
+      ~TestEconDefaults.assertEquals
+      ~TestEconDefaults.assertFalse
+      ~TestEconDefaults.assertGreater
+      ~TestEconDefaults.assertGreaterEqual
+      ~TestEconDefaults.assertIn
+      ~TestEconDefaults.assertIs
+      ~TestEconDefaults.assertIsInstance
+      ~TestEconDefaults.assertIsNone
+      ~TestEconDefaults.assertIsNot
+      ~TestEconDefaults.assertIsNotNone
+      ~TestEconDefaults.assertLess
+      ~TestEconDefaults.assertLessEqual
+      ~TestEconDefaults.assertListEqual
+      ~TestEconDefaults.assertLogs
+      ~TestEconDefaults.assertMultiLineEqual
+      ~TestEconDefaults.assertNoLogs
+      ~TestEconDefaults.assertNotAlmostEqual
+      ~TestEconDefaults.assertNotAlmostEquals
+      ~TestEconDefaults.assertNotEqual
+      ~TestEconDefaults.assertNotEquals
+      ~TestEconDefaults.assertNotIn
+      ~TestEconDefaults.assertNotIsInstance
+      ~TestEconDefaults.assertNotRegex
+      ~TestEconDefaults.assertNotRegexpMatches
+      ~TestEconDefaults.assertRaises
+      ~TestEconDefaults.assertRaisesRegex
+      ~TestEconDefaults.assertRaisesRegexp
+      ~TestEconDefaults.assertRegex
+      ~TestEconDefaults.assertRegexpMatches
+      ~TestEconDefaults.assertSequenceEqual
+      ~TestEconDefaults.assertSetEqual
+      ~TestEconDefaults.assertTrue
+      ~TestEconDefaults.assertTupleEqual
+      ~TestEconDefaults.assertWarns
+      ~TestEconDefaults.assertWarnsRegex
+      ~TestEconDefaults.assert_
+      ~TestEconDefaults.countTestCases
+      ~TestEconDefaults.debug
+      ~TestEconDefaults.defaultTestResult
+      ~TestEconDefaults.doClassCleanups
+      ~TestEconDefaults.doCleanups
+      ~TestEconDefaults.enterClassContext
+      ~TestEconDefaults.enterContext
+      ~TestEconDefaults.fail
+      ~TestEconDefaults.failIf
+      ~TestEconDefaults.failIfAlmostEqual
+      ~TestEconDefaults.failIfEqual
+      ~TestEconDefaults.failUnless
+      ~TestEconDefaults.failUnlessAlmostEqual
+      ~TestEconDefaults.failUnlessEqual
+      ~TestEconDefaults.failUnlessRaises
+      ~TestEconDefaults.id
+      ~TestEconDefaults.run
+      ~TestEconDefaults.setUp
+      ~TestEconDefaults.setUpClass
+      ~TestEconDefaults.shortDescription
+      ~TestEconDefaults.skipTest
+      ~TestEconDefaults.subTest
+      ~TestEconDefaults.tearDown
+      ~TestEconDefaults.tearDownClass
+      ~TestEconDefaults.test_custom_costs
+      ~TestEconDefaults.test_non_costmodel_default
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestEconDefaults.longMessage
+      ~TestEconDefaults.maxDiff
+   
+   

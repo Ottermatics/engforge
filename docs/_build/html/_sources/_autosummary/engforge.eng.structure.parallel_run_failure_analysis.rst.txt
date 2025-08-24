@@ -1,0 +1,6 @@
+engforge.eng.structure.parallel\_run\_failure\_analysis
+=======================================================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autofunction:: parallel_run_failure_analysis

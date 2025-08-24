@@ -1,0 +1,102 @@
+engforge.test.test\_performance.TestPerformance
+===============================================
+
+.. currentmodule:: engforge.test.test_performance
+
+.. autoclass:: TestPerformance
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestPerformance.addClassCleanup
+      ~TestPerformance.addCleanup
+      ~TestPerformance.addTypeEqualityFunc
+      ~TestPerformance.assertAlmostEqual
+      ~TestPerformance.assertAlmostEquals
+      ~TestPerformance.assertCountEqual
+      ~TestPerformance.assertDictContainsSubset
+      ~TestPerformance.assertDictEqual
+      ~TestPerformance.assertEqual
+      ~TestPerformance.assertEquals
+      ~TestPerformance.assertFalse
+      ~TestPerformance.assertGreater
+      ~TestPerformance.assertGreaterEqual
+      ~TestPerformance.assertIn
+      ~TestPerformance.assertIs
+      ~TestPerformance.assertIsInstance
+      ~TestPerformance.assertIsNone
+      ~TestPerformance.assertIsNot
+      ~TestPerformance.assertIsNotNone
+      ~TestPerformance.assertLess
+      ~TestPerformance.assertLessEqual
+      ~TestPerformance.assertListEqual
+      ~TestPerformance.assertLogs
+      ~TestPerformance.assertMultiLineEqual
+      ~TestPerformance.assertNoLogs
+      ~TestPerformance.assertNotAlmostEqual
+      ~TestPerformance.assertNotAlmostEquals
+      ~TestPerformance.assertNotEqual
+      ~TestPerformance.assertNotEquals
+      ~TestPerformance.assertNotIn
+      ~TestPerformance.assertNotIsInstance
+      ~TestPerformance.assertNotRegex
+      ~TestPerformance.assertNotRegexpMatches
+      ~TestPerformance.assertRaises
+      ~TestPerformance.assertRaisesRegex
+      ~TestPerformance.assertRaisesRegexp
+      ~TestPerformance.assertRegex
+      ~TestPerformance.assertRegexpMatches
+      ~TestPerformance.assertSequenceEqual
+      ~TestPerformance.assertSetEqual
+      ~TestPerformance.assertTrue
+      ~TestPerformance.assertTupleEqual
+      ~TestPerformance.assertWarns
+      ~TestPerformance.assertWarnsRegex
+      ~TestPerformance.assert_
+      ~TestPerformance.countTestCases
+      ~TestPerformance.debug
+      ~TestPerformance.defaultTestResult
+      ~TestPerformance.doClassCleanups
+      ~TestPerformance.doCleanups
+      ~TestPerformance.enterClassContext
+      ~TestPerformance.enterContext
+      ~TestPerformance.fail
+      ~TestPerformance.failIf
+      ~TestPerformance.failIfAlmostEqual
+      ~TestPerformance.failIfEqual
+      ~TestPerformance.failUnless
+      ~TestPerformance.failUnlessAlmostEqual
+      ~TestPerformance.failUnlessEqual
+      ~TestPerformance.failUnlessRaises
+      ~TestPerformance.id
+      ~TestPerformance.run
+      ~TestPerformance.setUp
+      ~TestPerformance.setUpClass
+      ~TestPerformance.shortDescription
+      ~TestPerformance.skipTest
+      ~TestPerformance.subTest
+      ~TestPerformance.tearDown
+      ~TestPerformance.tearDownClass
+      ~TestPerformance.test_steady_state
+      ~TestPerformance.test_transient
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestPerformance.longMessage
+      ~TestPerformance.maxDiff
+   
+   

@@ -1,0 +1,104 @@
+engforge.test.test\_costs.TestCategoriesAndTerms
+================================================
+
+.. currentmodule:: engforge.test.test_costs
+
+.. autoclass:: TestCategoriesAndTerms
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestCategoriesAndTerms.addClassCleanup
+      ~TestCategoriesAndTerms.addCleanup
+      ~TestCategoriesAndTerms.addTypeEqualityFunc
+      ~TestCategoriesAndTerms.assertAlmostEqual
+      ~TestCategoriesAndTerms.assertAlmostEquals
+      ~TestCategoriesAndTerms.assertCountEqual
+      ~TestCategoriesAndTerms.assertDictContainsSubset
+      ~TestCategoriesAndTerms.assertDictEqual
+      ~TestCategoriesAndTerms.assertEqual
+      ~TestCategoriesAndTerms.assertEquals
+      ~TestCategoriesAndTerms.assertFalse
+      ~TestCategoriesAndTerms.assertGreater
+      ~TestCategoriesAndTerms.assertGreaterEqual
+      ~TestCategoriesAndTerms.assertIn
+      ~TestCategoriesAndTerms.assertIs
+      ~TestCategoriesAndTerms.assertIsInstance
+      ~TestCategoriesAndTerms.assertIsNone
+      ~TestCategoriesAndTerms.assertIsNot
+      ~TestCategoriesAndTerms.assertIsNotNone
+      ~TestCategoriesAndTerms.assertLess
+      ~TestCategoriesAndTerms.assertLessEqual
+      ~TestCategoriesAndTerms.assertListEqual
+      ~TestCategoriesAndTerms.assertLogs
+      ~TestCategoriesAndTerms.assertMultiLineEqual
+      ~TestCategoriesAndTerms.assertNoLogs
+      ~TestCategoriesAndTerms.assertNotAlmostEqual
+      ~TestCategoriesAndTerms.assertNotAlmostEquals
+      ~TestCategoriesAndTerms.assertNotEqual
+      ~TestCategoriesAndTerms.assertNotEquals
+      ~TestCategoriesAndTerms.assertNotIn
+      ~TestCategoriesAndTerms.assertNotIsInstance
+      ~TestCategoriesAndTerms.assertNotRegex
+      ~TestCategoriesAndTerms.assertNotRegexpMatches
+      ~TestCategoriesAndTerms.assertRaises
+      ~TestCategoriesAndTerms.assertRaisesRegex
+      ~TestCategoriesAndTerms.assertRaisesRegexp
+      ~TestCategoriesAndTerms.assertRegex
+      ~TestCategoriesAndTerms.assertRegexpMatches
+      ~TestCategoriesAndTerms.assertSequenceEqual
+      ~TestCategoriesAndTerms.assertSetEqual
+      ~TestCategoriesAndTerms.assertTrue
+      ~TestCategoriesAndTerms.assertTupleEqual
+      ~TestCategoriesAndTerms.assertWarns
+      ~TestCategoriesAndTerms.assertWarnsRegex
+      ~TestCategoriesAndTerms.assert_
+      ~TestCategoriesAndTerms.countTestCases
+      ~TestCategoriesAndTerms.debug
+      ~TestCategoriesAndTerms.defaultTestResult
+      ~TestCategoriesAndTerms.doClassCleanups
+      ~TestCategoriesAndTerms.doCleanups
+      ~TestCategoriesAndTerms.enterClassContext
+      ~TestCategoriesAndTerms.enterContext
+      ~TestCategoriesAndTerms.fail
+      ~TestCategoriesAndTerms.failIf
+      ~TestCategoriesAndTerms.failIfAlmostEqual
+      ~TestCategoriesAndTerms.failIfEqual
+      ~TestCategoriesAndTerms.failUnless
+      ~TestCategoriesAndTerms.failUnlessAlmostEqual
+      ~TestCategoriesAndTerms.failUnlessEqual
+      ~TestCategoriesAndTerms.failUnlessRaises
+      ~TestCategoriesAndTerms.id
+      ~TestCategoriesAndTerms.run
+      ~TestCategoriesAndTerms.setUp
+      ~TestCategoriesAndTerms.setUpClass
+      ~TestCategoriesAndTerms.shortDescription
+      ~TestCategoriesAndTerms.skipTest
+      ~TestCategoriesAndTerms.subTest
+      ~TestCategoriesAndTerms.tearDown
+      ~TestCategoriesAndTerms.tearDownClass
+      ~TestCategoriesAndTerms.test_category_costs
+      ~TestCategoriesAndTerms.test_econ
+      ~TestCategoriesAndTerms.test_econ_array
+      ~TestCategoriesAndTerms.test_itemized_costs
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestCategoriesAndTerms.longMessage
+      ~TestCategoriesAndTerms.maxDiff
+   
+   

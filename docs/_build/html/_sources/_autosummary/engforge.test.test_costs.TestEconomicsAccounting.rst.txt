@@ -1,0 +1,104 @@
+engforge.test.test\_costs.TestEconomicsAccounting
+=================================================
+
+.. currentmodule:: engforge.test.test_costs
+
+.. autoclass:: TestEconomicsAccounting
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestEconomicsAccounting.addClassCleanup
+      ~TestEconomicsAccounting.addCleanup
+      ~TestEconomicsAccounting.addTypeEqualityFunc
+      ~TestEconomicsAccounting.assertAlmostEqual
+      ~TestEconomicsAccounting.assertAlmostEquals
+      ~TestEconomicsAccounting.assertCountEqual
+      ~TestEconomicsAccounting.assertDictContainsSubset
+      ~TestEconomicsAccounting.assertDictEqual
+      ~TestEconomicsAccounting.assertEqual
+      ~TestEconomicsAccounting.assertEquals
+      ~TestEconomicsAccounting.assertFalse
+      ~TestEconomicsAccounting.assertGreater
+      ~TestEconomicsAccounting.assertGreaterEqual
+      ~TestEconomicsAccounting.assertIn
+      ~TestEconomicsAccounting.assertIs
+      ~TestEconomicsAccounting.assertIsInstance
+      ~TestEconomicsAccounting.assertIsNone
+      ~TestEconomicsAccounting.assertIsNot
+      ~TestEconomicsAccounting.assertIsNotNone
+      ~TestEconomicsAccounting.assertLess
+      ~TestEconomicsAccounting.assertLessEqual
+      ~TestEconomicsAccounting.assertListEqual
+      ~TestEconomicsAccounting.assertLogs
+      ~TestEconomicsAccounting.assertMultiLineEqual
+      ~TestEconomicsAccounting.assertNoLogs
+      ~TestEconomicsAccounting.assertNotAlmostEqual
+      ~TestEconomicsAccounting.assertNotAlmostEquals
+      ~TestEconomicsAccounting.assertNotEqual
+      ~TestEconomicsAccounting.assertNotEquals
+      ~TestEconomicsAccounting.assertNotIn
+      ~TestEconomicsAccounting.assertNotIsInstance
+      ~TestEconomicsAccounting.assertNotRegex
+      ~TestEconomicsAccounting.assertNotRegexpMatches
+      ~TestEconomicsAccounting.assertRaises
+      ~TestEconomicsAccounting.assertRaisesRegex
+      ~TestEconomicsAccounting.assertRaisesRegexp
+      ~TestEconomicsAccounting.assertRegex
+      ~TestEconomicsAccounting.assertRegexpMatches
+      ~TestEconomicsAccounting.assertSequenceEqual
+      ~TestEconomicsAccounting.assertSetEqual
+      ~TestEconomicsAccounting.assertTrue
+      ~TestEconomicsAccounting.assertTupleEqual
+      ~TestEconomicsAccounting.assertWarns
+      ~TestEconomicsAccounting.assertWarnsRegex
+      ~TestEconomicsAccounting.assert_
+      ~TestEconomicsAccounting.countTestCases
+      ~TestEconomicsAccounting.debug
+      ~TestEconomicsAccounting.defaultTestResult
+      ~TestEconomicsAccounting.doClassCleanups
+      ~TestEconomicsAccounting.doCleanups
+      ~TestEconomicsAccounting.enterClassContext
+      ~TestEconomicsAccounting.enterContext
+      ~TestEconomicsAccounting.fail
+      ~TestEconomicsAccounting.failIf
+      ~TestEconomicsAccounting.failIfAlmostEqual
+      ~TestEconomicsAccounting.failIfEqual
+      ~TestEconomicsAccounting.failUnless
+      ~TestEconomicsAccounting.failUnlessAlmostEqual
+      ~TestEconomicsAccounting.failUnlessEqual
+      ~TestEconomicsAccounting.failUnlessRaises
+      ~TestEconomicsAccounting.id
+      ~TestEconomicsAccounting.run
+      ~TestEconomicsAccounting.setUp
+      ~TestEconomicsAccounting.setUpClass
+      ~TestEconomicsAccounting.shortDescription
+      ~TestEconomicsAccounting.skipTest
+      ~TestEconomicsAccounting.subTest
+      ~TestEconomicsAccounting.tearDown
+      ~TestEconomicsAccounting.tearDownClass
+      ~TestEconomicsAccounting.test_econ_defaults
+      ~TestEconomicsAccounting.test_recursive_all
+      ~TestEconomicsAccounting.test_recursive_comp2
+      ~TestEconomicsAccounting.test_recursive_null
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestEconomicsAccounting.longMessage
+      ~TestEconomicsAccounting.maxDiff
+   
+   

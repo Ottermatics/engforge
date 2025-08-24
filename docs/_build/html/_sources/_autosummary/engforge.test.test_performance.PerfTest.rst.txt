@@ -1,0 +1,50 @@
+engforge.test.test\_performance.PerfTest
+========================================
+
+.. currentmodule:: engforge.test.test_performance
+
+.. autoclass:: PerfTest
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~PerfTest.add_fields
+      ~PerfTest.change_all_log_lvl
+      ~PerfTest.critical
+      ~PerfTest.debug
+      ~PerfTest.error
+      ~PerfTest.extract_message
+      ~PerfTest.filter
+      ~PerfTest.info
+      ~PerfTest.installSTDLogger
+      ~PerfTest.message_with_identiy
+      ~PerfTest.msg
+      ~PerfTest.resetLog
+      ~PerfTest.resetSystemLogs
+      ~PerfTest.slack_notification
+      ~PerfTest.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~PerfTest.identity
+      ~PerfTest.log_fmt
+      ~PerfTest.log_level
+      ~PerfTest.log_on
+      ~PerfTest.logger
+      ~PerfTest.slack_webhook_url
+   
+   

@@ -1,0 +1,196 @@
+engforge.test.test\_problem\_deepscoping.DeepSys
+================================================
+
+.. currentmodule:: engforge.test.test_problem_deepscoping
+
+.. autoclass:: DeepSys
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~DeepSys.add_fields
+      ~DeepSys.change_all_log_lvl
+      ~DeepSys.check_ref_slot_type
+      ~DeepSys.clone
+      ~DeepSys.cls_all_attrs_fields
+      ~DeepSys.cls_all_property_keys
+      ~DeepSys.cls_all_property_labels
+      ~DeepSys.cls_compile
+      ~DeepSys.collect_all_attributes
+      ~DeepSys.collect_comp_refs
+      ~DeepSys.collect_dynamic_refs
+      ~DeepSys.collect_inst_attributes
+      ~DeepSys.collect_post_update_refs
+      ~DeepSys.collect_solver_refs
+      ~DeepSys.collect_update_refs
+      ~DeepSys.comp_references
+      ~DeepSys.compile_classes
+      ~DeepSys.copy_config_at_state
+      ~DeepSys.create_dynamic_matricies
+      ~DeepSys.create_feedthrough_matrix
+      ~DeepSys.create_input_matrix
+      ~DeepSys.create_output_constants
+      ~DeepSys.create_output_matrix
+      ~DeepSys.create_state_constants
+      ~DeepSys.create_state_matrix
+      ~DeepSys.critical
+      ~DeepSys.debug
+      ~DeepSys.determine_nearest_stationary_state
+      ~DeepSys.difference
+      ~DeepSys.error
+      ~DeepSys.eval
+      ~DeepSys.execute
+      ~DeepSys.extract_message
+      ~DeepSys.filter
+      ~DeepSys.format_columns
+      ~DeepSys.get_system_input_refs
+      ~DeepSys.go_through_configurations
+      ~DeepSys.hash
+      ~DeepSys.hash_numeric_with
+      ~DeepSys.hash_with
+      ~DeepSys.info
+      ~DeepSys.input_attrs
+      ~DeepSys.input_fields
+      ~DeepSys.installSTDLogger
+      ~DeepSys.internal_components
+      ~DeepSys.internal_configurations
+      ~DeepSys.internal_references
+      ~DeepSys.internal_systems
+      ~DeepSys.internal_tabulations
+      ~DeepSys.linear_output
+      ~DeepSys.linear_step
+      ~DeepSys.locate
+      ~DeepSys.locate_ref
+      ~DeepSys.make_plots
+      ~DeepSys.mark_all_comps_changed
+      ~DeepSys.message_with_identiy
+      ~DeepSys.msg
+      ~DeepSys.nonlinear_output
+      ~DeepSys.nonlinear_step
+      ~DeepSys.numeric_fields
+      ~DeepSys.parent_configurations_cls
+      ~DeepSys.parse_run_kwargs
+      ~DeepSys.parse_simulation_input
+      ~DeepSys.plot_attributes
+      ~DeepSys.post_run_callback
+      ~DeepSys.post_update
+      ~DeepSys.pre_compile
+      ~DeepSys.pre_run_callback
+      ~DeepSys.print_info
+      ~DeepSys.rate
+      ~DeepSys.rate_linear
+      ~DeepSys.rate_nonlinear
+      ~DeepSys.ref_dXdt
+      ~DeepSys.resetLog
+      ~DeepSys.resetSystemLogs
+      ~DeepSys.run
+      ~DeepSys.run_internal_systems
+      ~DeepSys.set_attr
+      ~DeepSys.set_time
+      ~DeepSys.setattrs
+      ~DeepSys.setup_global_dynamics
+      ~DeepSys.signals_attributes
+      ~DeepSys.sim_matrix
+      ~DeepSys.simulate
+      ~DeepSys.slack_notification
+      ~DeepSys.slot_refs
+      ~DeepSys.slots_attributes
+      ~DeepSys.smart_split_dataframe
+      ~DeepSys.solver
+      ~DeepSys.solver_vars
+      ~DeepSys.solvers_attributes
+      ~DeepSys.step
+      ~DeepSys.subclasses
+      ~DeepSys.subcls_compile
+      ~DeepSys.system_properties_classdef
+      ~DeepSys.system_references
+      ~DeepSys.table_fields
+      ~DeepSys.trace_attributes
+      ~DeepSys.transients_attributes
+      ~DeepSys.update
+      ~DeepSys.update_dynamics
+      ~DeepSys.update_feedthrough
+      ~DeepSys.update_input
+      ~DeepSys.update_output_constants
+      ~DeepSys.update_output_matrix
+      ~DeepSys.update_state
+      ~DeepSys.update_state_constants
+      ~DeepSys.validate_class
+      ~DeepSys.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~DeepSys.Ut_ref
+      ~DeepSys.Xt_ref
+      ~DeepSys.Yt_ref
+      ~DeepSys.anything_changed
+      ~DeepSys.as_dict
+      ~DeepSys.attrs_fields
+      ~DeepSys.classname
+      ~DeepSys.converged
+      ~DeepSys.dXtdt_ref
+      ~DeepSys.dataframe
+      ~DeepSys.dataframe_constants
+      ~DeepSys.dataframe_variants
+      ~DeepSys.displayname
+      ~DeepSys.dynamic_A
+      ~DeepSys.dynamic_B
+      ~DeepSys.dynamic_C
+      ~DeepSys.dynamic_D
+      ~DeepSys.dynamic_F
+      ~DeepSys.dynamic_K
+      ~DeepSys.dynamic_input
+      ~DeepSys.dynamic_input_vars
+      ~DeepSys.dynamic_output
+      ~DeepSys.dynamic_output_vars
+      ~DeepSys.dynamic_state
+      ~DeepSys.dynamic_state_vars
+      ~DeepSys.filename
+      ~DeepSys.identity
+      ~DeepSys.input_as_dict
+      ~DeepSys.input_hash
+      ~DeepSys.last_context
+      ~DeepSys.log_fmt
+      ~DeepSys.log_level
+      ~DeepSys.log_on
+      ~DeepSys.log_silo
+      ~DeepSys.logger
+      ~DeepSys.nonlinear
+      ~DeepSys.numeric_as_dict
+      ~DeepSys.numeric_hash
+      ~DeepSys.plotable_variables
+      ~DeepSys.run_id
+      ~DeepSys.skip_plot_vars
+      ~DeepSys.slack_webhook_url
+      ~DeepSys.solved
+      ~DeepSys.static_A
+      ~DeepSys.static_B
+      ~DeepSys.static_C
+      ~DeepSys.static_D
+      ~DeepSys.static_F
+      ~DeepSys.static_K
+      ~DeepSys.stored_plots
+      ~DeepSys.system_id
+      ~DeepSys.table_hash
+      ~DeepSys.table_row_dict
+      ~DeepSys.time
+      ~DeepSys.unique_hash
+      ~DeepSys.update_interval
+      ~DeepSys.parent
+      ~DeepSys.name
+   
+   

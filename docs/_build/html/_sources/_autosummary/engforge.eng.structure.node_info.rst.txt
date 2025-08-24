@@ -1,0 +1,6 @@
+engforge.eng.structure.node\_info
+=================================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autofunction:: node_info

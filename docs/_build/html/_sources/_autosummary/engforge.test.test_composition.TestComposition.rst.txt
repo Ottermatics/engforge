@@ -1,0 +1,102 @@
+engforge.test.test\_composition.TestComposition
+===============================================
+
+.. currentmodule:: engforge.test.test_composition
+
+.. autoclass:: TestComposition
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestComposition.addClassCleanup
+      ~TestComposition.addCleanup
+      ~TestComposition.addTypeEqualityFunc
+      ~TestComposition.assertAlmostEqual
+      ~TestComposition.assertAlmostEquals
+      ~TestComposition.assertCountEqual
+      ~TestComposition.assertDictContainsSubset
+      ~TestComposition.assertDictEqual
+      ~TestComposition.assertEqual
+      ~TestComposition.assertEquals
+      ~TestComposition.assertFalse
+      ~TestComposition.assertGreater
+      ~TestComposition.assertGreaterEqual
+      ~TestComposition.assertIn
+      ~TestComposition.assertIs
+      ~TestComposition.assertIsInstance
+      ~TestComposition.assertIsNone
+      ~TestComposition.assertIsNot
+      ~TestComposition.assertIsNotNone
+      ~TestComposition.assertLess
+      ~TestComposition.assertLessEqual
+      ~TestComposition.assertListEqual
+      ~TestComposition.assertLogs
+      ~TestComposition.assertMultiLineEqual
+      ~TestComposition.assertNoLogs
+      ~TestComposition.assertNotAlmostEqual
+      ~TestComposition.assertNotAlmostEquals
+      ~TestComposition.assertNotEqual
+      ~TestComposition.assertNotEquals
+      ~TestComposition.assertNotIn
+      ~TestComposition.assertNotIsInstance
+      ~TestComposition.assertNotRegex
+      ~TestComposition.assertNotRegexpMatches
+      ~TestComposition.assertRaises
+      ~TestComposition.assertRaisesRegex
+      ~TestComposition.assertRaisesRegexp
+      ~TestComposition.assertRegex
+      ~TestComposition.assertRegexpMatches
+      ~TestComposition.assertSequenceEqual
+      ~TestComposition.assertSetEqual
+      ~TestComposition.assertTrue
+      ~TestComposition.assertTupleEqual
+      ~TestComposition.assertWarns
+      ~TestComposition.assertWarnsRegex
+      ~TestComposition.assert_
+      ~TestComposition.countTestCases
+      ~TestComposition.debug
+      ~TestComposition.defaultTestResult
+      ~TestComposition.doClassCleanups
+      ~TestComposition.doCleanups
+      ~TestComposition.enterClassContext
+      ~TestComposition.enterContext
+      ~TestComposition.fail
+      ~TestComposition.failIf
+      ~TestComposition.failIfAlmostEqual
+      ~TestComposition.failIfEqual
+      ~TestComposition.failUnless
+      ~TestComposition.failUnlessAlmostEqual
+      ~TestComposition.failUnlessEqual
+      ~TestComposition.failUnlessRaises
+      ~TestComposition.id
+      ~TestComposition.run
+      ~TestComposition.setUp
+      ~TestComposition.setUpClass
+      ~TestComposition.shortDescription
+      ~TestComposition.skipTest
+      ~TestComposition.subTest
+      ~TestComposition.tearDown
+      ~TestComposition.tearDownClass
+      ~TestComposition.test_input_and_run
+      ~TestComposition.test_signals
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestComposition.longMessage
+      ~TestComposition.maxDiff
+   
+   

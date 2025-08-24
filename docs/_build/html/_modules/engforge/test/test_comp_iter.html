@@ -1,0 +1,327 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.test.test_comp_iter &mdash; engforge 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/readthedocs-custom.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.test.test_comp_iter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.test.test_comp_iter</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span><span class="w"> </span><span class="nn">engforge.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.component_collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComponentDict</span><span class="p">,</span> <span class="n">ComponentIter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.system</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.attr_slots</span><span class="w"> </span><span class="kn">import</span> <span class="n">Slot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">forge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.tabulation</span><span class="w"> </span><span class="kn">import</span> <span class="n">system_property</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">attrs</span><span class="o">,</span><span class="w"> </span><span class="nn">attr</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+
+<span class="c1"># from engforge.logging import LoggingMixin, change_all_log_levels</span>
+<span class="c1"># change_all_log_levels(10)</span>
+
+
+<div class="viewcode-block" id="TestConfig">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_comp_iter.TestConfig.html#engforge.test.test_comp_iter.TestConfig">[docs]</a>
+<span class="nd">@forge</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestConfig</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="n">attrs_prop</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">attrs_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="s2">&quot;hey now&quot;</span><span class="p">)</span>
+
+    <span class="nd">@system_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_one</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="nd">@system_property</span><span class="p">(</span><span class="n">stochastic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_two</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+
+    <span class="nd">@system_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_three</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">2</span>
+
+    <span class="nd">@system_property</span><span class="p">(</span><span class="n">stochastic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_four</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="DictComp">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_comp_iter.DictComp.html#engforge.test.test_comp_iter.DictComp">[docs]</a>
+<span class="nd">@forge</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DictComp</span><span class="p">(</span><span class="n">ComponentDict</span><span class="p">):</span>
+    <span class="n">component_type</span> <span class="o">=</span> <span class="n">TestConfig</span></div>
+
+
+
+<div class="viewcode-block" id="ListComp">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_comp_iter.ListComp.html#engforge.test.test_comp_iter.ListComp">[docs]</a>
+<span class="nd">@forge</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">ListComp</span><span class="p">(</span><span class="n">ComponentDict</span><span class="p">):</span>
+    <span class="n">component_type</span> <span class="o">=</span> <span class="n">TestConfig</span></div>
+
+
+
+<div class="viewcode-block" id="WideSystem">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_comp_iter.WideSystem.html#engforge.test.test_comp_iter.WideSystem">[docs]</a>
+<span class="nd">@forge</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">WideSystem</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="n">cdict</span> <span class="o">=</span> <span class="n">Slot</span><span class="o">.</span><span class="n">define_iterator</span><span class="p">(</span><span class="n">DictComp</span><span class="p">)</span>
+    <span class="n">citer</span> <span class="o">=</span> <span class="n">Slot</span><span class="o">.</span><span class="n">define_iterator</span><span class="p">(</span><span class="n">ComponentIter</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="NarrowSystem">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_comp_iter.NarrowSystem.html#engforge.test.test_comp_iter.NarrowSystem">[docs]</a>
+<span class="nd">@forge</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">NarrowSystem</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="n">cdict</span> <span class="o">=</span> <span class="n">Slot</span><span class="o">.</span><span class="n">define_iterator</span><span class="p">(</span><span class="n">DictComp</span><span class="p">,</span> <span class="n">wide</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">citer</span> <span class="o">=</span> <span class="n">Slot</span><span class="o">.</span><span class="n">define_iterator</span><span class="p">(</span><span class="n">ComponentIter</span><span class="p">,</span> <span class="n">wide</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="TestWide">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_comp_iter.TestWide.html#engforge.test.test_comp_iter.TestWide">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestWide</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestWide.setUp">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_comp_iter.TestWide.html#engforge.test.test_comp_iter.TestWide.setUp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">item_in</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="s2">&quot;hey&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span>
+
+        <span class="n">lc</span> <span class="o">=</span> <span class="n">ListComp</span><span class="p">(</span><span class="n">component_type</span><span class="o">=</span><span class="n">TestConfig</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_in</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">lc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">TestConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;citer_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">attrs_prop</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">attrs_str</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+
+        <span class="n">dc</span> <span class="o">=</span> <span class="n">DictComp</span><span class="p">(</span><span class="n">component_type</span><span class="o">=</span><span class="n">TestConfig</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_in</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">dc</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">TestConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;cdict_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">attrs_prop</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">attrs_str</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">WideSystem</span><span class="p">(</span><span class="n">cdict</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">citer</span><span class="o">=</span><span class="n">lc</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">))</span>
+
+        <span class="n">dat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">data_dict</span>
+
+        <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dat</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="n">comps</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;cdict&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;hey&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)],</span>
+            <span class="s2">&quot;citer&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)),</span>
+        <span class="p">}</span>
+
+        <span class="n">props</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;test_one&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;test_two&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;test_three&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;test_four&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;attrs_prop&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;attrs_str&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="n">should_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">dataframe_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">ck</span><span class="p">,</span> <span class="n">vlist</span> <span class="ow">in</span> <span class="n">comps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vlist</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">props</span><span class="p">:</span>
+                    <span class="n">tkn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ck</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">v</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span>
+                    <span class="n">should_keys</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tkn</span><span class="p">)</span>
+                    <span class="n">dataframe_keys</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tkn</span><span class="p">)</span>
+
+        <span class="n">sys_key</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">mtch</span> <span class="o">=</span> <span class="n">should_keys</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">sys_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;keys: </span><span class="si">{</span><span class="n">should_keys</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">sys_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">mtch</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;missing keys: </span><span class="si">{</span><span class="n">should_keys</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">sys_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># save the data to table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">revert_last</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">revert_every</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">save_on_exit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">last_context</span><span class="o">.</span><span class="n">dataframe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;len: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2">|</span><span class="se">\n</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">dataframe_keys</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">dataframe_keys</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span></div>
+
+
+
+<div class="viewcode-block" id="TestNarrow">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_comp_iter.TestNarrow.html#engforge.test.test_comp_iter.TestNarrow">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestNarrow</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestNarrow.setUp">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_comp_iter.TestNarrow.html#engforge.test.test_comp_iter.TestNarrow.setUp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">item_in</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="s2">&quot;hey&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)}</span>
+
+        <span class="n">lc</span> <span class="o">=</span> <span class="n">ListComp</span><span class="p">(</span><span class="n">component_type</span><span class="o">=</span><span class="n">TestConfig</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_in</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">lc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">TestConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;citer_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">attrs_prop</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">attrs_str</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+
+        <span class="n">dc</span> <span class="o">=</span> <span class="n">DictComp</span><span class="p">(</span><span class="n">component_type</span><span class="o">=</span><span class="n">TestConfig</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">item_in</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">dc</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">TestConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;cdict_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">attrs_prop</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">attrs_str</span><span class="o">=</span><span class="n">v</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">NarrowSystem</span><span class="p">(</span><span class="n">cdict</span><span class="o">=</span><span class="n">dc</span><span class="p">,</span> <span class="n">citer</span><span class="o">=</span><span class="n">lc</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_keys</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">dat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">data_dict</span>
+
+        <span class="n">all_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">dat</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+        <span class="n">comps</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;cdict&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;hey&quot;</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)],</span>
+            <span class="s2">&quot;citer&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">)),</span>
+        <span class="p">}</span>
+
+        <span class="n">props</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;test_one&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;test_two&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;test_three&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;test_four&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;attrs_prop&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;attrs_str&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="n">should_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">dataframe_keys</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">ck</span><span class="p">,</span> <span class="n">vlist</span> <span class="ow">in</span> <span class="n">comps</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="c1"># for v in vlist:</span>
+            <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">props</span><span class="p">:</span>
+                <span class="n">tkn</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">ck</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span>
+                <span class="n">should_keys</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tkn</span><span class="p">)</span>
+                <span class="n">dataframe_keys</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tkn</span><span class="p">)</span>
+
+        <span class="n">sys_key</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">data_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">mtch</span> <span class="o">=</span> <span class="n">should_keys</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="n">sys_key</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;keys: </span><span class="si">{</span><span class="n">should_keys</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="n">sys_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">mtch</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;missing keys: </span><span class="si">{</span><span class="n">should_keys</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">sys_key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># save the data to table</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">last_context</span><span class="o">.</span><span class="n">dataframe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span> <span class="o">**</span> <span class="nb">len</span><span class="p">(</span><span class="n">comps</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">dataframe_keys</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">dataframe_keys</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">keys</span><span class="p">())))</span>
+
+        <span class="c1"># test item existence</span>
+        <span class="n">v1</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s2">&quot;cdict.current_item&quot;</span><span class="p">])</span>
+        <span class="n">v2</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">comps</span><span class="p">[</span><span class="s2">&quot;cdict&quot;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+
+        <span class="n">d1</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s2">&quot;citer.current_item&quot;</span><span class="p">])</span>
+        <span class="n">d2</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">comps</span><span class="p">[</span><span class="s2">&quot;citer&quot;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span> <span class="n">d2</span><span class="p">)</span>
+
+        <span class="n">dvs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s2">&quot;cdict.current_item&quot;</span><span class="p">]</span>
+        <span class="n">cvs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s2">&quot;citer.current_item&quot;</span><span class="p">]</span>
+
+        <span class="n">al</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">dvs</span><span class="p">,</span> <span class="n">cvs</span><span class="p">))</span>
+        <span class="n">sh</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">v2</span><span class="p">,</span> <span class="n">d2</span><span class="p">))</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">al</span><span class="p">,</span> <span class="n">sh</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

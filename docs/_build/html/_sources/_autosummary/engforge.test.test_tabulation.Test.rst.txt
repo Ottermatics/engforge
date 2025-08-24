@@ -1,0 +1,109 @@
+engforge.test.test\_tabulation.Test
+===================================
+
+.. currentmodule:: engforge.test.test_tabulation
+
+.. autoclass:: Test
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Test.addClassCleanup
+      ~Test.addCleanup
+      ~Test.addTypeEqualityFunc
+      ~Test.assertAlmostEqual
+      ~Test.assertAlmostEquals
+      ~Test.assertCountEqual
+      ~Test.assertDictContainsSubset
+      ~Test.assertDictEqual
+      ~Test.assertEqual
+      ~Test.assertEquals
+      ~Test.assertFalse
+      ~Test.assertGreater
+      ~Test.assertGreaterEqual
+      ~Test.assertIn
+      ~Test.assertIs
+      ~Test.assertIsInstance
+      ~Test.assertIsNone
+      ~Test.assertIsNot
+      ~Test.assertIsNotNone
+      ~Test.assertLess
+      ~Test.assertLessEqual
+      ~Test.assertListEqual
+      ~Test.assertLogs
+      ~Test.assertMultiLineEqual
+      ~Test.assertNoLogs
+      ~Test.assertNotAlmostEqual
+      ~Test.assertNotAlmostEquals
+      ~Test.assertNotEqual
+      ~Test.assertNotEquals
+      ~Test.assertNotIn
+      ~Test.assertNotIsInstance
+      ~Test.assertNotRegex
+      ~Test.assertNotRegexpMatches
+      ~Test.assertRaises
+      ~Test.assertRaisesRegex
+      ~Test.assertRaisesRegexp
+      ~Test.assertRegex
+      ~Test.assertRegexpMatches
+      ~Test.assertSequenceEqual
+      ~Test.assertSetEqual
+      ~Test.assertTrue
+      ~Test.assertTupleEqual
+      ~Test.assertWarns
+      ~Test.assertWarnsRegex
+      ~Test.assert_
+      ~Test.countTestCases
+      ~Test.debug
+      ~Test.defaultTestResult
+      ~Test.doClassCleanups
+      ~Test.doCleanups
+      ~Test.enterClassContext
+      ~Test.enterContext
+      ~Test.fail
+      ~Test.failIf
+      ~Test.failIfAlmostEqual
+      ~Test.failIfEqual
+      ~Test.failUnless
+      ~Test.failUnlessAlmostEqual
+      ~Test.failUnlessEqual
+      ~Test.failUnlessRaises
+      ~Test.id
+      ~Test.run
+      ~Test.setUp
+      ~Test.setUpClass
+      ~Test.shortDescription
+      ~Test.skipTest
+      ~Test.subTest
+      ~Test.tearDown
+      ~Test.tearDownClass
+      ~Test.test_assemble_data_always_save
+      ~Test.test_assemble_data_on_input
+      ~Test.test_dataframe
+      ~Test.test_property_desc
+      ~Test.test_property_labels
+      ~Test.test_property_types
+      ~Test.test_table_vals
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Test.longMessage
+      ~Test.maxDiff
+      ~Test.test_dir
+      ~Test.test_file_name
+   
+   

@@ -1,0 +1,196 @@
+engforge.test.test\_comp\_iter.NarrowSystem
+===========================================
+
+.. currentmodule:: engforge.test.test_comp_iter
+
+.. autoclass:: NarrowSystem
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~NarrowSystem.add_fields
+      ~NarrowSystem.change_all_log_lvl
+      ~NarrowSystem.check_ref_slot_type
+      ~NarrowSystem.clone
+      ~NarrowSystem.cls_all_attrs_fields
+      ~NarrowSystem.cls_all_property_keys
+      ~NarrowSystem.cls_all_property_labels
+      ~NarrowSystem.cls_compile
+      ~NarrowSystem.collect_all_attributes
+      ~NarrowSystem.collect_comp_refs
+      ~NarrowSystem.collect_dynamic_refs
+      ~NarrowSystem.collect_inst_attributes
+      ~NarrowSystem.collect_post_update_refs
+      ~NarrowSystem.collect_solver_refs
+      ~NarrowSystem.collect_update_refs
+      ~NarrowSystem.comp_references
+      ~NarrowSystem.compile_classes
+      ~NarrowSystem.copy_config_at_state
+      ~NarrowSystem.create_dynamic_matricies
+      ~NarrowSystem.create_feedthrough_matrix
+      ~NarrowSystem.create_input_matrix
+      ~NarrowSystem.create_output_constants
+      ~NarrowSystem.create_output_matrix
+      ~NarrowSystem.create_state_constants
+      ~NarrowSystem.create_state_matrix
+      ~NarrowSystem.critical
+      ~NarrowSystem.debug
+      ~NarrowSystem.determine_nearest_stationary_state
+      ~NarrowSystem.difference
+      ~NarrowSystem.error
+      ~NarrowSystem.eval
+      ~NarrowSystem.execute
+      ~NarrowSystem.extract_message
+      ~NarrowSystem.filter
+      ~NarrowSystem.format_columns
+      ~NarrowSystem.get_system_input_refs
+      ~NarrowSystem.go_through_configurations
+      ~NarrowSystem.hash
+      ~NarrowSystem.hash_numeric_with
+      ~NarrowSystem.hash_with
+      ~NarrowSystem.info
+      ~NarrowSystem.input_attrs
+      ~NarrowSystem.input_fields
+      ~NarrowSystem.installSTDLogger
+      ~NarrowSystem.internal_components
+      ~NarrowSystem.internal_configurations
+      ~NarrowSystem.internal_references
+      ~NarrowSystem.internal_systems
+      ~NarrowSystem.internal_tabulations
+      ~NarrowSystem.linear_output
+      ~NarrowSystem.linear_step
+      ~NarrowSystem.locate
+      ~NarrowSystem.locate_ref
+      ~NarrowSystem.make_plots
+      ~NarrowSystem.mark_all_comps_changed
+      ~NarrowSystem.message_with_identiy
+      ~NarrowSystem.msg
+      ~NarrowSystem.nonlinear_output
+      ~NarrowSystem.nonlinear_step
+      ~NarrowSystem.numeric_fields
+      ~NarrowSystem.parent_configurations_cls
+      ~NarrowSystem.parse_run_kwargs
+      ~NarrowSystem.parse_simulation_input
+      ~NarrowSystem.plot_attributes
+      ~NarrowSystem.post_run_callback
+      ~NarrowSystem.post_update
+      ~NarrowSystem.pre_compile
+      ~NarrowSystem.pre_run_callback
+      ~NarrowSystem.print_info
+      ~NarrowSystem.rate
+      ~NarrowSystem.rate_linear
+      ~NarrowSystem.rate_nonlinear
+      ~NarrowSystem.ref_dXdt
+      ~NarrowSystem.resetLog
+      ~NarrowSystem.resetSystemLogs
+      ~NarrowSystem.run
+      ~NarrowSystem.run_internal_systems
+      ~NarrowSystem.set_attr
+      ~NarrowSystem.set_time
+      ~NarrowSystem.setattrs
+      ~NarrowSystem.setup_global_dynamics
+      ~NarrowSystem.signals_attributes
+      ~NarrowSystem.sim_matrix
+      ~NarrowSystem.simulate
+      ~NarrowSystem.slack_notification
+      ~NarrowSystem.slot_refs
+      ~NarrowSystem.slots_attributes
+      ~NarrowSystem.smart_split_dataframe
+      ~NarrowSystem.solver
+      ~NarrowSystem.solver_vars
+      ~NarrowSystem.solvers_attributes
+      ~NarrowSystem.step
+      ~NarrowSystem.subclasses
+      ~NarrowSystem.subcls_compile
+      ~NarrowSystem.system_properties_classdef
+      ~NarrowSystem.system_references
+      ~NarrowSystem.table_fields
+      ~NarrowSystem.trace_attributes
+      ~NarrowSystem.transients_attributes
+      ~NarrowSystem.update
+      ~NarrowSystem.update_dynamics
+      ~NarrowSystem.update_feedthrough
+      ~NarrowSystem.update_input
+      ~NarrowSystem.update_output_constants
+      ~NarrowSystem.update_output_matrix
+      ~NarrowSystem.update_state
+      ~NarrowSystem.update_state_constants
+      ~NarrowSystem.validate_class
+      ~NarrowSystem.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~NarrowSystem.Ut_ref
+      ~NarrowSystem.Xt_ref
+      ~NarrowSystem.Yt_ref
+      ~NarrowSystem.anything_changed
+      ~NarrowSystem.as_dict
+      ~NarrowSystem.attrs_fields
+      ~NarrowSystem.classname
+      ~NarrowSystem.converged
+      ~NarrowSystem.dXtdt_ref
+      ~NarrowSystem.dataframe
+      ~NarrowSystem.dataframe_constants
+      ~NarrowSystem.dataframe_variants
+      ~NarrowSystem.displayname
+      ~NarrowSystem.dynamic_A
+      ~NarrowSystem.dynamic_B
+      ~NarrowSystem.dynamic_C
+      ~NarrowSystem.dynamic_D
+      ~NarrowSystem.dynamic_F
+      ~NarrowSystem.dynamic_K
+      ~NarrowSystem.dynamic_input
+      ~NarrowSystem.dynamic_input_vars
+      ~NarrowSystem.dynamic_output
+      ~NarrowSystem.dynamic_output_vars
+      ~NarrowSystem.dynamic_state
+      ~NarrowSystem.dynamic_state_vars
+      ~NarrowSystem.filename
+      ~NarrowSystem.identity
+      ~NarrowSystem.input_as_dict
+      ~NarrowSystem.input_hash
+      ~NarrowSystem.last_context
+      ~NarrowSystem.log_fmt
+      ~NarrowSystem.log_level
+      ~NarrowSystem.log_on
+      ~NarrowSystem.log_silo
+      ~NarrowSystem.logger
+      ~NarrowSystem.nonlinear
+      ~NarrowSystem.numeric_as_dict
+      ~NarrowSystem.numeric_hash
+      ~NarrowSystem.plotable_variables
+      ~NarrowSystem.run_id
+      ~NarrowSystem.skip_plot_vars
+      ~NarrowSystem.slack_webhook_url
+      ~NarrowSystem.solved
+      ~NarrowSystem.static_A
+      ~NarrowSystem.static_B
+      ~NarrowSystem.static_C
+      ~NarrowSystem.static_D
+      ~NarrowSystem.static_F
+      ~NarrowSystem.static_K
+      ~NarrowSystem.stored_plots
+      ~NarrowSystem.system_id
+      ~NarrowSystem.table_hash
+      ~NarrowSystem.table_row_dict
+      ~NarrowSystem.time
+      ~NarrowSystem.unique_hash
+      ~NarrowSystem.update_interval
+      ~NarrowSystem.parent
+      ~NarrowSystem.name
+   
+   

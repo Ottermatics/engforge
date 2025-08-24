@@ -1,0 +1,6 @@
+engforge.eng.structure.run\_combo\_failure\_analysis
+====================================================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autofunction:: run_combo_failure_analysis

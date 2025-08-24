@@ -1,0 +1,108 @@
+engforge.test.test\_problem.TestContextExits
+============================================
+
+.. currentmodule:: engforge.test.test_problem
+
+.. autoclass:: TestContextExits
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestContextExits.addClassCleanup
+      ~TestContextExits.addCleanup
+      ~TestContextExits.addTypeEqualityFunc
+      ~TestContextExits.assertAlmostEqual
+      ~TestContextExits.assertAlmostEquals
+      ~TestContextExits.assertCountEqual
+      ~TestContextExits.assertDictContainsSubset
+      ~TestContextExits.assertDictEqual
+      ~TestContextExits.assertEqual
+      ~TestContextExits.assertEquals
+      ~TestContextExits.assertFalse
+      ~TestContextExits.assertGreater
+      ~TestContextExits.assertGreaterEqual
+      ~TestContextExits.assertIn
+      ~TestContextExits.assertIs
+      ~TestContextExits.assertIsInstance
+      ~TestContextExits.assertIsNone
+      ~TestContextExits.assertIsNot
+      ~TestContextExits.assertIsNotNone
+      ~TestContextExits.assertLess
+      ~TestContextExits.assertLessEqual
+      ~TestContextExits.assertListEqual
+      ~TestContextExits.assertLogs
+      ~TestContextExits.assertMultiLineEqual
+      ~TestContextExits.assertNoLogs
+      ~TestContextExits.assertNotAlmostEqual
+      ~TestContextExits.assertNotAlmostEquals
+      ~TestContextExits.assertNotEqual
+      ~TestContextExits.assertNotEquals
+      ~TestContextExits.assertNotIn
+      ~TestContextExits.assertNotIsInstance
+      ~TestContextExits.assertNotRegex
+      ~TestContextExits.assertNotRegexpMatches
+      ~TestContextExits.assertRaises
+      ~TestContextExits.assertRaisesRegex
+      ~TestContextExits.assertRaisesRegexp
+      ~TestContextExits.assertRegex
+      ~TestContextExits.assertRegexpMatches
+      ~TestContextExits.assertSequenceEqual
+      ~TestContextExits.assertSetEqual
+      ~TestContextExits.assertTrue
+      ~TestContextExits.assertTupleEqual
+      ~TestContextExits.assertWarns
+      ~TestContextExits.assertWarnsRegex
+      ~TestContextExits.assert_
+      ~TestContextExits.countTestCases
+      ~TestContextExits.debug
+      ~TestContextExits.defaultTestResult
+      ~TestContextExits.doClassCleanups
+      ~TestContextExits.doCleanups
+      ~TestContextExits.enterClassContext
+      ~TestContextExits.enterContext
+      ~TestContextExits.fail
+      ~TestContextExits.failIf
+      ~TestContextExits.failIfAlmostEqual
+      ~TestContextExits.failIfEqual
+      ~TestContextExits.failUnless
+      ~TestContextExits.failUnlessAlmostEqual
+      ~TestContextExits.failUnlessEqual
+      ~TestContextExits.failUnlessRaises
+      ~TestContextExits.id
+      ~TestContextExits.run
+      ~TestContextExits.setUp
+      ~TestContextExits.setUpClass
+      ~TestContextExits.shortDescription
+      ~TestContextExits.skipTest
+      ~TestContextExits.subTest
+      ~TestContextExits.tearDown
+      ~TestContextExits.tearDownClass
+      ~TestContextExits.test_context_singularity
+      ~TestContextExits.test_error_exit
+      ~TestContextExits.test_exit_2_with_state
+      ~TestContextExits.test_exit_2_wo_state
+      ~TestContextExits.test_exit_and_revert
+      ~TestContextExits.test_exit_top
+      ~TestContextExits.test_exit_top_with_state
+      ~TestContextExits.test_exit_with_state
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestContextExits.longMessage
+      ~TestContextExits.maxDiff
+   
+   

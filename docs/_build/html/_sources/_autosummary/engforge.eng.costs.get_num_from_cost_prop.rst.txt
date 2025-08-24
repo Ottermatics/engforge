@@ -1,0 +1,6 @@
+engforge.eng.costs.get\_num\_from\_cost\_prop
+=============================================
+
+.. currentmodule:: engforge.eng.costs
+
+.. autofunction:: get_num_from_cost_prop

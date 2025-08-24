@@ -1,0 +1,355 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.test.test_tabulation &mdash; engforge 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/readthedocs-custom.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.test.test_tabulation</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.test.test_tabulation</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">io</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">tempfile</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">forge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.tabulation</span><span class="w"> </span><span class="kn">import</span> <span class="n">system_property</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.system</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.component_collections</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComponentIterator</span><span class="p">,</span> <span class="n">ComponentDict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.problem_context</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProblemExec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">attr</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pprint</span><span class="w"> </span><span class="kn">import</span> <span class="n">pprint</span>
+
+<span class="c1"># from engforge.logging import LoggingMixin, change_all_log_levels</span>
+<span class="c1"># change_all_log_levels(10)</span>
+
+
+<div class="viewcode-block" id="TestConfig">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_tabulation.TestConfig.html#engforge.test.test_tabulation.TestConfig">[docs]</a>
+<span class="nd">@forge</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestConfig</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="n">attrs_prop</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">attrs_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="s2">&quot;hey now&quot;</span><span class="p">)</span>
+
+    <span class="nd">@system_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_one</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="nd">@system_property</span><span class="p">(</span><span class="n">stochastic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_two</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+
+    <span class="nd">@system_property</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;three&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;some words&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_three</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">2</span>
+
+    <span class="nd">@system_property</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;four&quot;</span><span class="p">,</span> <span class="n">desc</span><span class="o">=</span><span class="s2">&quot;would make sense&quot;</span><span class="p">,</span> <span class="n">stochastic</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_four</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="Test">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_tabulation.Test.html#engforge.test.test_tabulation.Test">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Test</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="n">test_file_name</span> <span class="o">=</span> <span class="s2">&quot;test_dataframe_file&quot;</span>
+    <span class="n">test_dir</span> <span class="o">=</span> <span class="s2">&quot;~/&quot;</span>
+
+<div class="viewcode-block" id="Test.setUp">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_tabulation.Test.html#engforge.test.test_tabulation.Test.setUp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span> <span class="o">=</span> <span class="n">TestConfig</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;testconfig&quot;</span><span class="p">)</span></div>
+
+
+    <span class="c1">#         self.test_dir = tempfile.mkdtemp()</span>
+    <span class="c1">#</span>
+    <span class="c1">#     def tearDown(self):</span>
+    <span class="c1">#         contents_local = os.listdir(self.test_dir)</span>
+    <span class="c1">#         for fil in contents_local:</span>
+    <span class="c1">#             if self.test_file_name in fil:</span>
+    <span class="c1">#                 rfil = os.path.join(self.test_dir, fil)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_property_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="nb">set</span><span class="p">([</span><span class="s2">&quot;four&quot;</span><span class="p">,</span> <span class="s2">&quot;test_two&quot;</span><span class="p">,</span> <span class="s2">&quot;test_one&quot;</span><span class="p">,</span> <span class="s2">&quot;three&quot;</span><span class="p">,</span> <span class="s2">&quot;converged&quot;</span><span class="p">,</span> <span class="s2">&quot;run_id&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">system_properties_labels</span><span class="p">),</span> <span class="n">ans</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_property_types</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">system_properties_types</span><span class="p">,</span> <span class="n">ans</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_property_desc</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;some words&quot;</span><span class="p">,</span> <span class="s2">&quot;would make sense&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">system_properties_description</span><span class="p">,</span> <span class="n">ans</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_table_vals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">vals_ans</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">vals_ans</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span>
+                <span class="nb">any</span><span class="p">(</span>
+                    <span class="p">[</span>
+                        <span class="n">val</span> <span class="o">==</span> <span class="n">valcan</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">valcan</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">int</span> <span class="k">else</span> <span class="kc">False</span>
+                        <span class="k">for</span> <span class="n">valcan</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">system_properties</span>
+                    <span class="p">]</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_assemble_data_always_save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;testing data assembly </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">always_save_data</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">_always_save_data</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="c1"># Run before test_table_to...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="p">,</span> <span class="p">{})</span> <span class="k">as</span> <span class="n">px</span><span class="p">:</span>
+            <span class="n">px</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">px</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="n">px</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="c1"># Stochastic Props so this will work without input change.</span>
+            <span class="n">px</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="mi">2</span> <span class="o">==</span> <span class="n">px</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_assemble_data_on_input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># change this to check behavior to adjust stochastic behavior</span>
+        <span class="c1"># print(f&quot;testing data assembly {self.test_config.always_save_data}&quot;)</span>
+        <span class="c1"># Run before test_table_to...</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">_always_save_data</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">info</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;testing data assembly </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">always_save_data</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="p">,</span> <span class="p">{})</span> <span class="k">as</span> <span class="n">px</span><span class="p">:</span>
+            <span class="n">px</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+
+            <span class="c1"># print(px.dataframe,len(px.dataframe))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">px</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="mi">1</span> <span class="o">==</span> <span class="n">px</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="c1"># No Update So This Wont Save</span>
+            <span class="n">px</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="mi">2</span> <span class="o">==</span> <span class="n">px</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+            <span class="c1"># Change Something</span>
+            <span class="n">cur_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">attrs_prop</span>
+            <span class="n">new_val</span> <span class="o">=</span> <span class="mi">6</span> <span class="o">+</span> <span class="n">cur_val</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;setting attrs prop on in </span><span class="si">{</span><span class="n">cur_val</span><span class="w"> </span><span class="si">}</span><span class="s2"> =&gt; </span><span class="si">{</span><span class="n">new_val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">attrs_prop</span> <span class="o">=</span> <span class="n">new_val</span>
+            <span class="n">px</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="mi">2</span> <span class="o">==</span> <span class="n">px</span><span class="o">.</span><span class="n">dataframe</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">iter</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+        <span class="n">attr_in</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">cur_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">data_dict</span>
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="p">,</span> <span class="p">{})</span> <span class="k">as</span> <span class="n">px</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">iter</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="p">,</span> <span class="p">{})</span> <span class="k">as</span> <span class="n">px</span><span class="p">:</span>
+                    <span class="n">cur_val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">attrs_prop</span>
+                    <span class="n">attr_in</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span> <span class="o">=</span> <span class="n">cur_val</span> <span class="o">+</span> <span class="n">i</span><span class="o">**</span><span class="mf">2.0</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;setting attrs prop df </span><span class="si">{</span><span class="n">cur_val</span><span class="w"> </span><span class="si">}</span><span class="s2"> =&gt; </span><span class="si">{</span><span class="n">val</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">attrs_prop</span> <span class="o">=</span> <span class="n">val</span>
+                    <span class="n">px</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+                    <span class="n">px</span><span class="o">.</span><span class="n">exit_with_state</span><span class="p">()</span>
+                <span class="n">postdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">data_dict</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">cur_dict</span><span class="p">,</span> <span class="n">postdict</span><span class="p">)</span>
+            <span class="n">px</span><span class="o">.</span><span class="n">exit_with_state</span><span class="p">()</span>
+
+        <span class="n">postdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">data_dict</span>
+        <span class="c1"># self.test_config.info(f&#39;cur_dict {cur_dict} postdict {postdict}&#39;)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">cur_dict</span><span class="p">,</span> <span class="n">postdict</span><span class="p">)</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">dataframe</span>
+        <span class="n">pprint</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">),</span> <span class="nb">iter</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;test_one&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;test_one&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;test_three&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;test_three&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="mi">2</span><span class="p">)</span>
+
+        <span class="n">l1</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;attrs_prop&quot;</span><span class="p">])</span>
+        <span class="n">l2</span> <span class="o">=</span> <span class="p">[</span><span class="n">attr_in</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">iter</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertListEqual</span><span class="p">(</span><span class="n">l1</span><span class="p">,</span> <span class="n">l2</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># TODO: move these to reporting</span>
+<span class="c1"># def file_in_format(self, fileextension, path=True):</span>
+<span class="c1">#     fille = &quot;{}.{}&quot;.format(self.test_file_name, fileextension)</span>
+<span class="c1">#     if path:</span>
+<span class="c1">#         path = os.path.join(self.test_dir, fille)</span>
+<span class="c1">#         return path</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         return fille</span>
+<span class="c1">#     def test_table_to_csv(self):</span>
+<span class="c1">#         pass</span>
+<span class="c1">#         print(&#39;saving &#39;+self.file_in_format(&#39;xlsx&#39;))</span>
+<span class="c1">#         self.test_config.save_csv(self.file_in_format(&#39;csv&#39;))</span>
+<span class="c1">#         self.assertIn(self.file_in_format(&#39;csv&#39;,False), os.listdir(self.test_dir))</span>
+
+<span class="c1">#</span>
+<span class="c1">#     def test_table_to_excel(self):</span>
+<span class="c1">#         pass</span>
+<span class="c1">#         #print(&#39;saving &#39;+self.file_in_format(&#39;xlsx&#39;))</span>
+<span class="c1">#         #self.test_config.save_excel(self.file_in_format(&#39;xlsx&#39;))</span>
+<span class="c1">#         #self.assertIn(self.file_in_format(&#39;xlsx&#39;,False),os.listdir(self.test_dir))</span>
+<span class="c1">#</span>
+<span class="c1">#     def test_table_to_gsheets(self):</span>
+<span class="c1">#         pass</span>
+<span class="c1">#</span>
+<span class="c1">#     def test_table_to_db(self):</span>
+<span class="c1">#         pass</span>
+
+
+<div class="viewcode-block" id="Static">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_tabulation.Static.html#engforge.test.test_tabulation.Static">[docs]</a>
+<span class="nd">@forge</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Static</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="n">attrs_prop</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">attrs_str</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">attr</span><span class="o">.</span><span class="n">ib</span><span class="p">(</span><span class="s2">&quot;hey now&quot;</span><span class="p">)</span>
+
+    <span class="nd">@system_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_one</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+
+    <span class="nd">@system_property</span><span class="p">()</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_two</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="TestStatic">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_tabulation.TestStatic.html#engforge.test.test_tabulation.TestStatic">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestStatic</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestStatic.setUp">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_tabulation.TestStatic.html#engforge.test.test_tabulation.TestStatic.setUp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span> <span class="o">=</span> <span class="n">Static</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_static</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">cur_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">data_dict</span>
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="p">,</span> <span class="p">{})</span> <span class="k">as</span> <span class="n">px</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="p">,</span> <span class="p">{})</span> <span class="k">as</span> <span class="n">px</span><span class="p">:</span>
+                    <span class="n">px</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+                <span class="n">postdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">data_dict</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">cur_dict</span><span class="p">,</span> <span class="n">postdict</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">dataframe</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">cur_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">data_dict</span>
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="p">,</span> <span class="p">{})</span> <span class="k">as</span> <span class="n">px</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+                <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="p">,</span> <span class="p">{})</span> <span class="k">as</span> <span class="n">px</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">attrs_prop</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">attrs_prop</span>
+                    <span class="n">px</span><span class="o">.</span><span class="n">save_data</span><span class="p">()</span>
+                <span class="n">postdict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">data_dict</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">cur_dict</span><span class="p">,</span> <span class="n">postdict</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">test_config</span><span class="o">.</span><span class="n">dataframe</span><span class="p">),</span> <span class="n">num</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

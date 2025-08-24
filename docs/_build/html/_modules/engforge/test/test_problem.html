@@ -1,0 +1,527 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.test.test_problem &mdash; engforge 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/readthedocs-custom.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.test.test_problem</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.test.test_problem</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.problem_context</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.system</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span><span class="p">,</span> <span class="n">forge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge._testing_components</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+
+<div class="viewcode-block" id="SimpleContext">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_problem.SimpleContext.html#engforge.test.test_problem.SimpleContext">[docs]</a>
+<span class="nd">@forge</span><span class="p">(</span><span class="n">auto_attribs</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SimpleContext</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="n">one</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">two</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_rand</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">one</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">two</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">one</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">two</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+
+<span class="n">chk</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">d</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">))</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">d</span> <span class="k">else</span> <span class="nb">set</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="TestSession">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_problem.TestSession.html#engforge.test.test_problem.TestSession">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestSession</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test lifecycle of a problem and IO of the context&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_system_last_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">SpringMass</span><span class="p">(</span><span class="n">Fa</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">sm</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">dxdt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">combos</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+        <span class="n">ssid</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">last_context</span><span class="o">.</span><span class="n">session_id</span>
+        <span class="n">sm</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">dxdt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">combos</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+        <span class="n">trid</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">last_context</span><span class="o">.</span><span class="n">session_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">ssid</span><span class="p">,</span> <span class="n">trid</span><span class="p">,</span> <span class="s2">&quot;Session ID should change after a run&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_system_change_context</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">SpringMass</span><span class="p">(</span><span class="n">Fa</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">sm</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">dxdt</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">combos</span><span class="o">=</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+        <span class="n">ssid</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">last_context</span><span class="o">.</span><span class="n">session_id</span>
+        <span class="n">trsm</span><span class="p">,</span> <span class="n">df</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">simulate</span><span class="p">(</span><span class="n">dt</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">endtime</span><span class="o">=</span><span class="mf">0.1</span><span class="p">,</span> <span class="n">return_all</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">trid</span> <span class="o">=</span> <span class="n">trsm</span><span class="o">.</span><span class="n">last_context</span><span class="o">.</span><span class="n">session_id</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">ssid</span><span class="p">,</span> <span class="n">trid</span><span class="p">,</span> <span class="s2">&quot;Session ID should change after a run&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_slide_crank_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">SliderCrank</span><span class="p">(</span><span class="n">Tg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pbx</span> <span class="o">=</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;combos&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;slv_vars&quot;</span><span class="p">:</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;dxdt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+        <span class="n">atx</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">ref_attrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.var&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.obj&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.ineq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.eq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.output&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.rate&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.state&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.input&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+
+        <span class="n">cons</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">],</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">atx</span><span class="p">[</span><span class="s2">&quot;solver.var&quot;</span><span class="p">]))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_slide_crank_dflt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">SliderCrank</span><span class="p">(</span><span class="n">Tg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pbx</span> <span class="o">=</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;dxdt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+        <span class="n">atx</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">ref_attrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.var&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.obj&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.ineq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.eq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.output&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.rate&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.state&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.input&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+
+        <span class="n">cons</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_slide_crank_dxdt_true</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">SliderCrank</span><span class="p">(</span><span class="n">Tg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pbx</span> <span class="o">=</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;dxdt&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})</span>
+        <span class="n">atx</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">ref_attrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.var&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.obj&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.ineq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.eq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.output&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.rate&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;omega&quot;</span><span class="p">,</span> <span class="s2">&quot;theta&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.state&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;omega&quot;</span><span class="p">,</span> <span class="s2">&quot;theta&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.input&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;Tg&quot;</span><span class="p">,)))</span>
+
+        <span class="n">cons</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">],</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">atx</span><span class="p">[</span><span class="s2">&quot;solver.var&quot;</span><span class="p">]))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_slide_crank_dxdt_zero</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">SliderCrank</span><span class="p">(</span><span class="n">Tg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pbx</span> <span class="o">=</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;dxdt&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+        <span class="n">atx</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">ref_attrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.var&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.obj&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.ineq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.eq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.output&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.rate&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;omega&quot;</span><span class="p">,</span> <span class="s2">&quot;theta&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.state&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;omega&quot;</span><span class="p">,</span> <span class="s2">&quot;theta&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.input&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;Tg&quot;</span><span class="p">,)))</span>
+
+        <span class="n">cons</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]),</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_slide_crank_design</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">SliderCrank</span><span class="p">(</span><span class="n">Tg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pbx</span> <span class="o">=</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;combos&quot;</span><span class="p">:</span> <span class="s2">&quot;design,cost&quot;</span><span class="p">,</span> <span class="s2">&quot;dxdt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+        <span class="n">atx</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">ref_attrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.var&quot;</span><span class="p">),</span>
+            <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;Lo&quot;</span><span class="p">,</span> <span class="s2">&quot;Rc&quot;</span><span class="p">,</span> <span class="s2">&quot;Ro&quot;</span><span class="p">,</span> <span class="s2">&quot;x_offset&quot;</span><span class="p">,</span> <span class="s2">&quot;y_offset&quot;</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.obj&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;cost_slv&quot;</span><span class="p">,)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.ineq&quot;</span><span class="p">),</span>
+            <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;crank_pos_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;gear_pos_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;motor_pos_slv&quot;</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.eq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">(()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.output&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.rate&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.state&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.input&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+
+        <span class="n">cons</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]),</span> <span class="mi">4</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]),</span> <span class="mi">5</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_slide_crank_design_one_match</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">SliderCrank</span><span class="p">(</span><span class="n">Tg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pbx</span> <span class="o">=</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;combos&quot;</span><span class="p">:</span> <span class="s2">&quot;design&quot;</span><span class="p">,</span> <span class="s2">&quot;dxdt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;both_match&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+        <span class="n">atx</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">ref_attrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.var&quot;</span><span class="p">),</span>
+            <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;Lo&quot;</span><span class="p">,</span> <span class="s2">&quot;Rc&quot;</span><span class="p">,</span> <span class="s2">&quot;Ro&quot;</span><span class="p">,</span> <span class="s2">&quot;x_offset&quot;</span><span class="p">,</span> <span class="s2">&quot;y_offset&quot;</span><span class="p">,</span> <span class="s2">&quot;X_spring_center&quot;</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.obj&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;cost_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;sym_slv&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.ineq&quot;</span><span class="p">),</span>
+            <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;crank_pos_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;gear_pos_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;motor_pos_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.eq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;gear_speed_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;range_slv&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.output&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.rate&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.state&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.input&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+
+        <span class="n">cons</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]),</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]),</span> <span class="mi">6</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_slide_crank_design_slv_design</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">SliderCrank</span><span class="p">(</span><span class="n">Tg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pbx</span> <span class="o">=</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">sm</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;combos&quot;</span><span class="p">:</span> <span class="s2">&quot;design&quot;</span><span class="p">,</span> <span class="s2">&quot;slv_vars&quot;</span><span class="p">:</span> <span class="s2">&quot;*slv&quot;</span><span class="p">,</span> <span class="s2">&quot;dxdt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
+        <span class="n">atx</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">ref_attrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.var&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.obj&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">(()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.ineq&quot;</span><span class="p">),</span>
+            <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;crank_pos_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;gear_pos_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;motor_pos_slv&quot;</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.eq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">(()))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.output&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.rate&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.state&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.input&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+
+        <span class="n">cons</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]),</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]),</span> <span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_slide_crank_design_slv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">SliderCrank</span><span class="p">(</span><span class="n">Tg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pbx</span> <span class="o">=</span> <span class="n">ProblemExec</span><span class="p">(</span>
+            <span class="n">sm</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;combos&quot;</span><span class="p">:</span> <span class="s2">&quot;design,cost,speed_goal,range_goal&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ign_combos&quot;</span><span class="p">:</span> <span class="s2">&quot;max*&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;slv_vars&quot;</span><span class="p">:</span> <span class="s2">&quot;*slv&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;dxdt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">atx</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">ref_attrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.var&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.obj&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;cost_slv&quot;</span><span class="p">,)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.ineq&quot;</span><span class="p">),</span>
+            <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;crank_pos_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;gear_pos_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;motor_pos_slv&quot;</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.eq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;gear_speed_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;range_slv&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.output&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.rate&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.state&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.input&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+
+        <span class="n">cons</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]),</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">atx</span><span class="p">[</span><span class="s2">&quot;solver.var&quot;</span><span class="p">]))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_slide_crank_design_slv_one_match</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sm</span> <span class="o">=</span> <span class="n">SliderCrank</span><span class="p">(</span><span class="n">Tg</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pbx</span> <span class="o">=</span> <span class="n">ProblemExec</span><span class="p">(</span>
+            <span class="n">sm</span><span class="p">,</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;combos&quot;</span><span class="p">:</span> <span class="s2">&quot;design&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;ign_combos&quot;</span><span class="p">:</span> <span class="s2">&quot;max*&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;slv_vars&quot;</span><span class="p">:</span> <span class="s2">&quot;*slv&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;dxdt&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                <span class="s2">&quot;both_match&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">)</span>
+        <span class="n">atx</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">ref_attrs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.var&quot;</span><span class="p">),</span>
+            <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;Lo&quot;</span><span class="p">,</span> <span class="s2">&quot;Rc&quot;</span><span class="p">,</span> <span class="s2">&quot;Ro&quot;</span><span class="p">,</span> <span class="s2">&quot;x_offset&quot;</span><span class="p">,</span> <span class="s2">&quot;y_offset&quot;</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.obj&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;cost_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;sym_slv&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span>
+            <span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.ineq&quot;</span><span class="p">),</span>
+            <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;crank_pos_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;gear_pos_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;motor_pos_slv&quot;</span><span class="p">)),</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;solver.eq&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">((</span><span class="s2">&quot;gear_speed_slv&quot;</span><span class="p">,</span> <span class="s2">&quot;range_slv&quot;</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.output&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.rate&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.state&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">chk</span><span class="p">(</span><span class="n">atx</span><span class="p">,</span> <span class="s2">&quot;dynamics.input&quot;</span><span class="p">),</span> <span class="nb">set</span><span class="p">())</span>
+
+        <span class="n">cons</span> <span class="o">=</span> <span class="n">pbx</span><span class="o">.</span><span class="n">constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;constraints&quot;</span><span class="p">]),</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cons</span><span class="p">[</span><span class="s2">&quot;bounds&quot;</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">atx</span><span class="p">[</span><span class="s2">&quot;solver.var&quot;</span><span class="p">]))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_slide_crank_add_var</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sc</span> <span class="o">=</span> <span class="n">SliderCrank</span><span class="p">()</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">sc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="n">combos</span><span class="o">=</span><span class="s2">&quot;design,speed_goal,range_goal&quot;</span><span class="p">,</span>
+            <span class="n">slv_vars</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+            <span class="n">revert_last</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+            <span class="n">add_vars</span><span class="o">=</span><span class="s2">&quot;*gear*&quot;</span><span class="p">,</span>
+            <span class="n">both_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="c1"># self.assertEqual(len(out[&#39;gear_speed_slv&#39;]),0)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">out</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="TestContextExits">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_problem.TestContextExits.html#engforge.test.test_problem.TestContextExits">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestContextExits</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestContextExits.tearDown">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_problem.TestContextExits.html#engforge.test.test_problem.TestContextExits.tearDown">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span>
+            <span class="nb">hasattr</span><span class="p">(</span><span class="n">ProblemExec</span><span class="o">.</span><span class="n">class_cache</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;not cleaned!&quot;</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_error_exit</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tst</span> <span class="o">=</span> <span class="n">SimpleContext</span><span class="p">()</span>
+
+        <span class="k">class</span><span class="w"> </span><span class="nc">TestError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+            <span class="k">pass</span>
+
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">assertRaises</span><span class="p">(</span><span class="n">TestError</span><span class="p">):</span>  <span class="c1"># we should get an error</span>
+            <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb1</span><span class="p">:</span>
+                <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">,</span> <span class="n">level_name</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb2</span><span class="p">:</span>
+                    <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                    <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb3</span><span class="p">:</span>
+                        <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                        <span class="k">raise</span> <span class="n">TestError</span><span class="p">(</span>
+                            <span class="s2">&quot;pocket-sand&quot;</span>
+                        <span class="p">)</span>  <span class="c1"># TODO: INSERT KING OF THE HILL REFERENCE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="nb">hasattr</span><span class="p">(</span><span class="n">ProblemExec</span><span class="o">.</span><span class="n">class_cache</span><span class="p">,</span> <span class="s2">&quot;session&quot;</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_context_singularity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tst</span> <span class="o">=</span> <span class="n">SimpleContext</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">pb1</span><span class="p">,</span> <span class="n">tst</span><span class="o">.</span><span class="n">last_context</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">pb1</span><span class="o">.</span><span class="n">entered</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">pb1</span><span class="o">.</span><span class="n">exited</span><span class="p">)</span>
+            <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">,</span> <span class="n">level_name</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">pb1</span><span class="p">,</span> <span class="n">pb2</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">pb1</span><span class="o">.</span><span class="n">entered</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">pb1</span><span class="o">.</span><span class="n">exited</span><span class="p">)</span>
+                <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb3</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertIs</span><span class="p">(</span><span class="n">pb1</span><span class="p">,</span> <span class="n">pb3</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">pb3</span><span class="o">.</span><span class="n">entered</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertFalse</span><span class="p">(</span><span class="n">pb3</span><span class="o">.</span><span class="n">exited</span><span class="p">)</span>
+                    <span class="n">pb3</span><span class="o">.</span><span class="n">exit_to_level</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">revert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">pb1</span><span class="p">,</span> <span class="n">tst</span><span class="o">.</span><span class="n">last_context</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">pb1</span><span class="o">.</span><span class="n">entered</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">pb1</span><span class="o">.</span><span class="n">exited</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_exit_top</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tst</span> <span class="o">=</span> <span class="n">SimpleContext</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb1</span><span class="p">:</span>
+            <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">,</span> <span class="n">level_name</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb2</span><span class="p">:</span>
+                <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb3</span><span class="p">:</span>
+                    <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                    <span class="n">pb3</span><span class="o">.</span><span class="n">exit_to_level</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">revert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_exit_top_with_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tst</span> <span class="o">=</span> <span class="n">SimpleContext</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">,</span> <span class="n">level_name</span><span class="o">=</span><span class="s2">&quot;super&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb1</span><span class="p">:</span>
+            <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">,</span> <span class="n">level_name</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb2</span><span class="p">:</span>
+                <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb3</span><span class="p">:</span>
+                    <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                    <span class="n">final_one</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">one</span>
+                    <span class="n">final_two</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">two</span>
+                    <span class="n">pb3</span><span class="o">.</span><span class="n">exit_to_level</span><span class="p">(</span><span class="s2">&quot;top&quot;</span><span class="p">,</span> <span class="n">revert</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="n">final_one</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="n">final_two</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_exit_2_with_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tst</span> <span class="o">=</span> <span class="n">SimpleContext</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb1</span><span class="p">:</span>
+            <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+            <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">,</span> <span class="n">level_name</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb2</span><span class="p">:</span>
+                <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb3</span><span class="p">:</span>
+                    <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                    <span class="n">final_one</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">one</span>
+                    <span class="n">final_two</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">two</span>
+                    <span class="n">pb3</span><span class="o">.</span><span class="n">exit_to_level</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="n">revert</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="n">final_one</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="n">final_two</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_exit_2_wo_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tst</span> <span class="o">=</span> <span class="n">SimpleContext</span><span class="p">()</span>
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb1</span><span class="p">:</span>
+            <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+            <span class="n">final_one</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">one</span>
+            <span class="n">final_two</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">two</span>
+            <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">,</span> <span class="n">level_name</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb2</span><span class="p">:</span>
+                <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb3</span><span class="p">:</span>
+                    <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                    <span class="n">pb3</span><span class="o">.</span><span class="n">exit_to_level</span><span class="p">(</span><span class="s2">&quot;2&quot;</span><span class="p">,</span> <span class="n">revert</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="n">final_one</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="n">final_two</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_exit_with_state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tst</span> <span class="o">=</span> <span class="n">SimpleContext</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb1</span><span class="p">:</span>
+            <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+            <span class="n">mid_one</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">one</span>
+            <span class="n">mid_two</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">two</span>
+            <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">,</span> <span class="n">level_name</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb2</span><span class="p">:</span>
+                <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                <span class="n">final_one</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">one</span>
+                <span class="n">final_two</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">two</span>
+                <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb3</span><span class="p">:</span>
+                    <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                    <span class="n">final_one</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">one</span>
+                    <span class="n">final_two</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">two</span>
+                    <span class="n">pb3</span><span class="o">.</span><span class="n">exit_with_state</span><span class="p">()</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="n">final_one</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="n">final_two</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="n">mid_one</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="n">mid_two</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_exit_and_revert</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tst</span> <span class="o">=</span> <span class="n">SimpleContext</span><span class="p">()</span>
+
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb1</span><span class="p">:</span>
+            <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+            <span class="n">mid_one</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">one</span>
+            <span class="n">mid_two</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">two</span>
+            <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">,</span> <span class="n">level_name</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb2</span><span class="p">:</span>
+                <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+                <span class="n">final_one</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">one</span>
+                <span class="n">final_two</span> <span class="o">=</span> <span class="n">tst</span><span class="o">.</span><span class="n">two</span>
+                <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="n">tst</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb3</span><span class="p">:</span>
+                    <span class="n">tst</span><span class="o">.</span><span class="n">set_rand</span><span class="p">()</span>
+
+                    <span class="n">pb3</span><span class="o">.</span><span class="n">exit_and_revert</span><span class="p">()</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Wrong Level&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="n">final_one</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="n">final_two</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="n">mid_one</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="n">mid_two</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">one</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">tst</span><span class="o">.</span><span class="n">two</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

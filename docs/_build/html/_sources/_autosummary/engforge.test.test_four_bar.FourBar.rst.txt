@@ -1,0 +1,210 @@
+engforge.test.test\_four\_bar.FourBar
+=====================================
+
+.. currentmodule:: engforge.test.test_four_bar
+
+.. autoclass:: FourBar
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~FourBar.add_fields
+      ~FourBar.change_all_log_lvl
+      ~FourBar.check_ref_slot_type
+      ~FourBar.clone
+      ~FourBar.cls_all_attrs_fields
+      ~FourBar.cls_all_property_keys
+      ~FourBar.cls_all_property_labels
+      ~FourBar.cls_compile
+      ~FourBar.collect_all_attributes
+      ~FourBar.collect_comp_refs
+      ~FourBar.collect_dynamic_refs
+      ~FourBar.collect_inst_attributes
+      ~FourBar.collect_post_update_refs
+      ~FourBar.collect_solver_refs
+      ~FourBar.collect_update_refs
+      ~FourBar.comp_references
+      ~FourBar.compile_classes
+      ~FourBar.copy_config_at_state
+      ~FourBar.create_dynamic_matricies
+      ~FourBar.create_feedthrough_matrix
+      ~FourBar.create_input_matrix
+      ~FourBar.create_output_constants
+      ~FourBar.create_output_matrix
+      ~FourBar.create_state_constants
+      ~FourBar.create_state_matrix
+      ~FourBar.critical
+      ~FourBar.debug
+      ~FourBar.determine_nearest_stationary_state
+      ~FourBar.difference
+      ~FourBar.error
+      ~FourBar.eval
+      ~FourBar.execute
+      ~FourBar.extract_message
+      ~FourBar.filter
+      ~FourBar.format_columns
+      ~FourBar.get_system_input_refs
+      ~FourBar.go_through_configurations
+      ~FourBar.hash
+      ~FourBar.hash_numeric_with
+      ~FourBar.hash_with
+      ~FourBar.info
+      ~FourBar.input_attrs
+      ~FourBar.input_fields
+      ~FourBar.installSTDLogger
+      ~FourBar.internal_components
+      ~FourBar.internal_configurations
+      ~FourBar.internal_references
+      ~FourBar.internal_systems
+      ~FourBar.internal_tabulations
+      ~FourBar.linear_output
+      ~FourBar.linear_step
+      ~FourBar.locate
+      ~FourBar.locate_ref
+      ~FourBar.make_plots
+      ~FourBar.mark_all_comps_changed
+      ~FourBar.message_with_identiy
+      ~FourBar.msg
+      ~FourBar.nonlinear_output
+      ~FourBar.nonlinear_step
+      ~FourBar.numeric_fields
+      ~FourBar.parent_configurations_cls
+      ~FourBar.parse_run_kwargs
+      ~FourBar.parse_simulation_input
+      ~FourBar.plot_attributes
+      ~FourBar.post_run_callback
+      ~FourBar.post_update
+      ~FourBar.pre_compile
+      ~FourBar.pre_run_callback
+      ~FourBar.print_info
+      ~FourBar.rate
+      ~FourBar.rate_linear
+      ~FourBar.rate_nonlinear
+      ~FourBar.ref_dXdt
+      ~FourBar.resetLog
+      ~FourBar.resetSystemLogs
+      ~FourBar.run
+      ~FourBar.run_internal_systems
+      ~FourBar.set_attr
+      ~FourBar.set_time
+      ~FourBar.setattrs
+      ~FourBar.setup_global_dynamics
+      ~FourBar.signals_attributes
+      ~FourBar.sim_matrix
+      ~FourBar.simulate
+      ~FourBar.slack_notification
+      ~FourBar.slot_refs
+      ~FourBar.slots_attributes
+      ~FourBar.smart_split_dataframe
+      ~FourBar.solver
+      ~FourBar.solver_vars
+      ~FourBar.solvers_attributes
+      ~FourBar.step
+      ~FourBar.subclasses
+      ~FourBar.subcls_compile
+      ~FourBar.system_properties_classdef
+      ~FourBar.system_references
+      ~FourBar.table_fields
+      ~FourBar.trace_attributes
+      ~FourBar.transients_attributes
+      ~FourBar.update
+      ~FourBar.update_dynamics
+      ~FourBar.update_feedthrough
+      ~FourBar.update_input
+      ~FourBar.update_output_constants
+      ~FourBar.update_output_matrix
+      ~FourBar.update_state
+      ~FourBar.update_state_constants
+      ~FourBar.validate_class
+      ~FourBar.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~FourBar.Ut_ref
+      ~FourBar.Xt_ref
+      ~FourBar.Yt_ref
+      ~FourBar.anything_changed
+      ~FourBar.as_dict
+      ~FourBar.attrs_fields
+      ~FourBar.classname
+      ~FourBar.converged
+      ~FourBar.dXtdt_ref
+      ~FourBar.dataframe
+      ~FourBar.dataframe_constants
+      ~FourBar.dataframe_variants
+      ~FourBar.displayname
+      ~FourBar.dynamic_A
+      ~FourBar.dynamic_B
+      ~FourBar.dynamic_C
+      ~FourBar.dynamic_D
+      ~FourBar.dynamic_F
+      ~FourBar.dynamic_K
+      ~FourBar.dynamic_input
+      ~FourBar.dynamic_input_vars
+      ~FourBar.dynamic_output
+      ~FourBar.dynamic_output_vars
+      ~FourBar.dynamic_state
+      ~FourBar.dynamic_state_vars
+      ~FourBar.filename
+      ~FourBar.gamma_goal
+      ~FourBar.identity
+      ~FourBar.input_as_dict
+      ~FourBar.input_hash
+      ~FourBar.l3_gamma
+      ~FourBar.l3_zero
+      ~FourBar.last_context
+      ~FourBar.log_fmt
+      ~FourBar.log_level
+      ~FourBar.log_on
+      ~FourBar.log_silo
+      ~FourBar.logger
+      ~FourBar.nonlinear
+      ~FourBar.numeric_as_dict
+      ~FourBar.numeric_hash
+      ~FourBar.plotable_variables
+      ~FourBar.r3_x
+      ~FourBar.r3_x_zero
+      ~FourBar.run_id
+      ~FourBar.skip_plot_vars
+      ~FourBar.slack_webhook_url
+      ~FourBar.solved
+      ~FourBar.static_A
+      ~FourBar.static_B
+      ~FourBar.static_C
+      ~FourBar.static_D
+      ~FourBar.static_F
+      ~FourBar.static_K
+      ~FourBar.stored_plots
+      ~FourBar.system_id
+      ~FourBar.table_hash
+      ~FourBar.table_row_dict
+      ~FourBar.time
+      ~FourBar.unique_hash
+      ~FourBar.update_interval
+      ~FourBar.y
+      ~FourBar.y_zero
+      ~FourBar.r1
+      ~FourBar.gamma_zero
+      ~FourBar.gamma
+      ~FourBar.theta
+      ~FourBar.ra
+      ~FourBar.x2
+      ~FourBar.h2
+      ~FourBar.parent
+      ~FourBar.name
+   
+   

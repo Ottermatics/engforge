@@ -1,0 +1,102 @@
+engforge.test.test\_tabulation.TestStatic
+=========================================
+
+.. currentmodule:: engforge.test.test_tabulation
+
+.. autoclass:: TestStatic
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestStatic.addClassCleanup
+      ~TestStatic.addCleanup
+      ~TestStatic.addTypeEqualityFunc
+      ~TestStatic.assertAlmostEqual
+      ~TestStatic.assertAlmostEquals
+      ~TestStatic.assertCountEqual
+      ~TestStatic.assertDictContainsSubset
+      ~TestStatic.assertDictEqual
+      ~TestStatic.assertEqual
+      ~TestStatic.assertEquals
+      ~TestStatic.assertFalse
+      ~TestStatic.assertGreater
+      ~TestStatic.assertGreaterEqual
+      ~TestStatic.assertIn
+      ~TestStatic.assertIs
+      ~TestStatic.assertIsInstance
+      ~TestStatic.assertIsNone
+      ~TestStatic.assertIsNot
+      ~TestStatic.assertIsNotNone
+      ~TestStatic.assertLess
+      ~TestStatic.assertLessEqual
+      ~TestStatic.assertListEqual
+      ~TestStatic.assertLogs
+      ~TestStatic.assertMultiLineEqual
+      ~TestStatic.assertNoLogs
+      ~TestStatic.assertNotAlmostEqual
+      ~TestStatic.assertNotAlmostEquals
+      ~TestStatic.assertNotEqual
+      ~TestStatic.assertNotEquals
+      ~TestStatic.assertNotIn
+      ~TestStatic.assertNotIsInstance
+      ~TestStatic.assertNotRegex
+      ~TestStatic.assertNotRegexpMatches
+      ~TestStatic.assertRaises
+      ~TestStatic.assertRaisesRegex
+      ~TestStatic.assertRaisesRegexp
+      ~TestStatic.assertRegex
+      ~TestStatic.assertRegexpMatches
+      ~TestStatic.assertSequenceEqual
+      ~TestStatic.assertSetEqual
+      ~TestStatic.assertTrue
+      ~TestStatic.assertTupleEqual
+      ~TestStatic.assertWarns
+      ~TestStatic.assertWarnsRegex
+      ~TestStatic.assert_
+      ~TestStatic.countTestCases
+      ~TestStatic.debug
+      ~TestStatic.defaultTestResult
+      ~TestStatic.doClassCleanups
+      ~TestStatic.doCleanups
+      ~TestStatic.enterClassContext
+      ~TestStatic.enterContext
+      ~TestStatic.fail
+      ~TestStatic.failIf
+      ~TestStatic.failIfAlmostEqual
+      ~TestStatic.failIfEqual
+      ~TestStatic.failUnless
+      ~TestStatic.failUnlessAlmostEqual
+      ~TestStatic.failUnlessEqual
+      ~TestStatic.failUnlessRaises
+      ~TestStatic.id
+      ~TestStatic.run
+      ~TestStatic.setUp
+      ~TestStatic.setUpClass
+      ~TestStatic.shortDescription
+      ~TestStatic.skipTest
+      ~TestStatic.subTest
+      ~TestStatic.tearDown
+      ~TestStatic.tearDownClass
+      ~TestStatic.test_input
+      ~TestStatic.test_static
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestStatic.longMessage
+      ~TestStatic.maxDiff
+   
+   

@@ -1,0 +1,182 @@
+engforge.test.test\_composition.MockComponent
+=============================================
+
+.. currentmodule:: engforge.test.test_composition
+
+.. autoclass:: MockComponent
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~MockComponent.add_fields
+      ~MockComponent.change_all_log_lvl
+      ~MockComponent.check_ref_slot_type
+      ~MockComponent.cls_all_attrs_fields
+      ~MockComponent.cls_all_property_keys
+      ~MockComponent.cls_all_property_labels
+      ~MockComponent.cls_compile
+      ~MockComponent.collect_all_attributes
+      ~MockComponent.collect_comp_refs
+      ~MockComponent.collect_dynamic_refs
+      ~MockComponent.collect_inst_attributes
+      ~MockComponent.collect_post_update_refs
+      ~MockComponent.collect_solver_refs
+      ~MockComponent.collect_update_refs
+      ~MockComponent.comp_references
+      ~MockComponent.compile_classes
+      ~MockComponent.copy_config_at_state
+      ~MockComponent.create_dynamic_matricies
+      ~MockComponent.create_feedthrough_matrix
+      ~MockComponent.create_input_matrix
+      ~MockComponent.create_output_constants
+      ~MockComponent.create_output_matrix
+      ~MockComponent.create_state_constants
+      ~MockComponent.create_state_matrix
+      ~MockComponent.critical
+      ~MockComponent.debug
+      ~MockComponent.determine_nearest_stationary_state
+      ~MockComponent.difference
+      ~MockComponent.error
+      ~MockComponent.extract_message
+      ~MockComponent.filter
+      ~MockComponent.format_columns
+      ~MockComponent.get_system_input_refs
+      ~MockComponent.go_through_configurations
+      ~MockComponent.hash
+      ~MockComponent.hash_numeric_with
+      ~MockComponent.hash_with
+      ~MockComponent.info
+      ~MockComponent.input_attrs
+      ~MockComponent.input_fields
+      ~MockComponent.installSTDLogger
+      ~MockComponent.internal_components
+      ~MockComponent.internal_configurations
+      ~MockComponent.internal_references
+      ~MockComponent.internal_systems
+      ~MockComponent.internal_tabulations
+      ~MockComponent.linear_output
+      ~MockComponent.linear_step
+      ~MockComponent.locate
+      ~MockComponent.locate_ref
+      ~MockComponent.message_with_identiy
+      ~MockComponent.msg
+      ~MockComponent.nonlinear_output
+      ~MockComponent.nonlinear_step
+      ~MockComponent.numeric_fields
+      ~MockComponent.parent_configurations_cls
+      ~MockComponent.parse_run_kwargs
+      ~MockComponent.parse_simulation_input
+      ~MockComponent.plot_attributes
+      ~MockComponent.post_update
+      ~MockComponent.pre_compile
+      ~MockComponent.print_info
+      ~MockComponent.rate
+      ~MockComponent.rate_linear
+      ~MockComponent.rate_nonlinear
+      ~MockComponent.ref_dXdt
+      ~MockComponent.resetLog
+      ~MockComponent.resetSystemLogs
+      ~MockComponent.set_attr
+      ~MockComponent.set_time
+      ~MockComponent.setattrs
+      ~MockComponent.signals_attributes
+      ~MockComponent.slack_notification
+      ~MockComponent.slot_refs
+      ~MockComponent.slots_attributes
+      ~MockComponent.smart_split_dataframe
+      ~MockComponent.solvers_attributes
+      ~MockComponent.step
+      ~MockComponent.subclasses
+      ~MockComponent.subcls_compile
+      ~MockComponent.system_properties_classdef
+      ~MockComponent.system_references
+      ~MockComponent.table_fields
+      ~MockComponent.trace_attributes
+      ~MockComponent.transients_attributes
+      ~MockComponent.update
+      ~MockComponent.update_dynamics
+      ~MockComponent.update_feedthrough
+      ~MockComponent.update_input
+      ~MockComponent.update_output_constants
+      ~MockComponent.update_output_matrix
+      ~MockComponent.update_state
+      ~MockComponent.update_state_constants
+      ~MockComponent.validate_class
+      ~MockComponent.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MockComponent.Ut_ref
+      ~MockComponent.Xt_ref
+      ~MockComponent.Yt_ref
+      ~MockComponent.anything_changed
+      ~MockComponent.as_dict
+      ~MockComponent.attrs_fields
+      ~MockComponent.classname
+      ~MockComponent.dXtdt_ref
+      ~MockComponent.data_dict
+      ~MockComponent.dataframe
+      ~MockComponent.dataframe_constants
+      ~MockComponent.dataframe_variants
+      ~MockComponent.displayname
+      ~MockComponent.dynamic_A
+      ~MockComponent.dynamic_B
+      ~MockComponent.dynamic_C
+      ~MockComponent.dynamic_D
+      ~MockComponent.dynamic_F
+      ~MockComponent.dynamic_K
+      ~MockComponent.dynamic_input
+      ~MockComponent.dynamic_input_vars
+      ~MockComponent.dynamic_output
+      ~MockComponent.dynamic_output_vars
+      ~MockComponent.dynamic_state
+      ~MockComponent.dynamic_state_vars
+      ~MockComponent.filename
+      ~MockComponent.identity
+      ~MockComponent.input_as_dict
+      ~MockComponent.input_hash
+      ~MockComponent.last_context
+      ~MockComponent.log_fmt
+      ~MockComponent.log_level
+      ~MockComponent.log_on
+      ~MockComponent.log_silo
+      ~MockComponent.logger
+      ~MockComponent.nonlinear
+      ~MockComponent.numeric_as_dict
+      ~MockComponent.numeric_hash
+      ~MockComponent.output
+      ~MockComponent.plotable_variables
+      ~MockComponent.skip_plot_vars
+      ~MockComponent.slack_webhook_url
+      ~MockComponent.static_A
+      ~MockComponent.static_B
+      ~MockComponent.static_C
+      ~MockComponent.static_D
+      ~MockComponent.static_F
+      ~MockComponent.static_K
+      ~MockComponent.system_id
+      ~MockComponent.table_hash
+      ~MockComponent.table_row_dict
+      ~MockComponent.time
+      ~MockComponent.unique_hash
+      ~MockComponent.update_interval
+      ~MockComponent.input
+      ~MockComponent.aux
+      ~MockComponent.parent
+      ~MockComponent.name
+   
+   

@@ -1,0 +1,199 @@
+engforge.test.test\_problem.SimpleContext
+=========================================
+
+.. currentmodule:: engforge.test.test_problem
+
+.. autoclass:: SimpleContext
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~SimpleContext.add_fields
+      ~SimpleContext.change_all_log_lvl
+      ~SimpleContext.check_ref_slot_type
+      ~SimpleContext.clone
+      ~SimpleContext.cls_all_attrs_fields
+      ~SimpleContext.cls_all_property_keys
+      ~SimpleContext.cls_all_property_labels
+      ~SimpleContext.cls_compile
+      ~SimpleContext.collect_all_attributes
+      ~SimpleContext.collect_comp_refs
+      ~SimpleContext.collect_dynamic_refs
+      ~SimpleContext.collect_inst_attributes
+      ~SimpleContext.collect_post_update_refs
+      ~SimpleContext.collect_solver_refs
+      ~SimpleContext.collect_update_refs
+      ~SimpleContext.comp_references
+      ~SimpleContext.compile_classes
+      ~SimpleContext.copy_config_at_state
+      ~SimpleContext.create_dynamic_matricies
+      ~SimpleContext.create_feedthrough_matrix
+      ~SimpleContext.create_input_matrix
+      ~SimpleContext.create_output_constants
+      ~SimpleContext.create_output_matrix
+      ~SimpleContext.create_state_constants
+      ~SimpleContext.create_state_matrix
+      ~SimpleContext.critical
+      ~SimpleContext.debug
+      ~SimpleContext.determine_nearest_stationary_state
+      ~SimpleContext.difference
+      ~SimpleContext.error
+      ~SimpleContext.eval
+      ~SimpleContext.execute
+      ~SimpleContext.extract_message
+      ~SimpleContext.filter
+      ~SimpleContext.format_columns
+      ~SimpleContext.get_system_input_refs
+      ~SimpleContext.go_through_configurations
+      ~SimpleContext.hash
+      ~SimpleContext.hash_numeric_with
+      ~SimpleContext.hash_with
+      ~SimpleContext.info
+      ~SimpleContext.input_attrs
+      ~SimpleContext.input_fields
+      ~SimpleContext.installSTDLogger
+      ~SimpleContext.internal_components
+      ~SimpleContext.internal_configurations
+      ~SimpleContext.internal_references
+      ~SimpleContext.internal_systems
+      ~SimpleContext.internal_tabulations
+      ~SimpleContext.linear_output
+      ~SimpleContext.linear_step
+      ~SimpleContext.locate
+      ~SimpleContext.locate_ref
+      ~SimpleContext.make_plots
+      ~SimpleContext.mark_all_comps_changed
+      ~SimpleContext.message_with_identiy
+      ~SimpleContext.msg
+      ~SimpleContext.nonlinear_output
+      ~SimpleContext.nonlinear_step
+      ~SimpleContext.numeric_fields
+      ~SimpleContext.parent_configurations_cls
+      ~SimpleContext.parse_run_kwargs
+      ~SimpleContext.parse_simulation_input
+      ~SimpleContext.plot_attributes
+      ~SimpleContext.post_run_callback
+      ~SimpleContext.post_update
+      ~SimpleContext.pre_compile
+      ~SimpleContext.pre_run_callback
+      ~SimpleContext.print_info
+      ~SimpleContext.rate
+      ~SimpleContext.rate_linear
+      ~SimpleContext.rate_nonlinear
+      ~SimpleContext.ref_dXdt
+      ~SimpleContext.resetLog
+      ~SimpleContext.resetSystemLogs
+      ~SimpleContext.run
+      ~SimpleContext.run_internal_systems
+      ~SimpleContext.set_attr
+      ~SimpleContext.set_rand
+      ~SimpleContext.set_time
+      ~SimpleContext.setattrs
+      ~SimpleContext.setup_global_dynamics
+      ~SimpleContext.signals_attributes
+      ~SimpleContext.sim_matrix
+      ~SimpleContext.simulate
+      ~SimpleContext.slack_notification
+      ~SimpleContext.slot_refs
+      ~SimpleContext.slots_attributes
+      ~SimpleContext.smart_split_dataframe
+      ~SimpleContext.solver
+      ~SimpleContext.solver_vars
+      ~SimpleContext.solvers_attributes
+      ~SimpleContext.step
+      ~SimpleContext.subclasses
+      ~SimpleContext.subcls_compile
+      ~SimpleContext.system_properties_classdef
+      ~SimpleContext.system_references
+      ~SimpleContext.table_fields
+      ~SimpleContext.trace_attributes
+      ~SimpleContext.transients_attributes
+      ~SimpleContext.update
+      ~SimpleContext.update_dynamics
+      ~SimpleContext.update_feedthrough
+      ~SimpleContext.update_input
+      ~SimpleContext.update_output_constants
+      ~SimpleContext.update_output_matrix
+      ~SimpleContext.update_state
+      ~SimpleContext.update_state_constants
+      ~SimpleContext.validate_class
+      ~SimpleContext.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~SimpleContext.Ut_ref
+      ~SimpleContext.Xt_ref
+      ~SimpleContext.Yt_ref
+      ~SimpleContext.anything_changed
+      ~SimpleContext.as_dict
+      ~SimpleContext.attrs_fields
+      ~SimpleContext.classname
+      ~SimpleContext.converged
+      ~SimpleContext.dXtdt_ref
+      ~SimpleContext.dataframe
+      ~SimpleContext.dataframe_constants
+      ~SimpleContext.dataframe_variants
+      ~SimpleContext.displayname
+      ~SimpleContext.dynamic_A
+      ~SimpleContext.dynamic_B
+      ~SimpleContext.dynamic_C
+      ~SimpleContext.dynamic_D
+      ~SimpleContext.dynamic_F
+      ~SimpleContext.dynamic_K
+      ~SimpleContext.dynamic_input
+      ~SimpleContext.dynamic_input_vars
+      ~SimpleContext.dynamic_output
+      ~SimpleContext.dynamic_output_vars
+      ~SimpleContext.dynamic_state
+      ~SimpleContext.dynamic_state_vars
+      ~SimpleContext.filename
+      ~SimpleContext.identity
+      ~SimpleContext.input_as_dict
+      ~SimpleContext.input_hash
+      ~SimpleContext.last_context
+      ~SimpleContext.log_fmt
+      ~SimpleContext.log_level
+      ~SimpleContext.log_on
+      ~SimpleContext.log_silo
+      ~SimpleContext.logger
+      ~SimpleContext.nonlinear
+      ~SimpleContext.numeric_as_dict
+      ~SimpleContext.numeric_hash
+      ~SimpleContext.plotable_variables
+      ~SimpleContext.run_id
+      ~SimpleContext.skip_plot_vars
+      ~SimpleContext.slack_webhook_url
+      ~SimpleContext.solved
+      ~SimpleContext.static_A
+      ~SimpleContext.static_B
+      ~SimpleContext.static_C
+      ~SimpleContext.static_D
+      ~SimpleContext.static_F
+      ~SimpleContext.static_K
+      ~SimpleContext.stored_plots
+      ~SimpleContext.system_id
+      ~SimpleContext.table_hash
+      ~SimpleContext.table_row_dict
+      ~SimpleContext.time
+      ~SimpleContext.unique_hash
+      ~SimpleContext.update_interval
+      ~SimpleContext.one
+      ~SimpleContext.two
+      ~SimpleContext.parent
+      ~SimpleContext.name
+   
+   

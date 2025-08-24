@@ -1,0 +1,102 @@
+engforge.test.test\_slider\_crank.TestSliderCrank
+=================================================
+
+.. currentmodule:: engforge.test.test_slider_crank
+
+.. autoclass:: TestSliderCrank
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestSliderCrank.addClassCleanup
+      ~TestSliderCrank.addCleanup
+      ~TestSliderCrank.addTypeEqualityFunc
+      ~TestSliderCrank.assertAlmostEqual
+      ~TestSliderCrank.assertAlmostEquals
+      ~TestSliderCrank.assertCountEqual
+      ~TestSliderCrank.assertDictContainsSubset
+      ~TestSliderCrank.assertDictEqual
+      ~TestSliderCrank.assertEqual
+      ~TestSliderCrank.assertEquals
+      ~TestSliderCrank.assertFalse
+      ~TestSliderCrank.assertGreater
+      ~TestSliderCrank.assertGreaterEqual
+      ~TestSliderCrank.assertIn
+      ~TestSliderCrank.assertIs
+      ~TestSliderCrank.assertIsInstance
+      ~TestSliderCrank.assertIsNone
+      ~TestSliderCrank.assertIsNot
+      ~TestSliderCrank.assertIsNotNone
+      ~TestSliderCrank.assertLess
+      ~TestSliderCrank.assertLessEqual
+      ~TestSliderCrank.assertListEqual
+      ~TestSliderCrank.assertLogs
+      ~TestSliderCrank.assertMultiLineEqual
+      ~TestSliderCrank.assertNoLogs
+      ~TestSliderCrank.assertNotAlmostEqual
+      ~TestSliderCrank.assertNotAlmostEquals
+      ~TestSliderCrank.assertNotEqual
+      ~TestSliderCrank.assertNotEquals
+      ~TestSliderCrank.assertNotIn
+      ~TestSliderCrank.assertNotIsInstance
+      ~TestSliderCrank.assertNotRegex
+      ~TestSliderCrank.assertNotRegexpMatches
+      ~TestSliderCrank.assertRaises
+      ~TestSliderCrank.assertRaisesRegex
+      ~TestSliderCrank.assertRaisesRegexp
+      ~TestSliderCrank.assertRegex
+      ~TestSliderCrank.assertRegexpMatches
+      ~TestSliderCrank.assertSequenceEqual
+      ~TestSliderCrank.assertSetEqual
+      ~TestSliderCrank.assertTrue
+      ~TestSliderCrank.assertTupleEqual
+      ~TestSliderCrank.assertWarns
+      ~TestSliderCrank.assertWarnsRegex
+      ~TestSliderCrank.assert_
+      ~TestSliderCrank.countTestCases
+      ~TestSliderCrank.debug
+      ~TestSliderCrank.defaultTestResult
+      ~TestSliderCrank.doClassCleanups
+      ~TestSliderCrank.doCleanups
+      ~TestSliderCrank.enterClassContext
+      ~TestSliderCrank.enterContext
+      ~TestSliderCrank.fail
+      ~TestSliderCrank.failIf
+      ~TestSliderCrank.failIfAlmostEqual
+      ~TestSliderCrank.failIfEqual
+      ~TestSliderCrank.failUnless
+      ~TestSliderCrank.failUnlessAlmostEqual
+      ~TestSliderCrank.failUnlessEqual
+      ~TestSliderCrank.failUnlessRaises
+      ~TestSliderCrank.id
+      ~TestSliderCrank.run
+      ~TestSliderCrank.setUp
+      ~TestSliderCrank.setUpClass
+      ~TestSliderCrank.shortDescription
+      ~TestSliderCrank.skipTest
+      ~TestSliderCrank.subTest
+      ~TestSliderCrank.tearDown
+      ~TestSliderCrank.tearDownClass
+      ~TestSliderCrank.test_design_multiobj
+      ~TestSliderCrank.test_optimization
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestSliderCrank.longMessage
+      ~TestSliderCrank.maxDiff
+   
+   

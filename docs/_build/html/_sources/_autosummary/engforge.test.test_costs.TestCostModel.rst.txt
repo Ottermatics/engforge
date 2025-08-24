@@ -1,0 +1,106 @@
+engforge.test.test\_costs.TestCostModel
+=======================================
+
+.. currentmodule:: engforge.test.test_costs
+
+.. autoclass:: TestCostModel
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestCostModel.addClassCleanup
+      ~TestCostModel.addCleanup
+      ~TestCostModel.addTypeEqualityFunc
+      ~TestCostModel.assertAlmostEqual
+      ~TestCostModel.assertAlmostEquals
+      ~TestCostModel.assertCountEqual
+      ~TestCostModel.assertDictContainsSubset
+      ~TestCostModel.assertDictEqual
+      ~TestCostModel.assertEqual
+      ~TestCostModel.assertEquals
+      ~TestCostModel.assertFalse
+      ~TestCostModel.assertGreater
+      ~TestCostModel.assertGreaterEqual
+      ~TestCostModel.assertIn
+      ~TestCostModel.assertIs
+      ~TestCostModel.assertIsInstance
+      ~TestCostModel.assertIsNone
+      ~TestCostModel.assertIsNot
+      ~TestCostModel.assertIsNotNone
+      ~TestCostModel.assertLess
+      ~TestCostModel.assertLessEqual
+      ~TestCostModel.assertListEqual
+      ~TestCostModel.assertLogs
+      ~TestCostModel.assertMultiLineEqual
+      ~TestCostModel.assertNoLogs
+      ~TestCostModel.assertNotAlmostEqual
+      ~TestCostModel.assertNotAlmostEquals
+      ~TestCostModel.assertNotEqual
+      ~TestCostModel.assertNotEquals
+      ~TestCostModel.assertNotIn
+      ~TestCostModel.assertNotIsInstance
+      ~TestCostModel.assertNotRegex
+      ~TestCostModel.assertNotRegexpMatches
+      ~TestCostModel.assertRaises
+      ~TestCostModel.assertRaisesRegex
+      ~TestCostModel.assertRaisesRegexp
+      ~TestCostModel.assertRegex
+      ~TestCostModel.assertRegexpMatches
+      ~TestCostModel.assertSequenceEqual
+      ~TestCostModel.assertSetEqual
+      ~TestCostModel.assertTrue
+      ~TestCostModel.assertTupleEqual
+      ~TestCostModel.assertWarns
+      ~TestCostModel.assertWarnsRegex
+      ~TestCostModel.assert_
+      ~TestCostModel.countTestCases
+      ~TestCostModel.debug
+      ~TestCostModel.defaultTestResult
+      ~TestCostModel.doClassCleanups
+      ~TestCostModel.doCleanups
+      ~TestCostModel.enterClassContext
+      ~TestCostModel.enterContext
+      ~TestCostModel.fail
+      ~TestCostModel.failIf
+      ~TestCostModel.failIfAlmostEqual
+      ~TestCostModel.failIfEqual
+      ~TestCostModel.failUnless
+      ~TestCostModel.failUnlessAlmostEqual
+      ~TestCostModel.failUnlessEqual
+      ~TestCostModel.failUnlessRaises
+      ~TestCostModel.id
+      ~TestCostModel.run
+      ~TestCostModel.setUp
+      ~TestCostModel.setUpClass
+      ~TestCostModel.shortDescription
+      ~TestCostModel.skipTest
+      ~TestCostModel.subTest
+      ~TestCostModel.tearDown
+      ~TestCostModel.tearDownClass
+      ~TestCostModel.test_comp1
+      ~TestCostModel.test_comp2
+      ~TestCostModel.test_default
+      ~TestCostModel.test_defaults
+      ~TestCostModel.test_override
+      ~TestCostModel.test_ref_loop
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestCostModel.longMessage
+      ~TestCostModel.maxDiff
+   
+   

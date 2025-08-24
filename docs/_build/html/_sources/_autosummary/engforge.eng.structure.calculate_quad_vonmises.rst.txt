@@ -1,0 +1,6 @@
+engforge.eng.structure.calculate\_quad\_vonmises
+================================================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autofunction:: calculate_quad_vonmises

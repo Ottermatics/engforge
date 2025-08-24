@@ -1,0 +1,196 @@
+engforge.test.test\_comp\_iter.WideSystem
+=========================================
+
+.. currentmodule:: engforge.test.test_comp_iter
+
+.. autoclass:: WideSystem
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~WideSystem.add_fields
+      ~WideSystem.change_all_log_lvl
+      ~WideSystem.check_ref_slot_type
+      ~WideSystem.clone
+      ~WideSystem.cls_all_attrs_fields
+      ~WideSystem.cls_all_property_keys
+      ~WideSystem.cls_all_property_labels
+      ~WideSystem.cls_compile
+      ~WideSystem.collect_all_attributes
+      ~WideSystem.collect_comp_refs
+      ~WideSystem.collect_dynamic_refs
+      ~WideSystem.collect_inst_attributes
+      ~WideSystem.collect_post_update_refs
+      ~WideSystem.collect_solver_refs
+      ~WideSystem.collect_update_refs
+      ~WideSystem.comp_references
+      ~WideSystem.compile_classes
+      ~WideSystem.copy_config_at_state
+      ~WideSystem.create_dynamic_matricies
+      ~WideSystem.create_feedthrough_matrix
+      ~WideSystem.create_input_matrix
+      ~WideSystem.create_output_constants
+      ~WideSystem.create_output_matrix
+      ~WideSystem.create_state_constants
+      ~WideSystem.create_state_matrix
+      ~WideSystem.critical
+      ~WideSystem.debug
+      ~WideSystem.determine_nearest_stationary_state
+      ~WideSystem.difference
+      ~WideSystem.error
+      ~WideSystem.eval
+      ~WideSystem.execute
+      ~WideSystem.extract_message
+      ~WideSystem.filter
+      ~WideSystem.format_columns
+      ~WideSystem.get_system_input_refs
+      ~WideSystem.go_through_configurations
+      ~WideSystem.hash
+      ~WideSystem.hash_numeric_with
+      ~WideSystem.hash_with
+      ~WideSystem.info
+      ~WideSystem.input_attrs
+      ~WideSystem.input_fields
+      ~WideSystem.installSTDLogger
+      ~WideSystem.internal_components
+      ~WideSystem.internal_configurations
+      ~WideSystem.internal_references
+      ~WideSystem.internal_systems
+      ~WideSystem.internal_tabulations
+      ~WideSystem.linear_output
+      ~WideSystem.linear_step
+      ~WideSystem.locate
+      ~WideSystem.locate_ref
+      ~WideSystem.make_plots
+      ~WideSystem.mark_all_comps_changed
+      ~WideSystem.message_with_identiy
+      ~WideSystem.msg
+      ~WideSystem.nonlinear_output
+      ~WideSystem.nonlinear_step
+      ~WideSystem.numeric_fields
+      ~WideSystem.parent_configurations_cls
+      ~WideSystem.parse_run_kwargs
+      ~WideSystem.parse_simulation_input
+      ~WideSystem.plot_attributes
+      ~WideSystem.post_run_callback
+      ~WideSystem.post_update
+      ~WideSystem.pre_compile
+      ~WideSystem.pre_run_callback
+      ~WideSystem.print_info
+      ~WideSystem.rate
+      ~WideSystem.rate_linear
+      ~WideSystem.rate_nonlinear
+      ~WideSystem.ref_dXdt
+      ~WideSystem.resetLog
+      ~WideSystem.resetSystemLogs
+      ~WideSystem.run
+      ~WideSystem.run_internal_systems
+      ~WideSystem.set_attr
+      ~WideSystem.set_time
+      ~WideSystem.setattrs
+      ~WideSystem.setup_global_dynamics
+      ~WideSystem.signals_attributes
+      ~WideSystem.sim_matrix
+      ~WideSystem.simulate
+      ~WideSystem.slack_notification
+      ~WideSystem.slot_refs
+      ~WideSystem.slots_attributes
+      ~WideSystem.smart_split_dataframe
+      ~WideSystem.solver
+      ~WideSystem.solver_vars
+      ~WideSystem.solvers_attributes
+      ~WideSystem.step
+      ~WideSystem.subclasses
+      ~WideSystem.subcls_compile
+      ~WideSystem.system_properties_classdef
+      ~WideSystem.system_references
+      ~WideSystem.table_fields
+      ~WideSystem.trace_attributes
+      ~WideSystem.transients_attributes
+      ~WideSystem.update
+      ~WideSystem.update_dynamics
+      ~WideSystem.update_feedthrough
+      ~WideSystem.update_input
+      ~WideSystem.update_output_constants
+      ~WideSystem.update_output_matrix
+      ~WideSystem.update_state
+      ~WideSystem.update_state_constants
+      ~WideSystem.validate_class
+      ~WideSystem.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~WideSystem.Ut_ref
+      ~WideSystem.Xt_ref
+      ~WideSystem.Yt_ref
+      ~WideSystem.anything_changed
+      ~WideSystem.as_dict
+      ~WideSystem.attrs_fields
+      ~WideSystem.classname
+      ~WideSystem.converged
+      ~WideSystem.dXtdt_ref
+      ~WideSystem.dataframe
+      ~WideSystem.dataframe_constants
+      ~WideSystem.dataframe_variants
+      ~WideSystem.displayname
+      ~WideSystem.dynamic_A
+      ~WideSystem.dynamic_B
+      ~WideSystem.dynamic_C
+      ~WideSystem.dynamic_D
+      ~WideSystem.dynamic_F
+      ~WideSystem.dynamic_K
+      ~WideSystem.dynamic_input
+      ~WideSystem.dynamic_input_vars
+      ~WideSystem.dynamic_output
+      ~WideSystem.dynamic_output_vars
+      ~WideSystem.dynamic_state
+      ~WideSystem.dynamic_state_vars
+      ~WideSystem.filename
+      ~WideSystem.identity
+      ~WideSystem.input_as_dict
+      ~WideSystem.input_hash
+      ~WideSystem.last_context
+      ~WideSystem.log_fmt
+      ~WideSystem.log_level
+      ~WideSystem.log_on
+      ~WideSystem.log_silo
+      ~WideSystem.logger
+      ~WideSystem.nonlinear
+      ~WideSystem.numeric_as_dict
+      ~WideSystem.numeric_hash
+      ~WideSystem.plotable_variables
+      ~WideSystem.run_id
+      ~WideSystem.skip_plot_vars
+      ~WideSystem.slack_webhook_url
+      ~WideSystem.solved
+      ~WideSystem.static_A
+      ~WideSystem.static_B
+      ~WideSystem.static_C
+      ~WideSystem.static_D
+      ~WideSystem.static_F
+      ~WideSystem.static_K
+      ~WideSystem.stored_plots
+      ~WideSystem.system_id
+      ~WideSystem.table_hash
+      ~WideSystem.table_row_dict
+      ~WideSystem.time
+      ~WideSystem.unique_hash
+      ~WideSystem.update_interval
+      ~WideSystem.parent
+      ~WideSystem.name
+   
+   

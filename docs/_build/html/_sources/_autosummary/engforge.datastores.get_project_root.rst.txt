@@ -1,0 +1,6 @@
+engforge.datastores.get\_project\_root
+======================================
+
+.. currentmodule:: engforge.datastores
+
+.. autofunction:: get_project_root

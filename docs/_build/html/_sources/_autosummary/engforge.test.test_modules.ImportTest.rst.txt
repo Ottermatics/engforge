@@ -1,0 +1,112 @@
+engforge.test.test\_modules.ImportTest
+======================================
+
+.. currentmodule:: engforge.test.test_modules
+
+.. autoclass:: ImportTest
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~ImportTest.addClassCleanup
+      ~ImportTest.addCleanup
+      ~ImportTest.addTypeEqualityFunc
+      ~ImportTest.assertAlmostEqual
+      ~ImportTest.assertAlmostEquals
+      ~ImportTest.assertCountEqual
+      ~ImportTest.assertDictContainsSubset
+      ~ImportTest.assertDictEqual
+      ~ImportTest.assertEqual
+      ~ImportTest.assertEquals
+      ~ImportTest.assertFalse
+      ~ImportTest.assertGreater
+      ~ImportTest.assertGreaterEqual
+      ~ImportTest.assertIn
+      ~ImportTest.assertIs
+      ~ImportTest.assertIsInstance
+      ~ImportTest.assertIsNone
+      ~ImportTest.assertIsNot
+      ~ImportTest.assertIsNotNone
+      ~ImportTest.assertLess
+      ~ImportTest.assertLessEqual
+      ~ImportTest.assertListEqual
+      ~ImportTest.assertLogs
+      ~ImportTest.assertMultiLineEqual
+      ~ImportTest.assertNoLogs
+      ~ImportTest.assertNotAlmostEqual
+      ~ImportTest.assertNotAlmostEquals
+      ~ImportTest.assertNotEqual
+      ~ImportTest.assertNotEquals
+      ~ImportTest.assertNotIn
+      ~ImportTest.assertNotIsInstance
+      ~ImportTest.assertNotRegex
+      ~ImportTest.assertNotRegexpMatches
+      ~ImportTest.assertRaises
+      ~ImportTest.assertRaisesRegex
+      ~ImportTest.assertRaisesRegexp
+      ~ImportTest.assertRegex
+      ~ImportTest.assertRegexpMatches
+      ~ImportTest.assertSequenceEqual
+      ~ImportTest.assertSetEqual
+      ~ImportTest.assertTrue
+      ~ImportTest.assertTupleEqual
+      ~ImportTest.assertWarns
+      ~ImportTest.assertWarnsRegex
+      ~ImportTest.assert_
+      ~ImportTest.countTestCases
+      ~ImportTest.debug
+      ~ImportTest.defaultTestResult
+      ~ImportTest.doClassCleanups
+      ~ImportTest.doCleanups
+      ~ImportTest.enterClassContext
+      ~ImportTest.enterContext
+      ~ImportTest.fail
+      ~ImportTest.failIf
+      ~ImportTest.failIfAlmostEqual
+      ~ImportTest.failIfEqual
+      ~ImportTest.failUnless
+      ~ImportTest.failUnlessAlmostEqual
+      ~ImportTest.failUnlessEqual
+      ~ImportTest.failUnlessRaises
+      ~ImportTest.id
+      ~ImportTest.run
+      ~ImportTest.setUp
+      ~ImportTest.setUpClass
+      ~ImportTest.shortDescription
+      ~ImportTest.skipTest
+      ~ImportTest.subTest
+      ~ImportTest.tearDown
+      ~ImportTest.tearDownClass
+      ~ImportTest.test_import_analysis
+      ~ImportTest.test_import_common
+      ~ImportTest.test_import_components
+      ~ImportTest.test_import_configuration
+      ~ImportTest.test_import_data
+      ~ImportTest.test_import_locations
+      ~ImportTest.test_import_logging
+      ~ImportTest.test_import_patterns
+      ~ImportTest.test_import_plotting
+      ~ImportTest.test_import_solid_materials
+      ~ImportTest.test_import_tabulation
+      ~ImportTest.test_import_thermodynamics
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~ImportTest.longMessage
+      ~ImportTest.maxDiff
+   
+   

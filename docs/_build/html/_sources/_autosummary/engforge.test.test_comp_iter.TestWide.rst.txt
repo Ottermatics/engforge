@@ -1,0 +1,101 @@
+engforge.test.test\_comp\_iter.TestWide
+=======================================
+
+.. currentmodule:: engforge.test.test_comp_iter
+
+.. autoclass:: TestWide
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestWide.addClassCleanup
+      ~TestWide.addCleanup
+      ~TestWide.addTypeEqualityFunc
+      ~TestWide.assertAlmostEqual
+      ~TestWide.assertAlmostEquals
+      ~TestWide.assertCountEqual
+      ~TestWide.assertDictContainsSubset
+      ~TestWide.assertDictEqual
+      ~TestWide.assertEqual
+      ~TestWide.assertEquals
+      ~TestWide.assertFalse
+      ~TestWide.assertGreater
+      ~TestWide.assertGreaterEqual
+      ~TestWide.assertIn
+      ~TestWide.assertIs
+      ~TestWide.assertIsInstance
+      ~TestWide.assertIsNone
+      ~TestWide.assertIsNot
+      ~TestWide.assertIsNotNone
+      ~TestWide.assertLess
+      ~TestWide.assertLessEqual
+      ~TestWide.assertListEqual
+      ~TestWide.assertLogs
+      ~TestWide.assertMultiLineEqual
+      ~TestWide.assertNoLogs
+      ~TestWide.assertNotAlmostEqual
+      ~TestWide.assertNotAlmostEquals
+      ~TestWide.assertNotEqual
+      ~TestWide.assertNotEquals
+      ~TestWide.assertNotIn
+      ~TestWide.assertNotIsInstance
+      ~TestWide.assertNotRegex
+      ~TestWide.assertNotRegexpMatches
+      ~TestWide.assertRaises
+      ~TestWide.assertRaisesRegex
+      ~TestWide.assertRaisesRegexp
+      ~TestWide.assertRegex
+      ~TestWide.assertRegexpMatches
+      ~TestWide.assertSequenceEqual
+      ~TestWide.assertSetEqual
+      ~TestWide.assertTrue
+      ~TestWide.assertTupleEqual
+      ~TestWide.assertWarns
+      ~TestWide.assertWarnsRegex
+      ~TestWide.assert_
+      ~TestWide.countTestCases
+      ~TestWide.debug
+      ~TestWide.defaultTestResult
+      ~TestWide.doClassCleanups
+      ~TestWide.doCleanups
+      ~TestWide.enterClassContext
+      ~TestWide.enterContext
+      ~TestWide.fail
+      ~TestWide.failIf
+      ~TestWide.failIfAlmostEqual
+      ~TestWide.failIfEqual
+      ~TestWide.failUnless
+      ~TestWide.failUnlessAlmostEqual
+      ~TestWide.failUnlessEqual
+      ~TestWide.failUnlessRaises
+      ~TestWide.id
+      ~TestWide.run
+      ~TestWide.setUp
+      ~TestWide.setUpClass
+      ~TestWide.shortDescription
+      ~TestWide.skipTest
+      ~TestWide.subTest
+      ~TestWide.tearDown
+      ~TestWide.tearDownClass
+      ~TestWide.test_keys
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestWide.longMessage
+      ~TestWide.maxDiff
+   
+   

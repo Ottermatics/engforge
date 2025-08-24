@@ -1,0 +1,6 @@
+engforge.eng.structure.node\_pt
+===============================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autofunction:: node_pt

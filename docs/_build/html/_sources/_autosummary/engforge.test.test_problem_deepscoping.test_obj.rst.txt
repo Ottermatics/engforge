@@ -1,0 +1,6 @@
+engforge.test.test\_problem\_deepscoping.test\_obj
+==================================================
+
+.. currentmodule:: engforge.test.test_problem_deepscoping
+
+.. autofunction:: test_obj

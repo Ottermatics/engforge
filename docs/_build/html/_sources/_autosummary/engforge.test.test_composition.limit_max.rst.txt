@@ -1,0 +1,6 @@
+engforge.test.test\_composition.limit\_max
+==========================================
+
+.. currentmodule:: engforge.test.test_composition
+
+.. autofunction:: limit_max

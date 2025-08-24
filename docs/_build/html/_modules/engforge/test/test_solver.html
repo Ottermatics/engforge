@@ -1,0 +1,483 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.test.test_solver &mdash; engforge 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/readthedocs-custom.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.test.test_solver</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.test.test_solver</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge._testing_components</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.problem_context</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProblemExec</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">itertools</span>
+
+
+<span class="n">indep</span> <span class="o">=</span> <span class="s2">&quot;*x,*y,*z&quot;</span>
+<span class="n">indep_l</span> <span class="o">=</span> <span class="n">indep</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="SolverRefSelection">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SolverRefSelection.html#engforge.test.test_solver.SolverRefSelection">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SolverRefSelection</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="SolverRefSelection.setUp">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SolverRefSelection.html#engforge.test.test_solver.SolverRefSelection.setUp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sc</span> <span class="o">=</span> <span class="n">CubeSystem</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_comps_solver_act</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">inv</span> <span class="o">=</span> <span class="s2">&quot;ineq_cost,ineq_length,min_len&quot;</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">indep</span>
+        <span class="n">acts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*costA&quot;</span><span class="p">,</span> <span class="s2">&quot;*lenA&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">cmb</span> <span class="ow">in</span> <span class="p">[</span><span class="n">inv</span><span class="p">,</span> <span class="n">inv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]:</span>
+                <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">combos</span><span class="o">=</span><span class="n">cmb</span><span class="p">,</span>
+                    <span class="n">slv_vars</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span>
+                    <span class="n">activate</span><span class="o">=</span><span class="n">acts</span> <span class="k">if</span> <span class="n">act</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                    <span class="n">only_active</span><span class="o">=</span><span class="n">act</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">solver_vars</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">)[</span><span class="s2">&quot;attrs&quot;</span><span class="p">]</span>
+                <span class="n">ans</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.x&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.y&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.z&quot;</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.var&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.state&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.rate&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+
+                <span class="n">empt</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;solver.eq&quot;</span><span class="p">,</span> <span class="s2">&quot;solver.obj&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;slot&quot;</span><span class="p">,</span> <span class="s2">&quot;signal&quot;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">emp</span> <span class="ow">in</span> <span class="n">empt</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="n">emp</span><span class="p">],</span> <span class="p">{})</span>
+
+                <span class="k">if</span> <span class="n">act</span><span class="p">:</span>
+                    <span class="n">ineq</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;comp.lenA&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.costA&quot;</span><span class="p">,</span> <span class="s2">&quot;costA&quot;</span><span class="p">,</span> <span class="s2">&quot;lenA&quot;</span><span class="p">}</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.ineq&quot;</span><span class="p">]),</span> <span class="n">ineq</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_comps_solver_obj</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">inv</span> <span class="o">=</span> <span class="s2">&quot;obj_size,ineq_cost,ineq_length,min_len&quot;</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">indep</span>
+        <span class="n">acts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*costA&quot;</span><span class="p">,</span> <span class="s2">&quot;*lenA&quot;</span><span class="p">]</span>
+        <span class="n">aacts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;*costA&quot;</span><span class="p">,</span> <span class="s2">&quot;*lenA&quot;</span><span class="p">,</span> <span class="s2">&quot;*size&quot;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">cmb</span> <span class="ow">in</span> <span class="p">[</span><span class="n">inv</span><span class="p">,</span> <span class="n">inv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]:</span>
+                <span class="n">actv</span> <span class="o">=</span> <span class="n">acts</span> <span class="k">if</span> <span class="n">act</span> <span class="k">else</span> <span class="n">aacts</span>
+                <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">combos</span><span class="o">=</span><span class="n">cmb</span><span class="p">,</span> <span class="n">slv_vars</span><span class="o">=</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="n">activate</span><span class="o">=</span><span class="n">actv</span><span class="p">,</span> <span class="n">only_active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">solver_vars</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">)[</span><span class="s2">&quot;attrs&quot;</span><span class="p">]</span>
+                <span class="n">ans</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.x&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.y&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.z&quot;</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.var&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.state&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.rate&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+
+                <span class="n">ineq</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;comp.lenA&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.costA&quot;</span><span class="p">,</span> <span class="s2">&quot;costA&quot;</span><span class="p">,</span> <span class="s2">&quot;lenA&quot;</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.ineq&quot;</span><span class="p">]),</span> <span class="n">ineq</span><span class="p">)</span>
+
+                <span class="n">empt</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;solver.eq&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;slot&quot;</span><span class="p">,</span> <span class="s2">&quot;signal&quot;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">emp</span> <span class="ow">in</span> <span class="n">empt</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="n">emp</span><span class="p">],</span> <span class="p">{})</span>
+
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">act</span><span class="p">:</span>
+                    <span class="n">obj</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.size&quot;</span><span class="p">}</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.obj&quot;</span><span class="p">]),</span> <span class="n">obj</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.obj&quot;</span><span class="p">]),</span> <span class="nb">set</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_sys_solver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># test combos</span>
+        <span class="n">inv</span> <span class="o">=</span> <span class="s2">&quot;volume,height,min_len,total_*&quot;</span> <span class="o">+</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">indep</span>
+        <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">cmb</span> <span class="ow">in</span> <span class="p">[</span><span class="n">inv</span><span class="p">,</span> <span class="n">inv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]:</span>
+                <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                    <span class="n">combos</span><span class="o">=</span><span class="n">cmb</span><span class="p">,</span>
+                    <span class="n">slv_vars</span><span class="o">=</span><span class="n">indep</span> <span class="o">+</span> <span class="s2">&quot;,hght,obj,*sys*&quot;</span><span class="p">,</span>
+                    <span class="n">activate</span><span class="o">=</span><span class="p">[],</span>
+                    <span class="n">only_active</span><span class="o">=</span><span class="n">act</span><span class="p">,</span>
+                <span class="p">)</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">solver_vars</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">)[</span><span class="s2">&quot;attrs&quot;</span><span class="p">]</span>
+                <span class="n">ans</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.x&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.y&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.z&quot;</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.var&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.state&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.rate&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+
+                <span class="n">obj</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;hght&quot;</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.obj&quot;</span><span class="p">]),</span> <span class="n">obj</span><span class="p">)</span>
+                <span class="n">ineq</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;sys_budget&quot;</span><span class="p">,</span> <span class="s2">&quot;sys_length&quot;</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.ineq&quot;</span><span class="p">]),</span> <span class="n">ineq</span><span class="p">)</span>
+
+                <span class="n">empt</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;solver.eq&quot;</span><span class="p">,</span> <span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="s2">&quot;slot&quot;</span><span class="p">,</span> <span class="s2">&quot;signal&quot;</span><span class="p">]</span>
+                <span class="k">for</span> <span class="n">emp</span> <span class="ow">in</span> <span class="n">empt</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="n">emp</span><span class="p">],</span> <span class="p">{})</span>
+
+<div class="viewcode-block" id="SolverRefSelection.test_xyz_var_only">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SolverRefSelection.html#engforge.test.test_solver.SolverRefSelection.test_xyz_var_only">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_xyz_var_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;only xyz via vars&quot;&quot;&quot;</span>
+        <span class="n">inv</span> <span class="o">=</span> <span class="n">indep</span>
+        <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">cmb</span> <span class="ow">in</span> <span class="p">[</span><span class="n">inv</span><span class="p">,</span> <span class="n">inv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]:</span>
+                <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">combos</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">slv_vars</span><span class="o">=</span><span class="n">cmb</span><span class="p">,</span> <span class="n">only_active</span><span class="o">=</span><span class="n">act</span><span class="p">)</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">solver_vars</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">)[</span><span class="s2">&quot;attrs&quot;</span><span class="p">]</span>
+                <span class="n">ans</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.x&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.y&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.z&quot;</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.var&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.state&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.rate&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+
+                <span class="n">empt</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="s2">&quot;solver.eq&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;solver.ineq&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;solver.obj&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;slot&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;signal&quot;</span><span class="p">,</span>
+                <span class="p">]</span>
+                <span class="k">for</span> <span class="n">emp</span> <span class="ow">in</span> <span class="n">empt</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="n">emp</span><span class="p">],</span> <span class="p">{})</span></div>
+
+
+<div class="viewcode-block" id="SolverRefSelection.test_xyz_combo_only">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SolverRefSelection.html#engforge.test.test_solver.SolverRefSelection.test_xyz_combo_only">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_xyz_combo_only</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;only xyz via combos&quot;&quot;&quot;</span>
+        <span class="n">inv</span> <span class="o">=</span> <span class="s2">&quot;x,y,z&quot;</span>
+        <span class="k">for</span> <span class="n">act</span> <span class="ow">in</span> <span class="p">[</span><span class="kc">True</span><span class="p">,</span> <span class="kc">False</span><span class="p">]:</span>
+            <span class="k">for</span> <span class="n">cmb</span> <span class="ow">in</span> <span class="p">[</span><span class="n">inv</span><span class="p">,</span> <span class="n">inv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)]:</span>
+                <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">combos</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">slv_vars</span><span class="o">=</span><span class="n">indep</span><span class="p">,</span> <span class="n">only_active</span><span class="o">=</span><span class="n">act</span><span class="p">)</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">solver_vars</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">)[</span><span class="s2">&quot;attrs&quot;</span><span class="p">]</span>
+                <span class="n">ans</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.x&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.y&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.z&quot;</span><span class="p">}</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.var&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.state&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.rate&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+
+                <span class="n">empt</span> <span class="o">=</span> <span class="p">[</span>
+                    <span class="s2">&quot;solver.eq&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;solver.ineq&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;solver.obj&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;slot&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;signal&quot;</span><span class="p">,</span>
+                <span class="p">]</span>
+                <span class="k">for</span> <span class="n">emp</span> <span class="ow">in</span> <span class="n">empt</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="n">emp</span><span class="p">],</span> <span class="p">{})</span></div>
+
+
+<div class="viewcode-block" id="SolverRefSelection.test_xyz_act_nocombo">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SolverRefSelection.html#engforge.test.test_solver.SolverRefSelection.test_xyz_act_nocombo">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_xyz_act_nocombo</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;activated aren&#39;t included because no combos are given&quot;&quot;&quot;</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">combos</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+            <span class="n">slv_vars</span><span class="o">=</span><span class="n">indep</span><span class="p">,</span>
+            <span class="n">activate</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;*costA&quot;</span><span class="p">,</span> <span class="s2">&quot;*lenA&quot;</span><span class="p">,</span> <span class="s2">&quot;*size&quot;</span><span class="p">],</span>
+            <span class="n">only_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">solver_vars</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">)[</span><span class="s2">&quot;attrs&quot;</span><span class="p">]</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.x&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.y&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.z&quot;</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;solver.var&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.state&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;dynamics.rate&quot;</span><span class="p">]),</span> <span class="n">ans</span><span class="p">)</span>
+
+        <span class="n">empt</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s2">&quot;solver.eq&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;solver.ineq&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;solver.obj&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;time&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;slot&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;signal&quot;</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="k">for</span> <span class="n">emp</span> <span class="ow">in</span> <span class="n">empt</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">info</span><span class="p">[</span><span class="n">emp</span><span class="p">],</span> <span class="p">{})</span></div>
+</div>
+
+
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pprint</span>
+
+
+<div class="viewcode-block" id="SingleCompSolverTest">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SingleCompSolverTest.html#engforge.test.test_solver.SingleCompSolverTest">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SingleCompSolverTest</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="n">inequality_min</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e-6</span>
+
+<div class="viewcode-block" id="SingleCompSolverTest.setUp">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SingleCompSolverTest.html#engforge.test.test_solver.SingleCompSolverTest.setUp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sc</span> <span class="o">=</span> <span class="n">CubeSystem</span><span class="p">(</span><span class="n">comp</span><span class="o">=</span><span class="n">CubeComp</span><span class="p">())</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_exec_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">combos</span><span class="o">=</span><span class="n">indep_l</span><span class="p">,</span> <span class="n">slv_vars</span><span class="o">=</span><span class="n">indep</span><span class="p">,</span> <span class="n">activate</span><span class="o">=</span><span class="p">[],</span> <span class="n">only_active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="p">,</span> <span class="n">extra</span><span class="p">)</span> <span class="k">as</span> <span class="n">pb</span><span class="p">:</span>
+            <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertDictEqual</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="s2">&quot;Xstart&quot;</span><span class="p">],</span> <span class="n">o</span><span class="p">[</span><span class="s2">&quot;Xans&quot;</span><span class="p">])</span>
+
+<div class="viewcode-block" id="SingleCompSolverTest.test_run_results">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SingleCompSolverTest.html#engforge.test.test_solver.SingleCompSolverTest.test_run_results">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_run_results</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;test that inputs stay the same when no objecives present&quot;&quot;&quot;</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">combos</span><span class="o">=</span><span class="n">indep</span><span class="p">,</span> <span class="n">slv_vars</span><span class="o">=</span><span class="n">indep_l</span><span class="p">,</span> <span class="n">activate</span><span class="o">=</span><span class="p">[],</span> <span class="n">only_active</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">scx</span><span class="p">,</span> <span class="n">scy</span><span class="p">,</span> <span class="n">scz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">z</span>
+        <span class="n">sccx</span><span class="p">,</span> <span class="n">sccy</span><span class="p">,</span> <span class="n">sccz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">z</span>
+        <span class="n">vray</span> <span class="o">=</span> <span class="p">[</span><span class="n">scx</span><span class="p">,</span> <span class="n">scy</span><span class="p">,</span> <span class="n">scz</span><span class="p">,</span> <span class="n">sccx</span><span class="p">,</span> <span class="n">sccy</span><span class="p">,</span> <span class="n">sccz</span><span class="p">]</span>
+
+        <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">)</span>
+
+        <span class="c1"># dfray = self.sc.dataframe[[&#39;x&#39;,&#39;y&#39;,&#39;z&#39;,&#39;comp_x&#39;,&#39;comp_y&#39;,&#39;comp_z&#39;]].iloc[0].values</span>
+        <span class="c1"># self.assertFalse(np.all(dfray==vray),msg=f&#39;{dfray}\n{vray}&#39;)</span>
+
+        <span class="n">scx</span><span class="p">,</span> <span class="n">scy</span><span class="p">,</span> <span class="n">scz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">z</span>
+        <span class="n">sccx</span><span class="p">,</span> <span class="n">sccy</span><span class="p">,</span> <span class="n">sccz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">z</span>
+        <span class="n">v2ray</span> <span class="o">=</span> <span class="p">[</span><span class="n">scx</span><span class="p">,</span> <span class="n">scy</span><span class="p">,</span> <span class="n">scz</span><span class="p">,</span> <span class="n">sccx</span><span class="p">,</span> <span class="n">sccy</span><span class="p">,</span> <span class="n">sccz</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">vray</span> <span class="o">==</span> <span class="n">v2ray</span><span class="p">),</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;revert values changed!&quot;</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_comp_method_equivalence</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">objs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;obj_eff&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;eff&quot;</span><span class="p">,</span> <span class="s2">&quot;effF&quot;</span><span class="p">],</span> <span class="s2">&quot;obj_size&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">,</span> <span class="s2">&quot;sizeF&quot;</span><span class="p">]}</span>
+        <span class="n">cons</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;ineq_cost&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;costA&quot;</span><span class="p">,</span> <span class="s2">&quot;costF&quot;</span><span class="p">,</span> <span class="s2">&quot;costP&quot;</span><span class="p">],</span>
+            <span class="s2">&quot;ineq_length&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;lenA&quot;</span><span class="p">,</span> <span class="s2">&quot;lenF&quot;</span><span class="p">,</span> <span class="s2">&quot;lenP&quot;</span><span class="p">],</span>
+        <span class="p">}</span>
+
+        <span class="k">for</span> <span class="n">ok</span><span class="p">,</span> <span class="n">ck</span> <span class="ow">in</span> <span class="n">itertools</span><span class="o">.</span><span class="n">product</span><span class="p">(</span><span class="n">objs</span><span class="p">,</span> <span class="n">cons</span><span class="p">):</span>
+            <span class="n">attempts</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">objs</span><span class="p">[</span><span class="n">ok</span><span class="p">]:</span>
+                <span class="k">for</span> <span class="n">con</span> <span class="ow">in</span> <span class="n">cons</span><span class="p">[</span><span class="n">ck</span><span class="p">]:</span>
+                    <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                        <span class="n">combos</span><span class="o">=</span><span class="p">[</span><span class="n">ok</span><span class="p">,</span> <span class="n">ck</span><span class="p">,</span> <span class="s2">&quot;min_len&quot;</span><span class="p">],</span>
+                        <span class="n">slv_vars</span><span class="o">=</span><span class="n">indep</span><span class="p">,</span>
+                        <span class="n">activate</span><span class="o">=</span><span class="p">[</span><span class="n">var</span><span class="p">,</span> <span class="n">con</span><span class="p">],</span>
+                        <span class="n">only_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">both_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                    <span class="p">)</span>
+                    <span class="n">o</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">)</span>
+                    <span class="n">attempts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
+
+            <span class="c1"># check for equivalence</span>
+            <span class="n">a0</span> <span class="o">=</span> <span class="n">attempts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">for</span> <span class="n">atmpt</span> <span class="ow">in</span> <span class="n">attempts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">ak1</span> <span class="o">=</span> <span class="n">a0</span><span class="p">[</span><span class="s2">&quot;Xans&quot;</span><span class="p">]</span>
+                <span class="n">ak2</span> <span class="o">=</span> <span class="n">atmpt</span><span class="p">[</span><span class="s2">&quot;Xans&quot;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">ak1</span><span class="p">),</span> <span class="nb">set</span><span class="p">(</span><span class="n">ak2</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">ak1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">assertAlmostEqual</span><span class="p">(</span><span class="n">ak1</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">ak2</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">places</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SingleCompSolverTest.test_system_execute">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SingleCompSolverTest.html#engforge.test.test_solver.SingleCompSolverTest.test_system_execute">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_system_execute</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;check the system solver methods work as expected (objectives are optimized)&quot;&quot;&quot;</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">combos</span><span class="o">=</span><span class="s2">&quot;volume,height,min_len,total_*&quot;</span><span class="p">,</span>
+            <span class="n">slv_vars</span><span class="o">=</span><span class="n">indep</span><span class="p">,</span>
+            <span class="n">activate</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">only_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">both_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hght&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hght&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">H</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;hght&quot;</span><span class="p">],</span> <span class="n">V</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;hght&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">V</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;obj&quot;</span><span class="p">],</span> <span class="n">H</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;obj&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="SingleCompSolverTest.test_system_run">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SingleCompSolverTest.html#engforge.test.test_solver.SingleCompSolverTest.test_system_run">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_system_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;check the system solver methods work as expected (objectives are optimized)&quot;&quot;&quot;</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">combos</span><span class="o">=</span><span class="s2">&quot;volume,height,min_len,total_*&quot;</span><span class="p">,</span>
+            <span class="n">slv_vars</span><span class="o">=</span><span class="n">indep</span><span class="p">,</span>
+            <span class="n">activate</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">only_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">both_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hght&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})[</span><span class="s2">&quot;output&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hght&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})[</span><span class="s2">&quot;output&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">H</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;hght&quot;</span><span class="p">],</span> <span class="n">V</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;hght&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">V</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;obj&quot;</span><span class="p">],</span> <span class="n">H</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;obj&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="SingleCompSolverTest.test_system_solver">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SingleCompSolverTest.html#engforge.test.test_solver.SingleCompSolverTest.test_system_solver">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_system_solver</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;check the system solver methods work as expected (objectives are optimized)&quot;&quot;&quot;</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">combos</span><span class="o">=</span><span class="s2">&quot;volume,height,min_len,total_*&quot;</span><span class="p">,</span>
+            <span class="n">slv_vars</span><span class="o">=</span><span class="n">indep</span><span class="p">,</span>
+            <span class="n">activate</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">only_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">both_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">solver</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hght&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">solver</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hght&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">H</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;hght&quot;</span><span class="p">],</span> <span class="n">V</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;hght&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">V</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;obj&quot;</span><span class="p">],</span> <span class="n">H</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;obj&quot;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="SingleCompSolverTest.test_system_eval">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_solver.SingleCompSolverTest.html#engforge.test.test_solver.SingleCompSolverTest.test_system_eval">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_system_eval</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;check the system solver methods work as expected (objectives are optimized)&quot;&quot;&quot;</span>
+        <span class="n">extra</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">combos</span><span class="o">=</span><span class="s2">&quot;volume,height,min_len,total_*&quot;</span><span class="p">,</span>
+            <span class="n">slv_vars</span><span class="o">=</span><span class="n">indep</span><span class="p">,</span>
+            <span class="n">activate</span><span class="o">=</span><span class="p">[],</span>
+            <span class="n">only_active</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">both_match</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hght&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">})</span>
+        <span class="n">V</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sc</span><span class="o">.</span><span class="n">eval</span><span class="p">(</span><span class="o">**</span><span class="n">extra</span><span class="p">,</span> <span class="n">weights</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;hght&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">})</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">H</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;hght&quot;</span><span class="p">],</span> <span class="n">V</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;hght&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertGreater</span><span class="p">(</span><span class="n">V</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;obj&quot;</span><span class="p">],</span> <span class="n">H</span><span class="p">[</span><span class="s2">&quot;Yobj&quot;</span><span class="p">][</span><span class="s2">&quot;obj&quot;</span><span class="p">])</span></div>
+</div>
+
+
+
+<span class="c1"># TODO: rewrite these tests</span>
+<span class="c1">#     def test_selective_exec(self):</span>
+<span class="c1">#         extra = dict(combos=&#39;*fun*,goal&#39;,ign_combos=[&#39;z_sym_eq&#39;,&#39;*size*&#39;,&#39;*eff*&#39;])</span>
+<span class="c1">#         o = self.sc.execute(**extra)</span>
+<span class="c1">#         res = self.test_results(o)</span>
+<span class="c1">#         self.test_selection(o,res,extra)</span>
+<span class="c1">#</span>
+<span class="c1">#     def test_runmtx(self):</span>
+<span class="c1">#         extra = dict(budget=[100,500,1000],max_length=[50,100,200])</span>
+<span class="c1">#         o = self.sc.run(**extra)</span>
+<span class="c1">#         res = self.test_results(o)</span>
+<span class="c1">#         df = self.test_dataframe(o)</span>
+<span class="c1">#         self.test_selection(o,res,extra)</span>
+<span class="c1">#</span>
+<span class="c1">#     def test_selective_runmtx(self):</span>
+<span class="c1">#         extra = dict(budget=[100,500,1000],max_length=[50,100,200],combos=&#39;*fun*,goal&#39;,ign_combos=[&#39;z_sym_eq&#39;,&#39;*size*&#39;,&#39;*eff*&#39;])</span>
+<span class="c1">#         o = self.sc.run(**extra)</span>
+<span class="c1">#         res = self.test_results(o)</span>
+<span class="c1">#         df = self.test_dataframe(o)</span>
+<span class="c1">#         self.test_selection(o,res,extra)</span>
+<span class="c1">#</span>
+<span class="c1">#     def test_run_wildcard(self):</span>
+<span class="c1">#         extra = dict(combos=&#39;*fun*,goal&#39;,ign_combos=&#39;*&#39;,budget=[100,500,1000],max_length=[50,100,200])</span>
+<span class="c1">#         o = self.sc.run(**extra)</span>
+<span class="c1">#         res = self.test_results(o)</span>
+<span class="c1">#         df = self.test_dataframe(o)</span>
+<span class="c1">#         self.test_selection(o,res,extra)</span>
+<span class="c1">#</span>
+<span class="c1">#     #Checks</span>
+<span class="c1">#     def test_dataframe(self,results)-&gt;dict:</span>
+<span class="c1">#         #print(results)</span>
+<span class="c1">#         print(NotImplementedError(&quot;#FIXME!&quot;))</span>
+<span class="c1">#</span>
+<span class="c1">#     def test_selection(self,results,df_res,extra):</span>
+<span class="c1">#         #print(results,df_res,extra)</span>
+<span class="c1">#         print(NotImplementedError(&quot;#FIXME!&quot;))</span>
+<span class="c1">#</span>
+<span class="c1">#     def test_results(self,results):</span>
+<span class="c1">#         Ycon = results[&#39;Ycon&#39;]</span>
+<span class="c1">#         costmg = {k:v for k,v in Ycon.items() if &#39;cost&#39; in k}</span>
+<span class="c1">#         lenmg = {k:v for k,v in Ycon.items() if &#39;len&#39; in k}</span>
+<span class="c1">#</span>
+<span class="c1">#         #Test input equivalence of methods</span>
+<span class="c1">#         self.assertEqual(len(set(costmg.values())),1)</span>
+<span class="c1">#         self.assertEqual(len(set(lenmg.values())),1)</span>
+<span class="c1">#</span>
+<span class="c1">#         #Test inequality constraints</span>
+<span class="c1">#         yvals = (v &gt;= self.inequality_min for v in Ycon.values())</span>
+<span class="c1">#         self.assertTrue(all(yvals))</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

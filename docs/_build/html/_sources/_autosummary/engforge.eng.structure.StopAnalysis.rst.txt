@@ -1,0 +1,6 @@
+engforge.eng.structure.StopAnalysis
+===================================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autoexception:: StopAnalysis

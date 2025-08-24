@@ -1,0 +1,203 @@
+engforge.test.test\_composition.MockSystem
+==========================================
+
+.. currentmodule:: engforge.test.test_composition
+
+.. autoclass:: MockSystem
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~MockSystem.add_fields
+      ~MockSystem.change_all_log_lvl
+      ~MockSystem.check_ref_slot_type
+      ~MockSystem.clone
+      ~MockSystem.cls_all_attrs_fields
+      ~MockSystem.cls_all_property_keys
+      ~MockSystem.cls_all_property_labels
+      ~MockSystem.cls_compile
+      ~MockSystem.collect_all_attributes
+      ~MockSystem.collect_comp_refs
+      ~MockSystem.collect_dynamic_refs
+      ~MockSystem.collect_inst_attributes
+      ~MockSystem.collect_post_update_refs
+      ~MockSystem.collect_solver_refs
+      ~MockSystem.collect_update_refs
+      ~MockSystem.comp_references
+      ~MockSystem.compile_classes
+      ~MockSystem.copy_config_at_state
+      ~MockSystem.create_dynamic_matricies
+      ~MockSystem.create_feedthrough_matrix
+      ~MockSystem.create_input_matrix
+      ~MockSystem.create_output_constants
+      ~MockSystem.create_output_matrix
+      ~MockSystem.create_state_constants
+      ~MockSystem.create_state_matrix
+      ~MockSystem.critical
+      ~MockSystem.debug
+      ~MockSystem.determine_nearest_stationary_state
+      ~MockSystem.difference
+      ~MockSystem.error
+      ~MockSystem.eval
+      ~MockSystem.execute
+      ~MockSystem.extract_message
+      ~MockSystem.filter
+      ~MockSystem.format_columns
+      ~MockSystem.get_system_input_refs
+      ~MockSystem.go_through_configurations
+      ~MockSystem.hash
+      ~MockSystem.hash_numeric_with
+      ~MockSystem.hash_with
+      ~MockSystem.info
+      ~MockSystem.input_attrs
+      ~MockSystem.input_fields
+      ~MockSystem.installSTDLogger
+      ~MockSystem.internal_components
+      ~MockSystem.internal_configurations
+      ~MockSystem.internal_references
+      ~MockSystem.internal_systems
+      ~MockSystem.internal_tabulations
+      ~MockSystem.linear_output
+      ~MockSystem.linear_step
+      ~MockSystem.locate
+      ~MockSystem.locate_ref
+      ~MockSystem.make_plots
+      ~MockSystem.mark_all_comps_changed
+      ~MockSystem.message_with_identiy
+      ~MockSystem.msg
+      ~MockSystem.nonlinear_output
+      ~MockSystem.nonlinear_step
+      ~MockSystem.numeric_fields
+      ~MockSystem.parent_configurations_cls
+      ~MockSystem.parse_run_kwargs
+      ~MockSystem.parse_simulation_input
+      ~MockSystem.plot_attributes
+      ~MockSystem.post_run_callback
+      ~MockSystem.post_update
+      ~MockSystem.pre_compile
+      ~MockSystem.pre_run_callback
+      ~MockSystem.print_info
+      ~MockSystem.rate
+      ~MockSystem.rate_linear
+      ~MockSystem.rate_nonlinear
+      ~MockSystem.ref_dXdt
+      ~MockSystem.resetLog
+      ~MockSystem.resetSystemLogs
+      ~MockSystem.run
+      ~MockSystem.run_internal_systems
+      ~MockSystem.set_attr
+      ~MockSystem.set_time
+      ~MockSystem.setattrs
+      ~MockSystem.setup_global_dynamics
+      ~MockSystem.signals_attributes
+      ~MockSystem.sim_matrix
+      ~MockSystem.simulate
+      ~MockSystem.slack_notification
+      ~MockSystem.slot_refs
+      ~MockSystem.slots_attributes
+      ~MockSystem.smart_split_dataframe
+      ~MockSystem.solver
+      ~MockSystem.solver_vars
+      ~MockSystem.solvers_attributes
+      ~MockSystem.step
+      ~MockSystem.subclasses
+      ~MockSystem.subcls_compile
+      ~MockSystem.system_properties_classdef
+      ~MockSystem.system_references
+      ~MockSystem.table_fields
+      ~MockSystem.trace_attributes
+      ~MockSystem.transients_attributes
+      ~MockSystem.update
+      ~MockSystem.update_dynamics
+      ~MockSystem.update_feedthrough
+      ~MockSystem.update_input
+      ~MockSystem.update_output_constants
+      ~MockSystem.update_output_matrix
+      ~MockSystem.update_state
+      ~MockSystem.update_state_constants
+      ~MockSystem.validate_class
+      ~MockSystem.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~MockSystem.Ut_ref
+      ~MockSystem.Xt_ref
+      ~MockSystem.Yt_ref
+      ~MockSystem.anything_changed
+      ~MockSystem.as_dict
+      ~MockSystem.attrs_fields
+      ~MockSystem.classname
+      ~MockSystem.converged
+      ~MockSystem.dXtdt_ref
+      ~MockSystem.dataframe
+      ~MockSystem.dataframe_constants
+      ~MockSystem.dataframe_variants
+      ~MockSystem.displayname
+      ~MockSystem.dxdt
+      ~MockSystem.dynamic_A
+      ~MockSystem.dynamic_B
+      ~MockSystem.dynamic_C
+      ~MockSystem.dynamic_D
+      ~MockSystem.dynamic_F
+      ~MockSystem.dynamic_K
+      ~MockSystem.dynamic_input
+      ~MockSystem.dynamic_input_vars
+      ~MockSystem.dynamic_output
+      ~MockSystem.dynamic_output_vars
+      ~MockSystem.dynamic_state
+      ~MockSystem.dynamic_state_vars
+      ~MockSystem.filename
+      ~MockSystem.identity
+      ~MockSystem.in2out2
+      ~MockSystem.in_out_diff
+      ~MockSystem.input_as_dict
+      ~MockSystem.input_hash
+      ~MockSystem.last_context
+      ~MockSystem.log_fmt
+      ~MockSystem.log_level
+      ~MockSystem.log_on
+      ~MockSystem.log_silo
+      ~MockSystem.logger
+      ~MockSystem.nonlinear
+      ~MockSystem.numeric_as_dict
+      ~MockSystem.numeric_hash
+      ~MockSystem.plotable_variables
+      ~MockSystem.run_id
+      ~MockSystem.skip_plot_vars
+      ~MockSystem.slack_webhook_url
+      ~MockSystem.solved
+      ~MockSystem.static_A
+      ~MockSystem.static_B
+      ~MockSystem.static_C
+      ~MockSystem.static_D
+      ~MockSystem.static_F
+      ~MockSystem.static_K
+      ~MockSystem.stored_plots
+      ~MockSystem.system_id
+      ~MockSystem.table_hash
+      ~MockSystem.table_row_dict
+      ~MockSystem.time
+      ~MockSystem.unique_hash
+      ~MockSystem.update_interval
+      ~MockSystem.input
+      ~MockSystem.output
+      ~MockSystem.in2
+      ~MockSystem.x
+      ~MockSystem.parent
+      ~MockSystem.name
+   
+   

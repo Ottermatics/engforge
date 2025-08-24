@@ -1,0 +1,6 @@
+engforge.eng.structure.run\_failure\_sections
+=============================================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autofunction:: run_failure_sections

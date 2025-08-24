@@ -1,0 +1,6 @@
+engforge.datastores.check\_and\_install\_datastores
+===================================================
+
+.. currentmodule:: engforge.datastores
+
+.. autofunction:: check_and_install_datastores

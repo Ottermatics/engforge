@@ -1,0 +1,101 @@
+engforge.test.test\_comp\_iter.TestNarrow
+=========================================
+
+.. currentmodule:: engforge.test.test_comp_iter
+
+.. autoclass:: TestNarrow
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestNarrow.addClassCleanup
+      ~TestNarrow.addCleanup
+      ~TestNarrow.addTypeEqualityFunc
+      ~TestNarrow.assertAlmostEqual
+      ~TestNarrow.assertAlmostEquals
+      ~TestNarrow.assertCountEqual
+      ~TestNarrow.assertDictContainsSubset
+      ~TestNarrow.assertDictEqual
+      ~TestNarrow.assertEqual
+      ~TestNarrow.assertEquals
+      ~TestNarrow.assertFalse
+      ~TestNarrow.assertGreater
+      ~TestNarrow.assertGreaterEqual
+      ~TestNarrow.assertIn
+      ~TestNarrow.assertIs
+      ~TestNarrow.assertIsInstance
+      ~TestNarrow.assertIsNone
+      ~TestNarrow.assertIsNot
+      ~TestNarrow.assertIsNotNone
+      ~TestNarrow.assertLess
+      ~TestNarrow.assertLessEqual
+      ~TestNarrow.assertListEqual
+      ~TestNarrow.assertLogs
+      ~TestNarrow.assertMultiLineEqual
+      ~TestNarrow.assertNoLogs
+      ~TestNarrow.assertNotAlmostEqual
+      ~TestNarrow.assertNotAlmostEquals
+      ~TestNarrow.assertNotEqual
+      ~TestNarrow.assertNotEquals
+      ~TestNarrow.assertNotIn
+      ~TestNarrow.assertNotIsInstance
+      ~TestNarrow.assertNotRegex
+      ~TestNarrow.assertNotRegexpMatches
+      ~TestNarrow.assertRaises
+      ~TestNarrow.assertRaisesRegex
+      ~TestNarrow.assertRaisesRegexp
+      ~TestNarrow.assertRegex
+      ~TestNarrow.assertRegexpMatches
+      ~TestNarrow.assertSequenceEqual
+      ~TestNarrow.assertSetEqual
+      ~TestNarrow.assertTrue
+      ~TestNarrow.assertTupleEqual
+      ~TestNarrow.assertWarns
+      ~TestNarrow.assertWarnsRegex
+      ~TestNarrow.assert_
+      ~TestNarrow.countTestCases
+      ~TestNarrow.debug
+      ~TestNarrow.defaultTestResult
+      ~TestNarrow.doClassCleanups
+      ~TestNarrow.doCleanups
+      ~TestNarrow.enterClassContext
+      ~TestNarrow.enterContext
+      ~TestNarrow.fail
+      ~TestNarrow.failIf
+      ~TestNarrow.failIfAlmostEqual
+      ~TestNarrow.failIfEqual
+      ~TestNarrow.failUnless
+      ~TestNarrow.failUnlessAlmostEqual
+      ~TestNarrow.failUnlessEqual
+      ~TestNarrow.failUnlessRaises
+      ~TestNarrow.id
+      ~TestNarrow.run
+      ~TestNarrow.setUp
+      ~TestNarrow.setUpClass
+      ~TestNarrow.shortDescription
+      ~TestNarrow.skipTest
+      ~TestNarrow.subTest
+      ~TestNarrow.tearDown
+      ~TestNarrow.tearDownClass
+      ~TestNarrow.test_keys
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestNarrow.longMessage
+      ~TestNarrow.maxDiff
+   
+   

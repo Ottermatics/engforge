@@ -1,0 +1,6 @@
+engforge.eng.structure.calculate\_von\_mises\_stress
+====================================================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autofunction:: calculate_von_mises_stress

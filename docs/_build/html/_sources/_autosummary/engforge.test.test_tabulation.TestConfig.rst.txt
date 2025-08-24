@@ -1,0 +1,202 @@
+engforge.test.test\_tabulation.TestConfig
+=========================================
+
+.. currentmodule:: engforge.test.test_tabulation
+
+.. autoclass:: TestConfig
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestConfig.add_fields
+      ~TestConfig.change_all_log_lvl
+      ~TestConfig.check_ref_slot_type
+      ~TestConfig.clone
+      ~TestConfig.cls_all_attrs_fields
+      ~TestConfig.cls_all_property_keys
+      ~TestConfig.cls_all_property_labels
+      ~TestConfig.cls_compile
+      ~TestConfig.collect_all_attributes
+      ~TestConfig.collect_comp_refs
+      ~TestConfig.collect_dynamic_refs
+      ~TestConfig.collect_inst_attributes
+      ~TestConfig.collect_post_update_refs
+      ~TestConfig.collect_solver_refs
+      ~TestConfig.collect_update_refs
+      ~TestConfig.comp_references
+      ~TestConfig.compile_classes
+      ~TestConfig.copy_config_at_state
+      ~TestConfig.create_dynamic_matricies
+      ~TestConfig.create_feedthrough_matrix
+      ~TestConfig.create_input_matrix
+      ~TestConfig.create_output_constants
+      ~TestConfig.create_output_matrix
+      ~TestConfig.create_state_constants
+      ~TestConfig.create_state_matrix
+      ~TestConfig.critical
+      ~TestConfig.debug
+      ~TestConfig.determine_nearest_stationary_state
+      ~TestConfig.difference
+      ~TestConfig.error
+      ~TestConfig.eval
+      ~TestConfig.execute
+      ~TestConfig.extract_message
+      ~TestConfig.filter
+      ~TestConfig.format_columns
+      ~TestConfig.get_system_input_refs
+      ~TestConfig.go_through_configurations
+      ~TestConfig.hash
+      ~TestConfig.hash_numeric_with
+      ~TestConfig.hash_with
+      ~TestConfig.info
+      ~TestConfig.input_attrs
+      ~TestConfig.input_fields
+      ~TestConfig.installSTDLogger
+      ~TestConfig.internal_components
+      ~TestConfig.internal_configurations
+      ~TestConfig.internal_references
+      ~TestConfig.internal_systems
+      ~TestConfig.internal_tabulations
+      ~TestConfig.linear_output
+      ~TestConfig.linear_step
+      ~TestConfig.locate
+      ~TestConfig.locate_ref
+      ~TestConfig.make_plots
+      ~TestConfig.mark_all_comps_changed
+      ~TestConfig.message_with_identiy
+      ~TestConfig.msg
+      ~TestConfig.nonlinear_output
+      ~TestConfig.nonlinear_step
+      ~TestConfig.numeric_fields
+      ~TestConfig.parent_configurations_cls
+      ~TestConfig.parse_run_kwargs
+      ~TestConfig.parse_simulation_input
+      ~TestConfig.plot_attributes
+      ~TestConfig.post_run_callback
+      ~TestConfig.post_update
+      ~TestConfig.pre_compile
+      ~TestConfig.pre_run_callback
+      ~TestConfig.print_info
+      ~TestConfig.rate
+      ~TestConfig.rate_linear
+      ~TestConfig.rate_nonlinear
+      ~TestConfig.ref_dXdt
+      ~TestConfig.resetLog
+      ~TestConfig.resetSystemLogs
+      ~TestConfig.run
+      ~TestConfig.run_internal_systems
+      ~TestConfig.set_attr
+      ~TestConfig.set_time
+      ~TestConfig.setattrs
+      ~TestConfig.setup_global_dynamics
+      ~TestConfig.signals_attributes
+      ~TestConfig.sim_matrix
+      ~TestConfig.simulate
+      ~TestConfig.slack_notification
+      ~TestConfig.slot_refs
+      ~TestConfig.slots_attributes
+      ~TestConfig.smart_split_dataframe
+      ~TestConfig.solver
+      ~TestConfig.solver_vars
+      ~TestConfig.solvers_attributes
+      ~TestConfig.step
+      ~TestConfig.subclasses
+      ~TestConfig.subcls_compile
+      ~TestConfig.system_properties_classdef
+      ~TestConfig.system_references
+      ~TestConfig.table_fields
+      ~TestConfig.trace_attributes
+      ~TestConfig.transients_attributes
+      ~TestConfig.update
+      ~TestConfig.update_dynamics
+      ~TestConfig.update_feedthrough
+      ~TestConfig.update_input
+      ~TestConfig.update_output_constants
+      ~TestConfig.update_output_matrix
+      ~TestConfig.update_state
+      ~TestConfig.update_state_constants
+      ~TestConfig.validate_class
+      ~TestConfig.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestConfig.Ut_ref
+      ~TestConfig.Xt_ref
+      ~TestConfig.Yt_ref
+      ~TestConfig.anything_changed
+      ~TestConfig.as_dict
+      ~TestConfig.attrs_fields
+      ~TestConfig.classname
+      ~TestConfig.converged
+      ~TestConfig.dXtdt_ref
+      ~TestConfig.dataframe
+      ~TestConfig.dataframe_constants
+      ~TestConfig.dataframe_variants
+      ~TestConfig.displayname
+      ~TestConfig.dynamic_A
+      ~TestConfig.dynamic_B
+      ~TestConfig.dynamic_C
+      ~TestConfig.dynamic_D
+      ~TestConfig.dynamic_F
+      ~TestConfig.dynamic_K
+      ~TestConfig.dynamic_input
+      ~TestConfig.dynamic_input_vars
+      ~TestConfig.dynamic_output
+      ~TestConfig.dynamic_output_vars
+      ~TestConfig.dynamic_state
+      ~TestConfig.dynamic_state_vars
+      ~TestConfig.filename
+      ~TestConfig.identity
+      ~TestConfig.input_as_dict
+      ~TestConfig.input_hash
+      ~TestConfig.last_context
+      ~TestConfig.log_fmt
+      ~TestConfig.log_level
+      ~TestConfig.log_on
+      ~TestConfig.log_silo
+      ~TestConfig.logger
+      ~TestConfig.nonlinear
+      ~TestConfig.numeric_as_dict
+      ~TestConfig.numeric_hash
+      ~TestConfig.plotable_variables
+      ~TestConfig.run_id
+      ~TestConfig.skip_plot_vars
+      ~TestConfig.slack_webhook_url
+      ~TestConfig.solved
+      ~TestConfig.static_A
+      ~TestConfig.static_B
+      ~TestConfig.static_C
+      ~TestConfig.static_D
+      ~TestConfig.static_F
+      ~TestConfig.static_K
+      ~TestConfig.stored_plots
+      ~TestConfig.system_id
+      ~TestConfig.table_hash
+      ~TestConfig.table_row_dict
+      ~TestConfig.test_four
+      ~TestConfig.test_one
+      ~TestConfig.test_three
+      ~TestConfig.test_two
+      ~TestConfig.time
+      ~TestConfig.unique_hash
+      ~TestConfig.update_interval
+      ~TestConfig.attrs_prop
+      ~TestConfig.attrs_str
+      ~TestConfig.parent
+      ~TestConfig.name
+   
+   

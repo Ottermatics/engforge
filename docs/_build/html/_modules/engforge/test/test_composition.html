@@ -1,0 +1,258 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.test.test_composition &mdash; engforge 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/readthedocs-custom.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.test.test_composition</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.test.test_composition</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">forge</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.system</span><span class="w"> </span><span class="kn">import</span> <span class="n">System</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.attr_dynamics</span><span class="w"> </span><span class="kn">import</span> <span class="n">Time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.attr_solver</span><span class="w"> </span><span class="kn">import</span> <span class="n">Solver</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.attr_signals</span><span class="w"> </span><span class="kn">import</span> <span class="n">Signal</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.attr_slots</span><span class="w"> </span><span class="kn">import</span> <span class="n">Slot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.properties</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.problem_context</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProblemExec</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">attrs</span>
+
+
+<div class="viewcode-block" id="MockComponent">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_composition.MockComponent.html#engforge.test.test_composition.MockComponent">[docs]</a>
+<span class="nd">@forge</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MockComponent</span><span class="p">(</span><span class="n">Component</span><span class="p">):</span>
+    <span class="nb">input</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># use to test input from system</span>
+    <span class="n">aux</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">Slot</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">Component</span><span class="p">,</span> <span class="n">none_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="nd">@system_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span></div>
+
+
+
+<div class="viewcode-block" id="limit_max">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_composition.limit_max.html#engforge.test.test_composition.limit_max">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">limit_max</span><span class="p">(</span><span class="n">system</span><span class="p">,</span> <span class="n">prb</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mi">4</span> <span class="o">-</span> <span class="n">system</span><span class="o">.</span><span class="n">input</span></div>
+
+
+
+<div class="viewcode-block" id="MockSystem">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_composition.MockSystem.html#engforge.test.test_composition.MockSystem">[docs]</a>
+<span class="nd">@forge</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">MockSystem</span><span class="p">(</span><span class="n">System</span><span class="p">):</span>
+    <span class="nb">input</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">output</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">in2</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">x</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="n">attrs</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="c1"># move system input to component</span>
+    <span class="n">pre_sig</span> <span class="o">=</span> <span class="n">Signal</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="s2">&quot;comp.input&quot;</span><span class="p">,</span> <span class="s2">&quot;input&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;pre&quot;</span><span class="p">)</span>
+    <span class="c1"># move component output to system</span>
+    <span class="n">post_sig</span> <span class="o">=</span> <span class="n">Signal</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="s2">&quot;comp.output&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;both&quot;</span><span class="p">)</span>
+
+    <span class="n">Solver</span><span class="o">.</span><span class="n">constraint_equality</span><span class="p">(</span><span class="s2">&quot;in_out_diff&quot;</span><span class="p">)</span>
+    <span class="n">Solver</span><span class="o">.</span><span class="n">constraint_equality</span><span class="p">(</span><span class="s2">&quot;in2out2&quot;</span><span class="p">)</span>
+
+    <span class="n">var_in</span> <span class="o">=</span> <span class="n">Solver</span><span class="o">.</span><span class="n">declare_var</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">)</span>
+    <span class="n">var_in</span><span class="o">.</span><span class="n">add_var_constraint</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">var_in</span><span class="o">.</span><span class="n">add_var_constraint</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">sol2</span> <span class="o">=</span> <span class="n">Solver</span><span class="o">.</span><span class="n">declare_var</span><span class="p">(</span><span class="s2">&quot;in2&quot;</span><span class="p">)</span>
+    <span class="n">sol2</span><span class="o">.</span><span class="n">add_var_constraint</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;max&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">limit_max</span><span class="p">)</span>
+    <span class="n">sol2</span><span class="o">.</span><span class="n">add_var_constraint</span><span class="p">(</span><span class="n">kind</span><span class="o">=</span><span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">comp</span> <span class="o">=</span> <span class="n">Slot</span><span class="o">.</span><span class="n">define</span><span class="p">(</span><span class="n">MockComponent</span><span class="p">)</span>
+
+    <span class="nd">@system_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">in_out_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="c1"># Should solve= 0 when in2=input^2</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">output</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">in2</span> <span class="o">*</span> <span class="mf">0.1</span>
+
+    <span class="nd">@system_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">in2out2</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">in2</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">aux</span> <span class="o">/</span> <span class="mi">10</span>
+
+    <span class="nd">@system_property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">dxdt</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="c1"># dxdt = (in - in**2)/1000.0</span>
+        <span class="c1"># Should converge to 1,0,-1</span>
+        <span class="n">ans</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">in2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="k">if</span> <span class="n">ans</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">ans</span>
+        <span class="k">return</span> <span class="n">ans</span></div>
+
+
+
+<div class="viewcode-block" id="TestComposition">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_composition.TestComposition.html#engforge.test.test_composition.TestComposition">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestComposition</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestComposition.setUp">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_composition.TestComposition.html#engforge.test.test_composition.TestComposition.setUp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comp2</span> <span class="o">=</span> <span class="n">MockComponent</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">comp</span> <span class="o">=</span> <span class="n">MockComponent</span><span class="p">(</span><span class="n">comp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">comp2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span> <span class="o">=</span> <span class="n">MockSystem</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">comp</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">comp</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_signals</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">post_sig</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;post&quot;</span>  <span class="c1"># usually its both</span>
+
+        <span class="c1"># Pre Signals Test</span>
+        <span class="n">outsys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">output</span>
+        <span class="n">outcomp</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">output</span>
+        <span class="n">sysstart</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">input</span>
+        <span class="n">compstart</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">input</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">sysstart</span><span class="p">,</span> <span class="n">compstart</span><span class="p">)</span>  <span class="c1"># no signals transfering input</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;test signals: </span><span class="si">{</span><span class="n">sysstart</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">compstart</span><span class="si">}</span><span class="s2">| </span><span class="si">{</span><span class="n">outsys</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">outcomp</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">ProblemExec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="p">,</span> <span class="p">{},</span> <span class="n">post_exec</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">pre_exec</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">as</span> <span class="n">pbx</span><span class="p">:</span>
+            <span class="n">sysend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">input</span>
+            <span class="n">compend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">input</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">sysend</span><span class="p">,</span> <span class="n">compend</span><span class="p">)</span>  <span class="c1"># signals should work as defined</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">sysstart</span><span class="p">,</span> <span class="n">sysend</span><span class="p">)</span>  <span class="c1"># input should remain the same</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">compstart</span><span class="p">,</span> <span class="n">compend</span><span class="p">)</span>  <span class="c1"># input on comp changes</span>
+
+            <span class="n">sysstart</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">output</span>
+            <span class="n">compstart</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">output</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">sysstart</span><span class="p">,</span> <span class="n">compstart</span><span class="p">)</span>  <span class="c1"># they aren&#39;t aligned</span>
+            <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;pre-vert: </span><span class="si">{</span><span class="n">sysstart</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">compstart</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+            <span class="c1"># preserve changes</span>
+            <span class="n">pbx</span><span class="o">.</span><span class="n">exit_with_state</span><span class="p">()</span>
+
+        <span class="c1"># now post signals should be applied</span>
+        <span class="n">sysend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">output</span>
+        <span class="n">compend</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">comp</span><span class="o">.</span><span class="n">output</span>
+
+        <span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;final: </span><span class="si">{</span><span class="n">sysstart</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">compstart</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">sysend</span><span class="p">,</span> <span class="n">compend</span><span class="p">)</span>  <span class="c1"># signals should work</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">compstart</span><span class="p">,</span> <span class="n">compend</span><span class="p">)</span>  <span class="c1"># output should change</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotEqual</span><span class="p">(</span><span class="n">sysstart</span><span class="p">,</span> <span class="n">sysend</span><span class="p">)</span>  <span class="c1"># output should change</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_input_and_run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="s2">&quot;comp.aux&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;comp.comp.aux&quot;</span><span class="p">:</span> <span class="mi">6</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;wrong run config&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s2">&quot;comp.aux&quot;</span><span class="p">]),</span> <span class="nb">set</span><span class="p">([</span><span class="mi">5</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">system</span><span class="o">.</span><span class="n">dataframe</span><span class="p">[</span><span class="s2">&quot;comp.comp.aux&quot;</span><span class="p">]),</span> <span class="nb">set</span><span class="p">([</span><span class="mi">6</span><span class="p">]))</span></div>
+
+
+        <span class="c1"># internal storage</span>
+        <span class="c1"># self.assertEqual(set(self.system.comp.dataframe[&quot;aux&quot;]), set([5]))</span>
+        <span class="c1"># self.assertEqual(set(self.system.comp.comp.dataframe[&quot;aux&quot;]), set([6]))</span>
+
+
+<span class="c1">#         # solver constraints checking</span>
+<span class="c1">#         input = self.system.dataframe[&quot;input&quot;][0]</span>
+<span class="c1">#         self.assertGreaterEqual(input, -1e3)  # min protection</span>
+<span class="c1">#         self.assertLessEqual(input, 1)  # max protection</span>
+<span class="c1">#</span>
+<span class="c1">#         in2 = self.system.dataframe[&quot;in2&quot;][0]</span>
+<span class="c1">#         self.assertGreaterEqual(in2, -1e3)  # min protection</span>
+<span class="c1">#         self.assertLessEqual(in2, 4 - input)  # max protection</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

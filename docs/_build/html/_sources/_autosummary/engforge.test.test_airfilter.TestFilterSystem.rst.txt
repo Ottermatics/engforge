@@ -1,0 +1,101 @@
+engforge.test.test\_airfilter.TestFilterSystem
+==============================================
+
+.. currentmodule:: engforge.test.test_airfilter
+
+.. autoclass:: TestFilterSystem
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestFilterSystem.addClassCleanup
+      ~TestFilterSystem.addCleanup
+      ~TestFilterSystem.addTypeEqualityFunc
+      ~TestFilterSystem.assertAlmostEqual
+      ~TestFilterSystem.assertAlmostEquals
+      ~TestFilterSystem.assertCountEqual
+      ~TestFilterSystem.assertDictContainsSubset
+      ~TestFilterSystem.assertDictEqual
+      ~TestFilterSystem.assertEqual
+      ~TestFilterSystem.assertEquals
+      ~TestFilterSystem.assertFalse
+      ~TestFilterSystem.assertGreater
+      ~TestFilterSystem.assertGreaterEqual
+      ~TestFilterSystem.assertIn
+      ~TestFilterSystem.assertIs
+      ~TestFilterSystem.assertIsInstance
+      ~TestFilterSystem.assertIsNone
+      ~TestFilterSystem.assertIsNot
+      ~TestFilterSystem.assertIsNotNone
+      ~TestFilterSystem.assertLess
+      ~TestFilterSystem.assertLessEqual
+      ~TestFilterSystem.assertListEqual
+      ~TestFilterSystem.assertLogs
+      ~TestFilterSystem.assertMultiLineEqual
+      ~TestFilterSystem.assertNoLogs
+      ~TestFilterSystem.assertNotAlmostEqual
+      ~TestFilterSystem.assertNotAlmostEquals
+      ~TestFilterSystem.assertNotEqual
+      ~TestFilterSystem.assertNotEquals
+      ~TestFilterSystem.assertNotIn
+      ~TestFilterSystem.assertNotIsInstance
+      ~TestFilterSystem.assertNotRegex
+      ~TestFilterSystem.assertNotRegexpMatches
+      ~TestFilterSystem.assertRaises
+      ~TestFilterSystem.assertRaisesRegex
+      ~TestFilterSystem.assertRaisesRegexp
+      ~TestFilterSystem.assertRegex
+      ~TestFilterSystem.assertRegexpMatches
+      ~TestFilterSystem.assertSequenceEqual
+      ~TestFilterSystem.assertSetEqual
+      ~TestFilterSystem.assertTrue
+      ~TestFilterSystem.assertTupleEqual
+      ~TestFilterSystem.assertWarns
+      ~TestFilterSystem.assertWarnsRegex
+      ~TestFilterSystem.assert_
+      ~TestFilterSystem.countTestCases
+      ~TestFilterSystem.debug
+      ~TestFilterSystem.defaultTestResult
+      ~TestFilterSystem.doClassCleanups
+      ~TestFilterSystem.doCleanups
+      ~TestFilterSystem.enterClassContext
+      ~TestFilterSystem.enterContext
+      ~TestFilterSystem.fail
+      ~TestFilterSystem.failIf
+      ~TestFilterSystem.failIfAlmostEqual
+      ~TestFilterSystem.failIfEqual
+      ~TestFilterSystem.failUnless
+      ~TestFilterSystem.failUnlessAlmostEqual
+      ~TestFilterSystem.failUnlessEqual
+      ~TestFilterSystem.failUnlessRaises
+      ~TestFilterSystem.id
+      ~TestFilterSystem.run
+      ~TestFilterSystem.setUp
+      ~TestFilterSystem.setUpClass
+      ~TestFilterSystem.shortDescription
+      ~TestFilterSystem.skipTest
+      ~TestFilterSystem.subTest
+      ~TestFilterSystem.tearDown
+      ~TestFilterSystem.tearDownClass
+      ~TestFilterSystem.test_plot
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestFilterSystem.longMessage
+      ~TestFilterSystem.maxDiff
+   
+   

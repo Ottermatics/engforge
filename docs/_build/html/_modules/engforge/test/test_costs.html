@@ -1,0 +1,475 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>engforge.test.test_costs &mdash; engforge 0.2.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/readthedocs-custom.css" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=938c9ccc"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            engforge
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../index.html">Home page</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../tutorials.html">Tutorials</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../_autosummary/engforge.html">API reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">engforge</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">engforge.test.test_costs</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for engforge.test.test_costs</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Testing of costs reporting module</span>
+<span class="sd">- emphasis on recursive testing w/o double accounting on instance basis (id!)</span>
+<span class="sd">- emphasis on default / subclass adjustments</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">unittest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">engforge._testing_components</span><span class="w"> </span><span class="kn">import</span> <span class="o">*</span>
+
+
+<div class="viewcode-block" id="TestEconDefaults">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_costs.TestEconDefaults.html#engforge.test.test_costs.TestEconDefaults">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestEconDefaults</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestEconDefaults.tearDown">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_costs.TestEconDefaults.html#engforge.test.test_costs.TestEconDefaults.tearDown">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">Comp1</span><span class="o">.</span><span class="n">reset_cls_costs</span><span class="p">()</span>
+        <span class="n">EconDefault</span><span class="o">.</span><span class="n">reset_cls_costs</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_custom_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">ed</span> <span class="o">=</span> <span class="n">EconDefault</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertNotIn</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="n">ed</span><span class="o">.</span><span class="n">internal_components</span><span class="p">())</span>
+
+        <span class="n">ed</span><span class="o">.</span><span class="n">custom_cost</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="n">Comp1</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertIn</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="n">ed</span><span class="o">.</span><span class="n">internal_components</span><span class="p">())</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_non_costmodel_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">EconDefault</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp&quot;</span><span class="p">,</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">ed</span> <span class="o">=</span> <span class="n">EconDefault</span><span class="p">(</span><span class="n">comp</span><span class="o">=</span><span class="n">Component</span><span class="p">())</span>
+        <span class="n">ed</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ed</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ed</span><span class="o">.</span><span class="n">econ</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="TestCategoriesAndTerms">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_costs.TestCategoriesAndTerms.html#engforge.test.test_costs.TestCategoriesAndTerms">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestCategoriesAndTerms</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCategoriesAndTerms.tearDown">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_costs.TestCategoriesAndTerms.html#engforge.test.test_costs.TestCategoriesAndTerms.tearDown">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">Comp1</span><span class="o">.</span><span class="n">reset_cls_costs</span><span class="p">()</span>
+        <span class="n">Comp2</span><span class="o">.</span><span class="n">reset_cls_costs</span><span class="p">()</span>
+        <span class="n">EconRecursive</span><span class="o">.</span><span class="n">reset_cls_costs</span><span class="p">()</span>
+        <span class="n">TermCosts</span><span class="o">.</span><span class="n">reset_cls_costs</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_itemized_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tc</span> <span class="o">=</span> <span class="n">TermCosts</span><span class="p">()</span>
+
+        <span class="n">ct</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">costs_at_term</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_init&quot;</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_maintenance&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_tax&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_wage_tax&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">ct</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">costs_at_term</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_init&quot;</span><span class="p">],</span> <span class="mi">00</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_maintenance&quot;</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_tax&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_wage_tax&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">ct</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">costs_at_term</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_init&quot;</span><span class="p">],</span> <span class="mi">00</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_maintenance&quot;</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_tax&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ct</span><span class="p">[</span><span class="s2">&quot;cost_wage_tax&quot;</span><span class="p">],</span> <span class="mi">15</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_category_costs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tc</span> <span class="o">=</span> <span class="n">TermCosts</span><span class="p">()</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">cost_categories_at_term</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cc</span><span class="p">[</span><span class="s2">&quot;capex&quot;</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cc</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cc</span><span class="p">[</span><span class="s2">&quot;tax&quot;</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">tc</span> <span class="o">=</span> <span class="n">TermCosts</span><span class="p">()</span>
+        <span class="n">cc</span> <span class="o">=</span> <span class="n">tc</span><span class="o">.</span><span class="n">cost_categories_at_term</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cc</span><span class="p">[</span><span class="s2">&quot;capex&quot;</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cc</span><span class="p">[</span><span class="s2">&quot;opex&quot;</span><span class="p">],</span> <span class="mi">25</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">cc</span><span class="p">[</span><span class="s2">&quot;tax&quot;</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_econ</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tc</span> <span class="o">=</span> <span class="n">TermCosts</span><span class="p">()</span>
+        <span class="n">Comp2</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="n">Comp2</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">er</span> <span class="o">=</span> <span class="n">EconRecursive</span><span class="p">(</span><span class="n">comp1</span><span class="o">=</span><span class="n">tc</span><span class="p">,</span> <span class="n">comp2</span><span class="o">=</span><span class="n">c2</span><span class="p">)</span>
+        <span class="c1"># inkw = {&#39;econ_term_length&#39;:[1,5,10,50],&#39;econ_discount_rate&#39;:[0,0.01,0.05,0.1]}</span>
+        <span class="n">inkw</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">er</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">revert_last</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">inkw</span><span class="p">)</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="n">er</span><span class="o">.</span><span class="n">data_dict</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.lifecycle.term_cost&quot;</span><span class="p">],</span> <span class="mi">161</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.summary.total_cost&quot;</span><span class="p">],</span> <span class="mi">161</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;combine_cost&quot;</span><span class="p">],</span> <span class="mi">161</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;sub_items_cost&quot;</span><span class="p">],</span> <span class="mi">161</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_econ_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">tc</span> <span class="o">=</span> <span class="n">TermCosts</span><span class="p">()</span>
+        <span class="n">Comp2</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="n">Comp2</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">er</span> <span class="o">=</span> <span class="n">EconRecursive</span><span class="p">(</span><span class="n">comp1</span><span class="o">=</span><span class="n">tc</span><span class="p">,</span> <span class="n">comp2</span><span class="o">=</span><span class="n">c2</span><span class="p">)</span>
+        <span class="n">inkw</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;econ.term_length&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span> <span class="s2">&quot;econ.fixed_output&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+        <span class="c1"># inkw = {}</span>
+        <span class="n">er</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">revert_last</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">revert_every</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">inkw</span><span class="p">)</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">er</span><span class="o">.</span><span class="n">dataframe</span>
+        <span class="n">tc</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">df</span><span class="p">[</span><span class="s2">&quot;econ.summary.total_cost&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">161.0</span><span class="p">,</span> <span class="mf">220.0</span><span class="p">,</span> <span class="mf">305.0</span><span class="p">,</span> <span class="mf">390.0</span><span class="p">])</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">tc</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="TestEconomicsAccounting">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_costs.TestEconomicsAccounting.html#engforge.test.test_costs.TestEconomicsAccounting">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestEconomicsAccounting</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestEconomicsAccounting.setUp">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_costs.TestEconomicsAccounting.html#engforge.test.test_costs.TestEconomicsAccounting.setUp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="TestEconomicsAccounting.tearDown">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_costs.TestEconomicsAccounting.html#engforge.test.test_costs.TestEconomicsAccounting.tearDown">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">Comp1</span><span class="o">.</span><span class="n">reset_cls_costs</span><span class="p">()</span>
+        <span class="n">Comp2</span><span class="o">.</span><span class="n">reset_cls_costs</span><span class="p">()</span>
+        <span class="n">EconRecursive</span><span class="o">.</span><span class="n">reset_cls_costs</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_econ_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Comp1</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="n">Norm</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">Comp2</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
+        <span class="n">EconRecursive</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp2&quot;</span><span class="p">,</span> <span class="n">Comp2</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">er</span> <span class="o">=</span> <span class="n">EconRecursive</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+        <span class="c1"># c2 = er.comp2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">78</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">sub_items_cost</span><span class="p">,</span> <span class="mi">28</span><span class="p">)</span>
+
+        <span class="n">er</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">er</span><span class="o">.</span><span class="n">data_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">78</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.summary.total_cost&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">78</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.lifecycle.annualized.term_cost&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">78</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.lifecycle.annualized.levelized_cost&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">78</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.lifecycle.term_cost&quot;</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_recursive_null</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ANS</span><span class="o">=</span><span class="mi">75</span><span class="p">):</span>
+        <span class="n">Comp1</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">Comp2</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">EconRecursive</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">EconRecursive</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp2&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+        <span class="n">er</span> <span class="o">=</span> <span class="n">EconRecursive</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">comp1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comp2</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">er</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="n">ANS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">econ</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="n">ANS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">comp1</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">comp2</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="n">er</span><span class="o">.</span><span class="n">data_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ANS</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.combine_cost&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ANS</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;combine_cost&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.comp1.cost.item_cost&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.comp2.cost.item_cost&quot;</span><span class="p">])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_recursive_comp2</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ANS</span><span class="o">=</span><span class="mi">80</span><span class="p">):</span>
+        <span class="n">Comp1</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">Comp2</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">EconRecursive</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">EconRecursive</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp2&quot;</span><span class="p">,</span> <span class="n">Comp2</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">7</span><span class="p">))</span>
+        <span class="n">er</span> <span class="o">=</span> <span class="n">EconRecursive</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">comp1</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">comp2</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">er</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="n">ANS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">econ</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="n">ANS</span><span class="p">)</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="n">er</span><span class="o">.</span><span class="n">data_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ANS</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.combine_cost&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ANS</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;combine_cost&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.comp1.cost.item_cost&quot;</span><span class="p">])</span>
+        <span class="c1"># self.assertEqual(10,d[&#39;econ_comp2.combine_cost&#39;])</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_recursive_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ANS</span><span class="o">=</span><span class="mi">80</span><span class="p">):</span>
+        <span class="c1"># FIXME: missing norm cost of -5</span>
+
+        <span class="n">Comp1</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        <span class="n">Comp2</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">EconRecursive</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+        <span class="n">EconRecursive</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp2&quot;</span><span class="p">,</span> <span class="n">Comp2</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">7</span><span class="p">))</span>
+        <span class="n">er</span> <span class="o">=</span> <span class="n">EconRecursive</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+        <span class="n">er</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="n">ANS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">er</span><span class="o">.</span><span class="n">econ</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="n">ANS</span><span class="p">)</span>
+
+        <span class="n">d</span> <span class="o">=</span> <span class="n">er</span><span class="o">.</span><span class="n">data_dict</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ANS</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.combine_cost&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">ANS</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;combine_cost&quot;</span><span class="p">])</span>
+        <span class="c1"># self.assertEqual(5,d[&#39;econ_comp1.combine_cost&#39;])</span>
+        <span class="c1"># self.assertEqual(10,d[&#39;econ_comp2.combine_cost&#39;])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.comp2.comp1.cost.item_cost&quot;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;econ.comp1.norm.cost.item_cost&quot;</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="TestCostModel">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_costs.TestCostModel.html#engforge.test.test_costs.TestCostModel">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestCostModel</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+<div class="viewcode-block" id="TestCostModel.setUp">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_costs.TestCostModel.html#engforge.test.test_costs.TestCostModel.setUp">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">setUp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="TestCostModel.tearDown">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_costs.TestCostModel.html#engforge.test.test_costs.TestCostModel.tearDown">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">tearDown</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">Comp1</span><span class="o">.</span><span class="n">reset_cls_costs</span><span class="p">()</span>
+        <span class="n">Comp2</span><span class="o">.</span><span class="n">reset_cls_costs</span><span class="p">()</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_comp1</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">c0</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c0</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+        <span class="n">c2</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c2</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_comp2</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="n">Comp2</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">comp1</span><span class="o">=</span><span class="n">c1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c2</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="n">Comp2</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">comp1</span><span class="o">=</span><span class="n">c1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c2</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="n">Comp2</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">comp1</span><span class="o">=</span><span class="n">c1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c2</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">Comp1</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">c1</span><span class="o">.</span><span class="n">custom_cost</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">Comp1</span><span class="o">.</span><span class="n">_slot_costs</span><span class="p">[</span><span class="s2">&quot;norm&quot;</span><span class="p">],</span> <span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_ref_loop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Comp1.default_cost(&#39;norm&#39;,10)</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="n">Comp2</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">c2</span><span class="p">)</span>
+        <span class="n">c2</span><span class="o">.</span><span class="n">comp1</span> <span class="o">=</span> <span class="n">c1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">sub_items_cost</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_override</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">Comp1</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="c1"># c2 = Comp2(cost_per_item=5)</span>
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>  <span class="c1"># ,norm=c2)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">sub_items_cost</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+
+        <span class="c1"># Comp1.reset_cls_costs()</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="n">Comp2</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+        <span class="n">c1</span> <span class="o">=</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="n">c2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c1</span><span class="o">.</span><span class="n">sub_items_cost</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Comp1.reset_cls_costs()</span>
+        <span class="n">Comp1</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;norm&quot;</span><span class="p">,</span> <span class="n">Norm</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">10</span><span class="p">))</span>
+        <span class="n">Comp2</span><span class="o">.</span><span class="n">default_cost</span><span class="p">(</span><span class="s2">&quot;comp1&quot;</span><span class="p">,</span> <span class="n">Comp1</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">5</span><span class="p">))</span>
+        <span class="n">c2</span> <span class="o">=</span> <span class="n">Comp2</span><span class="p">(</span><span class="n">cost_per_item</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c2</span><span class="o">.</span><span class="n">combine_cost</span><span class="p">,</span> <span class="mi">18</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertEqual</span><span class="p">(</span><span class="n">c2</span><span class="o">.</span><span class="n">sub_items_cost</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="TestFanSystemDataFrame">
+<a class="viewcode-back" href="../../../_autosummary/engforge.test.test_costs.TestFanSystemDataFrame.html#engforge.test.test_costs.TestFanSystemDataFrame">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestFanSystemDataFrame</span><span class="p">(</span><span class="n">unittest</span><span class="o">.</span><span class="n">TestCase</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">test_dataframe</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Create the FanSystem instance</span>
+        <span class="n">fs</span> <span class="o">=</span> <span class="n">FanSystem</span><span class="p">(</span><span class="n">fan</span><span class="o">=</span><span class="n">Fan</span><span class="p">(),</span> <span class="n">motor</span><span class="o">=</span><span class="n">Motor</span><span class="p">(),</span> <span class="n">base</span><span class="o">=</span><span class="n">MetalBase</span><span class="p">())</span>
+        <span class="n">fs</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="s2">&quot;econ.term_length&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">50</span><span class="p">],</span>
+                <span class="s2">&quot;fan.V&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+                <span class="s2">&quot;fan.area&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+            <span class="p">},</span>
+            <span class="n">base</span><span class="o">=</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="n">MetalBase</span><span class="p">()],</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Get the dataframe</span>
+        <span class="n">df_complete</span> <span class="o">=</span> <span class="n">fs</span><span class="o">.</span><span class="n">last_context</span><span class="o">.</span><span class="n">dataframe</span>
+
+        <span class="n">dfc</span> <span class="o">=</span> <span class="n">df_complete</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">dfc</span><span class="p">[</span><span class="s2">&quot;fan.blade_cost&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">dfc</span><span class="p">[</span><span class="s2">&quot;motor.motor_cost&quot;</span><span class="p">]</span>
+            <span class="o">==</span> <span class="n">dfc</span><span class="p">[</span><span class="s2">&quot;econ.lifecycle.category.capex&quot;</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">match</span><span class="p">)</span>
+
+        <span class="n">match</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">df_complete</span><span class="p">[</span><span class="s2">&quot;fan.area&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="n">df_complete</span><span class="p">[</span><span class="s2">&quot;fan.v&quot;</span><span class="p">]</span>
+            <span class="o">==</span> <span class="n">df_complete</span><span class="p">[</span><span class="s2">&quot;fan.volumetric_flow&quot;</span><span class="p">]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">assertTrue</span><span class="p">(</span><span class="n">match</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># TODO: get cost accounting working for ComponentIter components</span>
+<span class="c1"># @forge</span>
+<span class="c1"># class CompGroup(ComponentIterator):</span>
+<span class="c1">#     pass</span>
+<span class="c1"># # @forge</span>
+<span class="c1"># # class CostGroup(CompGroup,CostModel):</span>
+<span class="c1"># #     pass</span>
+
+<span class="c1"># @forge</span>
+<span class="c1"># class EconWide(System):</span>
+<span class="c1">#     econ = Slot.define(Economics)</span>
+<span class="c1">#     comp_set = Slot.define_iterator(CompGroup,wide=True)</span>
+<span class="c1">#</span>
+<span class="c1"># @forge</span>
+<span class="c1"># class EconNarrow(System):</span>
+<span class="c1">#     econ = Slot.define(Economics)</span>
+<span class="c1">#     comp_set = Slot.define_iterator(CompGroup,wide=False)</span>
+
+<span class="c1"># class TestEconomicsIter(unittest.TestCase):</span>
+<span class="c1">#</span>
+<span class="c1">#     def tearDown(self):</span>
+<span class="c1">#         Comp1.reset_cls_costs()</span>
+<span class="c1">#         Comp2.reset_cls_costs()</span>
+<span class="c1">#         EconWide.reset_cls_costs()</span>
+<span class="c1">#         EconNarrow.reset_cls_costs()</span>
+<span class="c1">#         CostGroup.reset_cls_costs()</span>
+<span class="c1">#</span>
+<span class="c1">#     def test_comp_wide(self):</span>
+<span class="c1">#</span>
+<span class="c1">#     def test_comp_narrow(self):</span>
+<span class="c1">#</span>
+<span class="c1">#     def test_cost_wide(self):</span>
+<span class="c1">#</span>
+<span class="c1">#     def test_comp_narrow(self):</span>
+<span class="c1">#         cg = CompGroup(component_type=Comp1)</span>
+<span class="c1">#         total = 0</span>
+<span class="c1">#         for i in range(11):</span>
+<span class="c1">#             cg.data.append(Comp1(cost_per_item=i))</span>
+<span class="c1">#             total += i</span>
+<span class="c1">#</span>
+<span class="c1">#         ew = EconNarrow(comp_set = cg)</span>
+<span class="c1">#         ew.run()</span>
+<span class="c1">#</span>
+<span class="c1">#         d = ew.data_dict</span>
+<span class="c1">#         self.assertEqual(d[&#39;econ_comp_set.item_cost&#39;], ew.comp_set.current.item_cost)</span>
+<span class="c1">#         self.assertEqual(ew.econ.total_cost,total)</span>
+<span class="c1">#         self.assertEqual(ew.econ.total_cost,total)</span>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">unittest</span><span class="o">.</span><span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Kevin Russell.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

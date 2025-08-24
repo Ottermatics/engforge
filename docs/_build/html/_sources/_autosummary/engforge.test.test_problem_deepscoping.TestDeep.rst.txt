@@ -1,0 +1,101 @@
+engforge.test.test\_problem\_deepscoping.TestDeep
+=================================================
+
+.. currentmodule:: engforge.test.test_problem_deepscoping
+
+.. autoclass:: TestDeep
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestDeep.addClassCleanup
+      ~TestDeep.addCleanup
+      ~TestDeep.addTypeEqualityFunc
+      ~TestDeep.assertAlmostEqual
+      ~TestDeep.assertAlmostEquals
+      ~TestDeep.assertCountEqual
+      ~TestDeep.assertDictContainsSubset
+      ~TestDeep.assertDictEqual
+      ~TestDeep.assertEqual
+      ~TestDeep.assertEquals
+      ~TestDeep.assertFalse
+      ~TestDeep.assertGreater
+      ~TestDeep.assertGreaterEqual
+      ~TestDeep.assertIn
+      ~TestDeep.assertIs
+      ~TestDeep.assertIsInstance
+      ~TestDeep.assertIsNone
+      ~TestDeep.assertIsNot
+      ~TestDeep.assertIsNotNone
+      ~TestDeep.assertLess
+      ~TestDeep.assertLessEqual
+      ~TestDeep.assertListEqual
+      ~TestDeep.assertLogs
+      ~TestDeep.assertMultiLineEqual
+      ~TestDeep.assertNoLogs
+      ~TestDeep.assertNotAlmostEqual
+      ~TestDeep.assertNotAlmostEquals
+      ~TestDeep.assertNotEqual
+      ~TestDeep.assertNotEquals
+      ~TestDeep.assertNotIn
+      ~TestDeep.assertNotIsInstance
+      ~TestDeep.assertNotRegex
+      ~TestDeep.assertNotRegexpMatches
+      ~TestDeep.assertRaises
+      ~TestDeep.assertRaisesRegex
+      ~TestDeep.assertRaisesRegexp
+      ~TestDeep.assertRegex
+      ~TestDeep.assertRegexpMatches
+      ~TestDeep.assertSequenceEqual
+      ~TestDeep.assertSetEqual
+      ~TestDeep.assertTrue
+      ~TestDeep.assertTupleEqual
+      ~TestDeep.assertWarns
+      ~TestDeep.assertWarnsRegex
+      ~TestDeep.assert_
+      ~TestDeep.countTestCases
+      ~TestDeep.debug
+      ~TestDeep.defaultTestResult
+      ~TestDeep.doClassCleanups
+      ~TestDeep.doCleanups
+      ~TestDeep.enterClassContext
+      ~TestDeep.enterContext
+      ~TestDeep.fail
+      ~TestDeep.failIf
+      ~TestDeep.failIfAlmostEqual
+      ~TestDeep.failIfEqual
+      ~TestDeep.failUnless
+      ~TestDeep.failUnlessAlmostEqual
+      ~TestDeep.failUnlessEqual
+      ~TestDeep.failUnlessRaises
+      ~TestDeep.id
+      ~TestDeep.run
+      ~TestDeep.setUp
+      ~TestDeep.setUpClass
+      ~TestDeep.shortDescription
+      ~TestDeep.skipTest
+      ~TestDeep.subTest
+      ~TestDeep.tearDown
+      ~TestDeep.tearDownClass
+      ~TestDeep.test_one_deep
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestDeep.longMessage
+      ~TestDeep.maxDiff
+   
+   

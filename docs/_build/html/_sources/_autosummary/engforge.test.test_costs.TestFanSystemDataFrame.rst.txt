@@ -1,0 +1,101 @@
+engforge.test.test\_costs.TestFanSystemDataFrame
+================================================
+
+.. currentmodule:: engforge.test.test_costs
+
+.. autoclass:: TestFanSystemDataFrame
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestFanSystemDataFrame.addClassCleanup
+      ~TestFanSystemDataFrame.addCleanup
+      ~TestFanSystemDataFrame.addTypeEqualityFunc
+      ~TestFanSystemDataFrame.assertAlmostEqual
+      ~TestFanSystemDataFrame.assertAlmostEquals
+      ~TestFanSystemDataFrame.assertCountEqual
+      ~TestFanSystemDataFrame.assertDictContainsSubset
+      ~TestFanSystemDataFrame.assertDictEqual
+      ~TestFanSystemDataFrame.assertEqual
+      ~TestFanSystemDataFrame.assertEquals
+      ~TestFanSystemDataFrame.assertFalse
+      ~TestFanSystemDataFrame.assertGreater
+      ~TestFanSystemDataFrame.assertGreaterEqual
+      ~TestFanSystemDataFrame.assertIn
+      ~TestFanSystemDataFrame.assertIs
+      ~TestFanSystemDataFrame.assertIsInstance
+      ~TestFanSystemDataFrame.assertIsNone
+      ~TestFanSystemDataFrame.assertIsNot
+      ~TestFanSystemDataFrame.assertIsNotNone
+      ~TestFanSystemDataFrame.assertLess
+      ~TestFanSystemDataFrame.assertLessEqual
+      ~TestFanSystemDataFrame.assertListEqual
+      ~TestFanSystemDataFrame.assertLogs
+      ~TestFanSystemDataFrame.assertMultiLineEqual
+      ~TestFanSystemDataFrame.assertNoLogs
+      ~TestFanSystemDataFrame.assertNotAlmostEqual
+      ~TestFanSystemDataFrame.assertNotAlmostEquals
+      ~TestFanSystemDataFrame.assertNotEqual
+      ~TestFanSystemDataFrame.assertNotEquals
+      ~TestFanSystemDataFrame.assertNotIn
+      ~TestFanSystemDataFrame.assertNotIsInstance
+      ~TestFanSystemDataFrame.assertNotRegex
+      ~TestFanSystemDataFrame.assertNotRegexpMatches
+      ~TestFanSystemDataFrame.assertRaises
+      ~TestFanSystemDataFrame.assertRaisesRegex
+      ~TestFanSystemDataFrame.assertRaisesRegexp
+      ~TestFanSystemDataFrame.assertRegex
+      ~TestFanSystemDataFrame.assertRegexpMatches
+      ~TestFanSystemDataFrame.assertSequenceEqual
+      ~TestFanSystemDataFrame.assertSetEqual
+      ~TestFanSystemDataFrame.assertTrue
+      ~TestFanSystemDataFrame.assertTupleEqual
+      ~TestFanSystemDataFrame.assertWarns
+      ~TestFanSystemDataFrame.assertWarnsRegex
+      ~TestFanSystemDataFrame.assert_
+      ~TestFanSystemDataFrame.countTestCases
+      ~TestFanSystemDataFrame.debug
+      ~TestFanSystemDataFrame.defaultTestResult
+      ~TestFanSystemDataFrame.doClassCleanups
+      ~TestFanSystemDataFrame.doCleanups
+      ~TestFanSystemDataFrame.enterClassContext
+      ~TestFanSystemDataFrame.enterContext
+      ~TestFanSystemDataFrame.fail
+      ~TestFanSystemDataFrame.failIf
+      ~TestFanSystemDataFrame.failIfAlmostEqual
+      ~TestFanSystemDataFrame.failIfEqual
+      ~TestFanSystemDataFrame.failUnless
+      ~TestFanSystemDataFrame.failUnlessAlmostEqual
+      ~TestFanSystemDataFrame.failUnlessEqual
+      ~TestFanSystemDataFrame.failUnlessRaises
+      ~TestFanSystemDataFrame.id
+      ~TestFanSystemDataFrame.run
+      ~TestFanSystemDataFrame.setUp
+      ~TestFanSystemDataFrame.setUpClass
+      ~TestFanSystemDataFrame.shortDescription
+      ~TestFanSystemDataFrame.skipTest
+      ~TestFanSystemDataFrame.subTest
+      ~TestFanSystemDataFrame.tearDown
+      ~TestFanSystemDataFrame.tearDownClass
+      ~TestFanSystemDataFrame.test_dataframe
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestFanSystemDataFrame.longMessage
+      ~TestFanSystemDataFrame.maxDiff
+   
+   

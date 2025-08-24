@@ -1,0 +1,43 @@
+engforge.test.test\_dynamics
+============================
+
+.. automodule:: engforge.test.test_dynamics
+
+   
+   
+   
+
+   
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+      :toctree:
+      :nosignatures:
+   
+      f
+      fit
+      jac
+      ls
+   
+   
+
+   
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+      :toctree:
+      :template: custom-class-template.rst
+      :nosignatures:
+   
+      TestDynamics
+   
+   
+
+   
+   
+   
+
+
+

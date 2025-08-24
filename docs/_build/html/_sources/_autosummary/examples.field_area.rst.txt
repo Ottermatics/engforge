@@ -1,0 +1,12 @@
+examples.field\_area
+====================
+
+.. automodule:: examples.field_area
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      SimpleField
+   

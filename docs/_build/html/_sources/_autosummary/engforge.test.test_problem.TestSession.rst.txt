@@ -1,0 +1,112 @@
+engforge.test.test\_problem.TestSession
+=======================================
+
+.. currentmodule:: engforge.test.test_problem
+
+.. autoclass:: TestSession
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~TestSession.addClassCleanup
+      ~TestSession.addCleanup
+      ~TestSession.addTypeEqualityFunc
+      ~TestSession.assertAlmostEqual
+      ~TestSession.assertAlmostEquals
+      ~TestSession.assertCountEqual
+      ~TestSession.assertDictContainsSubset
+      ~TestSession.assertDictEqual
+      ~TestSession.assertEqual
+      ~TestSession.assertEquals
+      ~TestSession.assertFalse
+      ~TestSession.assertGreater
+      ~TestSession.assertGreaterEqual
+      ~TestSession.assertIn
+      ~TestSession.assertIs
+      ~TestSession.assertIsInstance
+      ~TestSession.assertIsNone
+      ~TestSession.assertIsNot
+      ~TestSession.assertIsNotNone
+      ~TestSession.assertLess
+      ~TestSession.assertLessEqual
+      ~TestSession.assertListEqual
+      ~TestSession.assertLogs
+      ~TestSession.assertMultiLineEqual
+      ~TestSession.assertNoLogs
+      ~TestSession.assertNotAlmostEqual
+      ~TestSession.assertNotAlmostEquals
+      ~TestSession.assertNotEqual
+      ~TestSession.assertNotEquals
+      ~TestSession.assertNotIn
+      ~TestSession.assertNotIsInstance
+      ~TestSession.assertNotRegex
+      ~TestSession.assertNotRegexpMatches
+      ~TestSession.assertRaises
+      ~TestSession.assertRaisesRegex
+      ~TestSession.assertRaisesRegexp
+      ~TestSession.assertRegex
+      ~TestSession.assertRegexpMatches
+      ~TestSession.assertSequenceEqual
+      ~TestSession.assertSetEqual
+      ~TestSession.assertTrue
+      ~TestSession.assertTupleEqual
+      ~TestSession.assertWarns
+      ~TestSession.assertWarnsRegex
+      ~TestSession.assert_
+      ~TestSession.countTestCases
+      ~TestSession.debug
+      ~TestSession.defaultTestResult
+      ~TestSession.doClassCleanups
+      ~TestSession.doCleanups
+      ~TestSession.enterClassContext
+      ~TestSession.enterContext
+      ~TestSession.fail
+      ~TestSession.failIf
+      ~TestSession.failIfAlmostEqual
+      ~TestSession.failIfEqual
+      ~TestSession.failUnless
+      ~TestSession.failUnlessAlmostEqual
+      ~TestSession.failUnlessEqual
+      ~TestSession.failUnlessRaises
+      ~TestSession.id
+      ~TestSession.run
+      ~TestSession.setUp
+      ~TestSession.setUpClass
+      ~TestSession.shortDescription
+      ~TestSession.skipTest
+      ~TestSession.subTest
+      ~TestSession.tearDown
+      ~TestSession.tearDownClass
+      ~TestSession.test_slide_crank_add_var
+      ~TestSession.test_slide_crank_design
+      ~TestSession.test_slide_crank_design_one_match
+      ~TestSession.test_slide_crank_design_slv
+      ~TestSession.test_slide_crank_design_slv_design
+      ~TestSession.test_slide_crank_design_slv_one_match
+      ~TestSession.test_slide_crank_dflt
+      ~TestSession.test_slide_crank_dxdt_true
+      ~TestSession.test_slide_crank_dxdt_zero
+      ~TestSession.test_slide_crank_empty
+      ~TestSession.test_system_change_context
+      ~TestSession.test_system_last_context
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~TestSession.longMessage
+      ~TestSession.maxDiff
+   
+   

@@ -1,0 +1,200 @@
+engforge.test.test\_tabulation.Static
+=====================================
+
+.. currentmodule:: engforge.test.test_tabulation
+
+.. autoclass:: Static
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~Static.add_fields
+      ~Static.change_all_log_lvl
+      ~Static.check_ref_slot_type
+      ~Static.clone
+      ~Static.cls_all_attrs_fields
+      ~Static.cls_all_property_keys
+      ~Static.cls_all_property_labels
+      ~Static.cls_compile
+      ~Static.collect_all_attributes
+      ~Static.collect_comp_refs
+      ~Static.collect_dynamic_refs
+      ~Static.collect_inst_attributes
+      ~Static.collect_post_update_refs
+      ~Static.collect_solver_refs
+      ~Static.collect_update_refs
+      ~Static.comp_references
+      ~Static.compile_classes
+      ~Static.copy_config_at_state
+      ~Static.create_dynamic_matricies
+      ~Static.create_feedthrough_matrix
+      ~Static.create_input_matrix
+      ~Static.create_output_constants
+      ~Static.create_output_matrix
+      ~Static.create_state_constants
+      ~Static.create_state_matrix
+      ~Static.critical
+      ~Static.debug
+      ~Static.determine_nearest_stationary_state
+      ~Static.difference
+      ~Static.error
+      ~Static.eval
+      ~Static.execute
+      ~Static.extract_message
+      ~Static.filter
+      ~Static.format_columns
+      ~Static.get_system_input_refs
+      ~Static.go_through_configurations
+      ~Static.hash
+      ~Static.hash_numeric_with
+      ~Static.hash_with
+      ~Static.info
+      ~Static.input_attrs
+      ~Static.input_fields
+      ~Static.installSTDLogger
+      ~Static.internal_components
+      ~Static.internal_configurations
+      ~Static.internal_references
+      ~Static.internal_systems
+      ~Static.internal_tabulations
+      ~Static.linear_output
+      ~Static.linear_step
+      ~Static.locate
+      ~Static.locate_ref
+      ~Static.make_plots
+      ~Static.mark_all_comps_changed
+      ~Static.message_with_identiy
+      ~Static.msg
+      ~Static.nonlinear_output
+      ~Static.nonlinear_step
+      ~Static.numeric_fields
+      ~Static.parent_configurations_cls
+      ~Static.parse_run_kwargs
+      ~Static.parse_simulation_input
+      ~Static.plot_attributes
+      ~Static.post_run_callback
+      ~Static.post_update
+      ~Static.pre_compile
+      ~Static.pre_run_callback
+      ~Static.print_info
+      ~Static.rate
+      ~Static.rate_linear
+      ~Static.rate_nonlinear
+      ~Static.ref_dXdt
+      ~Static.resetLog
+      ~Static.resetSystemLogs
+      ~Static.run
+      ~Static.run_internal_systems
+      ~Static.set_attr
+      ~Static.set_time
+      ~Static.setattrs
+      ~Static.setup_global_dynamics
+      ~Static.signals_attributes
+      ~Static.sim_matrix
+      ~Static.simulate
+      ~Static.slack_notification
+      ~Static.slot_refs
+      ~Static.slots_attributes
+      ~Static.smart_split_dataframe
+      ~Static.solver
+      ~Static.solver_vars
+      ~Static.solvers_attributes
+      ~Static.step
+      ~Static.subclasses
+      ~Static.subcls_compile
+      ~Static.system_properties_classdef
+      ~Static.system_references
+      ~Static.table_fields
+      ~Static.trace_attributes
+      ~Static.transients_attributes
+      ~Static.update
+      ~Static.update_dynamics
+      ~Static.update_feedthrough
+      ~Static.update_input
+      ~Static.update_output_constants
+      ~Static.update_output_matrix
+      ~Static.update_state
+      ~Static.update_state_constants
+      ~Static.validate_class
+      ~Static.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~Static.Ut_ref
+      ~Static.Xt_ref
+      ~Static.Yt_ref
+      ~Static.anything_changed
+      ~Static.as_dict
+      ~Static.attrs_fields
+      ~Static.classname
+      ~Static.converged
+      ~Static.dXtdt_ref
+      ~Static.dataframe
+      ~Static.dataframe_constants
+      ~Static.dataframe_variants
+      ~Static.displayname
+      ~Static.dynamic_A
+      ~Static.dynamic_B
+      ~Static.dynamic_C
+      ~Static.dynamic_D
+      ~Static.dynamic_F
+      ~Static.dynamic_K
+      ~Static.dynamic_input
+      ~Static.dynamic_input_vars
+      ~Static.dynamic_output
+      ~Static.dynamic_output_vars
+      ~Static.dynamic_state
+      ~Static.dynamic_state_vars
+      ~Static.filename
+      ~Static.identity
+      ~Static.input_as_dict
+      ~Static.input_hash
+      ~Static.last_context
+      ~Static.log_fmt
+      ~Static.log_level
+      ~Static.log_on
+      ~Static.log_silo
+      ~Static.logger
+      ~Static.nonlinear
+      ~Static.numeric_as_dict
+      ~Static.numeric_hash
+      ~Static.plotable_variables
+      ~Static.run_id
+      ~Static.skip_plot_vars
+      ~Static.slack_webhook_url
+      ~Static.solved
+      ~Static.static_A
+      ~Static.static_B
+      ~Static.static_C
+      ~Static.static_D
+      ~Static.static_F
+      ~Static.static_K
+      ~Static.stored_plots
+      ~Static.system_id
+      ~Static.table_hash
+      ~Static.table_row_dict
+      ~Static.test_one
+      ~Static.test_two
+      ~Static.time
+      ~Static.unique_hash
+      ~Static.update_interval
+      ~Static.attrs_prop
+      ~Static.attrs_str
+      ~Static.parent
+      ~Static.name
+   
+   

@@ -1,0 +1,50 @@
+engforge.eng.structure.StructureLog
+===================================
+
+.. currentmodule:: engforge.eng.structure
+
+.. autoclass:: StructureLog
+   :members:
+   :show-inheritance:
+   :inherited-members:
+   :special-members: __call__, __add__, __mul__
+
+   
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+      :nosignatures:
+   
+      ~StructureLog.add_fields
+      ~StructureLog.change_all_log_lvl
+      ~StructureLog.critical
+      ~StructureLog.debug
+      ~StructureLog.error
+      ~StructureLog.extract_message
+      ~StructureLog.filter
+      ~StructureLog.info
+      ~StructureLog.installSTDLogger
+      ~StructureLog.message_with_identiy
+      ~StructureLog.msg
+      ~StructureLog.resetLog
+      ~StructureLog.resetSystemLogs
+      ~StructureLog.slack_notification
+      ~StructureLog.warning
+   
+   
+
+   
+   
+   .. rubric:: Attributes
+
+   .. autosummary::
+   
+      ~StructureLog.identity
+      ~StructureLog.log_fmt
+      ~StructureLog.log_level
+      ~StructureLog.log_on
+      ~StructureLog.logger
+      ~StructureLog.slack_webhook_url
+   
+   
