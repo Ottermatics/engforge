@@ -4,12 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - '**.py'
-      - 'pyproject.toml'
-      - '**.md'
-      - '**.rst'
-      - '**.yml'
   workflow_dispatch:
 
   workflow_call:
@@ -38,6 +32,10 @@ jobs:
         pip install build twine
         pip install -e .[all]
 
+    - name: Run tests
+      run: python -m unittest discover -s engforge/test -p "test_*.py" -v
+
+
     - name: Get version
       id: version
       run: |
@@ -58,6 +56,7 @@ jobs:
         if gh release view "v${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
           echo "exists=true" >> $GITHUB_OUTPUT
           echo "Release v${{ steps.version.outputs.version }} already exists"
+          exit 1
         else
           echo "exists=false" >> $GITHUB_OUTPUT
           echo "Release v${{ steps.version.outputs.version }} does not exist"
@@ -84,6 +83,12 @@ jobs:
       run: |
         python -m build
 
+    - name: Publish to PyPI
+      if: steps.check_release.outputs.exists == 'false'
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://upload.pypi.org/legacy/
+
     - name: Create GitHub Release
       if: steps.check_release.outputs.exists == 'false'
       run: |
@@ -94,9 +99,3 @@ jobs:
           dist/*
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-    - name: Publish to PyPI
-      if: steps.check_release.outputs.exists == 'false'
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://upload.pypi.org/legacy/

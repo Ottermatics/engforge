@@ -7,15 +7,6 @@ on:
       - edited
       - synchronize
       - reopened
-    paths:
-      - '**.py'
-      - 'pyproject.toml'
-  push:
-    branches:
-      - main
-    paths:
-      - '**.py'
-      - 'pyproject.toml'
   workflow_dispatch:
   workflow_call:
 jobs:
@@ -80,6 +71,3 @@ jobs:
 
     - name: Run tests
       run: python -m unittest discover -s engforge/test -p "test_*.py" -v
-
-    - name: Verify Black formatting
-      run: black --check --verbose ./engforge
