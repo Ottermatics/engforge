@@ -101,6 +101,6 @@ jobs:
     - name: Check Python & Run Tests
       run: |
         python -c "import sys; print(sys.version)"
-        python -m pip list | { grep -v PyNiteFEA || echo "pynite-not-found" }
-        python -m pip list | { grep -v coolprop || echo "coolprop-not-found" }
+        python -m pip list | grep PyNiteFEA || echo "pynite-not-found"
+        python -m pip list | grep coolprop || echo "coolprop-not-found"
         python -m unittest discover -s engforge/test -p "test_*.py" -v
