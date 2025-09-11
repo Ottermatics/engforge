@@ -99,7 +99,10 @@ jobs:
         pip install -e .[all]    
 
     - name: Display Python Version
-      run: python -c "import sys; print(sys.version)"
+      run: |
+        python -c "import sys; print(sys.version)"
+        python -m pip list | grep PyNite
+        python -m pip list | grep CoolProp
 
     - name: Run tests
       run: python -m unittest discover -s engforge/test -p "test_*.py" -v
