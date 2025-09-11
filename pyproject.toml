@@ -4,12 +4,12 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "engforge"
-version = "0.2.0"
+version = "0.2.1"
 description = "The Engineer's Framework"
 readme = "README.md"
 license = "MIT"
 authors = [
-    {name = "Kevin Russell", email = "kevin@ottermatics.com"}
+    {name = "Kevin Russell", email = "olly@ottermatics.com"}
 ]
 classifiers = [
     "Development Status :: 3 - Alpha",
