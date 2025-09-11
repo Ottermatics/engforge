@@ -29,7 +29,6 @@ from engforge.solveable import (
 from collections import OrderedDict
 import numpy as np
 import pandas
-import expiringdict
 import attr, attrs
 
 

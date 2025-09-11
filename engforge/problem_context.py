@@ -62,8 +62,6 @@ from scipy.integrate import solve_ivp
 from collections import OrderedDict
 import numpy as np
 import pandas as pd
-import expiringdict
-import attr, attrs
 import datetime
 
 
