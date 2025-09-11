@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "engforge"
-version = "0.2.1"
+version = "0.3.0"
 description = "The Engineer's Framework"
 readme = "README.md"
 license = "MIT"
@@ -62,7 +62,7 @@ eng = [
     "fluids",    
     "CoolProp",    
     "sectionproperties~=3.1.2",
-    "PyNiteFEA"
+    "PyniteFEA>=1.2.0"
 ]
 
 database = [

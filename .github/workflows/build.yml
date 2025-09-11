@@ -98,11 +98,9 @@ jobs:
         pip install flake8 pytest black
         pip install -e .[all]    
 
-    - name: Display Python Version
+    - name: Check Python & Run Tests
       run: |
         python -c "import sys; print(sys.version)"
-        python -m pip list | grep PyNite
+        python -m pip list | grep PyniteFEA
         python -m pip list | grep coolprop
-
-    - name: Run tests
-      run: python -m unittest discover -s engforge/test -p "test_*.py" -v
+        python -m unittest discover -s engforge/test -p "test_*.py" -v

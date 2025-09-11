@@ -1,4 +1,4 @@
-"""These exist as in interface to sectionproperties from PyNite"""
+"""These exist as in interface to sectionproperties from Pynite"""
 
 from engforge.configuration import Configuration, forge, LoggingMixin
 from engforge.properties import (
