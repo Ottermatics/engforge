@@ -760,7 +760,7 @@ class Comp2(Norm, CostModel):
     comp1 = Slot.define(Comp1, none_ok=True, default_ok=False)
 
 
-quarterly = lambda inst, term: True if (term + 1) % 3 == 0 else False
+quarterly = lambda inst, term, econ: True if (term + 1) % 3 == 0 else False
 
 
 @forge

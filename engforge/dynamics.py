@@ -8,7 +8,7 @@ As opposed to the Time attribute, which modifies the state of the system, the Dy
 
 #TODO: The top level system will collect the underlying dynamical systems and combine them to an index and overall state space model. This will allow for the creation of a system of systems, and the ability to create a system of systems with a single state space model.
 
-#TODO: integration is done by the solver, where DynamicSystems have individual solver control, solver control is set for a smart default scipy 
+#TODO: integration is done by the solver, where DynamicSystems have individual solver control, solver control is set for a smart default scipy
 """
 
 from engforge.configuration import Configuration, forge
@@ -29,7 +29,6 @@ from engforge.solveable import (
 from collections import OrderedDict
 import numpy as np
 import pandas
-import expiringdict
 import attr, attrs
 
 

@@ -4,14 +4,14 @@ CostModels can have a `cost_per_item` and additionally calculate a `cumulative_c
 
 CostModel's can have cost_property's which detail how and when a cost should be applied & grouped. By default each CostModel has a `cost_per_item` which is reflected in `item_cost` cost_property set on the `initial` term as a `unit` category. Multiple categories of cost are also able to be set on cost_properties as follows
 
-Cost Models can represent multiple instances of a component, and can be set to have a `num_items` multiplier to account for multiple instances of a component. CostModels can have a `term_length` which will apply costs over the term, using the `cost_property.mode` to determine at which terms a cost should be applied. 
+Cost Models can represent multiple instances of a component, and can be set to have a `num_items` multiplier to account for multiple instances of a component. CostModels can have a `term_length` which will apply costs over the term, using the `cost_property.mode` to determine at which terms a cost should be applied.
 
 ```
 @forge
 class Widget(Component,CostModel):
-    
+
     #use num_items as a multiplier for costs, `cost_properties` can have their own custom num_items value.
-    num_items:float = 100 
+    num_items:float = 100
 
     @cost_property(mode='initial',category='capex,manufacturing',num_items=1)
     def cost_of_XYZ(self) -> float:

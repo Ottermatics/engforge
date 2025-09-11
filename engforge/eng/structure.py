@@ -28,7 +28,7 @@ from engforge.problem_context import ProblemExec
 import sectionproperties
 import sectionproperties.pre.geometry as geometry
 import sectionproperties.pre.library.primitive_sections as sections
-import PyNite as pynite
+import Pynite as pynite
 import numpy as np
 from scipy import optimize as sciopt
 import pandas as pd
@@ -208,7 +208,7 @@ class BeamDict(ComponentDict):
 # TODO: Make analysis, where each load case is a row, but how sytactically?
 @forge
 class Structure(System, CostModel, PredictionMixin):
-    """A integration between sectionproperties and PyNite, with a focus on ease of use
+    """A integration between sectionproperties and Pynite, with a focus on ease of use
 
     Right now we just need an integration between Sections+Materials and Members, to find, CG, and inertial components
 
@@ -658,7 +658,7 @@ class Structure(System, CostModel, PredictionMixin):
         return self._quad_info.copy()
 
     def add_mesh(self, meshtype, *args, **kwargs):
-        """maps to appropriate PyNite mesh generator but also applies loads
+        """maps to appropriate Pynite mesh generator but also applies loads
 
         Currently these types are supported ['rect','annulus','cylinder','triangle']
         """
@@ -951,7 +951,7 @@ class Structure(System, CostModel, PredictionMixin):
         return out
 
     def visulize(self, **kwargs):
-        from PyNite import Visualization
+        from Pynite import Visualization
 
         if "combo_name" not in kwargs:
             kwargs["combo_name"] = self.default_combo
@@ -1054,7 +1054,7 @@ class Structure(System, CostModel, PredictionMixin):
             node.RZ[combo] = D[node.ID * 6 + 5, 0]
 
     def prep_remote_analysis(self):
-        """copies PyNite analysis pre-functions"""
+        """copies Pynite analysis pre-functions"""
         # Generate all meshes
         for mesh in self.frame.Meshes.values():
             if mesh.is_generated == False:

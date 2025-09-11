@@ -1,6 +1,6 @@
-"""The ProblemExec provides a uniform set of options for managing the state of the system and its solvables, establishing the selection of combos or de/active attributes to Solvables. Once once created any further entracnces to ProblemExec will return the same instance until finally the last exit is called. 
+"""The ProblemExec provides a uniform set of options for managing the state of the system and its solvables, establishing the selection of combos or de/active attributes to Solvables. Once once created any further entracnces to ProblemExec will return the same instance until finally the last exit is called.
 
-The ProblemExec class allows entrance to a its context to the same instance until finally the last exit is called. The first entrance to the context will create the instance, each subsequent entrance will return the same instance. The ProblemExec arguments are set the first time and remove keyword arguments from the input dictionary (passed as a dict ie stateful) to subsequent methods. 
+The ProblemExec class allows entrance to a its context to the same instance until finally the last exit is called. The first entrance to the context will create the instance, each subsequent entrance will return the same instance. The ProblemExec arguments are set the first time and remove keyword arguments from the input dictionary (passed as a dict ie stateful) to subsequent methods.
 This isn't technically a singleton pattern, but it does provide a similar interface. Instead mutliple problem instances will be clones of the first instance, with the optional difference of input/output/event criteria. The first instance will be returned by each context entry, so for that reason it may always appear to have same instance, however each instance is unique in a recusive setting so it may record its own state and be reverted to its own state as per the options defined.
 
 #TODO: allow update of kwargs on re-entrance
@@ -13,9 +13,9 @@ This isn't technically a singleton pattern, but it does provide a similar interf
         pe._sys_refs #get the references and compiled problem
         for i in range(10):
             pe.solve_min(pe.Xref,pe.Yref,**other_args)
-            pe.set_checkpoint() #save the state of the system 
+            pe.set_checkpoint() #save the state of the system
             pe.save_data()
-            
+
 
     #Solver Module (can use without knowledge of the runtime system)
     with ProblemExec(sys,{},Xnew=Xnext,ctx_fail_new=True) as pe:
@@ -31,7 +31,7 @@ The `slv_vars` argument can be used to select a specific set of solvables. From 
 # Active Mode Handiling
 The `only_active` argument can be used to select only active items. The `activate` and `deactivate` arguments can be used to activate or deactivate specific solvables.
 
-`add_obj` can be used to add an objective to the solver. 
+`add_obj` can be used to add an objective to the solver.
 
 # Root Parameter Determination:
 Any session's may access root session parameters defined in the `root_parameters` dictionary like `converged`, or `data` can be accessed by calling `session.<parm>` this eventually calls `root._<parm>` via the __getattr__ method.
@@ -62,8 +62,6 @@ from scipy.integrate import solve_ivp
 from collections import OrderedDict
 import numpy as np
 import pandas as pd
-import expiringdict
-import attr, attrs
 import datetime
 
 

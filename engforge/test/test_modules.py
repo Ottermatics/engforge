@@ -21,7 +21,6 @@ import random, json
 import time
 
 
-
 class ImportTest(unittest.TestCase):
     """We test the compilation of all included modules"""
 

@@ -331,11 +331,12 @@ def signals_slots_handler(
                     f"{cls.__name__} overriding inherited attr: {o.name} as a system property overriding it"
                 )
             elif o.inherited and k in cls_dict:
-                log.debug(
+                log.warning(
                     f"{cls.__name__} overriding inherited attr: {o.name} as {cls_dict[k]} in cls"
                 )
                 # FIXME: should we deepcopy?
-                cls.__anony_store[k] = sscb = lambda: copy.copy(cls_dict[k])
+                val = copy.copy(cls_dict[k])
+                cls.__anony_store[k] = sscb = lambda: val
                 out.append(o.evolve(default=attrs.Factory(sscb)))
             else:
                 log.msg(f"{cls.__name__} adding attr: {o.name}")

@@ -1,12 +1,12 @@
 """define a collection of components that will propigate to its parents dataframe
 
-When `wide` is set each component's references are reported to the system's table, otherwise only one component's references are reported, however the system will iterate over the components by calling `system.iterable_components` 
+When `wide` is set each component's references are reported to the system's table, otherwise only one component's references are reported, however the system will iterate over the components by calling `system.iterable_components`
 
 Define a Iterable Component slot in a system by calling `Slot.define_iterable(...,wide=True/False)`
 
 CostModel isonly supported in wide mode at this time.
 
-Types: 
+Types:
 1. ComponentList, ordered by index
 2. ComponentDict, ordered by key
 3. ComponentGraph,  ?#TODO:

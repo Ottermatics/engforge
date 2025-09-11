@@ -4,12 +4,12 @@ Additionally the Solver attribute is defined to add complex behavior to a system
 
 ### A general Solver Run Will Look Like:
 0. run pre execute (signals=pre,both)
-1. add execution context with **kwargument for the signals. 
+1. add execution context with **kwargument for the signals.
 2. parse signals here (through a new Signals.parse_rtkwargs(**kw)) which will non destructively parse the signals and return all the signal candiates which are put into an ProblemExec object that resets the signals after the run depending on the revert behavior
 3. the execute method will recieve this ProblemExec object where it can update the solver references / signals so that it can handle them per the signals api
-4. with self.execution_context(**kwargs) as ctx_exe: 
+4. with self.execution_context(**kwargs) as ctx_exe:
     1. pre-update / signals
-    <FLEXIBLE_Exec>#self.execute(ctx_exe,**kwargs) 
+    <FLEXIBLE_Exec>#self.execute(ctx_exe,**kwargs)
     2. post-update / signals
     > signals will be reset after the execute per the api
 5. run post update

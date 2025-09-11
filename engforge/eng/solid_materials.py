@@ -11,7 +11,7 @@ import uuid
 import json, hashlib
 
 # One Material To Merge Them All
-from PyNite import Material as PyNiteMat
+from Pynite import Material as PyniteMat
 from sectionproperties.pre.pre import Material as SecMat
 
 SectionMaterial = SecMat.mro()[0]
@@ -35,7 +35,7 @@ def ih(val):
 
 
 @forge(hash=False)
-class SolidMaterial(SectionMaterial, PyNiteMat.Material, Configuration):
+class SolidMaterial(SectionMaterial, PyniteMat.Material, Configuration):
     """A class to hold physical properties of solid structural materials and act as both a section property material and a pynite material"""
 
     __metaclass__ = SecMat
