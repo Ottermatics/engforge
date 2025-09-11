@@ -94,7 +94,7 @@ docs = [
     "toml~=0.10.2",
 ]
 all = [
-    "engforge[database,google,cloud,distributed,docs]",
+    "engforge[database,google,cloud,distributed,docs,eng,dev]",
 ]
 
 [tool.setuptools]
