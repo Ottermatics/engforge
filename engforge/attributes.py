@@ -1,6 +1,6 @@
 """Defines a customizeable attrs attribute that is handled in configuration,
 
-on init an instance of `Instance` type for any ATTR_BASE subclass is created """
+on init an instance of `Instance` type for any ATTR_BASE subclass is created"""
 
 import attrs, attr, uuid
 from engforge.logging import LoggingMixin, log

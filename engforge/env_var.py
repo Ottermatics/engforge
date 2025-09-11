@@ -2,7 +2,7 @@
 
 A global record of variables is kept for informational purposes in keeping track of progam variables
 
-To prevent storage of env vars in program memory, access to the os env variables is provided on access of the `secret` variable. It is advisable to use the result of this as directly as possible when dealing with actual secrets. 
+To prevent storage of env vars in program memory, access to the os env variables is provided on access of the `secret` variable. It is advisable to use the result of this as directly as possible when dealing with actual secrets.
 
 For example add: `db_driver(DB_HOST.secret,DB_PASSWORD.secret,...)
 """
