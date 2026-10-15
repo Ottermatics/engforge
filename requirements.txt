@@ -20,11 +20,11 @@ deepdiff>=6.3.1
 # qtconsole==4.7.7
 
 #Science
-numpy==1.24.3
+numpy>=1.24.3,<2
 scipy
 matplotlib~=3.8.1
 jupyter
-pandas
+pandas>=2.1,<2.2
 scikit-learn~=1.3.2
 seaborn
 tabulate
