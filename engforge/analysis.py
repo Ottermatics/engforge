@@ -7,7 +7,6 @@ from engforge.typing import *
 from engforge.reporting import *
 from engforge.attr_plotting import PlottingMixin
 
-
 # import datetime
 import os
 from uuid import uuid4

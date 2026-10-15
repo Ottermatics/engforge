@@ -31,7 +31,6 @@ import numpy as np
 import pandas
 import attr, attrs
 
-
 # Index maps are used to translate between different indexes (local & global)
 
 

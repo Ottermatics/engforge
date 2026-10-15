@@ -14,7 +14,6 @@ from CoolProp.CoolProp import PropsSI
 import fluids
 import abc
 
-
 # TODO: add a exact fluid state (T,P) / (Q,P) in the concept of processes for each thermodynamic operation (isothermal,isobaric,heating...ect)
 
 STD_PRESSURE = 1e5  # pa

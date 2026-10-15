@@ -1,23 +1,15 @@
 name: build
 
+# One pipeline: build/test on every PR and every push to main; release runs
+# ONLY after the test matrix passes (release job `needs: test`), and only on
+# push to main or manual dispatch — never on PRs.
 on:
   pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
-      - reopened
-    paths:
-      - '**.py'
-      - 'pyproject.toml'
   push:
     branches:
       - main
-    paths:
-      - '**.py'
-      - 'pyproject.toml'
   workflow_dispatch:
-  workflow_call:
+
 jobs:
   format:
     runs-on: ubuntu-latest
@@ -29,7 +21,7 @@ jobs:
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         ref: ${{ github.head_ref || github.ref }}
-        
+
     - name: Install Python
       uses: actions/setup-python@v4
       with:
@@ -41,7 +33,6 @@ jobs:
         pip install black
 
     - name: Check for existing release
-      if: github.event_name == 'pull_request'
       run: |
         VERSION=$(python -c "
         try:
@@ -58,6 +49,8 @@ jobs:
         else
           echo "Version v$VERSION is available"
         fi
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Auto-format with Black
       run: |
@@ -96,11 +89,110 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest black
-        pip install -e .[all]    
+        pip install -e .[all]
+
+    # Transitional (until the engforge-structures split, docs/ENGFORGE_1.0.md):
+    # the eng extra's sectionproperties~=3.1.2 has no py3.12 release, and
+    # 3.2+ requires numpy>=2. Install current eng deps, then pin numpy back
+    # below 2 — runtime-compatible even though the resolver disagrees.
+    - name: Install eng deps on 3.12
+      if: matrix.python-version == '3.12'
+      run: |
+        pip install sectionproperties PyNiteFEA CoolProp fluids control
+        pip install "numpy>=1.26,<2"
 
     - name: Check Python & Run Tests
       run: |
         python -c "import sys; print(sys.version)"
-        python -m pip list | grep PyNiteFEA || echo "pynite-not-found"
-        python -m pip list | grep coolprop || echo "coolprop-not-found"
+        python -m pip list | grep -i PyNiteFEA || echo "pynite-not-found"
+        python -m pip list | grep -i coolprop || echo "coolprop-not-found"
         python -m unittest discover -s engforge/test -p "test_*.py" -v
+
+  release:
+    runs-on: ubuntu-latest
+    needs: [test]
+    # only ever release from main — push is already main-only via the trigger,
+    # but workflow_dispatch can be fired from any branch, so pin the ref too
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install build twine
+        pip install -e .[all]
+
+    - name: Get version
+      id: version
+      run: |
+        VERSION=$(python -c "
+        try:
+            import tomllib
+        except ImportError:
+            import tomli as tomllib
+        with open('pyproject.toml', 'rb') as f:
+            print(tomllib.load(f)['project']['version'])
+        ")
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Version: $VERSION"
+
+    - name: Check if release exists
+      id: check_release
+      run: |
+        if gh release view "v${{ steps.version.outputs.version }}" >/dev/null 2>&1; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+          echo "Release v${{ steps.version.outputs.version }} already exists"
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+          echo "Release v${{ steps.version.outputs.version }} does not exist"
+        fi
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build documentation
+      run: |
+        cd docs
+        make html
+
+    - name: Upload pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: 'docs/_build/html/'
+
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+
+    - name: Build package
+      if: steps.check_release.outputs.exists == 'false'
+      run: |
+        python -m build
+
+    - name: Create GitHub Release
+      if: steps.check_release.outputs.exists == 'false'
+      run: |
+        gh release create "v${{ steps.version.outputs.version }}" \
+          --title "Release v${{ steps.version.outputs.version }}" \
+          --notes "Automated release for version ${{ steps.version.outputs.version }}" \
+          --generate-notes \
+          dist/*
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish to PyPI
+      if: steps.check_release.outputs.exists == 'false'
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://upload.pypi.org/legacy/
