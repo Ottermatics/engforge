@@ -8,7 +8,6 @@ import copy
 import datetime
 import typing
 
-
 # from engforge.dynamics import DynamicsMixin
 from engforge.attributes import AttributeInstance
 from engforge.engforge_attributes import AttributedBaseMixin
