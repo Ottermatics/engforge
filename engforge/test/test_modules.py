@@ -57,14 +57,11 @@ class ImportTest(unittest.TestCase):
     def test_import_patterns(self):
         import engforge.patterns
 
-    def test_import_solid_materials(self):
-        import engforge.eng.solid_materials
-
     def test_import_tabulation(self):
         import engforge.tabulation
 
-    def test_import_thermodynamics(self):
-        import engforge.eng.thermodynamics
+    # engforge.eng.* moved to the engforge-<domain> toolboxes (1.0 split);
+    # their import-smoke tests now live in those repos' CI.
 
 
 if __name__ == "__main__":

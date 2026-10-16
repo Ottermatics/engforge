@@ -23,3 +23,5 @@ claude_session_*
 # Documentation build
 docs/_autosummary*
 docs/_build/
+# engforge 1.0 prototyping scratch (never committed)
+sandbox/
