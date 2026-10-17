@@ -395,12 +395,14 @@ class ProblemExec:
                 kw_dict.pop(k)
 
         # Define the handiling of rate integrals
+        # (kw_dict wins if both given; the old elif-less chain clobbered an
+        #  opts-supplied dxdt back to None, silently disabling dynamics for
+        #  any caller passing dxdt as a keyword — e.g. sim_matrix)
+        dxdt = None  # by default dont consider dynamics
         if "dxdt" in opts and opts["dxdt"] is not None:
             dxdt = opts.pop("dxdt")
         if "dxdt" in kw_dict and kw_dict["dxdt"] is not None:
             dxdt = kw_dict.pop("dxdt")
-        else:
-            dxdt = None  # by default dont consider dynamics
 
         if dxdt is not None and dxdt is not False:
             if dxdt == 0:
@@ -483,11 +485,42 @@ class ProblemExec:
             self.msg(f"new execution context for {system}| {self._slv_kw}")
 
     def reset_data(self):
-        """reset the data storage"""
-        # the data storage!!
-        # TODO: add buffer type, or disk cache
-        self._data = {}  # index:row_dict
-        self._index = 0  # works for time or index
+        """reset the result storage: a Result owns the run's Cases; rows are
+        recorded explicitly on the ACTIVE case (tabulation lives OUT of the
+        context/object interface — see engforge/results.py)"""
+        from engforge.results import Result
+
+        self._result = Result(system=getattr(self, "_system", None))
+        self._active_case = self._result.new_case({})
+
+    def begin_case(self, inputs: dict = None):
+        """start a new Case (one input-matrix point) on this run's Result; all
+        subsequent row recording targets it. Returns the Case."""
+        sesh = self.sesh
+        # drop a pristine default case so empty frames don't accumulate
+        if (
+            sesh._result.cases
+            and sesh._active_case is sesh._result.cases[-1]
+            and not sesh._active_case.rows
+            and not sesh._active_case.inputs
+        ):
+            sesh._result.cases.pop()
+        sesh._active_case = sesh._result.new_case(inputs or {})
+        return sesh._active_case
+
+    @property
+    def result(self):
+        """this run's Result (all cases)"""
+        return self.sesh._result
+
+    @property
+    def active_case(self):
+        return self.sesh._active_case
+
+    @property
+    def data(self):
+        """the ACTIVE case's rows (legacy dict-shaped reader)"""
+        return self.sesh._active_case.rows
 
     def establish_system(self, system, kw_dict, **kwargs):
         """caches the system references, and parses the system arguments"""
@@ -499,6 +532,8 @@ class ProblemExec:
 
         # place me here after system has been modified
         self.system = system
+        if hasattr(self, "_result"):
+            self._result.system = system  # for dataframe column formatting
 
         # pass args without creating singleton (yet)
         self.session_id = int(uuid.uuid4())
@@ -943,29 +978,27 @@ class ProblemExec:
         return True  # our problem will go on
 
     def save_data(self, index=None, force=False, **add_data):
-        """save data to the context"""
+        """record one row on the ACTIVE case (explicit recording — the dedup
+        policy lives in Case.record; tabulation is owned by the Result)"""
 
         sesh = self.sesh
         if not self.exited and self.post_exec:
             # a context custom callback
             sesh.post_execute()
 
-        if force or not sesh.data or sesh.system.anything_changed:
+        case = sesh._active_case
+        changed = bool(sesh.system.anything_changed)
+        if force or not case.rows or changed:
             out = sesh.output_state
             if index is None and sesh._dxdt == True:  # integration
                 index = sesh._time
-            elif index is None:
-                index = sesh._index
 
             if add_data:
                 out.update(add_data)
             if sesh._dxdt == True:
                 out["time"] = sesh._time
-            out["index"] = index
-            sesh._data[index] = out
-            # if we are integrating, then we dont increment the index
-            if sesh._dxdt != True:
-                sesh._index += 1
+
+            case.record(out, index=index, force=True)
 
             # reset the data for changed items
             sesh.system._anything_changed = False
@@ -1032,9 +1065,18 @@ class ProblemExec:
         if X0 is None:
             # get current
             X0 = x_cur
-        # add any missing solver vars existing in the system
-        if set(X0) != set(x_cur):
-            X0 = x_cur.update(X0)
+        elif set(X0) != set(x_cur):
+            # X0 may carry an input-matrix point: apply NON-state keys (gains,
+            # dotted paths, slot components) through the normal ref channel,
+            # then merge state keys over the current state.
+            # (was: `X0 = x_cur.update(X0)` — dict.update returns None, which
+            #  crashed sim_matrix for any point with non-state keys)
+            non_state = {k: v for k, v in X0.items() if k not in intl_refs}
+            if non_state:
+                Ref.refset_input(
+                    sesh.all_comps_and_vars, non_state, fail=False, scope="integ"
+                )
+            X0 = {**x_cur, **{k: v for k, v in X0.items() if k in intl_refs}}
 
         # this will fail if X0 doesn't have solver vars!
         X0 = np.array([X0[p] for p in intl_refs])
@@ -1765,45 +1807,41 @@ class ProblemExec:
                 ref.set_value(value)
 
     def set_checkpoint(self):
-        """sets the checkpoint"""
-        self.x_start = self.record_state
+        """sets the checkpoint as an explicit SystemState snapshot"""
+        from engforge.state import SystemState
+
+        self.x_state = SystemState.capture(self)
+        # legacy dict view (x_start consumers expect a {ref: value} mapping)
+        self.x_start = self.x_state.values
         if log.log_level <= 7:
             self.debug(f"set checkpoint: {list(self.x_start.values())}")
 
     def revert_to_start(self):
-        sesh = self.sesh
+        """restore the checkpoint SystemState (fields only — NEVER the clock:
+        integration advances time across nested context exits)"""
         if log.log_level < 5:
             xs = list(self.x_start.values())
             rs = list(self.record_state.values())
             self.debug(f"reverting to start: {xs} -> {rs}")
-        # TODO: STRICT MODE Fail for refset_input
-        Ref.refset_input(
-            sesh.all_comps_and_vars, self.x_start, fail=False, scope="rvtst"
-        )
+        # TODO: STRICT MODE Fail for refset_input (inside SystemState.apply)
+        self.x_state.apply(self, restore_time=False)
 
     def activate_temp_state(self, new_state=None):
+        """apply an input-matrix point (or the stored temp_state) as an
+        explicit state overlay"""
+        from engforge.state import SystemState
+
         # TODO: determine when components change, and update refs accordingly!
-        sesh = self.sesh
-        # TODO: STRICT MODE Fail for refset_input
-        if new_state:
+        point = new_state or self.temp_state
+        if point:
             if self.log_level < 3:
-                self.debug(f"new-state: {self.temp_state}")
-            Ref.refset_input(
-                sesh.all_comps_and_vars, new_state, fail=False, scope="ntemp"
-            )
-        elif self.temp_state:
-            if self.log_level < 3:
-                self.debug(f"act-state: {self.temp_state}")
-            Ref.refset_input(
-                sesh.all_comps_and_vars,
-                self.temp_state,
-                fail=False,
-                scope="atemp",
-            )
+                self.debug(f"act-state: {point}")
+            SystemState(values=point).apply(self)
         elif self.log_level < 3:
             self.debug(f"no-state: {new_state}")
 
         # initial establishment costs / ect
+        sesh = self.sesh
         if sesh.pre_exec:
             sesh.pre_execute()
 
@@ -2092,19 +2130,13 @@ class ProblemExec:
 
     @property
     def numeric_data(self):
-        """return a list of sorted data rows by item and filter each row to remove invalid data"""
-        sesh = self.sesh
-        filter_non_numeric = lambda kv: (
-            False if isinstance(kv[1], (list, dict, tuple)) else True
-        )
-        f_numrow = lambda in_dict: dict(filter(filter_non_numeric, in_dict.items()))
-        return [
-            f_numrow(kv[-1]) for kv in sorted(sesh.data.items(), key=lambda kv: kv[0])
-        ]
+        """numeric rows over the WHOLE run (all cases of the Result)"""
+        return self.sesh._result.numeric_rows
 
     @property
     def dataframe(self) -> pd.DataFrame:
-        """returns the dataframe of the system"""
+        """the run's combined dataframe (all cases); per-case frames live on
+        `self.result.cases[i].dataframe`"""
         res = pd.DataFrame(self.numeric_data)
         self.system.format_columns(res)
         return res

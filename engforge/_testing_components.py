@@ -14,15 +14,12 @@ from engforge.analysis import Analysis
 
 import unittest
 from engforge.configuration import forge
-from engforge import field
-from engforge.eng.costs import CostModel, Economics, cost_property
+from attrs import field
 from engforge.attr_slots import Slot
 from engforge.system import System
 from engforge.components import Component
 from engforge.component_collections import ComponentIterator
 from engforge.attr_plotting import *
-
-from engforge.eng.solid_materials import *
 
 from engforge.properties import system_property
 
@@ -475,7 +472,7 @@ theta = np.concatenate((np.linspace(0, 2 * np.pi, 120), np.array([0])))
 
 
 @forge(auto_attribs=True)
-class SliderCrank(System, CostModel):
+class SliderCrank(System):
     success_thresh = 1000
     dynamic_state_vars: list = ["theta", "omega"]
     dynamic_input_vars: list = ["Tg"]
@@ -483,7 +480,7 @@ class SliderCrank(System, CostModel):
     # outer gear
     Ro: float = 0.33
     gear_thickness: float = 0.0127  # 1/2 in
-    gear_material: SolidMaterial = attrs.field(factory=ANSI_4130)
+    gear_density: float = 7850.0  # kg/m^3 (cost/material lives in engforge-econ now)
 
     # motor gear
     Tg: float = 0
@@ -543,7 +540,9 @@ class SliderCrank(System, CostModel):
     main_gear_speed_min: float = 20 * (2 * 3.14159 / 60)
     main_gear_speed_max: float = 120 * (2 * 3.14159 / 60)
 
-    cost_slv = Solver.objective("combine_cost", kind="min", combos="cost")
+    # keeps the name `cost_slv` (selection-set tests unchanged) but targets
+    # a plain mass proxy now that CostModel lives in engforge-econ
+    cost_slv = Solver.objective("combine_mass", kind="min", combos="cost")
     sym_slv = Solver.objective("end_force_diff", combos="spring_sym")
 
     # constraints
@@ -679,7 +678,7 @@ class SliderCrank(System, CostModel):
 
     @system_property
     def mass_main_gear(self) -> float:
-        return np.pi * self.gear_material.density * self.Ro**2 * self.gear_thickness
+        return np.pi * self.gear_density * self.Ro**2 * self.gear_thickness
 
     @system_property
     def Imain_gear(self) -> float:
@@ -687,19 +686,16 @@ class SliderCrank(System, CostModel):
 
     @system_property
     def mass_pwr_gear(self) -> float:
-        return np.pi * self.gear_material.density * self.Rg**2 * self.gear_thickness
+        return np.pi * self.gear_density * self.Rg**2 * self.gear_thickness
 
     @system_property
     def Ipwr_gear(self) -> float:
         return self.mass_main_gear * (self.Rg**2)
 
-    @cost_property
-    def main_gear_cost(self) -> float:
-        return self.gear_material.cost_per_kg * self.mass_main_gear
-
-    @cost_property
-    def gear_cost(self) -> float:
-        return self.gear_material.cost_per_kg * self.mass_pwr_gear
+    @system_property
+    def combine_mass(self) -> float:
+        """total gear mass — the minimization proxy formerly `combine_cost`."""
+        return self.mass_main_gear + self.mass_pwr_gear
 
     @system_property
     def motor_gear_ratio(self) -> float:
@@ -737,128 +733,3 @@ class SliderCrank(System, CostModel):
         accl_input = self.input_torque / self.Imain_gear
         accl_react = self.reaction_torque / self.Imain_gear
         return np.array([0, accl_input + accl_react])
-
-
-# COSTS Testing
-
-# COSTS Testing
-
-
-@forge
-class Norm(Component, CostModel):
-    pass
-
-
-@forge
-class Comp1(Component, CostModel):
-    norm = Slot.define(Norm, none_ok=True)
-    not_cost = Slot.define(Component)
-
-
-@forge
-class Comp2(Norm, CostModel):
-    comp1 = Slot.define(Comp1, none_ok=True, default_ok=False)
-
-
-quarterly = lambda inst, term, econ: True if (term + 1) % 3 == 0 else False
-
-
-@forge
-class TermCosts(Comp1, CostModel):
-    @cost_property(category="capex")
-    def cost_init(self):
-        return 100
-
-    @cost_property(mode="maintenance", category="opex")
-    def cost_maintenance(self):
-        return 10
-
-    @cost_property(mode="always", category="tax")
-    def cost_tax(self):
-        return 1
-
-    @cost_property(mode=quarterly, category="opex,tax", label="quarterly wage tax")
-    def cost_wage_tax(self):
-        return 5 * 3
-
-
-@forge
-class EconDefault(System, CostModel):
-    econ = Slot.define(Economics)
-    comp = Slot.define(Component, none_ok=True)
-    comp1 = Slot.define(Comp1, none_ok=True)
-
-
-@forge
-class EconRecursive(System, CostModel):
-    econ = Slot.define(Economics)
-    comp1 = Slot.define(Comp1, none_ok=True)
-    comp2 = Slot.define(Comp2, none_ok=True)
-
-
-# FAN System test
-@forge
-class Fan(Component, CostModel):
-    """a fan component"""
-
-    blade_cost_com: float = attrs.field(default=100.0)
-    area: float = attrs.field(default=10.0)
-    V: float = attrs.field(default=5.0)
-
-    @system_property
-    def volumetric_flow(self) -> float:
-        return self.V * self.area
-
-    @cost_property(category="capex,mfg,material", mode="initial")
-    def blade_cost(self):
-        return self.area * self.blade_cost_com
-
-    @cost_property(category="labor,opex", mode="maintenance")
-    def repair_cost(self):
-        return self.volumetric_flow * 0.1
-
-
-@forge
-class Motor(Component, CostModel):
-    """a fan component"""
-
-    spc_motor_cost: float = attrs.field(default=100.0)
-
-    @system_property
-    def power(self) -> float:
-        return self.parent.fan.volumetric_flow * self.parent.fan.V
-
-    @cost_property(category="capex,mfg,electrical", mode="initial")
-    def motor_cost(self):
-        return self.power * self.spc_motor_cost
-
-    @cost_property(category="labor,opex", mode="maintenance")
-    def repair_cost(self):
-        return self.power * 0.1
-
-
-@forge
-class MetalBase(Component, CostModel):
-    cost_per_item = 1000
-
-
-@forge
-class SysEcon(Economics):
-    terms_per_year = 12
-
-    def calculate_production(self, parent, term):
-        return self.parent.fan.volumetric_flow
-
-
-@forge
-class FanSystem(System, CostModel):
-    base = Slot.define(
-        Component
-    )  # FIXME: not showing in "econ" (due to base default cost?)
-    fan = Slot.define(Fan)
-    motor = Slot.define(Motor)
-
-    econ = Slot.define(SysEcon)
-
-
-FanSystem.default_cost("base", 100)

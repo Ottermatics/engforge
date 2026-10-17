@@ -2,23 +2,15 @@
 
 import sys
 import functools
-
-# Common Modules
-from engforge.configuration import *
-from engforge.logging import LoggingMixin
+import numpy
 from urllib.request import urlopen
 
-import numpy
 
-
-class ForgeLog(LoggingMixin):
-    pass
-
-
-log = ForgeLog()
-log.info("Starting engforge Enviornment")
-
-
+# Defined BEFORE the `configuration` star-import below so that a circular
+# re-entry (configuration -> ... -> dataframe -> `from engforge.common import
+# inst_vectorize, chunks`) can always resolve these primitives, regardless of
+# which module first triggers engforge's import (toolboxes import @forge
+# classes as their own entry point since the 1.0 split).
 class inst_vectorize(numpy.vectorize):
     def __get__(self, obj, objtype):
         return functools.partial(self.__call__, obj)
@@ -28,6 +20,19 @@ def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
         yield lst[i : i + n]
+
+
+# Common Modules
+from engforge.configuration import *
+from engforge.logging import LoggingMixin
+
+
+class ForgeLog(LoggingMixin):
+    pass
+
+
+log = ForgeLog()
+log.info("Starting engforge Enviornment")
 
 
 def is_ec2_instance():

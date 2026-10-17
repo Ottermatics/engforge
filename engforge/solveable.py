@@ -57,34 +57,10 @@ def _post_update_func(comp, eval_kw):
     return updt
 
 
-def _cost_update(comp):
-    from engforge.eng.costs import Economics, CostModel
-
-    if isinstance(comp, Economics):
-
-        def updt(*args, **kw):
-            if log.log_level <= 12:
-                log.info(f"update economics {comp.name} | {comp.term_length} ")
-            comp.system_properties_classdef(True)
-            comp.update(comp.parent, *args, **kw)
-
-        if log.log_level <= 12:
-            log.info(f"economics update cb {comp.name} | {comp.term_length} ")
-        updt.__name__ = f"{comp.name}_econ_update"
-    else:
-
-        def updt(*args, **kw):
-            if log.log_level <= 12:
-                log.info(f"update costs {comp.name} ")  # =5)
-            comp.system_properties_classdef(True)
-            # comp.update(comp.parent, *args, **kw) #called as update without cm
-            return comp.update_dflt_costs()
-
-        if log.log_level <= 12:
-            log.info(f"cost update cb {comp.name} ")
-        updt.__name__ = f"{comp.name}_cost_update"
-
-    return updt
+# NOTE (1.0 split): the CostModel/Economics `_cost_update` special-casing is
+# deleted. Core collects ANY overridden `update()` generically below — the
+# toolboxes implement their own update behavior on their own classes
+# (explicitly, the L2 interface-override lever), with zero core knowledge.
 
 
 dflt_dynamics = {
@@ -133,9 +109,11 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             log.info(f"void post-updating {self.__class__.__name__}.{self}")
 
     def collect_update_refs(self, eval_kw=None, ignore=None):
-        """checks all methods and creates ref's to execute them later"""
-        from engforge.eng.costs import CostModel, Economics
+        """checks all methods and creates ref's to execute them later.
 
+        Collection is fully generic: any component (or self) with an overridden
+        `update()` participates. Toolboxes hook the update phase by overriding
+        `update()` on their own mixins (no core special-casing)."""
         updt_refs = {}
         from engforge.components import Component
         from engforge.component_collections import ComponentIter
@@ -150,10 +128,6 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         if self.__class__.update != SolveableMixin.update:
             ref = Ref(self, _update_func(self, eval_kw if eval_kw else {}))
             updt_refs[key] = ref
-
-        if isinstance(self, (CostModel, Economics)):
-            ref = Ref(self, _cost_update(self))
-            updt_refs[key + "._cost_model_"] = ref
 
         for key, comp in self.internal_configurations(False).items():
             # for key,lvl,comp in self.go_through_configurations(check_config=False):
@@ -171,15 +145,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             ekw = eval_kw_comp
 
             # Add if its a unique update method (not the passthrough)
-            if isinstance(comp, (CostModel, Economics)):
-                ref = Ref(comp, _cost_update(comp))
-                updt_refs[key + "._cost_model_"] = ref
-
             if comp.__class__.update != SolveableMixin.update:
                 ref = Ref(comp, _update_func(comp, ekw))
                 updt_refs[key] = ref
-
-            # Cost Models
 
         ignore.add(self)
         return updt_refs
@@ -397,56 +365,52 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         if method_kw is None:
             method_kw = {}
 
-        # Create Keys List
-        sequence_keys = set()
+        # validate sequence rows like any other input (keys AND value types)
         for seq in sequence:
-            sequence_keys = sequence_keys.union(set(seq.keys()))
+            for sk, sv in seq.items():
+                addty = self._validate_input_key(sk)
+                assert self._test_input_value(sv, addty), (
+                    f"bad sequence value {sk}:{sv!r}"
+                )
 
         # RUN when not solved, or anything changed, or arguments or if forced
         if force_solve or not self.solved or self.anything_changed or kwargs:
             _input = self.parse_run_kwargs(**kwargs)
 
-            output = {}
-            inputs = {}
-            result = {"output": output, "input_sets": inputs}
-
             # Pre Run Callback
             self.pre_run_callback(eval_kw=eval_kw, sys_kw=sys_kw, **kwargs)
 
-            # Premute the input as per SS or Transient Logic
-            ingrp = list(_input.values())
-            keys = list(_input.keys())
+            # split singles vs jointly-varying groups (declaration order kept)
+            from engforge.inputs import (
+                is_group_key,
+                split_group_key,
+                expand_point_factors,
+            )
+
+            singles = {k: v for k, v in _input.items() if not is_group_key(k)}
+            groups = [
+                (split_group_key(k), v) for k, v in _input.items() if is_group_key(k)
+            ]
 
             # Iterate over components (they are assigned to the system by call)
+            session = ProblemExec.class_cache.session
             for itercomp in self._iterate_components():
-                # Iterate over inputs
-                for vars in itertools.product(*ingrp):
-                    # Set the reference aliases
-                    cur = {k: v for k, v in zip(keys, vars)}
+                # product over factors (groups zip internally); sequence innermost
+                for icur in expand_point_factors(singles, groups, sequence):
+                    # each point gets its OWN Case on the run's Result —
+                    # explicit row ownership (no shared/keyed-by-time store)
+                    case = session.begin_case(icur)
 
-                    # Iterate over Sequence (or run once)
-                    for seq in sequence:
-                        # apply sequence values
-                        icur = cur.copy()
-                        # apply sequence values
-                        if seq:
-                            icur.update(**seq)
+                    # Run The Method with inputs provisioned
+                    out = method(icur, eval_kw, sys_kw, cb=cb, **method_kw)
+                    case.output = out
 
-                        # Run The Method with inputs provisioned
-                        out = method(icur, eval_kw, sys_kw, cb=cb, **method_kw)
-
-                        if (
-                            print_kw
-                            and hasattr(self, "last_context")
-                            and self.last_context
-                        ):
-                            self.last_context.print_all_info(**print_kw)
-
-                        if return_results:
-                            # store the output
-                            output[max(output) + 1 if output else 0] = out
-                            # store the input
-                            inputs[max(inputs) + 1 if inputs else 0] = icur
+                    if (
+                        print_kw
+                        and hasattr(self, "last_context")
+                        and self.last_context
+                    ):
+                        self.last_context.print_all_info(**print_kw)
 
             # nice
             # TODO: wrap this with context manager
@@ -456,7 +420,9 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
             self.post_run_callback(eval_kw=eval_kw, sys_kw=sys_kw, **kwargs)
 
             if return_results:
-                return result
+                # the run's Result (Mapping-compatible with the legacy
+                # {"output": {...}, "input_sets": {...}} shape)
+                return session.result
 
         elif not self.anything_changed:
             self.warning(f"nothing changed, not running {self.identity}")
@@ -495,52 +461,78 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
 
         return _trans_opts
 
+    def _validate_input_key(self, k):
+        """validate ONE run-input key (plain field, slot, or dotted path) and
+        return the extra accepted types for its values (slot classes)."""
+        if "." not in k:
+            inpossible = set.union(
+                set(self.input_fields()), set(self.slots_attributes())
+            )
+            assert k in inpossible, f"bad input {k}"
+        else:
+            assert k.split(".")[0] in self.slots_attributes(), (
+                f"bad slot references {k}"
+            )
+        subslot = self.check_ref_slot_type(k)
+        return subslot if subslot is not None else []
+
+    @staticmethod
+    def _test_input_value(v, addty):
+        return isinstance(v, (int, float, str, *addty)) or v is None
+
     def parse_run_kwargs(self, **kwargs):
         """ensures correct input for simulation.
-        :returns: first set of input for initalization, and all input dictionaries as tuple.
 
+        Keys may be plain fields, dotted paths, or comma-joined GROUPS
+        (``"a,comp.b": [(1,2),(3,4)]``) whose rows vary jointly (zipped) and
+        cross the other inputs — a partial factorial, not a full outer product.
+
+        :returns: dict of {key: list-of-values} for plain keys and
+                  {group_key: list-of-row-tuples} for group keys.
         """
-        # Validate OTher Arguments By Parameter Or Comp-Recursive
-        var_args = {k: v for k, v in kwargs.items() if "." not in k}
-        comp_args = {k: v for k, v in kwargs.items() if "." in k}
-
-        # check vars
-        inpossible = set.union(set(self.input_fields()), set(self.slots_attributes()))
-        argdiff = set(var_args).difference(inpossible)
-        assert not argdiff, f"bad input {argdiff}"
-
-        # check components
-        comps = set([k.split(".")[0] for k in comp_args.keys()])
-        compdiff = comps.difference(set(self.slots_attributes()))
-        assert not compdiff, f"bad slot references {compdiff}"
+        from engforge.inputs import (
+            is_group_key,
+            split_group_key,
+            normalize_group_rows,
+        )
 
         _input = {}
-        test = lambda v, add: isinstance(v, (int, float, str, *add)) or v is None
+        seen_subkeys = set()
 
-        # vars input
         for k, v in kwargs.items():
-            # If a slot check the type is applicable
-            subslot = self.check_ref_slot_type(k)
-            if subslot is not None:
-                # log.debug(f'found subslot {k}: {subslot}')
-                addty = subslot
-            else:
-                addty = []
+            if is_group_key(k):
+                subkeys = split_group_key(k)
+                dupes = seen_subkeys.intersection(subkeys)
+                assert not dupes, f"duplicate input keys across groups: {dupes}"
+                seen_subkeys.update(subkeys)
+
+                addtys = [self._validate_input_key(sk) for sk in subkeys]
+                rows = normalize_group_rows(k, subkeys, v)
+                for i, row in enumerate(rows):
+                    for sk, addty, vi in zip(subkeys, addtys, row):
+                        assert self._test_input_value(vi, addty), (
+                            f"bad value in group {k!r} row {i}: {sk}={vi!r}"
+                        )
+                _input[k] = rows
+                continue
+
+            assert k not in seen_subkeys, f"duplicate input keys across groups: {k}"
+            seen_subkeys.add(k)
+            addty = self._validate_input_key(k)
 
             # Ensure Its a List
             if isinstance(v, numpy.ndarray):
                 v = v.tolist()
 
             if not isinstance(v, list):
-                assert test(v, addty), f"bad values {k}:{v}"
+                assert self._test_input_value(v, addty), f"bad values {k}:{v}"
                 v = [v]
             else:
-                assert all([test(vi, addty) for vi in v]), f"bad values: {k}:{v}"
+                assert all(
+                    [self._test_input_value(vi, addty) for vi in v]
+                ), f"bad values: {k}:{v}"
 
-            if k not in _input:
-                _input[k] = v
-            else:
-                _input[k].extend(v)
+            _input[k] = v
 
         return _input
 

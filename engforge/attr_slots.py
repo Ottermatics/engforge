@@ -67,7 +67,6 @@ class Slot(ATTR_BASE):
         from engforge.components import Component
         from engforge.component_collections import ComponentIter
         from engforge.system import System
-        from engforge.eng.costs import CostModel
 
         # Format THe Accepted Component Types
         assert (
@@ -83,11 +82,10 @@ class Slot(ATTR_BASE):
             ]
         ), "Not System Or Component Input"
 
-        ### Cost models should always default to None
-        # FIXME: is this nessicary?
-        if any([issubclass(c, CostModel) for c in component_or_systems]):
-            default_ok = False
-            none_ok = True
+        # NOTE (1.0 split): core carries NO toolbox special-casing. Slot
+        # declarations are honored verbatim — toolboxes/users state intent
+        # explicitly, e.g. Slot.define(SomeCostModel, none_ok=True,
+        # default_ok=False). (The old CostModel auto-override is deleted.)
 
         new_dict = dict(
             accepted=component_or_systems,

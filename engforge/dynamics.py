@@ -559,7 +559,10 @@ class GlobalDynamics(DynamicsMixin):
         endtime = kwargs.pop("endtime", 10)
 
         with ProblemExec(
-            self, kwargs, level_name="simmtx", dxdt=True, copy_system=True
+            # copy_system=False: the per-point sim episodes isolate themselves
+            # (a simmtx COPY while sim() ran simulate() on the ORIGINAL raised
+            #  IllegalArgument "change of comp!" — sim_matrix was unusable)
+            self, kwargs, level_name="simmtx", dxdt=True, copy_system=False
         ) as pbx:
             if isinstance(self, SolveableMixin):
                 # adapt simulate to use the solver
@@ -614,8 +617,15 @@ class GlobalDynamics(DynamicsMixin):
 
         # variables if failed
         pbx, system = None, self
+        case = None
+        episode = None
         try:
-            # Time Iteration Context
+            # Time Iteration Context — an EPISODE: brackets itself with an
+            # explicit SystemState (fields + clock restored on exit) and owns
+            # its rows via its own Case. No shared/keyed-by-time row store,
+            # no scattered restore logic.
+            from engforge.state import SystemState
+
             data = []
             with ProblemExec(
                 system,
@@ -626,6 +636,8 @@ class GlobalDynamics(DynamicsMixin):
                 run_solver=run_solver,
                 post_callback=cb,
             ) as pbx:
+                episode = SystemState.capture(pbx)
+                case = pbx.begin_case(dict(X0) if X0 else {})
                 self._sim_ans = pbx.integrate(
                     endtime=endtime,
                     dt=dt,
@@ -641,10 +653,13 @@ class GlobalDynamics(DynamicsMixin):
                 # this will affect the context copy, not self
                 pbx.exit_to_level("sim", False)
 
-            # convert to list with time
-            # df = pandas.DataFrame(data)
-            # self.format_columns(df)
-            df = pbx.dataframe
+            # restore the episode state (fields AND clock) explicitly
+            if episode is not None and pbx is not None:
+                episode.apply(pbx, restore_time=True)
+
+            # this episode's rows only, formatted
+            df = case.dataframe
+            self.format_columns(df)
 
             # TODO: move to context
             if return_all:

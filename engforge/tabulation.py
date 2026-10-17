@@ -101,6 +101,17 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
             return self._patch_dataframe
         return pandas.DataFrame([])
 
+    @property
+    def last_result(self):
+        """the Result of the last run — the explicit owner of cases/rows
+        (tabulation lives in engforge/results.py, not on the object).
+
+        `result.cases[i].dataframe` is one input-point's rows;
+        `result.dataframe` is the whole run. `self.dataframe` remains as the
+        combined-frame convenience view."""
+        ctx = getattr(self, "last_context", None)
+        return getattr(ctx, "result", None) if ctx is not None else None
+
     @dataframe.setter
     def dataframe(self, input_dataframe):
         if hasattr(self, "last_context") and hasattr(self.last_context, "dataframe"):

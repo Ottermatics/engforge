@@ -26,11 +26,9 @@ import attrs
 
 def check_comp_type(instance, attr, value):
     """ensures the input component type is a Component"""
-    from engforge.eng.costs import CostModel
-
-    if not instance.wide and isinstance(value, type) and issubclass(value, CostModel):
-        raise TypeError(f"Cost Mixin Not Supported As Iter Type! {value}")
-
+    # NOTE (1.0 split): the CostModel narrow-mode veto is deleted — it was
+    # verified dead (wide flips AFTER this validator runs) and core carries
+    # no toolbox knowledge. Toolboxes enforce their own collection rules.
     if isinstance(value, type) and issubclass(value, Component):
         return
 

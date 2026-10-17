@@ -263,6 +263,44 @@ scaling/perturbation); wall-time at N; model LOC; concept count added.
 
 ---
 
+# PART V-b — Landed: explicit State & Result (the staging of Part VI)
+
+*Implemented this pass. Model code is unchanged; what moved is WHERE mutable state and
+result rows live.*
+
+**Why.** A `sim_matrix` bug chase produced four stacked patches (row-slicing, data-owner
+scopes, an owner stack, a time-restore) — all symptoms of one disease: **state scattered
+across live objects + a recursive context singleton, and rows accumulating implicitly as a
+side effect of property evaluation.** Every nested scope had to mutate-then-restore shared
+state, and every restore path was a new bug surface.
+
+**What landed.**
+
+| structure | file | owns |
+|---|---|---|
+| `SystemState` | `engforge/state.py` | the typed snapshot: `capture / apply / updated / copy / diff`, plus the episode clock. Promotes `record_state`, `x_start`, `temp_state` into one object. `apply(restore_time=)` separates *solver revert* (fields only) from *episode restore* (fields + clock). |
+| `Case` / `Result` | `engforge/results.py` | one input-point's inputs/rows/output; the run's cases. Recording is an explicit `case.record(...)` with the dedup policy moved out of the context. `Result` is a `Mapping`, so `run()["output"][i]` / `["input_sets"][i]` are unchanged. |
+
+- `ProblemExec` keeps **no row store**: `_data/_index` are gone; `begin_case()` starts a point,
+  `save_data` records on the active case, `numeric_data/dataframe` read the Result.
+- `simulate()` is now an **episode**: captures a `SystemState`, owns its `Case`, restores state
+  *and* clock on exit. Transient cases keyed by time can no longer collide — the four patches
+  are deleted, not kept.
+- `system.last_result` exposes the Result; `system.dataframe` stays as the combined view.
+
+**Also landed:** grouped matrix inputs (`"a,comp.b": [(1,2),(3,4)]` — joint rows crossing the
+other factors) via `engforge/inputs.py`; `sequence=` validated; genuine bug fixes (`dxdt`
+clobber, `integrate` X0 merge, `sim_matrix` copy_system).
+
+**Toolbox decoupling completed:** core carries no `CostModel`/`Economics` knowledge — the slot
+auto-override, the collection veto, and `_cost_update` are deleted. Toolboxes declare intent
+explicitly (`Slot.define(X, none_ok=True, default_ok=False)`) and hook the update phase by
+overriding `update()` on their own classes (engforge-econ does exactly this).
+
+**Verification:** core 92 tests green, engforge-econ 17 green, and
+`examples/transient_control.py` (PID + profile components, grouped gain sets) produces
+byte-identical output across reruns — no hysteresis.
+
 # PART VI — The compiled-graph engine design
 
 *The engine that implements Parts I–V: everything below compiles the declarations into one
