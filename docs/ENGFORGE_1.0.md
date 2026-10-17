@@ -1,9 +1,274 @@
-# engforge 1.0 — The Compiled Problem Graph
+# engforge 1.0 — Design Document
 
-*Design document. Status: approved direction, pre-implementation. This is the authoritative
-reference for the 1.0 core rebuild and the engforge-&lt;domain&gt; repo family.*
+*The unified design for engforge 1.0. Parts I–V are the drawing-board foundation: the update
+cycles our problem classes require, what the current system executes, the measured gap, and the
+minimal engine changes — expressed through existing engforge idioms (decorator marking + combos,
+interface overrides, argument-passed bindings). Part VI is the compiled-graph engine design that
+implements it. Everything is a Component; the declaration API stays
+Component / Slot / Signal / Solver / Time / @system_property.*
+
+*Evidence: every coverage claim below carries either a `file:line` mechanic or a probe number
+from `sandbox/cycles/run_probes.py` (P-A … P-H).*
 
 ---
+
+# PART I — The problem classes and their update cycles
+
+## I.1 The cycle alphabet
+
+Every target problem class is a nesting of eight primitive cycle elements:
+
+| element | meaning |
+|---|---|
+| EVAL | one pass through a value DAG (properties) |
+| SWEEP | ordered one-pass over parts (components/stations/cells) |
+| ITERATE | repeat to a fixed point (‖Δ‖ < tol) — Gauss-Seidel/Jacobi |
+| SOLVE | residual block → linear algebra → update, to tol (Newton/direct) |
+| MAP | independent evaluation over set members (parallelizable) |
+| REDUCE | aggregate member results into parent values |
+| MARCH | time/space stepping (each step contains one of the above) |
+| OPTIMIZE | driver loop over design vars |
+
+## I.2 Class 1 — feed-forward design study (hinge fit, airfilter)
+
+```
+for X in input_sets:                       # MAP (outer product / cases)
+    set_inputs(system, X)
+    for node in topo_order(value_dag):     # EVAL — order from dependencies
+        node.value = f(node.deps)
+    record_row()
+# optional driver:
+while not converged:                       # OPTIMIZE
+    f, g = EVAL(X);  X = step(X, grad)
+```
+No inner iteration. Correctness = evaluation order; cost = one DAG pass per point.
+
+## I.3 Class 2 — balanced network (jet engine, pipe nets, drivetrain)
+
+```
+u = guess(flows, speeds, PRs)              # the balance unknowns
+while norm(r) > tol:                       # SOLVE (Newton, bounded)
+    for comp in flow_order(components):    # SWEEP along the flow topology
+        comp.out = comp.compute(comp.in(u))
+    r = residuals(u)                       # continuity, energy, shaft power = 0
+    J = dr/du                              # small, sparse
+    u = u + solve(J, -r)
+# design mode:    u = {W, FAR, PR_turbine}
+# off-design:     u = {W, FAR, N_mech}     # SAME residuals, different unknown partition
+```
+
+**The multi-domain requirement (flagship case).** A real engine model integrates several domains
+with flexible solving: top-level design/off-design performance runs on **component maps**, while
+each component (compressor / turbine / fan) also carries its own **internal blade-geometry
+analysis** and **structural analysis**. All domains are defined upfront in the classes — that's
+the expected legwork — and **combos is the segmentation tool** that selects which domain/fidelity
+solves in a given run:
+
+```python
+run(combos='cycle,design')      # map-based design point
+run(combos='cycle,offdesign')   # same residuals, different unknowns  (probe P-E: works TODAY)
+run(combos='blade')             # blade geometry analysis on the same components
+run(combos='struct')            # structural checks
+```
+
+## I.4 Class 3 — coupled disciplines, fixed point (platform↔turbine, aero↔structure)
+
+```
+while not opt_converged:                   # OPTIMIZE over design d
+    while norm(delta) > tol:               # ITERATE (Gauss-Seidel MDA)
+        a = A.compute(d, b)
+        b = B.compute(d, a)
+    f, g = objectives(a, b)                # gradients valid ONLY at a consistent (a,b)
+    d = step(d, g)
+# alternative (IDF): lift (a,b) to the solver with residuals a-A(d,b)=0, b-B(d,a)=0
+```
+The inner loop must converge **every** outer evaluation, or the gradients lie.
+
+## I.5 Class 4 — continuum mesh (FEA/CFD)
+
+```
+# steady implicit:
+while norm(R) > tol:                       # SOLVE (Newton / linear)
+    for cell in cells:                     # MAP (parallel) over members
+        local = gather(u, neighbors[cell]) #   sparse stencil read
+        R[cell], Jrow = cell.residual(local)
+    J = assemble_sparse(Jrows)
+    u = u + sparse_solve(J, -R)
+# matrix-free variant:  ITERATE sweeps of local cell updates until norm(du) < tol
+# transient:            MARCH t: each step = one SOLVE (implicit) or one sweep (explicit)
+```
+Signatures: locality (stencil), sparse structure, N ≫ 1e3, assembly = gather/scatter.
+
+## I.6 Class 5 — sets × sites / multipoint design
+
+```
+while not opt_converged:                   # OPTIMIZE over SHARED design d
+    for site in sites:                     # MAP (independent → parallel)
+        y[site] = evaluate(system, d, site)
+    F = reduce(weights, y)                 # REDUCE: weighted sum / worst-case
+    d = step(d, grad(F))
+# "run at one site" = the same cycle, MAP over one site
+# coupled arrays (wakes): the MAP becomes an ordered SWEEP or a SOLVE
+```
+
+## I.7 Class 6 — stochastic optimization (random upstream output)
+
+```
+while not opt_converged:                   # OPTIMIZE over design d
+    for s in range(n_samples):             # MAP over random draws (seeded)
+        w = draw(dist, seed=base_seed + s) # CRN: SAME seeds every outer iteration
+        y[s] = evaluate(system, d, w)
+    F = statistic(y)                       # REDUCE: mean / quantile / CVaR
+    d = step(d, grad(F))                   # valid only because seeds are common
+```
+Disciplines: common random numbers (else FD gradients are noise — probe P-F), sample size vs
+tolerance, statistics as first-class outputs. Hook today: `@system_property(stochastic=True)`.
+
+## I.8 Class 7 — closed-loop modeling on a real data timeseries
+
+```
+# replay / correlation:
+for t, row in timeseries:                  # MARCH driven by RECORDED data
+    set_measured_inputs(system, row)
+    step(system, dt)
+    err[t] = outputs(system) - row.measured_outputs
+report(err)
+# parameter estimation (system ID):
+while not fit_converged:                   # OPTIMIZE over params p
+    E = replay(timeseries, p)              # the whole MARCH is one objective eval
+    p = step(p, grad(sum(E^2)))
+```
+Precedents in-repo: `test_dynamics` ω-fit; client rig-correlation data (Triton
+`test_analysis/data_cache` + `testpoints`). Probe P-G demonstrates both halves today.
+
+---
+
+# PART II — What engforge executes today (verified)
+
+```
+run(**kw):
+    for X in product(input_lists) x narrow_iter_frames:   # MAP — independent points only
+        enter ProblemExec                                  # re-walks/recaches ALL refs
+        apply_signals(declaration_order)                   # ┐ sweeps with NO dependency
+        run_update_refs(declaration_order, one_level)      # ┘ sort and NO tol contract
+        minimize(SLSQP, vars=all_selected, cons=all)       # the ONLY iterative construct
+            # per objective/constraint eval: re-enter context; set x; sweep again;
+            # lazily EVAL touched props.  con_eq -> minimize(1 + r^2) fallback
+        post_signals(); save_row(); revert()
+
+simulate(): MARCH via solve_ivp over name-concatenated per-component states
+    # per step: one sweep + per-component block-diagonal rates (no cross-component
+    # residual incidence); runs on a COPY and returns the dataframe
+reduce:    parent @system_property over wide-collection refs
+```
+
+In alphabet terms: `MAP_product( SWEEP_decl ∘ OPTIMIZE_flat( EVAL_lazy ) )` + a separate
+`MARCH( SWEEP )`.
+
+Topology facts (each verified by execution or probe):
+- Ownership is a tree; the lazy property DAG is correct per-read.
+- All cross-component flow lives in declaration-ordered sweeps. **Measured (P-D): `update()` is
+  called 6× per `run()` (12 after two runs) — there is no execution-count contract, so
+  non-idempotent updates (accumulators, cost tallies) are broken by design; and under strong
+  coupling the answer is declaration-order dependent (swap two class-body lines → results differ
+  by 0.80, mirrored: (8.62, 9.19) vs (9.19, 8.62), both far from the true (20, 20)).**
+- **Accidental iteration (new finding, P-B): `mode="both"` signals re-apply at every nested
+  context entry, so one `run()` performs ~8 unplanned Gauss-Seidel sweeps.** Weak couplings
+  therefore converge *by accident*; a strong coupling (ρ=0.9025) retains error 12.14 after a run
+  and creeps across re-runs (4.35 → 1.56 → 0.56) — convergence with no tolerance contract.
+  Reaching 1e-10 needs 232 controlled GS iterations (the ITERATE engforge lacks).
+- Solver declarations resolve **downward through slots only** (P-A: a child residual referencing
+  `parent.turb.torque` → `AssertionError: invalid parent`): couplings must be declared at a
+  common ancestor.
+- Collection members are tabulation-only: their `declare_var`/`con_eq`/updates are silently
+  ignored (P-C: solver saw `['plain.x']` only; member fields untouched at 3.0).
+- `con_eq` has no Newton: residuals become a `1+r²` objective under flat SLSQP. On a small clean
+  2×2 balance that works well (P-A: converged in 4 iterations / 13 evals, residual 1.2e-9,
+  matching hand-Newton's answer) — the weakness is robustness/scaling and the missing
+  flow-ordered sweep, not the small case.
+
+---
+
+# PART III — Coverage matrix (probe-backed)
+
+| class | covered? | evidence for | evidence against |
+|---|---|---|---|
+| 1 feed-forward | **native** | the entire current feature set | sweep order is declaration luck (P-D); 6× redundant update calls per run (P-D) |
+| 2 balanced network | **partial+** | flat SLSQP solved the 2×2 balance exactly (P-A: 4 it/13 evals, r=1.2e-9); **design/off-design unknown re-partition WORKS TODAY via combos** (P-E: `combos='design'` → PR=4.0 with Nmech untouched; `combos='offdesign'` → Nmech=6.0 with PR untouched) | downward-only declarations (P-A assertion); no Newton on residual blocks (robustness at scale unproven); no flow-ordered sweep |
+| 3 coupled fixed point | **accidental only** | ~8 unplanned sweeps per run converge weak couplings (P-B) | no ITERATE contract: strong coupling leaves err 12.14, creeps across re-runs, no tolerance, order-dependent (P-B, P-D) |
+| 4 continuum mesh | **not covered** | — | members invisible to solver (P-C); no neighbor refs; no assembly; per-object Python dispatch at N |
+| 5 sets/multipoint | **partial** | MAP via input product & narrow iter; REDUCE via wide refs | member solver content ignored (P-C); no member coupling; no shared-design cross-point objective in one solve |
+| 6 stochastic opt | **partial** | `stochastic=True` + list-sweep MC exist | no CRN: same design, 5 runs → 5 objectives (spread ~0.12); FD "gradients" spanned **109** vs true −2.0; hand-seeded CRN recovers −2.0256 exactly ×5 (P-F) — the gap is seed plumbing + statistics-REDUCE, not math |
+| 7 closed-loop on data | **partial (all user code)** | replay RMSE 2e-5 at true params; system-ID recovered (k,c)=(9.9996, 0.5999) from (10, 0.6) in 86 evals (P-G) | measured-input injection = hand-written interpolation inside `update_state_constants` + `nonlinear=True` to defeat matrix caching; error accumulation and staleness are user code |
+
+---
+
+# PART IV — Minimal engine changes, through the levers
+
+## IV.1 The levers (all existing idioms)
+
+| lever | precedent | role |
+|---|---|---|
+| L1 decorator marking + **combos** selection | `@system_property`, `@cost_property(category=,mode=)`; `combo_filter`/`filter_vals` | methods become cycle participants, activated by `run(combos=…)` — **combos is the house segmentation tool for types of analysis**. Solver-scoped naming: **`@Solver.residual(combos=…)`** (method-local residual, consistent with `Solver.con_eq`), `@Solver.update(combos=…, before=/after=…)` for ordered sweep participation |
+| L2 interface overrides | `update()`, `create_state_matrix()`, `_solver_override` | a component owns its block's inner solve (the `_solver_override` pattern generalized to SCC blocks); collection-level gather/assembly overrides |
+| L3 args → collection fields | `run(base=[None, MetalBase()])` | member addressing via the input channel: broadcast `cells.T0=5`, per-member arrays, member sweeps; site sets `sites.current=[s1,s2,s3]` |
+| L4 args → normal fields | `run(x=5, **{'comp.x': […]})` | the universal mutation channel — unchanged |
+
+## IV.2 The changes
+
+| # | change (engine-level) | unlocks | status |
+|---|---|---|---|
+| C1 | SWEEP in value-graph topological order with a **declared execution contract** (exactly-once per phase, or iterate-to-tol) — replaces declaration order and the accidental re-sweeps | correctness for 1–3; prereq for all | probe-proven need (P-B/P-D) |
+| C2 | detect coupling cycles → ITERATE/SOLVE the block to tolerance inside each outer eval (SCC → GS/Aitken or Newton); `con_eq` blocks get real Newton | class 3; robustness for 2 | P-B shows 232-iteration ITERATE need; P-A shows Newton parity |
+| C3 | generalized ref reach for existing string refs (sibling/parent/member) — resolver-only; largely obviated where `@Solver.residual` methods make deps visible by tracing | declare couplings where they live | P-A shows today's block |
+| C4 | collection members become full problem citizens (vars/residuals/updates collected; parent set; copy fixed) | class 5; doorway to 4 | P-C proves the gap |
+| C5 | **indexed peer Slots + member-block assembly**: a Slot may hold multiple indexed references to same-type components in N dimensions — structured sugar `i,j,k ±` for square cells (`self.nbr[+1,0,0].T`), index lists for unstructured; or **fixed-arity node slots** (a cube element holding 8 shared Node components — classic element↔node incidence). Peer slots are references, not owners (single-parent rule relaxed). Stencil properties (`dTdx = (nbr[+i].T − nbr[−i].T)/(nbr[+i].x − nbr[−i].x)`) read through them; identical-form members evaluate as one vectorized block whose Jacobian sparsity IS the slot-index pattern | class 4 | design (P-H shows the stencil Jacobian rows symbolically) |
+| C6 | ~~unknown re-partition~~ — **covered today** by combo-selected vars over shared residuals | class 2 design/off-design | **P-E: done, no change needed** |
+| C7 | cross-point aggregate: MAP subproblems sharing declared vars + statistics/weights REDUCE objective inside one problem; seeded-draw MAP for stochastic (CRN owned by the engine) | class 5 multipoint; class 6 | P-F quantifies the CRN requirement |
+| C8 | measured-input channel for MARCH (timeseries → inputs per step) + error-accumulation hooks | class 7 ergonomics | P-G shows the contortion that works today |
+
+Model code is unchanged by C1–C3 (same declarations, better engine); C4–C5 upgrade the existing
+collection/Slot primitives; C7–C8 are assembly/plumbing. **No new user-facing classes.**
+
+---
+
+# PART V — Test & evaluation strategy
+
+How candidate approaches graduate into core: reference problems with known answers, measured.
+
+**Reference problems** (one per class): hinge fit (1); 2×2 spool balance, root (0.6, 0.75), with
+design/off-design partitions (2 — P-A/P-E are its seed); two-discipline fixed point, ρ=0.9025,
+fixed point (20, 20) (3 — P-B); 1-D conduction mesh vs linear profile (4); 3-site weighted design
+with hand-computed optimum (5); noisy quadratic, true grad −2.0 at d=2, CRN-recoverable (6 —
+P-F); recorded spring-mass trace, recover (k,c)=(10, 0.6) (7 — P-G).
+
+**Candidate definition/extraction approaches under evaluation** (measured head-to-head, P-H):
+- (a) **plain Python + value tracer** (baseline): zero user-code constraints; exact dependency
+  sets always; exact Jacobian rows for affine terms only (P-H: r2 row {N: 1.1, W: 0.4} exact;
+  nonlinear r1 → FD/CS). Branch guards recorded.
+- (b) **opt-in symbolic (sympy) definitions**: incidence, coupled-block (SCC) identification, and
+  the exact Jacobian fall out *by construction* (P-H: J = [[4N+1/2, 7/10], [11/10, 2/5]], Newton
+  6 iterations to the exact root; symbolic stencil rows ±1/(x_p−x_m)). Costs: branches require
+  `Piecewise`, sympy-only math, two-world friction. Positioning: **top-down component DSL +
+  automatic DAG/cycle/solver identification is ModelingToolkit.jl's territory and empty in
+  Python** — symbolic and tracing are the two routes; evaluation decides the mix (expected:
+  tracer default, symbolic opt-in per property/residual).
+- (c) **decorator-marked methods + combos** (`@Solver.residual(combos=…)`) for cycle
+  participation — the house idiom.
+
+**Metrics**: correctness vs reference; convergence robustness (iterations, failure rate under
+scaling/perturbation); wall-time at N; model LOC; concept count added.
+**Gate**: nothing enters core without reference-problem numbers. Harness:
+`sandbox/cycles/run_probes.py` (P-A…P-H), extended per candidate.
+
+---
+
+# PART VI — The compiled-graph engine design
+
+*The engine that implements Parts I–V: everything below compiles the declarations into one
+problem graph (R(u)=0), which is precisely what delivers C1 (topological order), C2 (SCC blocks
+with real solvers), C4/C5 (members and peer slots as graph nodes), and C7 (point-mapped
+subproblems). Sections retain their original numbering.*
 
 ## 1. Why 1.0
 
