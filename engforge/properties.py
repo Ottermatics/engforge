@@ -162,6 +162,7 @@ class system_property(engforge_prop):
         self.valild_types = (int, str, float)  # check for return_type
         self.fget = fget
         if fget:
+            self.gname = fget.__name__  # backs cached_* private_var
             self.get_func_return(fget)
 
         self.fset = fset
@@ -185,6 +186,7 @@ class system_property(engforge_prop):
     def __call__(self, fget=None, fset=None, fdel=None, doc=None):
         """this will be called when input is provided before property is set"""
         if fget and self.fget is None:
+            self.gname = fget.__name__
             self.get_func_return(fget)
             self.fget = fget
         if self.fset is None:
@@ -291,8 +293,8 @@ class cached_system_property(system_property):
 
 
 # aliases
-cached_sys_prop = system_property
-cached_system_prop = system_property
+cached_sys_prop = cached_system_property
+cached_system_prop = cached_system_property
 
 
 # TODO: install solver reset / declarative instance cache+
@@ -306,10 +308,12 @@ class solver_cached(cache_prop):
         return f"_{self.gname}"
 
     def __get__(self, instance: "TabulationMixin", objtype=None):
+        if instance is None:
+            return self  # class-level access returns the descriptor
         if not hasattr(instance, self.private_var) and not IS_BUILD:
             from engforge.tabulation import TabulationMixin
 
-            assert instance.__class__ is None or issubclass(
+            assert issubclass(
                 instance.__class__, TabulationMixin
             ), f"incorrect class: {instance.__class__.__name__}"
             return self.set_cache(instance, reason="set")
@@ -341,6 +345,8 @@ class instance_cached(cache_prop):
         return f"_{self.gname}"
 
     def __get__(self, instance: "TabulationMixin", objtype=None):
+        if instance is None:
+            return self  # class-level access
         if not hasattr(instance, self.private_var):
             from engforge.tabulation import TabulationMixin
 
@@ -376,6 +382,8 @@ class class_cache(cache_prop):
         return f"__{self.gname}"
 
     def __get__(self, instance: "Any", objtype=None):
+        if instance is None:
+            return self  # class-level access
         cls = instance.__class__
         if hasattr(cls, self.private_var):
             # check and gtfo

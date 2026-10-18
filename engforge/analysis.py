@@ -72,10 +72,96 @@ class Analysis(Configuration, TabulationMixin, PlottingMixin, DataframeMixin):
         self._stored_plots = {}
         self.make_plots(analysis=self, store_figures=self._stored_plots)
         self.report_results()
+        return out
 
     def post_process(self, *args, **kwargs):
         """A user customizeable function"""
         pass
+
+    def cli(self, args=None):
+        """Command-line entry point for this analysis — JSON input sets in,
+        a run out. Put this at the bottom of your analysis script::
+
+            if __name__ == "__main__":
+                MyAnalysis(system=MySystem()).cli()
+
+        Then from a shell::
+
+            python my_analysis.py --input-json inputs.json --set a=2 \\
+                --set "comp.y=[1,2,3]" --save-mode sparse
+
+        The JSON file carries the input matrix (flat, or sectioned with
+        ``inputs`` / ``settings`` / ``sequence`` — see
+        ``engforge.inputs.load_input_sets``); ``--set`` overrides win over the
+        file. ``--list-inputs`` reflects the system's available input fields.
+
+        :param args: argv list for testing (None -> sys.argv)
+        :return: the run's Result, or None for --list-inputs
+        """
+        import argparse
+
+        from engforge.inputs import load_input_sets, parse_set_overrides
+        from engforge.problem_context import save_modes
+
+        doc = (self.__class__.__doc__ or "").strip().splitlines()
+        parser = argparse.ArgumentParser(
+            prog=self.classname.lower(),
+            description=doc[0] if doc else f"run {self.identity}",
+        )
+        parser.add_argument(
+            "--input-json",
+            metavar="PATH",
+            help="JSON input-set file: flat {key: value|[values]} or sectioned "
+            "{inputs, settings, sequence}; a comma key ('a,b') declares a "
+            "jointly-varying group with rows as lists",
+        )
+        parser.add_argument(
+            "--set",
+            action="append",
+            default=[],
+            dest="overrides",
+            metavar="KEY=VALUE",
+            help="set one input (JSON-parsed value, repeatable; overrides the file)",
+        )
+        parser.add_argument(
+            "--save-mode", choices=save_modes, help="row recording mode"
+        )
+        parser.add_argument(
+            "--no-plots", action="store_true", help="skip plot display"
+        )
+        parser.add_argument(
+            "--list-inputs",
+            action="store_true",
+            help="print the system's input fields and exit",
+        )
+        opts = parser.parse_args(args)
+
+        if opts.list_inputs:
+            sys_ = self.system
+            print(f"{sys_.identity} inputs:")
+            for k, f in sorted(sys_.input_fields().items()):
+                typ = getattr(f.type, "__name__", f.type)
+                print(f"  {k}: {typ} = {getattr(sys_, k, f.default)!r}")
+            for k in sorted(sys_.slots_attributes()):
+                print(f"  {k}: <slot> = {getattr(sys_, k, None)!r}")
+            return None
+
+        inputs, settings, sequence = {}, {}, None
+        if opts.input_json:
+            sets = load_input_sets(opts.input_json)
+            inputs = sets["inputs"]
+            settings = sets["settings"]
+            sequence = sets["sequence"]
+        inputs.update(parse_set_overrides(opts.overrides))
+
+        if opts.save_mode:
+            settings["save_mode"] = opts.save_mode
+        if sequence is not None:
+            settings["sequence"] = sequence
+        if opts.no_plots:
+            self.show_plots = False
+
+        return self.run(**inputs, **settings)
 
     def report_results(self):
         self.info(f"report results")

@@ -129,6 +129,17 @@ class Test(unittest.TestCase):
 
     def test_dataframe(self, iter=5):
         attr_in = {}
+        # stochastic props (test_two/test_four = random.random()) recompute on
+        # every data_dict access BY CONTRACT now that `stochastic=True` is live
+        # (it sets class-wide always-save). The old assertDictEqual compared the
+        # solver_cached dict to ITSELF (same cached object), which was vacuous.
+        # The real contract: recording a row must not drift the DETERMINISTIC
+        # values; attrs_prop is excluded since the loop itself sets it.
+        det = lambda d: {
+            k: v
+            for k, v in d.items()
+            if k not in ("test_two", "test_four", "attrs_prop")
+        }
         cur_dict = self.test_config.data_dict
         with ProblemExec(self.test_config, {}) as px:
             for i in range(iter):
@@ -140,12 +151,12 @@ class Test(unittest.TestCase):
                     px.save_data()
                     px.exit_with_state()
                 postdict = self.test_config.data_dict
-                self.assertDictEqual(cur_dict, postdict)
+                self.assertDictEqual(det(cur_dict), det(postdict))
+                self.assertEqual(postdict["attrs_prop"], val)
             px.exit_with_state()
 
         postdict = self.test_config.data_dict
-        # self.test_config.info(f'cur_dict {cur_dict} postdict {postdict}')
-        self.assertDictEqual(cur_dict, postdict)
+        self.assertDictEqual(det(cur_dict), det(postdict))
 
         df = self.test_config.dataframe
         pprint(df)

@@ -82,11 +82,8 @@ class Slot(ATTR_BASE):
             ]
         ), "Not System Or Component Input"
 
-        # NOTE (1.0 split): core carries NO toolbox special-casing. Slot
-        # declarations are honored verbatim — toolboxes/users state intent
-        # explicitly, e.g. Slot.define(SomeCostModel, none_ok=True,
-        # default_ok=False). (The old CostModel auto-override is deleted.)
-
+        # Slot declarations are honored verbatim; callers state none_ok/default_ok
+        # explicitly (e.g. Slot.define(SomeModel, none_ok=True, default_ok=False)).
         new_dict = dict(
             accepted=component_or_systems,
             none_ok=none_ok,

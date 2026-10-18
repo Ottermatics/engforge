@@ -19,7 +19,6 @@ Additionally the Solver attribute is defined to add complex behavior to a system
 import attrs
 import uuid
 import numpy
-import scipy.optimize as scopt
 from contextlib import contextmanager
 import copy
 import datetime
@@ -32,7 +31,6 @@ import pprint
 import itertools, collections
 import inspect
 
-SOLVER_OPTIONS = ["minimize"]  # "root", "global",
 from engforge.solver_utils import *
 from engforge.problem_context import *
 from engforge.attr_solver import Solver, SolverInstance
@@ -153,37 +151,47 @@ class SolverMixin(SolveableMixin):
         """user callback for when run is beginning"""
         pass
 
-    def run(self, **kwargs):
-        """the steady state run the solver for the system. It will run the system with the input vars and return the system with the results. Dynamics systems will be run so they are in a steady state nearest their initial position."""
+    def run(self, inputs=None, *, scope=None, config=None, sequence=None, **kwargs):
+        """run the steady-state solver and return a `Result`.
 
-        if "opt_fail" not in kwargs:
-            kwargs["opt_fail"] = False
+        Input is organized into explicit buckets (all optional); the flat
+        shorthand still works and routes into the same buckets:
 
-        with ProblemExec(self, kwargs, level_name="run") as pbx:
+        :param inputs: dict of the input matrix — ``field: value | [values]``,
+            comma-group keys, dotted slot paths. This is the swept STATE.
+        :param scope: dict of selection/re-scoping options (``combos``,
+            ``slv_vars``, ``activate``/``deactivate``, ``add_vars``, ...).
+        :param config: a ``RunConfig`` (or dict) of optimizer settings
+            (``method``/``tol``/``options``).
+        :param sequence: list of override-row dicts, crossed innermost.
+        :param kwargs: flat shorthand — behavior flags (``revert_last``,
+            ``save_mode``, ...) and/or any bucket key directly, e.g.
+            ``run(x=[1, 2], combos='design')``.
+
+        Matches the JSON ``{inputs, settings, sequence}`` shape so programmatic
+        and file/CLI runs share one structure.
+        """
+        merged = {}
+        if inputs:
+            assert isinstance(inputs, dict), "inputs must be a dict of field->value(s)"
+            merged.update(inputs)
+        if scope:
+            assert isinstance(scope, dict), "scope must be a dict of selection options"
+            merged.update(scope)
+        if config is not None:
+            merged["run_config"] = config
+        if sequence is not None:
+            merged["sequence"] = sequence
+        merged.update(kwargs)  # flat shorthand / behavior flags (win on collision)
+
+        if "opt_fail" not in merged:
+            merged["opt_fail"] = False
+
+        with ProblemExec(self, merged, level_name="run") as pbx:
             # problem context removes slv/args from kwargs
-            return self._iterate_input_matrix(self.eval, return_results=True, **kwargs)
-
-    def run_internal_systems(self, sys_kw=None):
-        """runs internal systems with potentially scoped kwargs"""
-        # Pre Execute Which Sets Fields And PRE Signals
-        from engforge.system import System
-
-        # Record any changed state in components here, important for iterators
-        if isinstance(self, System):
-            self.system_references(recache=True)
-
-        # System Solver Loop
-        for key, comp in self.internal_systems().items():
-            if hasattr(comp, "_solver_override") and comp._solver_override:
-                if sys_kw and key in sys_kw:
-                    sys_kw_comp = sys_kw[key]
-                else:
-                    sys_kw_comp = {}
-
-                # Systems solve cycle
-                if isinstance(comp, System):  # should always be true
-                    self.info(f"solving {key} with {sys_kw_comp}")
-                    comp.eval(**sys_kw_comp)
+            return self._iterate_input_matrix(
+                self.eval, return_results=True, **merged
+            )
 
     # Single Point Flow
     def eval(self, Xo=None, eval_kw: dict = None, sys_kw: dict = None, cb=None, **kw):

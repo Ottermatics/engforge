@@ -661,6 +661,11 @@ class GlobalDynamics(DynamicsMixin):
             df = case.dataframe
             self.format_columns(df)
 
+            # the episode ran on a COPY, so its context never attaches to this
+            # system: hand the Result back explicitly so `self.last_result`
+            # reaches the episode's cases either way (see tabulation.last_result)
+            self._last_result = getattr(pbx.sesh, "_result", None)
+
             # TODO: move to context
             if return_all:
                 return system, (data if return_data else df)

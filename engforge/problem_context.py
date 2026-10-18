@@ -12,7 +12,7 @@ This isn't technically a singleton pattern, but it does provide a similar interf
     with ProblemExec(sys,combos='default',slv_vars'*',**kw) as pe:
         pe._sys_refs #get the references and compiled problem
         for i in range(10):
-            pe.solve_min(pe.Xref,pe.Yref,**other_args)
+            pe.solve_min(pe.Xref,pe.final_objectives,**other_args)
             pe.set_checkpoint() #save the state of the system
             pe.save_data()
 
@@ -125,6 +125,7 @@ dflt_parse_kw = dict(
     x_start=None,
     save_on_exit=False,
     enter_refresh=True,
+    run_config=None,
 )
 # can be found on session._<parm> or session.<parm>
 root_defined = dict(
@@ -147,7 +148,7 @@ root_defined = dict(
     converged=None,
     comp_changed=False,
 )
-save_modes = ["vars", "nums", "all", "prob"]
+save_modes = ["vars", "nums", "all", "prob", "sparse"]
 transfer_kw = ["system", "_dxdt"]
 
 root_possible = list(root_defined.keys()) + list("_" + k for k in root_defined.keys())
@@ -428,7 +429,6 @@ class ProblemExec:
             self.problems_dict[self._problem_id] = self  # carry that weight
             self.session_id = int(uuid.uuid4())
 
-            self.class_cache.session._prob_levels[self.level_name] = self
             # error if the system is different (it shouldn't be!)
             if self.system is not system:
                 # TODO: subproblems allow different systems, but the top level should be the same
@@ -443,6 +443,9 @@ class ProblemExec:
                 self.level_name = "ctx_" + str(int(self._problem_id))[0:15]
             else:
                 self.level_name = level_name
+
+            # register under the resolved level_name
+            self.class_cache.session._prob_levels[self.level_name] = self
 
             if opt_in:
                 self.__dict__.update(opt_in)  # level options ASAP
@@ -464,6 +467,10 @@ class ProblemExec:
             self._prob_levels = {}
             self._converged = None
             self._dxdt = dxdt
+            # a fresh session has never built its reference graph, so the first
+            # refresh is owed unconditionally (see `min_refresh`); structural
+            # events re-arm this flag thereafter.
+            self._comp_changed = True
             self.reset_data()
 
             # supply the level name default as top if not set
@@ -497,14 +504,19 @@ class ProblemExec:
         """start a new Case (one input-matrix point) on this run's Result; all
         subsequent row recording targets it. Returns the Case."""
         sesh = self.sesh
-        # drop a pristine default case so empty frames don't accumulate
-        if (
-            sesh._result.cases
-            and sesh._active_case is sesh._result.cases[-1]
-            and not sesh._active_case.rows
-            and not sesh._active_case.inputs
-        ):
-            sesh._result.cases.pop()
+        prev = sesh._active_case
+        # REUSE a case that never recorded a row, merging the new inputs into
+        # it. One matrix point is one Case, and the point's own method may open
+        # its case too: sim_matrix calls begin_case(point) and the `simulate`
+        # episode nested inside it calls begin_case(X0). Appending both gave 2N
+        # cases, half of them empty with a None dataframe. An un-recorded case
+        # holds nothing worth keeping, so collapsing is lossless, and merging
+        # the inputs keeps the row provenance (matrix point + episode X0).
+        if prev is not None and sesh._result.cases and prev is sesh._result.cases[-1]:
+            if not prev.rows:
+                if inputs:
+                    prev.inputs.update(inputs)
+                return prev
         sesh._active_case = sesh._result.new_case(inputs or {})
         return sesh._active_case
 
@@ -552,12 +564,20 @@ class ProblemExec:
             self.system.success_thresh, (int, float)
         ):
             self.success_thresh = self.system.success_thresh
+        # Run configuration (optimizer method/tol/options); default is empty.
+        # run_config is a recognized context kwarg (dflt_parse_kw), so it is
+        # already stripped from the input matrix and set on self.
+        from engforge.run_config import RunConfig
+
+        self._run_config = RunConfig.from_dict(getattr(self, "run_config", None))
+
         # Extract solver vars and set them on this object, they will be distributed to any new further execution context's via monkey patch above
         in_kw = self.get_extra_kws(kwargs, slv_dflt_options, use_defaults=False)
         self._slv_kw = self.get_extra_kws(kw_dict, slv_dflt_options, rmv=True)
         self._slv_kw.update(in_kw)  # update with input!
 
         self.refresh_references()
+        self._diagnose_missing_targets()
 
         # Get solver weights
         self._weights = self._slv_kw.get("weights", None)
@@ -640,6 +660,27 @@ class ProblemExec:
         sesh.full_refresh(sesh=sesh)
         sesh.min_refresh(sesh=sesh)
 
+    def _diagnose_missing_targets(self, sesh=None):
+        """apply each declared solver var's on_missing policy for vars that
+        resolved into an empty (None) slot. Runs once, at problem establishment.
+        "skip" is silent, "warn" logs once, "error" raises."""
+        sesh = sesh if sesh is not None else self.sesh
+        missing = (sesh._sys_refs or {}).get("missing", {})
+        if not missing:
+            return
+        errs = [name for name, policy in missing.items() if policy == "error"]
+        if errs:
+            raise IllegalArgument(
+                f"solver var(s) {errs} target an empty slot (no component); "
+                f"provide the component or declare on_missing='skip'/'warn'"
+            )
+        for name, policy in missing.items():
+            if policy == "warn":
+                self.warning(
+                    f"solver var '{name}' targets an empty slot — skipped for "
+                    f"this problem (declare on_missing='skip' to silence)"
+                )
+
     def update_methods(self, sesh=None):
         # Get the update method refs
         sesh = sesh if sesh is not None else self.sesh
@@ -677,17 +718,51 @@ class ProblemExec:
         )
         sesh.update_methods(sesh=sesh)
 
+    # Structural change events (engforge/events.py) ---------------------------
+    def _on_structural_change(self, obj, key, *args):
+        """a slot component was swapped, or a collection member set/appended:
+        the reference graph is stale. Flag it — `min_refresh` recaches on the
+        next execution rather than every caller refreshing defensively.
+
+        Kept deliberately cheap: only the root session subscribes, and this
+        sets its own flag (no session lookup, no string formatting)."""
+        self._comp_changed = True
+
+    def _subscribe_structural_events(self):
+        """root-session subscription to the structural events, scoped to the
+        session's lifetime (removed in `clean_context`)"""
+        from engforge import events
+
+        if getattr(self, "_event_subs", None):
+            return
+        self._event_subs = subs = []
+        for evt in (events.SLOT_CHANGED, events.COLLECTION_CHANGED):
+            events.bus.on(evt, self._on_structural_change)
+            subs.append((evt, self._on_structural_change))
+
+    def _unsubscribe_structural_events(self):
+        from engforge import events
+
+        for evt, fn in getattr(self, "_event_subs", None) or []:
+            try:
+                events.bus.remove_listener(evt, fn)
+            except Exception:
+                pass
+        self._event_subs = None
+
     def min_refresh(self, sesh=None):
         """what things need to be refreshed per execution, this is important whenever items are replaced"""
-        # TODO: replace this function with an event based responsiblity model.
         sesh = sesh if sesh is not None else self.sesh
 
         if self.log_level < 5:
             self.info(f"min refresh")
 
-        if sesh.full_update:
-            # TODO: dont require this
+        # `full_update` (the default) refreshes unconditionally — accuracy
+        # first. With it off, the structural-change EVENT is what forces the
+        # expensive refresh, so replacing a component is still correct.
+        if sesh.full_update or sesh.comp_changed:
             sesh.full_refresh(sesh=sesh)
+            sesh._comp_changed = False
 
         # final ref's after update
         # after updates
@@ -698,11 +773,9 @@ class ProblemExec:
             none_ok=True,
             only_inst=False,
         )
-        # sesh._attr_sys_key_map = sesh.attribute_sys_key_map
 
         # Problem Variable Definitions
         sesh.Xref = sesh.all_problem_vars
-        sesh.Yref = sesh.sys_solver_objectives()
 
         cons = {}  # TODO: parse additional constraints
         sesh.constraints = sesh.sys_solver_constraints(cons)
@@ -794,6 +867,14 @@ class ProblemExec:
         self.class_cache.session = self
         self.class_cache.level_number = 0
 
+        # EVENTS: the root session listens for STRUCTURAL change (a slot's
+        # component swapped, a collection member set/appended) for its
+        # lifetime. Those are the changes that invalidate the reference graph,
+        # so `min_refresh` can trust `comp_changed` instead of refreshing
+        # everything unconditionally (problem_context TODO: "replace this
+        # function with an event based responsiblity model").
+        self._subscribe_structural_events()
+
         if self.log_level < 10:
             refs = {k: v for k, v in self.sesh._sys_refs.get("attrs", {}).items() if v}
             self.debug(
@@ -821,9 +902,11 @@ class ProblemExec:
         if self.save_on_exit:
             self.save_data()
 
-        # sesh = self.sesh #this should be here
-        # if self.level_name in sesh._prob_levels:
-        #    sesh._prob_levels.pop(self.level_name)
+        # drop this context's own level entry
+        sesh = self.sesh
+        if sesh is not None and self.level_name in sesh._prob_levels:
+            if sesh._prob_levels.get(self.level_name) is self:
+                sesh._prob_levels.pop(self.level_name)
 
         # Exit Scenerio (boolean return important for context manager exit handling in heirarchy)
         if isinstance(exc_value, ProblemExit):
@@ -998,7 +1081,13 @@ class ProblemExec:
             if sesh._dxdt == True:
                 out["time"] = sesh._time
 
-            case.record(out, index=index, force=True)
+            if sesh.save_mode == "sparse":
+                # delta row: only values that changed since the prior recorded
+                # state of THIS case (attr changes arrive via the event signal
+                # through anything_changed; properties diff against prior)
+                case.record_sparse(out, index=index)
+            else:
+                case.record(out, index=index, force=True)
 
             # reset the data for changed items
             sesh.system._anything_changed = False
@@ -1012,13 +1101,15 @@ class ProblemExec:
             if self.log_level <= 8:
                 self.debug(f"closing execution session")
             self.class_cache.level_number = 0
+            self._unsubscribe_structural_events()
             del self.class_cache.session
         elif hasattr(self.class_cache, "session"):
             # global level number
             self.class_cache.level_number -= 1
 
-        # if we are the top level, then we mark the session runtime/messages
-        if self.session_id == True:
+        # if we are the top level, then we mark the session runtime/messages.
+        # root context records the run timing
+        if self._problem_id is True:
             self._run_end = datetime.datetime.now()
             self._run_time = self._run_end - self._run_start
             if self.log_level <= 10:
@@ -1250,6 +1341,13 @@ class ProblemExec:
         # override constraints input
         kw.update(sesh.constraints)
 
+        # optimizer controls from the run config fill in unset defaults (an
+        # explicit per-call kwarg still wins); empty config -> scipy defaults
+        rc = getattr(sesh, "_run_config", None)
+        if rc is not None:
+            for ck, cv in rc.minimizer_kwargs().items():
+                kw.setdefault(ck, cv)
+
         if len(kw["bounds"]) != len(Xref):
             raise ValueError(
                 f"bounds {len(sesh.constraints['bounds'])} != Xref {len(Xref)}"
@@ -1320,14 +1418,6 @@ class ProblemExec:
 
     # Solver Parsing Methods
 
-    def sys_solver_objectives(self, **kw):
-        """gathers variables from solver vars, and attempts to locate any input_vars to add as well. use exclude_vars to eliminate a variable from  the solver"""
-        sys_refs = self.sesh._sys_refs
-
-        # Convert result per kind of objective (min/max ect)
-        objs = sys_refs.get("attrs", {}).get("solver.obj", {})
-        return {k: v for k, v in objs.items()}
-
     def pos_obj(self, ref):
         """converts an objective to a positive value"""
 
@@ -1353,25 +1443,16 @@ class ProblemExec:
             Yobj = {k: self.pos_obj(v) for k, v in Yeq.items()}
 
         elif not Yobj:
-            # minimize the product of all vars, so the smallest value is the best that satisfies all constraints
-            if self.session_id == True:
-                self.info(f"making Yobj from X: {Xss}")
+            # no declared objective: the solve only needs to satisfy the
+            # constraints, so the objective is constant — any feasible point is
+            # acceptable and the free variables are left where they are.
+            if self._problem_id is True:
+                self.info(f"no objective; solving for feasibility only: {Xss}")
 
-            def dflt(sys, prob) -> float:
-                out = 1
-                for k, v in prob.problem_opt_vars.items():
-                    val = v.value(sys, prob)
-                    # The code snippet is calculating the linear norm of positive
-                    # values greater than 1 by adding the square root of the sum
-                    # of 1 and the square of the value to the variable `out`. This
-                    # operation is intended to apply a large penalty to positive
-                    # values greater than 1.
-                    out = (
-                        out + (1 + val**2) ** 0.5
-                    )  # linear norm of positive values > 1 should be very large penalty
-                return 1
+            def feasibility(sys, prob) -> float:
+                return 1.0
 
-            Yobj = {"smallness": Ref(sesh.system, dflt)}
+            Yobj = {"smallness": Ref(sesh.system, feasibility)}
         return Yobj  # our residual based objective
 
     def sys_solver_constraints(self, add_con=None, combo_filter=True, **kw):
@@ -1624,10 +1705,8 @@ class ProblemExec:
                         name = f"eq_{parent}{ref.comp.classname}.{slvr}_{kind}_{cval}"
                         if log.log_level < 5:
                             self.debug(f"filtering constraint {slvr} |{name}")
+                        # one info label per constraint (stays aligned with con_list)
                         con_info.append(name)
-                        con_info.append(
-                            f"eq_{parent}{ref.comp.classname}.{slvr}_{kind}_{cval}"
-                        )
                         con_list.append(
                             create_constraint(
                                 system,
@@ -1744,13 +1823,24 @@ class ProblemExec:
         sesh = self.sesh
         # TODO: add system_properties to num_refs / all_system_refs ect.
         if "nums" == sesh.save_mode:
-            refs = sesh.num_refs
-        elif "all" == sesh.save_mode:
+            # flatten the nested {attributes,properties,components} ref dict
+            nums = sesh.num_refs or {}
+            refs = {}
+            refs.update(nums.get("attributes", {}))
+            refs.update(nums.get("properties", {}))
+        elif "all" == sesh.save_mode or "sparse" == sesh.save_mode:
+            # sparse records the same refs as 'all'; the delta is taken at save
             refs = sesh.all_system_references
         elif "vars" == sesh.save_mode:
             refs = self.all_variable_refs
         elif "prob" == sesh.save_mode:
-            raise NotImplementedError(f"problem save mode not implemented")
+            # the problem variables only; objective refs are excluded because
+            # evaluating a compiled objective re-enters the solver
+            refs = {
+                k: r
+                for k, r in sesh.all_problem_vars.items()
+                if getattr(r, "allow_set", True)
+            }
         else:
             raise KeyError(f"unknown save mode {sesh.save_mode}, not in {save_modes}")
 
@@ -1783,11 +1873,6 @@ class ProblemExec:
         """
         if self.log_level < 5:
             self.msg(f"setting var: {key} <= {value}")
-
-        # if isinstance(key,attrs.Attribute):
-        #    if attr_key_map is None:
-        #        attr_key_map = self.attribute_sys_key_map
-        #    key = attr_key_map[key] #change to system key format
 
         if refs is None:
             refs = self.sesh.all_comps_and_vars
@@ -2230,17 +2315,6 @@ class ProblemExec:
         return attrs
 
     @property
-    def attribute_sys_key_map(self) -> dict:
-        """returns an attribute:key mapping to lookup the key from the attribute"""
-        sesh = self.sesh
-        attrvars = sesh.all_refs["attributes"]
-        comps = {c: k for k, c in self.all_components.items()}
-        return {
-            refget_attr(v): refget_key(v, sesh.system, comps)
-            for k, v in attrvars.items()
-        }
-
-    @property
     def all_system_references(self) -> dict:
         sesh = self.sesh
         refs = sesh.all_refs
@@ -2253,12 +2327,6 @@ class ProblemExec:
         # TODO: expand this
         return f"ProblemContext[{self.level_name:^12}][{str(self.session_id)[0:8]}-{str(self._problem_id)[0:8]}][{self.system.identity}]"
 
-
-refget_attr = lambda ref: getattr(ref.comp.__class__.__attrs_attrs__, ref.key)
-###FIXME: ref.comp needs to be reliablly in comps
-refget_key = (
-    lambda ref, slf, comps: f'{comps[ref.comp]+"." if slf != ref.comp else ""}{ref.key}'
-)
 
 # TODO: move all system_reference concept inside problem context, remove from system/tabulation ect.
 # TODO: use prob.register/change(comp,key='') to add components to the problem context, mapping subcomponents to the problem context

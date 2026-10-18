@@ -6,7 +6,6 @@ Additionally the Solver attribute is defined to add complex behavior to a system
 import attrs
 import uuid
 import numpy
-import scipy.optimize as scopt
 from contextlib import contextmanager
 import copy
 import datetime
@@ -19,7 +18,6 @@ from engforge.properties import *
 import itertools
 
 INTEGRATION_MODES = ["euler", "trapezoid", "implicit"]
-SOLVER_OPTIONS = ["root", "minimize"]
 
 
 class AttrSolverLog(LoggingMixin):
@@ -169,9 +167,11 @@ class SolverInstance(AttributeInstance):
         return self.solver.active
 
     def get_alias(self, pre):
+        # the declared var string (e.g. 'filt.w'); composed with the declaring
+        # component's prefix into the canonical dotted ref name.
         if self.solver.slvtype == "var":
-            return self.var.key  # direct ref
-        return super().get_alias(pre)  # default
+            return self.solver.var
+        return super().get_alias(pre)
 
     def as_ref_dict(self):
         out = {"var": None, "eq": None, "ineq": None, "obj": None}
@@ -201,6 +201,10 @@ class Solver(ATTR_BASE):
 
     normalize: ref_type
     allow_constraint_override: bool = True
+
+    # policy when a declared var/ref resolves into an empty (None) slot:
+    # "warn" (once per problem), "error" (raise at establishment), or "skip"
+    on_missing: str = "warn"
 
     attr_prefix = "Solver"
     active: bool
@@ -233,6 +237,9 @@ class Solver(ATTR_BASE):
         Defines a solver variable for optimization in the class, constraints defined on this solver will correspond to the limits of that variable
         :param var: The var attribute for the solver variable.
         :param combos: The combinations of the solver variable.
+        :param on_missing: policy when `var` points into an empty (None) slot:
+            "warn" (default, one warning per problem), "error" (raise at
+            problem establishment), or "skip" (drop the var silently).
         :return: The setup class for the solver variable.
         """
         assert "," not in var, f"var cannot have commas: {var}"
@@ -240,6 +247,10 @@ class Solver(ATTR_BASE):
         # Create A New Signals Class
         active = kwargs.get("active", True)
         combos = kwargs.get("combos", f"default,{var}")  # default + var_name
+        on_missing = kwargs.get("on_missing", "warn")
+        assert on_missing in ("warn", "error", "skip"), (
+            f"on_missing must be warn|error|skip, got {on_missing!r}"
+        )
 
         new_name = f"Solver_var_{var}".replace(".", "_")
         bkw = {"var": var, "value": None}
@@ -249,6 +260,7 @@ class Solver(ATTR_BASE):
             active=active,
             var=var,
             slvtype="var",
+            on_missing=on_missing,
             constraints=constraints,
             combos=cls.process_combos(combos),
             default_options=cls.default_options.copy(),

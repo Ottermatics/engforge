@@ -10,13 +10,25 @@ Three input forms ride the one kwargs channel:
   * ``sequence=[{...},{...}]``                        -> row-dict group, crossed
                      innermost, overriding on key collision (legacy semantics)
 
-This module is deliberately pure (no engforge imports): the engforge-specific
-validation (field/slot existence, value types) stays in
-``SolveableMixin.parse_run_kwargs``; future CLI/JSON input-set loaders are skins
-over these functions.
+This module is deliberately pure (no engforge imports, stdlib only): the
+engforge-specific validation (field/slot existence, value types) stays in
+``SolveableMixin.parse_run_kwargs``; the CLI/JSON input-set loaders below are
+skins over these functions.
+
+JSON input-set files (``load_input_sets``) come in two shapes:
+
+  * flat        ``{"a": [1,2], "comp.y": 3.0, "kp,ki": [[2,1],[8,4]]}``
+                — the whole document is the inputs dict
+  * sectioned   ``{"inputs": {...}, "settings": {...}, "sequence": [{...}]}``
+                — settings are run/solver kwargs (save_mode, combos, ...)
+                  and sequence is the innermost override-row list
+
+JSON has no tuples, so group rows arrive as lists-of-lists — exactly what
+``normalize_group_rows`` already accepts.
 """
 
 import itertools
+import json
 
 __all__ = [
     "is_group_key",
@@ -24,6 +36,9 @@ __all__ = [
     "normalize_group_rows",
     "expand_point_factors",
     "count_points",
+    "load_input_sets",
+    "parse_cli_value",
+    "parse_set_overrides",
 ]
 
 
@@ -104,3 +119,66 @@ def count_points(singles: dict, groups: list, sequence: list = None) -> int:
         n *= len(rows)
     n *= max(len(sequence), 1) if sequence else 1
     return n
+
+
+# --- JSON / CLI input-set loading --------------------------------------------
+
+#: the recognized top-level sections of a sectioned input-set document
+RESERVED_SECTIONS = ("inputs", "settings", "sequence")
+
+
+def load_input_sets(path: str) -> dict:
+    """load a JSON input-set file into ``{"inputs", "settings", "sequence"}``.
+
+    A flat document is promoted to the inputs dict; a sectioned document may
+    ONLY contain the reserved sections (an unknown top-level key next to
+    ``inputs`` is almost certainly a typo'd section — fail loudly).
+
+    Keys are NOT validated here — field/slot existence and value types are
+    checked by ``parse_run_kwargs`` when the point matrix is parsed, so errors
+    carry the system's context.
+    """
+    with open(path) as fp:
+        doc = json.load(fp)
+    assert isinstance(doc, dict), f"input-set file must be a JSON object: {path}"
+
+    if any(k in doc for k in RESERVED_SECTIONS):
+        unknown = [k for k in doc if k not in RESERVED_SECTIONS]
+        assert not unknown, (
+            f"unknown top-level section(s) {unknown} in {path}; a sectioned "
+            f"input-set may only contain {RESERVED_SECTIONS}"
+        )
+        inputs = doc.get("inputs", {}) or {}
+        settings = doc.get("settings", {}) or {}
+        sequence = doc.get("sequence", None)
+    else:
+        inputs, settings, sequence = doc, {}, None
+
+    assert isinstance(inputs, dict), f"'inputs' must be an object in {path}"
+    assert isinstance(settings, dict), f"'settings' must be an object in {path}"
+    assert sequence is None or (
+        isinstance(sequence, list) and all(isinstance(r, dict) for r in sequence)
+    ), f"'sequence' must be a list of objects in {path}"
+
+    return {"inputs": inputs, "settings": settings, "sequence": sequence}
+
+
+def parse_cli_value(text: str):
+    """parse one CLI value: JSON first (numbers, lists, booleans, null,
+    quoted strings), bare string as the fallback"""
+    try:
+        return json.loads(text)
+    except (ValueError, TypeError):
+        return text
+
+
+def parse_set_overrides(pairs: list) -> dict:
+    """parse repeatable ``--set KEY=VALUE`` arguments into an inputs dict;
+    values go through :func:`parse_cli_value` (``--set a=[1,2]`` sweeps)"""
+    out = {}
+    for pair in pairs or []:
+        key, sep, value = pair.partition("=")
+        key = key.strip()
+        assert sep and key, f"--set expects KEY=VALUE, got {pair!r}"
+        out[key] = parse_cli_value(value)
+    return out

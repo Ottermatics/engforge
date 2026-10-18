@@ -22,8 +22,6 @@ from engforge.attr_dynamics import IntegratorInstance
 import collections
 import itertools
 
-SOLVER_OPTIONS = ["root", "minimize"]
-
 
 class SolvableLog(LoggingMixin):
     pass
@@ -57,10 +55,8 @@ def _post_update_func(comp, eval_kw):
     return updt
 
 
-# NOTE (1.0 split): the CostModel/Economics `_cost_update` special-casing is
-# deleted. Core collects ANY overridden `update()` generically below — the
-# toolboxes implement their own update behavior on their own classes
-# (explicitly, the L2 interface-override lever), with zero core knowledge.
+# Core collects any overridden update() generically; toolboxes hook the update
+# phase by overriding update() on their own classes, with no core special-casing.
 
 
 dflt_dynamics = {
@@ -427,9 +423,18 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         elif not self.anything_changed:
             self.warning(f"nothing changed, not running {self.identity}")
 
+            if return_results:
+                # a skipped run still returns the (empty) Result rather than
+                # None, so callers can always reach `.cases` / `.dataframe`
+                # without a type check on the return.
+                sesh = ProblemExec.class_cache.session
+                return getattr(sesh, "result", None) if sesh is not None else None
             return
-        elif self.solved:
-            raise Exception("Analysis Already Solved")
+        # NOTE: an `elif self.solved: raise Exception("Analysis Already
+        # Solved")` arm used to sit here. It was unreachable — reaching it needs
+        # `anything_changed` true, which selects the first branch — and docs had
+        # to explain a raise that never fires. A re-run of a solved system just
+        # runs again.
 
     # IO Functions
     def parse_simulation_input(self, **kwargs):
@@ -701,20 +706,19 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
         attr_dict = {}
         cls_dict = {}
         skipped = {}
+        missing = {}  # dotted var name -> on_missing policy (empty-slot targets)
 
         out = {
             "comps": comp_dict,
             "attrs": attr_dict,
             "type": cls_dict,
             "skipped": skipped,
+            "missing": missing,
         }
 
         # Go through all components
         for key, lvl, conf in confobj.go_through_configurations(**kw):
             if conf is None:
-                continue
-
-            if hasattr(conf, "_solver_override") and conf._solver_override:
                 continue
 
             # Get attributes & attribute instances
@@ -737,6 +741,18 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
                             continue
 
                         if val is None:
+                            # a declared solver var whose own target ref resolved
+                            # to None (an empty slot) — record it so the problem
+                            # context can apply the var's on_missing policy once,
+                            # instead of dropping it silently. (k == "var" guards
+                            # against a var instance's unused eq/ineq/obj slots,
+                            # which are legitimately None.)
+                            if k == "var":
+                                inst = getattr(conf, pre.split(".")[-1], None)
+                                slv = getattr(inst, "solver", None)
+                                if getattr(slv, "slvtype", None) == "var":
+                                    name = f"{key}{slv.var}"
+                                    missing[name] = getattr(slv, "on_missing", "warn")
                             continue
 
                         if conf.log_level <= 5:
@@ -798,6 +814,25 @@ class SolveableMixin(AttributedBaseMixin):  #'Configuration'
 
                         # if the value is a dictionary, unpack it with comp key
                         if val:
+                            # two declarers may compose to the same solver-var
+                            # name: same target merges, different target is a
+                            # naming conflict.
+                            if isinstance(val, Ref) and val.allow_set:
+                                prior = attr_dict[pre].get(scope_name)
+                                if isinstance(prior, Ref) and (
+                                    id(prior.comp),
+                                    prior.key,
+                                ) != (id(val.comp), val.key):
+                                    from engforge.problem_context import (
+                                        IllegalArgument,
+                                    )
+
+                                    raise IllegalArgument(
+                                        f"solver var name collision: {scope_name!r} "
+                                        f"resolves to two different targets "
+                                        f"({prior.comp}.{prior.key} and "
+                                        f"{val.comp}.{val.key})"
+                                    )
                             attr_dict[pre].update({scope_name: val})
                         else:
                             if attr_dict[pre]:

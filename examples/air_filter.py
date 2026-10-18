@@ -89,7 +89,7 @@ if __name__ == "__main__":
     fan = Fan()
     filt = Filter()
     af = Airfilter(fan=fan, filt=filt)
-    change_all_log_levels(af, 20)  # info
+    change_all_log_levels(20, inst=af)  # info
 
     # Make The Analysis
     sa = AirfilterAnalysis(
@@ -107,10 +107,12 @@ if __name__ == "__main__":
     df = af.dataframe
 
     fig, (ax, ax2) = subplots(2, 1)
+    # component columns are DOTTED (`filt.dp_filter`), so they need bracket
+    # access — `format_columns` only lowercases, it does not flatten dots
     ax.plot(df.throttle * 100, df.w, "k--", label="flow")
-    ax2.plot(df.throttle * 100, df.filt_dp_filter, label="filter")
+    ax2.plot(df.throttle * 100, df["filt.dp_filter"], label="filter")
     ax2.plot(df.throttle * 100, df.dp_parasitic, label="parasitic")
-    ax2.plot(df.throttle * 100, df.fan_dp_fan, label="fan")
+    ax2.plot(df.throttle * 100, df["fan.dp_fan"], label="fan")
     ax.legend(loc="upper right")
     ax.set_title("flow")
     ax.grid()

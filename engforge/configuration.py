@@ -73,6 +73,24 @@ PROTECTED_NAMES = [
 ]
 
 
+def run_pre_compile(acls):
+    """run each distinct pre_compile hook in the class MRO once, subclass-first.
+
+    Every mixin's pre_compile is a class-compile step; a plain `acls.pre_compile()`
+    would run only the first in the MRO. Deduped by function identity.
+    """
+    seen = set()
+    for klass in acls.__mro__:
+        fn = klass.__dict__.get("pre_compile", None)
+        if fn is None:
+            continue
+        func = getattr(fn, "__func__", fn)
+        if func in seen:
+            continue
+        seen.add(func)
+        func(acls)
+
+
 # Wraps Configuration with a decorator, similar to @attrs.define(**options)
 def forge(cls=None, **kwargs):
     """Wrap all Configurations with this decorator with the following behavior
@@ -99,7 +117,7 @@ def forge(cls=None, **kwargs):
             )
 
             # must be here since can't inspect till after fields corrected
-            acls.pre_compile()  # custom class compiler
+            run_pre_compile(acls)  # custom class compiler (ALL mro hooks)
             acls.validate_class()
             if acls.__name__ != "Configuration":  # prevent configuration lookup
                 acls.compile_classes()  # compile subclasses
@@ -117,7 +135,7 @@ def forge(cls=None, **kwargs):
         if FORGE_DEBUG.in_env:
             change_all_log_levels(inst=acls, new_log_level=FORGE_DEBUG.secret)
         # must be here since can't inspect till after fields corrected
-        acls.pre_compile()  # custom class compiler
+        run_pre_compile(acls)  # custom class compiler (ALL mro hooks)
         acls.validate_class()
         if acls.__name__ != "Configuration":  # prevent configuration lookup
             acls.compile_classes()  # compile subclasses
@@ -195,6 +213,22 @@ def property_changed(instance, variable, value):
 
     elif log.log_level < 4 and is_var and not is_different:
         log.warning(f"variables same {variable.name}| {value} == {cur}")
+
+    # EVENTS (engforge/events.py): emit change signals for subscribers
+    # (sparse recording, future graph invalidation). Zero cost w/o listeners.
+    if is_var and is_different:
+        from engforge import events
+
+        if isinstance(value, Configuration) or isinstance(cur, Configuration):
+            # a slot's COMPONENT was swapped — structural change. NOTE the
+            # identity test: `is_different` is True for every non-scalar
+            # assignment (it drives the coarse _anything_changed save flag), but
+            # re-assigning the SAME component is not a structural change, and
+            # that case dominates the call volume.
+            if value is not cur:
+                events.emit_slot_changed(instance, variable.name, cur, value)
+        else:
+            events.emit_value_changed(instance, variable.name, cur, value)
 
     # If active session in dynamic mode and the component is dynamic, flag for matrix update
     # TODO: determine if dynamic matricies affected by this.

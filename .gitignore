@@ -25,3 +25,7 @@ docs/_autosummary*
 docs/_build/
 # engforge 1.0 prototyping scratch (never committed)
 sandbox/
+
+# examples/air_filter.py writes a report per run, named after the system's
+# auto-generated instance name — otherwise every run leaves new untracked CSVs
+examples/airfilter_report/

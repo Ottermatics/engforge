@@ -6,11 +6,8 @@ import numpy
 from urllib.request import urlopen
 
 
-# Defined BEFORE the `configuration` star-import below so that a circular
-# re-entry (configuration -> ... -> dataframe -> `from engforge.common import
-# inst_vectorize, chunks`) can always resolve these primitives, regardless of
-# which module first triggers engforge's import (toolboxes import @forge
-# classes as their own entry point since the 1.0 split).
+# Defined before the `configuration` star-import below so a circular re-entry
+# (configuration -> ... -> dataframe -> engforge.common) can resolve them.
 class inst_vectorize(numpy.vectorize):
     def __get__(self, obj, objtype):
         return functools.partial(self.__call__, obj)

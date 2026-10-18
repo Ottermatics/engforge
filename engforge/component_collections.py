@@ -26,9 +26,6 @@ import attrs
 
 def check_comp_type(instance, attr, value):
     """ensures the input component type is a Component"""
-    # NOTE (1.0 split): the CostModel narrow-mode veto is deleted — it was
-    # verified dead (wide flips AFTER this validator runs) and core carries
-    # no toolbox knowledge. Toolboxes enforce their own collection rules.
     if isinstance(value, type) and issubclass(value, Component):
         return
 
@@ -76,11 +73,15 @@ class ComponentIter(Component):
             yield key, item
 
     def __setitem__(self, key, value):
+        from engforge import events
+
         assert isinstance(
             value, self.component_type
         ), f"{value} is not of type: {self.component_type}"
         super().__setitem__(key, value)
         self.reset()
+        # a collection member changed — structural change event
+        events.emit_collection_changed(self, key, value)
 
     def reset(self):
         # reset reference cache
@@ -211,6 +212,19 @@ class ComponentIterator(ComponentIter, UserList):
 
     def _item_key(self, itkey, item):
         return f"{self.component_type.__name__.lower()}.{itkey}"
+
+    def append(self, item):
+        """typed append that resets reference caches and emits a
+        collection-changed event (the raw UserList.append bypassed both —
+        a verified defect)"""
+        from engforge import events
+
+        assert isinstance(
+            item, self.component_type
+        ), f"{item} is not of type: {self.component_type}"
+        super().append(item)
+        self.reset()
+        events.emit_collection_changed(self, len(self.data) - 1, item)
 
     # def __setitem__(self, key, value):
     #     assert isinstance(value,self.component_type)

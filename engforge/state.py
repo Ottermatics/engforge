@@ -1,14 +1,6 @@
-"""SystemState — the explicit, typed snapshot of a system's mutable state.
-
-Promotes the implicit dicts that previously lived scattered across the problem
-context (`record_state`, `x_start`, `temp_state`) into one structure with four
-operations: capture / apply / updated / copy. Episodes (a transient simulation,
-a sweep point, a solver attempt) bracket themselves with a SystemState instead
-of mutate-then-carefully-restore logic spread across the context.
-
-This is the staging of the 1.0 engine's flat state vector (docs/ENGFORGE_1.0.md
-Part VI vectors.py): the storage later becomes a flat array without changing
-callers.
+"""SystemState — a typed, copyable snapshot of a system's settable refs plus
+the episode clock. Four operations: capture / apply / updated / copy. Episodes
+(a transient, a sweep point, a solver attempt) bracket themselves with one.
 """
 
 from engforge.system_reference import Ref
@@ -37,12 +29,13 @@ class SystemState:
 
     # --- application ---------------------------------------------------------
     def apply(self, context, restore_time: bool = False):
-        """write this state back through the context's refs (the typed
-        successor of ``revert_to_start``/``activate_temp_state``).
+        """write these values back through the context's refs.
 
-        :param restore_time: also restore the session/system clock — used by
-            EPISODE brackets (transients); solver revert paths must NOT touch
-            time (integration advances it between nested context exits).
+        :param restore_time: also restore the clock (episode brackets); solver
+            revert paths leave time alone.
+
+        Keys absent from the ref set are tolerated (warned) rather than fatal:
+        a slot-swap sweep can change which refs exist between capture and apply.
         """
         sesh = context.sesh
         if self.values:
@@ -51,18 +44,29 @@ class SystemState:
             )
         if restore_time:
             sesh._time = self.time
-            try:
-                sesh.system.time = self.time
-            except Exception:
-                pass
         return self
 
     # --- derivation ----------------------------------------------------------
-    def updated(self, point: dict) -> "SystemState":
-        """a NEW state = this state overlaid with an input-matrix point
-        (plain / dotted / component values)"""
+    def updated(self, point: dict, refs: dict = None) -> "SystemState":
+        """a NEW state = this state overlaid with an input point.
+
+        :param refs: optional name->ref mapping; when given, keys in ``point``
+            absent from it raise with close-match suggestions.
+        """
         new = self.copy()
         if point:
+            if refs is not None:
+                import difflib
+
+                unknown = [k for k in point if k not in refs]
+                if unknown:
+                    sugg = {
+                        k: difflib.get_close_matches(k, list(refs), n=3)
+                        for k in unknown
+                    }
+                    raise KeyError(
+                        f"state| unknown point key(s) {unknown}; did you mean {sugg}?"
+                    )
             new.values.update(point)
         return new
 

@@ -41,12 +41,6 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
     # Super Special Tabulating Index
     # index = 0  # Not an attr on purpose, we want pandas to provide the index
 
-    # override per class:
-    _skip_table_vars: list = None
-    _skip_plot_vars: list
-
-    # Cached and private
-    # _table: dict = None
     _anything_changed: bool = True
     _always_save_data = False
 
@@ -108,7 +102,15 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
 
         `result.cases[i].dataframe` is one input-point's rows;
         `result.dataframe` is the whole run. `self.dataframe` remains as the
-        combined-frame convenience view."""
+        combined-frame convenience view.
+
+        `simulate()` evaluates on a COPY of the system, so its context is never
+        attached here — it hands its Result back explicitly (`_last_result`),
+        which takes precedence so "where did my rows go" has one answer
+        regardless of which entry point produced them."""
+        res = getattr(self, "_last_result", None)
+        if res is not None:
+            return res
         ctx = getattr(self, "last_context", None)
         return getattr(ctx, "result", None) if ctx is not None else None
 
@@ -117,31 +119,6 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
         if hasattr(self, "last_context") and hasattr(self.last_context, "dataframe"):
             raise Exception(f"may not set dataframe on run component")
         self._patch_dataframe = input_dataframe
-
-    @property
-    def plotable_variables(self):
-        """Checks columns for ones that only contain numeric types or haven't been explicitly skipped"""
-        if self.dataframe is not None:
-            check_type = lambda key: all(
-                [isinstance(v, NUMERIC_TYPES) for v in self.dataframe[key]]
-            )
-            check_non_mono = lambda key: len(set(self.dataframe[key])) > 1
-
-            return [
-                var
-                for var in self.dataframe.columns
-                if var.lower() not in self.skip_plot_vars
-                and check_type(var)
-                and check_non_mono(var)
-            ]
-        return []
-
-    # Properties & Attribues
-    def print_info(self):
-        print(f"INFO: {self.name} | {self.identity}")
-        print("#" * 80)
-        for key, value in sorted(self.data_dict.items(), key=lambda kv: kv[0]):
-            print(f"{key:>40} | {value}")
 
     @property
     def data_dict(self):
@@ -161,24 +138,10 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
         good = set(self.table_fields())
         return [k for k in attr.fields_dict(self.__class__).keys() if k in good]
 
-    def set_attr(self, **kwargs):
-        assert set(kwargs).issubset(set(self.attr_raw_keys))
-        # TODO: support subcomponents via slots lookup
-        for k, v in kwargs.items():
-            setattr(self, k, v)
-
     @instance_cached
     def always_save_data(self):
         """Checks if any properties are stochastic (random)"""
         return self._always_save_data
-
-    @solver_cached
-    def table_dict(self):
-        # We use __get__ to emulate the property, we could call regularly from self but this is more straightforward
-        return {
-            k.lower(): obj.__get__(self)
-            for k, obj in self.system_properties_def.items()
-        }
 
     @solver_cached
     def system_properties(self):
@@ -207,12 +170,6 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
         return tabulated_properties
 
     @instance_cached
-    def system_properties_keys(self) -> list:
-        """Returns the table property keys"""
-        tabulated_properties = [k for k, obj in self.system_properties_def.items()]
-        return tabulated_properties
-
-    @instance_cached
     def system_properties_description(self) -> list:
         """returns system_property descriptions if they exist"""
         class_dict = self.__class__.__dict__
@@ -220,14 +177,6 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
             obj.desc for k, obj in self.system_properties_def.items()
         ]
         return tabulated_properties
-
-    @classmethod
-    def cls_all_property_labels(cls):
-        return [obj.label for k, obj in cls.system_properties_classdef().items()]
-
-    @classmethod
-    def cls_all_property_keys(cls):
-        return [k for k, obj in cls.system_properties_classdef().items()]
 
     @classmethod
     def cls_all_attrs_fields(cls):
@@ -287,7 +236,7 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
 
     @classmethod
     def pre_compile(cls):
-        cls._anything_changed = True  # set default on class
+        """class compile hook: a stochastic system_property forces always-save."""
         if any([v.stochastic for k, v in cls.system_properties_classdef(True).items()]):
             log.info(f"setting always save on {cls.__name__}")
             cls._always_save_data = True

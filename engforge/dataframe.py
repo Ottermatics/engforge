@@ -64,13 +64,6 @@ key_func = lambda kv: len(kv[1]) / len(kv[0].split("."))
 # 1. stats_mode: mean, median,min,max mode, std, var, skew, kurtosis
 # 2. min_mode: mean,median,std,min,max
 # 3. sub_mode: store the dataframe completely separately
-class dataframe_property(engforge_prop):
-    pass
-
-
-# aliases
-dataframe_prop = dataframe_property
-df_prop = dataframe_property
 
 
 def determine_split(raw, top: int = 1, key_f=key_func):
@@ -109,11 +102,8 @@ def split_dataframe(df: pandas.DataFrame) -> tuple:
 class DataframeMixin:
     dataframe: pandas.DataFrame
 
-    _split_dataframe_func = staticmethod(split_dataframe)
-    _determine_split_func = staticmethod(determine_split)
-
     def smart_split_dataframe(self, df=None, split_groups=0, key_f=key_func):
-        """splits dataframe between constant values and variants"""
+        """split a dataframe into its constant values and its varying slice"""
         if df is None:
             df = self.dataframe
         out = {}
@@ -168,16 +158,7 @@ class DataframeMixin:
         return o
 
     def format_columns(self, dataframe: pandas.DataFrame):
-        # replace(".", "_")
         dataframe.rename(lambda x: x.lower(), axis="columns", inplace=True)
-
-    # Plotting Interface
-    @property
-    def skip_plot_vars(self) -> list:
-        """accesses '_skip_plot_vars' if it exists, otherwise returns empty list"""
-        if hasattr(self, "_skip_plot_vars"):
-            return [var.lower() for var in self._skip_plot_vars]
-        return []
 
     @property
     def dataframe(self):

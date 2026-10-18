@@ -1,14 +1,29 @@
 # engforge 1.0 — Design Document
 
-*The unified design for engforge 1.0. Parts I–V are the drawing-board foundation: the update
+*The unified design for engforge 1.0. Parts I–IV are the drawing-board foundation: the update
 cycles our problem classes require, what the current system executes, the measured gap, and the
 minimal engine changes — expressed through existing engforge idioms (decorator marking + combos,
-interface overrides, argument-passed bindings). Part VI is the compiled-graph engine design that
-implements it. Everything is a Component; the declaration API stays
+interface overrides, argument-passed bindings). Parts V–VII record what has already landed or been
+measured; Part VIII is the test strategy. Part IX is the compiled-graph engine design that
+implements it all. Everything is a Component; the declaration API stays
 Component / Slot / Signal / Solver / Time / @system_property.*
 
 *Evidence: every coverage claim below carries either a `file:line` mechanic or a probe number
 from `sandbox/cycles/run_probes.py` (P-A … P-H).*
+
+**Part index**
+
+| part | what it is | status |
+|---|---|---|
+| I | the problem classes and their update cycles | design |
+| II | what engforge executes today (verified) | measurement |
+| III | coverage matrix (probe-backed) | measurement |
+| IV | minimal engine changes, through the levers | design |
+| **V** | **Landed: explicit State & Result** — the staging of Part IX | **shipped code** |
+| **VI** | **Parallel problem contexts** | **analysis only — no code landed** |
+| **VII** | **The ref space: where the DAG meets the solver matrix** | **measurement + prototype; 4 cache fixes landed** |
+| VIII | test & evaluation strategy | design |
+| IX | the compiled-graph engine design | design |
 
 ---
 
@@ -232,7 +247,551 @@ collection/Slot primitives; C7–C8 are assembly/plumbing. **No new user-facing 
 
 ---
 
-# PART V — Test & evaluation strategy
+# PART V — Landed: explicit State & Result (the staging of Part IX)
+
+*Implemented this pass. Model code is unchanged; what moved is WHERE mutable state and
+result rows live.*
+
+**Why.** A `sim_matrix` bug chase produced four stacked patches (row-slicing, data-owner
+scopes, an owner stack, a time-restore) — all symptoms of one disease: **state scattered
+across live objects + a recursive context singleton, and rows accumulating implicitly as a
+side effect of property evaluation.** Every nested scope had to mutate-then-restore shared
+state, and every restore path was a new bug surface.
+
+**What landed.**
+
+| structure | file | owns |
+|---|---|---|
+| `SystemState` | `engforge/state.py` | the typed snapshot: `capture / apply / updated / copy / diff`, plus the episode clock. **Backs `x_start` with a `SystemState`** — `set_checkpoint` (`problem_context.py:1886-1892`) builds `self.x_state = SystemState.capture(self)` and keeps `x_start = self.x_state.values` as an explicitly labelled legacy dict view; `record_state` (`:1787`) and `temp_state` (`:449, :479, :1793, :1912`) remain as readers. `apply(restore_time=)` separates *solver revert* (fields only — `revert_to_start` passes `restore_time=False`) from *episode restore* (fields + clock). |
+| `Case` / `Result` | `engforge/results.py` | one input-point's inputs/rows/output; the run's cases. Recording is an explicit `case.record(...)` with the dedup policy (`force or not rows or changed`) moved out of the context. `Result` is a `Mapping`, so `run()["output"][i]` / `["input_sets"][i]` are unchanged. |
+
+- `ProblemExec` keeps **no run-level row store**: `begin_case()` starts a point, `save_data`
+  records on the active case, `numeric_data/dataframe` read the Result. Precisely: the row
+  *store* is gone, but the `_data: list` class annotation survives (`problem_context.py:237`)
+  along with `data=None` in `root_defined` (`:139`), and **`ProblemExec.data` now returns the
+  ACTIVE case's rows** (`:529-532`), not the run's. `.data` (active case) and `.numeric_data`
+  (whole run, `:2208-2211`) are one letter apart in name and very different in scope — a reader
+  using `.data` to get the whole run gets one case.
+- `simulate()` is now an **episode**: captures a `SystemState`, owns its `Case`, restores state
+  *and* clock on exit. Transient cases keyed by time can no longer collide — the four patches
+  are deleted, not kept.
+- `system.last_result` exposes the Result; `system.dataframe` stays as the combined view.
+  `simulate()` evaluates on a COPY, so its context never attaches to the original — it hands the
+  Result back explicitly via `_last_result`, which `TabulationMixin.last_result`
+  (`tabulation.py:104-121`) prefers, so "where did my rows go" has one answer regardless of
+  entry point. (Verified: `Result(1 cases)` after a bare `simulate()`.) `TabulationMixin.dataframe`
+  (`:84-102`) is now a three-level fallback shim — `last_context.dataframe` → `_patch_dataframe`
+  → empty frame.
+
+**Also landed with the input layer** (`engforge/inputs.py`, pure stdlib, no engforge imports):
+
+- grouped matrix inputs — `"a,comp.b": [(1,2),(3,4)]`, joint (zipped) rows crossing the other
+  factors. Verified partial factorial: `run(**{"kp,ki":[(2,1),(8,4)], "x":[1,2,3]})` → **6 cases,
+  not 12**; dotted subkeys work (`{"x,comp.y":[(1,10),(2,20)]}` → 2 cases).
+- `sequence=` validated; crossed innermost, overriding on key collision.
+- `is_group_key` / `split_group_key` / `normalize_group_rows` / `expand_point_factors` /
+  `count_points` — the last being the dry-run point count before an expensive sweep.
+- **JSON input sets**: `load_input_sets(path)` accepts a flat document (the whole object is the
+  inputs dict) or a sectioned one restricted to `RESERVED_SECTIONS = ('inputs','settings','sequence')`
+  — an unknown top-level key next to `inputs` fails loudly rather than being silently dropped.
+  `parse_cli_value` (JSON first, bare string fallback) and `parse_set_overrides` back the CLI.
+- genuine bug fixes: `dxdt` clobber, `integrate` X0 merge, `sim_matrix` copy_system, and a typed
+  `ComponentIterator.append` (the raw `UserList.append` bypassed both the type check and the
+  reference-cache reset).
+
+**Also landed: the change-event bus** (`engforge/events.py`) — the first concrete piece of
+**M8 (§9, incremental recompute)**. §9's first bullet asks for attrs `on_setattr`
+(`property_changed`) to be "repointed from the global boolean to the graph → eager dirty push";
+the bus is that repointing, minus the graph that does not exist yet. Writes now *emit* instead of
+only setting `_anything_changed`, so the dirty-push consumer can be added without touching the
+DSL again.
+
+| event | payload | emitted from |
+|---|---|---|
+| `VALUE_CHANGED` | `(instance, name, old, new)` | `configuration.property_changed` (`:199-213`) |
+| `SLOT_CHANGED` | `(instance, name, old, new)` | same, when either side `isinstance Configuration` |
+| `COLLECTION_CHANGED` | `(collection, key, item)` | `ComponentIter.__setitem__` (`component_collections.py:78-87`), `ComponentIterator.append` (`:219-230`) |
+
+`bus` is a process-wide `pyee.EventEmitter`; emitters guard on `has_listeners`, so there is
+**zero cost with no listeners**. `watch(event, fn)` is a context manager, so listeners are scoped
+and unhooked on exit (verified: `has_listeners` back to `False` after the block). The one consumer
+today is `ProblemExec._on_structural_change` → `comp_changed` → `min_refresh`.
+
+Two entry conditions the 1.0 graph layer must respect (both measured):
+
+1. **`VALUE_CHANGED`/`SLOT_CHANGED` do not fire on every write.** `property_changed`
+   short-circuits (`configuration.py:164-168`) when there is **no active `ProblemExec` session**
+   *and* `instance._anything_changed` is already `True` — and a freshly constructed system has
+   that flag set. So a naive `with watch(VALUE_CHANGED, fn): s.x = 5` outside a run sees nothing;
+   clearing the flag first yields `[('x', 1.0, 5.0)]`, and inside `run(x=[1.0,2.0])` the same
+   watch sees 2 events. This is exactly the "tree-global boolean" §9 is replacing, now visible
+   as an event-delivery gap rather than only a caching one.
+2. **`SLOT_CHANGED` has an identity guard** (`configuration.py:210-211`, `if value is not cur`)
+   that `VALUE_CHANGED` does not: re-assigning the *same* component is deliberately silent,
+   because `is_different` is `True` for every non-scalar assignment and that case dominates call
+   volume. `COLLECTION_CHANGED` is emitted from the collection methods directly and is **not**
+   gated by `_anything_changed` at all.
+
+**Also landed: two new `save_mode` values.** `save_modes = ["vars","nums","all","prob","sparse"]`
+(`problem_context.py:150`; default `"all"`, `:124`), dispatched in `ProblemExec.output_state`
+(`:1795-1827`).
+
+| mode | ref set | measured on a 3-point sweep, 1 slot, 1 solver var |
+|---|---|---|
+| `vars` | the run's variable refs | `(3, 2)` |
+| `nums` | numeric attributes + properties (str fields dropped) | `(3, 8)` |
+| `all` | every system reference (default) | `(3, 10)` |
+| `prob` | **new** — only the solver's problem vars. Objective refs (`Yref`) are deliberately **excluded**: a compiled objective is a control-flow wrapper, and calling one outside the solver loop re-enters the solver and raises `ProblemExitAtLevel`. Previously declared-but-`NotImplementedError`. | `(3, 2)` |
+| `sparse` | **new** — same ref set as `all`, but each row stores only the **delta** vs the case's prior row (`Case.record_sparse`); `dense_rows`/`dense_dataframe` forward-fill them | `(3, 10)` — single-row cases cannot compress |
+
+`sparse` pays off on transients, which is where the row counts live. Measured on a 2012-row
+spring-mass simulation (`dt=0.02`, `endtime=4`, same model both runs):
+
+| mode | rows | stored values | `dataframe` | NaN holes |
+|---|---|---|---|---|
+| `all` | 2012 | 46276 | (2012, 23) | 4024 |
+| `sparse` | 2012 | **19323** | (2012, 23) | 26955 |
+| `sparse` → `dense_dataframe` | 2012 | — | (2012, 23) | **4024** |
+
+**58% fewer stored values for the same frame**, and the round trip is faithful: `dense_dataframe`'s
+NaN count matches `all`'s exactly, and the integrated states agree to 0.0 (`x`, `v`). Only `time`
+(1.1e-3) and the time-dependent `Fext` (0.011) differ, an artifact of the two runs being
+independent rather than of sparsity. This directly serves §9's "row-save dedup is restated over
+the tabulated node set" and is the storage shape a u-vector tabulation (§15.2) will want.
+
+**Also landed: a shell entry point.** `Analysis.cli(args=None)` (`analysis.py:81-164`) is an
+argparse front end — `--input-json PATH`, repeatable `--set KEY=VALUE` (JSON-parsed),
+`--save-mode {vars,nums,all,prob,sparse}`, `--no-plots`, `--list-inputs`. Precedence is
+file → `--set` → `sequence`, verified end to end: a sectioned file of
+`{"x":[1,2], "kp,ki":[[2,1],[8,4]], "comp.y":5.0}` + `sequence:[{"x":9}]` under
+`--set "x=[3,4]"` yields `Result(4 cases)` with every `input_set` carrying `x=9` — `--set`
+replaced the file's `x`, then the `sequence` row overrode it. `--list-inputs` prints fields and
+slots and returns `None`. `Analysis.run()` now **returns** the Result (it previously returned
+nothing), matching §15.5's "`Analysis.run()` returns the same type".
+
+Note `engforge/__init__.py` exports **none** of the new names — `Result`, `Case`, `SystemState`,
+`events`, and the `inputs` helpers are imported from their modules. 1.0 should decide this
+deliberately rather than by omission.
+
+**Toolbox decoupling completed:** core carries no `CostModel`/`Economics` knowledge — the slot
+auto-override, the collection veto, and `_cost_update` are deleted. Toolboxes declare intent
+explicitly (`Slot.define(X, none_ok=True, default_ok=False)`) and hook the update phase by
+overriding `update()` on their own classes (engforge-econ does exactly this).
+
+**Verification.** `conda run -n pace python -m unittest discover -s engforge/test -p "test_*.py"`
+→ **`Ran 129 tests ... OK`**. (This paragraph previously claimed 92; the suite has grown with the
+work below.) Four test files landed with this pass:
+
+| file | tests | covers |
+|---|---|---|
+| `engforge/test/test_input_groups.py` | 15 | group-key parsing, zipped rows, partial-factorial point counts, `sequence` precedence |
+| `engforge/test/test_state_results.py` | 18 | `SystemState` capture/apply/updated/copy/diff; `Case`/`Result` ownership, dedup, sparse round trip |
+| `engforge/test/test_events.py` | 12 | the three events, `watch()` scoping, emission entry conditions |
+| `engforge/test/test_cli_inputs.py` | 14 | `load_input_sets` both shapes, section validation, `--set` parsing and precedence |
+
+**Also landed: one `Case` per sweep point** (this section previously recorded the 2N-case
+defect as unfixed; it is fixed, and `examples/transient_control.py` — which crashed on it —
+now runs end to end and reports `ran 4 transients (2 gain-sets x 2 profiles — not 8)`).
+**Two** layers open a case per point — `solveable.py:402` (`session.begin_case(icur)` per
+input point) and `dynamics.py:640` (`pbx.begin_case(...)` per episode) — so a sweep of N
+points used to emit **2N** cases, with `input_sets` duplicated and half of
+`result["output"]` as `None`. The fix is in case ownership rather than another patch, per
+this part's thesis: `begin_case` (`problem_context.py:500-518`) **collapses** a trailing
+case that never recorded a row and merges the new inputs into it, so the matrix point's
+case and the episode's case are the same `Case` (an un-recorded case holds nothing worth
+keeping, so collapsing is lossless, and merging the inputs keeps the row provenance —
+matrix point + episode `X0`). Measured on the README's two-damping spring-mass sweep:
+
+```
+sim_matrix(dt=0.01, endtime=2, u=[0.0, 0.1], ...) -> Result(2 cases)
+  input_sets  {0:{'u':0.0}, 1:{'u':0.1}}
+  output      [DataFrame, DataFrame]
+  rows/case   [1012, 1012]
+  dataframe   (2024, 23)                                             # 2 x 1012
+```
+
+---
+
+# PART VI — Parallel problem contexts (analysis)
+
+> **This part is ANALYSIS ONLY. No code from it has landed.** Nothing in `engforge/` was changed
+> by this investigation; the repo is untouched. Part V above is the shipped record — this part
+> is a measured answer to "can two `ProblemExec`s run at once, and do we want them to?" The
+> experiment scripts are `e1_state_tree.py`, `e2_two_sessions.py`, `e3_threads.py`, `e3b_race.py`,
+> `e3c_runrace.py`, `e4_copies.py`, `e5_pickle.py`, `e6_pareto.py`, `e7_groups.py`,
+> `e8_threadlocal.py`, `e8b_tlmeta.py`, `e9_alias_rate.py`, `e10_timing.py` (sandbox/scratch, not
+> shipped). The suite is green throughout (`Ran 129 tests ... OK`).
+
+**Motivating case:** two Pareto fronts over one drivetrain (a light motor and a heavy one), each
+swept over gear ratio and duty cycle.
+
+## VI.1 What works today: one context, a tree of states
+
+`SystemState` (Part V) is already a persistent-tree node, which is the parallelism primitive we
+actually needed. `capture` reads every settable ref through the session, `updated(point)` returns
+a **new** node (verified: `root.values is leaf.values` → `False`), and `apply` writes back through
+`Ref.refset_input`. So branching and restoring is explicit and cheap:
+
+```python
+with ProblemExec(sys, {}, level_name="top") as px:
+    root = SystemState.capture(px)              # 6 refs: a, b, comp, comp.name, comp.y, name
+    for name, cfg in fronts.items():
+        branch = root.updated(cfg)              # this front's root — a NEW node
+        px.begin_case({"front": name})          # explicit row ownership (V)
+        for gear in gears:
+            for duty in duties:
+                branch.updated({"gear": gear, "duty": duty}).apply(px)
+                px.save_data(force=True)
+        branch.apply(px)                        # restore the branch root
+    root.apply(px)                              # restore everything
+```
+
+Measured: depth-2 branching round-trips **exactly** — `root.diff(after) == {}`, with `a, b, comp.y`
+back to `2.0, 3.0, 1.0` and the derived `s` back to `312.0`. Slot components are *in* the state
+(key `comp` holds the instance), so after `s.comp = Inner(y=99.0)` an `apply` restored the
+**original object** (`s.comp is orig` → `True`, `y` back to `1.0`).
+
+Both routes to the two-front problem were run and agree. One context with one `begin_case` per
+front gave 2 cases × 8 rows = 16 combined rows; two *sequential* contexts over two
+`copy_config_at_state()` duplicates gave 8 rows each. **The Pareto fronts were identical** —
+light `[(1.0, 0.25, 12.5, 7.25) … (4.0, 0.75, 150.0, 24.75)]`, heavy
+`[… (4.0, 0.75, 1200.0, 59.75)]`. Wall time for both fronts: **~5 ms**. There is no correctness
+motive for parallelism here, only a throughput one, and throughput is not the bottleneck.
+
+## VI.2 Why simultaneous contexts cannot work today
+
+`ProblemExec.class_cache = ProblemExec` (`problem_context.py:2346`) and `__enter__` does
+`self.class_cache.session = self` (`:837`). The session is therefore a **plain class attribute on
+a module-level class** — not a `threading.local`, not a `ContextVar`. Grepping the module for
+`threading.local`, `contextvars`, `ContextVar`, `threading.Lock`, `import threading` returns
+**zero hits for all five**. `'session' in ProblemExec.__dict__` is `False` before enter, `True`
+inside, `False` after — and a second thread reads the first thread's session (verified directly).
+
+Two failure paths, both observed:
+
+- **Guarded path.** Opening a context on a *different* instance while a session exists raises from
+  `__init__:436-438` — `IllegalArgument: somethings wrong! change of comp!`. Nesting on the *same*
+  instance does not create a second session at all: `__enter__:834` returns
+  `self.class_cache.session`, so `with ProblemExec(A, level_name="child") as px` hands back the
+  **top** object (`px is outer_sesh` → `True`), sharing one `Result`. **Levels are bookkeeping,
+  not isolation.**
+- **Unguarded path.** The guard only fires if a session exists *at construction time*. Construct
+  two contexts first, then enter both: both are top-level (`_problem_id is True`, `:462`) and the
+  second **silently clobbers** the class attribute. The first context's `__exit__` then does not
+  clear it — `clean_context` (`:1067-1073`) only deletes when `session is self` — so the session
+  **leaks past exit** and a later unrelated `C.run()` raises `IllegalArgument`. Worse, `inst_sesh`
+  is cached lazily by `get_sesh` (`:600`, reached on the first `.sesh`), so each context keeps resolving `.sesh` to itself and the
+  divergence is invisible from the inside.
+
+Threads hit both paths at random. 20 barrier-synchronized trials, two threads, two instances:
+**16 × `IllegalArgument`**, **3 × `AttributeError: type object 'ProblemExec' has no attribute
+'session'`** (from `exit_action`), **1 × no exception but aliased state** — **0 / 20 clean**.
+Concurrent `System.run()`, 15 trials: every trial had exactly one thread raise `IllegalArgument`.
+The exact tally moves between reruns (the original pass measured 19/1 and 9-of-15); what is stable
+is that the clean rate is zero and that *one* of the outcomes is silent corruption rather than an
+exception. That is the dangerous one — it passes in dev and fails in CI.
+
+## VI.3 Are duplicate entities required? Yes.
+
+State lives in live attrs objects; `SystemState` is a snapshot *of* them, not a store the context
+reads through. So two explorations of one instance alias each other. With sessions already isolated
+(thread-local prototype) and a 1 ms window between set and read:
+
+| entities | corrupt reads (per thread, 300 reads) |
+|---|---|
+| one shared instance | **298 / 300** and **298 / 300** |
+| `copy_config_at_state()` duplicates | **0 / 300** and **0 / 300** |
+
+An earlier shared-instance trial showed T1 writing `a=10.0` and reading back `a=20.0, s=30.0` —
+wrong numbers, **no exception**. **Session isolation without entity duplication converts loud
+failures into silent ones**, which is strictly worse. The invariant to document alongside any
+isolation work is *one entity graph per context*.
+
+The copy mechanism to use is `copy_config_at_state()` (`configuration.py:433`, recursive
+`attrs.evolve` with an identity map): `B.comp is A.comp` → `False`, mutations do not leak either
+direction, and `B.comp.parent is B` → `True`. **Avoid `clone()`** (`system.py:114`,
+`copy.deepcopy`): `TabulationMixin.__getstate__` (`tabulation.py:53-58`) pops `parent`, so the
+clone and its components end up with **no `parent` attribute at all**
+(`hasattr(C.comp,'parent')` → `False`). It still runs, which makes it a landmine rather than an
+error. `copy_system=True` inside a context works and leaves the original untouched.
+
+## VI.4 Three options, ranked
+
+**(i) Sequential state tree — available today, zero change.** Already correct and exact (VI.1).
+Cost: nothing. Breaks: nothing. The honest answer at current problem sizes.
+
+**(ii) Thread-local `session` + duplicated entities.** Prototyped. A naive
+`class_cache = threading.local()` breaks exactly one line — `:827
+isinstance(self, self.class_cache)` → `TypeError: isinstance() arg 2 must be a type`. Routing
+`session` through a metaclass-backed thread-local **class** keeps `isinstance` legal, and then:
+**25 / 25** concurrent `run()` trials exactly correct, 4 threads × 4 copies all correct. Fallout: a
+cosmetic `change of execution class!` warning (`:828`), and `level_number` must stay shared because
+instances read `self.level_number` for log formatting. Real cost: ~15 lines in core plus a
+documented invariant. **This is the right eventual fix** — it changes a storage class, not a
+concept.
+
+**(iii) Process-pool fan-out.** Pickle decides it. On **this probe's model** — a plain
+`System` with two fields and one slot, *no solver attributes* — a **fresh** system pickles
+(534 B), and `SystemState` (434 B; 165 B numeric-only), `Case` (394 B),
+`Result(system=None)` (607 B) and `dataframe` (1055 B) all pickle. But **after a run**,
+`pickle.dumps(system)` fails — `AttributeError: Can't get local object
+'Ref.setup_calls.<locals>.<lambda>'` — via `_last_context`; same failure for `Result` with
+`system` attached and for `ProblemExec`.
+
+That "fresh system pickles" result does **not** generalize, and the generalization would be
+the dangerous read: a system carrying `Solver` attributes does not pickle at **all**, not
+even freshly constructed, because `Solver.declare_var` generates a class per variable that
+does not exist at module scope for the unpickler to find (`PicklingError: Can't pickle
+<class 'engforge.attributes.Solver_var_<var>_<hash>'>`). Since every system worth fanning
+out has solver attributes, the conclusion is the stronger one either way: children must
+*build* their own system from a spec and return plain data. (Byte counts above are from one
+probe run and are not stable — instance names are auto-generated at random length.) That works (`spawn` Pool
+verified end to end). The problem is economics: 4 jobs × 144 points cost **0.70–1.15 s sequential
+vs 5.8–6.8 s** in `Pool(4)` — a **0.12–0.17× "speedup"** — because the spawn+import floor is
+**~4.8–6.5 s** while one job is **0.14–0.16 s**. (Ranges are across reruns on one macOS machine
+with a trivial model; the floor is roughly fixed, so the crossover depends entirely on real model
+cost.) Only worth it once a single job runs for seconds.
+
+## VI.5 Judged against the project's rules
+
+| rule | verdict |
+|---|---|
+| **Everything is a Component** | None of the options add a user-facing class. (ii) changes where `session` is stored; (iii) is a deployment topology. Neutral-to-good. |
+| **Concept parsimony** | (i) adds **zero** concepts — `SystemState` already does the work, which is the strongest argument for it. (ii) adds one invariant ("one entity graph per context") and no vocabulary. (iii) adds a spec/serialization boundary, a real new concept, and should be resisted until forced. |
+| **Combos as segmentation** | Decisive. Two Pareto fronts are two *segments of one analysis*, and combos + the grouped matrix key are the house tools for exactly that. Reaching for threads to express segmentation would duplicate a mechanism that already exists. |
+| **Explicit over implicit** | The current `class_cache.session` singleton is the *most implicit* thing in the execution path — an invisible global whose clobbering is silent (VI.2). (ii) is therefore a parsimony *win*, not just a concurrency feature: it makes "which session am I in" answerable. The state tree (i) is explicit by construction (`capture`/`apply`/`begin_case`). |
+
+Consistent with §15.2 (flat `u` can't carry revert alone) and §15.13 (selection can be
+structural): per-context isolation is a **storage** question, which is what makes (ii) small.
+
+## VI.6 Recommendation for the two-front case
+
+**Don't parallelize.** Make it **one run** and segment the frame — the grouped matrix key
+(Part V) already expresses "two fronts" exactly. Verified: 16 cases, 16 rows, 8 per front,
+numerically identical to both the state-tree and two-copy answers:
+
+```python
+res = drive.run(**{
+    "motor.mass,motor.kv": [(0.5, 100.0), (4.0, 100.0)],   # the two fronts, joint
+    "gear": [1., 2., 3., 4.],
+    "duty": [0.25, 0.75],
+})
+df = res.dataframe                      # run() returns the Result (Part V)
+
+light = df[df["motor.mass"] == 0.5]     # 8 rows
+heavy = df[df["motor.mass"] == 4.0]     # 8 rows
+```
+
+Escalation ladder: reach for the explicit `SystemState` tree (VI.1) only when fronts need
+*different sweep grids*; adopt thread-local sessions (option ii) when wall time actually hurts,
+and only together with `copy_config_at_state()` duplicates; fan out to processes only when one
+front's run takes seconds, not milliseconds.
+
+## VI.7 What was NOT verified
+
+Thread-safety of the **solver** under option (ii) — the prototype exercised `run`/`eval`/`sys_slvr`,
+not scipy `minimize` paths, transients (`dxdt=True`), signals, `ComponentIterator`, or the new pyee
+bus (whose `bus` is **also process-wide**, so listeners are a second shared global with the same
+class of problem). Whether `attrs.evolve`-based copies preserve dynamics state
+(`setup_global_dynamics`), plot attributes, or `Analysis` report wiring. Whether `problems_dict`
+(a `WeakValueDictionary`, `:217`) misbehaves under concurrent mutation. Whether the `clone()`
+`parent` drop breaks something not exercised here. Timings are one machine, one trivial model.
+
+---
+
+# PART VII — The ref space: where the DAG meets the solver matrix (measured)
+
+> **Status: measurement + git-ignored prototype. Four property/caching bug-fixes landed in core
+> with tests (`test_properties_cache.py`).** This part answers one design question — *every component
+> is a black box `Y = F(X)` from its state X to its properties Y; where does the "solver matrix" live,
+> and can we bring the refs into one space the DAG operates on?* Everything below was run, not
+> asserted. Prototypes: `sandbox/ref_space.py`, `sandbox/dp_eval.py`, `sandbox/viz_space.py` (all
+> git-ignored, `.gitignore:27`). Measurement harness: background workflow `wf_1e8290be-d7b` plus a
+> determinism-classifier pass.
+
+## VII.1 The gap, stated plainly: the solver matrix is not a matrix
+
+`refmin_solve` (`solver_utils.py:219-264`) hands scipy `vars = list(Xref.keys())` — an *ordered dict
+of keys* — and calls `sciopt.minimize(Fc, Xo, **kw)` with **no `jac=`, no `hess=`, no sparsity**
+(captured at the call: the only kwargs reaching scipy on the steady-state path are
+`['bounds','constraints']`). scipy therefore finite-differences everything itself: one-sided 2-point,
+step `h ≈ 1.49e-8·max(1,|x|)` (verified empirically — `h=1.49e-8` for `|x|≤1`, `2.73e-7` for `x=18.3`).
+No code anywhere computes a Jacobian (`calcJacobean` is commented out, `solver_utils.py:568-613`; the
+standing TODO is `:258`). And x-normalization is dead: `norm_x = handle_normalize(...)` is assigned at
+`:246` and **never read again** (`inspect.getsource(...).count('norm_x') == 1`), so a variable of SI
+magnitude 1e-6 silently gets a **1.5% perturbation reported as a derivative**.
+
+So the refs never enter a space. They are ordered keys into a black-box closure. Meanwhile the
+inspected DAG lived in a separate `sandbox/problem_map.py` pass with its *own* node identity, built
+from class inspection rather than the live session. That disconnect is exactly what "we were bringing
+the refs into a space (or so I thought)" names. VII builds the connection.
+
+## VII.2 The model: `Y = F(X)`, measured
+
+Per component, state X (settable fields + solver unknowns) maps to properties Y through
+`@system_property` bodies, composed across slots, collections, and `Signal`/`update()` broadcasts.
+The empirical oracle (`SystemState.capture` → perturb one x → re-read every property → bit-exact
+diff → `SystemState.apply` restore, verified exact) gives the true dependency matrix `D[y][x]` and its
+magnitudes (= the measured Jacobian). Caveats found by perturbation, not assumed:
+
+- **Signals create dependencies no property body contains.** `update()` writes sibling fields
+  (`for b in self.branches.data.values(): b.dP = self.dP`) — a cross-component edge invisible to any
+  reading of `fget` alone. Perturbation reveals it; a static body scan does not.
+- **`run_id` / `converged` read solver *history*, not X** (`system.py:77-95`). They are not `F(X)` and
+  must never enter a cached Y. At rest both read `None`; during a run they are history-dependent by
+  design.
+- **`cache_dXdt` writes the dynamics matrices onto `self` from inside a property read** — a real
+  state-in-a-getter smell, flagged for the M8 memoizer to eventually subsume.
+- Across **105 properties / 23 classes** (test components + the four examples), **user model math is
+  100% deterministic**; every flagged property is framework-inherited.
+
+## VII.3 The bridge: one graph, node identity = the session's dotted ref name
+
+`sandbox/ref_space.py:build_space(ctx)` takes a live `ProblemExec` and returns one `networkx.DiGraph`
+whose nodes are keyed by `sesh.all_refs['attributes'] | ['properties']` — the same flattening
+`all_system_references` does, one naming authority. Edges come from a **hybrid**: `@system_property`
+descriptor-stack tracing for property→property, the perturbation oracle for field→property and
+field→field (i.e. `update()`/signals). Roles come from the solver's own ref sets, never re-inspected:
+`solver_x ← all_problem_vars`, `residual/inequality ← problem_eq/problem_ineq`, `objective ← Yref`.
+**The solver matrix is then the induced submatrix**: predicted Jacobian sparsity = "can this Xref node
+reach this residual row in the graph."
+
+Predicted sparsity vs measured finite-difference, in the solver's own `Xref`/`Yref` order:
+
+| model / partition | solver TP/FP/**FN** | full-D TP/FP/**FN** |
+|---|---|---|
+| CubeSystem `[combos=*, signals OFF]` | 20/0/**0** | 110/0/**0** |
+| CubeSystem `[combos=*, signals ON]` | 100/24/**0** | 107/0/**0** |
+| SpringMass `@ v=2,a=1,t=0` | 2/0/**0** | 30/3/**0** |
+| SpringMass `@ t=0.7` | 2/0/**0** | 33/0/**0** |
+| Spool `[combos=DESIGN]` | 2/0/**0** | 36/0/**0** |
+| Spool `[combos=OFFDESIGN]` | 4/0/**0** | 36/0/**0** |
+| Spool `[combos=design,offdesign]` | 6/0/**0** | 36/0/**0** |
+| Manifold `[combos=balance]` | 4/0/**0** | 22/0/**0** |
+
+**Zero false negatives across all 8 configs.** (False *positives* on CubeSystem-signals-on are safe —
+they over-cover; a few `wrap_f` function-valued declarations are unnameable and reported, not guessed.)
+The combos result is the important one: selecting `DESIGN` vs `OFFDESIGN` on the same Spool gives
+**different X nodes (hardware `A_t,S_t` vs operating `N,W`) with the same two residual nodes** — read
+from the live session, confirming combos is the segmentation lever (Part IV) with nothing new added.
+
+A defect surfaced building the join: the naive bridge `get_parent_key(decl)+ref.key` points a
+cross-component constraint (`x_lim = con_ineq("x","comp.x")`) at the *system's* `x` instead of
+`comp.x`. **Any RefSpace must resolve a solver term through `ref.comp`, not the declaration's parent
+key.** Caught by predicted-vs-measured, fixed in the prototype.
+
+## VII.4 Inspection: static vs value-callback, and the sound hybrid rule
+
+Two methods, each incomplete alone; the union is complete on the models tested:
+
+- **Static bytecode** (`dis`) is the skeleton, **not a superset**: it over-approximates branches (safe)
+  but under-approximates loops, helper calls, and `getattr` (unsafe — misses real edges).
+- **Value-callback tracing** is path-exact, **therefore unsound by construction** for any cache that
+  outlives a branch flip: its map is valid only under the guard conjunction it was recorded on.
+
+The sound hybrid (what the M2/M3 engine must assume): static skeleton + traced confirmation, with an
+explicit **unknown → depends-on-everything fallback** that is **transitive** (poison the forward
+closure). A foreign C/ufunc call silently converts a dependency into a constant — force the dep set to
+static and void any affine claim. **The residual is `update() ∘ fget`, not `fget`** — trace from the
+solver's entry with `update()` inside the traced region, or every sibling-shared unknown is invisible.
+**Invalidation must precede `update()`** — no dependency map fixes the wrong order.
+
+## VII.5 Dynamic programming: real in eval-counts, break-even in today's wall clock
+
+`sandbox/dp_eval.py` memoizes evaluation over the DAG and, for one finite-difference probe that
+perturbs one x, recomputes only that x's reachable cone. Jacobian agreement with the naive full
+re-evaluation is **bit-exact (max |Δ| = 0.0, no tolerance needed)** — and the harness has teeth: three
+deliberately-crippled variants produce provably-wrong Jacobians (stale-cache corrupts a field;
+non-transitive poison → 1/14 cells wrong; no fallback → 2/14 wrong).
+
+Speedup, counted `fget` calls (the honest metric; `cse` = memoize-within-one-sweep, needs no graph):
+
+| model | naive | cse | dp | dp/naive | dp/cse |
+|---|---|---|---|---|---|
+| CubeSystem | 246 | 126 | 68 | 3.62× | 1.85× |
+| Spool design | 26 | 12 | 4 | **6.50×** | 3.00× |
+| Spool offdesign | 26 | 12 | 14 | 1.86× | **0.86×** |
+| Manifold N=3 → N=100 | 30→612 | 14→208 | 9→106 | 3.3→**5.8×** | 1.56→1.96× |
+
+DP removes **35–52% of a whole solve's property evaluations** and the advantage **grows with N**
+(saturates ~2× over CSE, bounded by the densest column). Spool-offdesign is the honest counter-case:
+DP is *worse* than CSE there (0.86×) because `update()` writes `comp.N` then reads `comp.PR`, which DP
+correctly recomputes and CSE serves stale. **But wall clock is break-even today** (DP 0.74–1.03×):
+the properties are too cheap (bare `fget` median 0.056–0.122 µs) and `pre_execute()`/`update()`'s
+attrs-broadcast is ~91% of a probe — a floor DP cannot touch. Measured **crossover ≈ 0.5–1 µs per
+property**; above 1 µs DP wins 1.4–2.2× wall-clock, above 10 µs 3.6–3.8×, converging on the count
+ratio. Graph build is 0.25–2.95 ms, amortized per *class*.
+
+**Invalidation is event-driven, not statically mapped.** `engforge/events.py` (Part V) already emits
+`VALUE_CHANGED` on every attrs write, so the evaluator *observes* `update()`'s sibling writes rather
+than trying to predict them — `dP=36.5` on Manifold emits the write plus three broadcasts, and
+"invalidate before `update()`" is satisfied for free. Measured unsound modes to respect in core:
+mid-solve collection mutation needs `min_refresh` (the `COLLECTION_CHANGED` hook); the clock
+(`self.time`) and `last_context` readers have no graph node and must stay never-cached.
+
+## VII.6 Property/caching defects fixed in core (landed)
+
+The determinism pass found four latent bugs by execution; all are fixed with tests
+(`engforge/test/test_properties_cache.py`, 7 tests):
+
+1. **`stochastic=True` was dead code.** `Configuration.pre_compile` (a no-op) shadowed
+   `TabulationMixin.pre_compile` in the MRO of both `System` and `Component`, and that Tabulation hook
+   is the flag's *only* consumer. Fixed with `configuration.run_pre_compile(acls)` running **every
+   distinct `pre_compile` hook in the MRO** (deduped by function identity), at both `forge` call sites.
+2. **`cached_system_property` crashed on first access** — `gname` was set only by
+   `engforge_prop.__init__`, never by the `system_property` family, so `private_var` raised
+   `AttributeError`. Fixed by setting `self.gname = fget.__name__` in both `__init__` and `__call__`.
+3. **The aliases lied**: `cached_sys_prop`/`cached_system_prop` pointed at the *uncached*
+   `system_property`. Repointed at `cached_system_property`.
+4. **Class-level access crashed** — `solver_cached`/`instance_cached`/`class_cache` asserted on a
+   `None` instance. Fixed with an `if instance is None: return self` guard.
+
+A regression from (1) was root-caused and removed: the old `pre_compile` also assigned
+`cls._anything_changed = True`, which on the subclass **clobbered `System`'s aggregating
+`_anything_changed` property** and silently killed transient row recording (every row after the first
+deduped away — surfaced as `test_dynamics_spaces` recording 1 row instead of 1000). The class default
+already provides the flag, so the assignment is gone. The stale `test_tabulation.test_dataframe`
+assertion (which vacuously compared a `solver_cached` dict to itself) now honors the live `stochastic`
+contract. Full suite: **136 green**; econ 17, thermo 1.
+
+**Determinism policy (recommended, concept-parsimonious).** Honor the existing `stochastic=` kwarg as
+the declaration lever — no new ontology. Default: undeclared + statically suspicious ⇒ treated as
+stochastic (sound-by-default; FPs cost only performance). A stochastic node is an **always-dirty
+source that poisons its descendant cone** through the ref DAG. CRN-freezing = promote the seed to an
+explicit X field (probe-F's existing pattern: seeded FD recovered −2.0256 ×5 identical vs a 212-wide
+noise span unseeded). Statefulness is a third verdict surfaced as a warning, never a cache policy.
+
+## VII.7 Visualization
+
+`sandbox/viz_space.py` renders the ref space from a live session: per-model PNGs (`viz_cube.png`,
+`viz_cube_signals.png`, `viz_spool_design.png`, `viz_spool_offdesign.png`) in a custom multipartite
+layout where column = measured dependency depth, with free fields (grey squares), solver unknowns
+(blue diamonds), properties (circles), residuals (orange triangles), objectives (aqua hexagons), and
+the aqua-dashed `update()`/signal broadcast edges that exist in no property body. Each model also
+emits an ASCII sparsity matrix (Y rows × X cols, terminal-readable) and a `.mmd` mermaid export. The
+drawn graph's reachability equals the raw measured oracle exactly on all four models.
+
+## VII.8 What it would take to land in core (tied to Part IX, no new concepts)
+
+This is the staging of Part IX's existing milestones, not a new design:
+
+- **M2 (graph extraction, §4)** — promote `ref_space.build_space` into `engforge/core/`: the hybrid
+  static-skeleton + oracle, node identity = dotted ref name, roles from the solver's ref sets. The
+  `ref.comp` resolution fix (VII.3) is a prerequisite.
+- **M3 (value tracer, §5)** — the path-exact tracer with stored guards; the hybrid rule in VII.4 is its
+  soundness contract.
+- **M6 (derivatives, §7)** — hand scipy the predicted sparsity + semi-analytic Jacobian instead of
+  letting it finite-difference blind; this is where the eval-count win becomes a real-model speedup.
+- **M8 (incremental recompute, §9)** — the DP layer: dirty-push memoization driven by `events.py`
+  (already landed, Part V), with transitive stochastic poisoning and the `COLLECTION_CHANGED →
+  min_refresh` invalidation hook.
+
+Combos still segment (design vs offdesign is one graph, two X partitions); everything stays a
+component; the two structures this needs — the event bus and `SystemState` — already exist.
+
+---
+
+# PART VIII — Test & evaluation strategy
 
 How candidate approaches graduate into core: reference problems with known answers, measured.
 
@@ -263,47 +822,9 @@ scaling/perturbation); wall-time at N; model LOC; concept count added.
 
 ---
 
-# PART V-b — Landed: explicit State & Result (the staging of Part VI)
+# PART IX — The compiled-graph engine design
 
-*Implemented this pass. Model code is unchanged; what moved is WHERE mutable state and
-result rows live.*
-
-**Why.** A `sim_matrix` bug chase produced four stacked patches (row-slicing, data-owner
-scopes, an owner stack, a time-restore) — all symptoms of one disease: **state scattered
-across live objects + a recursive context singleton, and rows accumulating implicitly as a
-side effect of property evaluation.** Every nested scope had to mutate-then-restore shared
-state, and every restore path was a new bug surface.
-
-**What landed.**
-
-| structure | file | owns |
-|---|---|---|
-| `SystemState` | `engforge/state.py` | the typed snapshot: `capture / apply / updated / copy / diff`, plus the episode clock. Promotes `record_state`, `x_start`, `temp_state` into one object. `apply(restore_time=)` separates *solver revert* (fields only) from *episode restore* (fields + clock). |
-| `Case` / `Result` | `engforge/results.py` | one input-point's inputs/rows/output; the run's cases. Recording is an explicit `case.record(...)` with the dedup policy moved out of the context. `Result` is a `Mapping`, so `run()["output"][i]` / `["input_sets"][i]` are unchanged. |
-
-- `ProblemExec` keeps **no row store**: `_data/_index` are gone; `begin_case()` starts a point,
-  `save_data` records on the active case, `numeric_data/dataframe` read the Result.
-- `simulate()` is now an **episode**: captures a `SystemState`, owns its `Case`, restores state
-  *and* clock on exit. Transient cases keyed by time can no longer collide — the four patches
-  are deleted, not kept.
-- `system.last_result` exposes the Result; `system.dataframe` stays as the combined view.
-
-**Also landed:** grouped matrix inputs (`"a,comp.b": [(1,2),(3,4)]` — joint rows crossing the
-other factors) via `engforge/inputs.py`; `sequence=` validated; genuine bug fixes (`dxdt`
-clobber, `integrate` X0 merge, `sim_matrix` copy_system).
-
-**Toolbox decoupling completed:** core carries no `CostModel`/`Economics` knowledge — the slot
-auto-override, the collection veto, and `_cost_update` are deleted. Toolboxes declare intent
-explicitly (`Slot.define(X, none_ok=True, default_ok=False)`) and hook the update phase by
-overriding `update()` on their own classes (engforge-econ does exactly this).
-
-**Verification:** core 92 tests green, engforge-econ 17 green, and
-`examples/transient_control.py` (PID + profile components, grouped gain sets) produces
-byte-identical output across reruns — no hysteresis.
-
-# PART VI — The compiled-graph engine design
-
-*The engine that implements Parts I–V: everything below compiles the declarations into one
+*The engine that implements Parts I–VIII: everything below compiles the declarations into one
 problem graph (R(u)=0), which is precisely what delivers C1 (topological order), C2 (SCC blocks
 with real solvers), C4/C5 (members and peer slots as graph nodes), and C7 (point-mapped
 subproblems). Sections retain their original numbering.*
@@ -577,7 +1098,13 @@ units sidecar (pint-pandas stays opt-in).
 ## 9. Incremental recompute (M8 — the dynamic-programming layer, revised)
 
 - **Write events**: attrs `on_setattr` (`property_changed`) repointed from the global boolean to
-  the graph → eager dirty push to transitive dependents only.
+  the graph → eager dirty push to transitive dependents only. **Half of this landed** — see
+  Part V: `engforge/events.py` makes writes, slot swaps, and collection mutations *emit*
+  (`VALUE_CHANGED` / `SLOT_CHANGED` / `COLLECTION_CHANGED`) on a `pyee` bus, so the dirty-push
+  consumer can be added without touching the DSL again. Two delivery caveats recorded there are
+  binding on this section: emission is still **gated by `_anything_changed`** outside an active
+  session (the very boolean this bullet replaces), and `SLOT_CHANGED` carries an identity guard.
+  Both must be lifted when the graph becomes the subscriber, or the dirty push will miss writes.
 - **Memoized topological evaluation**: dirty nodes recompute once, in order; clean subtrees never
   run (Excel-recalc semantics).
 - **Tolerance backdating** (salsa's early cutoff with float semantics): recomputed value within
@@ -661,6 +1188,9 @@ or `∂R/∂u` unless they ask.
 
 Core: `attrs, numpy (≥2 ok after typing.py fixes), scipy, pandas, matplotlib, seaborn, pint,
 networkx (now load-bearing), pyee (graph events)`.
+**`pyee` is no longer forward-looking** — it is a declared dependency *today*
+(`pyproject.toml:41`, `requirements.txt:64`) and the change-event bus ships now
+(`engforge/events.py`, Part V). What remains future is the graph that *consumes* the events.
 Dropped: `deepdiff` (hash methods reimplemented on hashlib — public API kept), `randomname`
 (→ deterministic `f"{cls}-{n}"`), `networkx-query`, `methodtools`, `arrow`, `tabulate`,
 `jupyter`, `black` (dev extra), slack-webhook `requests`.
@@ -734,7 +1264,7 @@ matrix (10 tests); deep-scoping component-solver resolution; performance budgets
 | keep-solution default (revert on request); sweeps still evaluate each point from the per-run checkpoint | revert-by-default is already the minority usage in the suite; sweep independence preserved (§15.6) |
 | signal ordering declaration → topological | correctness; `pre`/`post` keywords kept as sugar |
 | `test_problem` SLSQP constraint-count assertions → plan-summary assertions | internal SLSQP list shape no longer exists |
-| `run()` returns a `Problem` (strict Mapping over reserved keys; `["output"][0]` works; dataframe via `.dataframe`) | §15.5 — a column named `output` exists in real models |
+| `run()` returns a `Problem` (strict Mapping over reserved keys; `["output"][0]` works; dataframe via `.dataframe`) — **LANDED as `engforge.results.Result`** (Part V): same contract, different class name. 1.0's `Problem` supersedes it. Partly outstanding: §15.5's `Problem(ran=False, reason=…)` for the non-run paths — the skipped-run path now returns the (empty) `Result` rather than `None` so callers need no type check (`solveable.py:427-436`, verified), but it carries **no `ran`/`reason` field**, and the already-solved path still raises a bare `Exception` (`:437-438`). | §15.5 — a column named `output` exists in real models |
 | context `assertIs` → same-root/distinct-scope; `last_context` always = session root | concurrent sibling scopes require it; keeps `system.dataframe`/`converged`/`run_id` stable |
 
 ## 15. Risk register (from the adversarial review — 3 independent critics, 15 confirmed findings)
