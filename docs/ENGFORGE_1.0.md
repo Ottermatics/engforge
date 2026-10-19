@@ -410,6 +410,112 @@ sim_matrix(dt=0.01, endtime=2, u=[0.0, 0.1], ...) -> Result(2 cases)
   dataframe   (2024, 23)                                             # 2 x 1012
 ```
 
+## V.N — Landed since: run input, naming authority, per-root resolution
+
+A second pass landed the 1.0 run-input layer, the solver naming fix, an audit-driven cleanup, and
+the first structural step of the per-root Problem (Part IX M-numbers in parens). Full suite green
+throughout (151 core, 17 econ, 1 thermo, 7 examples).
+
+**Run input (one structure for code + JSON/CLI).**
+- `engforge/run_config.py` — `RunConfig(method, tol, options)`, a serializable (dict round-trip,
+  YAML/JSON-safe) optimizer-settings object. It reaches scipy via `solve_min` (`setdefault`, so an
+  explicit per-call kwarg still wins); empty default = scipy's own behavior. This gives the former
+  dead `min_kw_dflt` a real, user-controllable home on the steady-state path.
+- **Structured `run()`** — `run(inputs=, scope=, config=, sequence=, **shorthand)`, matching the
+  JSON `{inputs, settings, sequence}` shape; the flat shorthand still routes into the right bucket.
+  This makes the **state (inputs) vs settings (everything else)** split structural.
+
+**One naming authority (the dotted-var bug).** `SolverInstance.get_alias` now returns the declared
+var string, so a dotted slot var (`declare_var('comp.x')`) composes to the canonical dotted ref name
+and actually solves — previously it keyed the leaf (`'x'`), mismatched the writeback space, and the
+solver silently reported success at the start value. Leaf declarations are byte-identical.
+`declare_var(on_missing='warn'|'error'|'skip')` handles a var whose target slot is empty, applied
+once per problem at establishment.
+
+**Audit cleanup (dead forks removed).** `_solver_override` (never set True; dead branch),
+`SOLVER_OPTIONS` (no readers), the `Yref`/`sys_solver_objectives` dead store, the unused `norm_x`
+X-normalization, and ~219 lines of commented-out root/Jacobian solver were deleted. Known bugs
+fixed: the `con_info` double-append that mislabeled `Ycon`, the dead run-timing branch, and the
+`_prob_levels` strong-ref leak. Deferred with evidence: `_anything_changed_` removal waits for the
+Stage-4 dirty-set (three live cache consumers + cross-repo API); the var/bound combo-default
+divergence needs the two combo forks merged (a naive fix regressed slider-crank).
+
+**Per-root Problem — multi-root coexistence (toward the Part IX engine).** Each context carries an
+explicit `parent` (the enclosing context; `None` for a root) with `is_root` and a `root` property
+that walks the chain. Session resolution (`get_sesh`, `__getattr__` for the ~20 shared
+`root_possible` names) follows the context's **own** parent chain to its root, not the process-global
+`class_cache.session`. The active-root tracking is now a LIFO **stack**: entering a root pushes the
+previous active root and exiting pops it back, so a later root no longer clobbers an earlier one, and
+`problems_dict` is keyed by a unique id per context (no more `[True]` eviction). `run(root=True)` /
+`ProblemExec(..., root=True)` forces an **independent new root** even while another is active — a
+different system is allowed, since a forced root establishes its own. Verified (`test_problem_roots`):
+two different-system roots A and B coexist in nested `with` blocks, each resolves to itself, A is
+suspended on the stack while B is active, and B's exit restores A. This is the two-Pareto-front
+capability.
+
+The **routing principle** (ratified): a child branches from the root's `SystemState` as captured at
+`run()` entry, overlays only its own inputs, and derives its own scope — the shared thing across the
+tree is *state, not config*, the right model for differential/nonlinear systems.
+
+**Remaining (2c):** a child still inherits the root's `_slv_kw` and does not yet build its own
+problem definition, so per-child re-scoping (different combos per child) is the next increment; the
+resolution/lifecycle groundwork for it is in place.
+
+**Owned graph + cycle detection (Part IX M2/M4/M10 seed) — landed, report-only.** `engforge/problem_graph.py`
+(`ProblemGraph`) builds the dependency DAG over a system's fields and properties, keyed by the dotted ref
+name. Edges come from a static bytecode scan of each `@system_property` getter (the `self.<attr>` /
+`self.<comp>.<attr>` read chains, 3.12 method-form aware) — an over-approximation, so a reported
+"no cycle" is trustworthy. **Strongly-connected components of size > 1 are algebraic update cycles**,
+`layers()` gives the feed-forward topological order, and `report()` prints both. Exposed as
+`Problem.graph`; `run(cycle_check='warn'|'error')` applies the policy once at establishment (default
+off → report-only, zero solve-behavior change). This is the direct answer to "check for update
+cycles" — the core 1.0 convergence concern. Verified (`test_graph_cycles`): a feed-forward model
+reports none with `comp.twoy` ordered before `s`; a model whose two properties read each other is
+flagged as one SCC and `cycle_check='error'` raises on it. Enforcement (layer-ordered
+execution replacing declaration order; stochastic-node poisoning; structure-key plan cache) is
+Part IX M4/M8, deferred — it changes execution order and must be measured against the examples.
+
+**ProblemState — the per-root state object (Part IX M8 seed) — landed, additive.** `engforge/state.py`
+adds `ProblemState`, owned by each root (`Problem.state`): it holds the start checkpoint (a
+`SystemState`) and, while its root is active, an **event-driven dirty set** of the
+`(component, attr)` pairs changed since the last `clear()` — fed by `VALUE_CHANGED` on the bus,
+subscribed at root enter and removed at teardown alongside the structural-event listeners. This is
+the explicit, per-tree answer to "what changed" that will replace the tree-walking
+`System.anything_changed` (a full recursive walk per read, load-bearing for `solver_cached`). It is
+additive for now — it *records* changes; it does not yet gate caching. Removing `_anything_changed_`
+still waits for this to drive the cache-invalidation path AND for lockstep migration of
+engforge-econ / -structures / -thermo, which read/write the public `anything_changed` API (audit
+#iii). Verified (`test_problem_state`): a value write marks its attr dirty, the checkpoint is a
+`SystemState`, and the listener is removed when the root exits.
+
+### What remains (behavior-changing / cross-repo — focused work per stage)
+
+The additive per-root foundation is complete and green (165 core, 17 econ, 1 thermo, 7 examples).
+The static part of the graph is now computed at **startup**: `TabulationMixin.cls_property_dependencies`
+scans each `@system_property` getter's read-chains once per class (in `pre_compile`) and caches them
+on the class, so `ProblemGraph` (renamed from the earlier `RefGraph`; `engforge/problem_graph.py`)
+assembles the per-problem graph by stitching those cached chains along the instance tree — no
+bytecode scanning per run.
+
+**2c — per-child re-scoping: DONE (via `root=True`).** A re-scoping child is a nested root on the
+same system with its own combo selection: it checkpoints the system's current state and derives its
+own `Xref`/scope, and the outer scope is restored on exit. Verified (`test_problem_roots`): under an
+active `combos='design'` context (`Xref={A}`), a nested `ProblemExec(sys, {'combos':'offdesign'},
+root=True)` has `Xref={N}` — the routing principle (child branches state, derives own scope) realized
+with no new concept.
+
+The remaining stages each change runtime behavior or break an API and so are landed separately,
+each measured against the full suite + examples:
+- **3b** — layer-ordered execution (the graph's `layers()` drives `update`/signal order, replacing
+  declaration order) + stochastic-node poisoning + a structure-key plan cache; changes evaluation
+  order, so it is gated on example-by-example equivalence.
+- **4 (completion)** — route `anything_changed`/`solver_cached` invalidation through the
+  `ProblemState` dirty set and retire `_anything_changed_`, in lockstep with the toolboxes.
+- **5** — hard-drop the `data_dict`/`dataframe` object surface (audit) with the econ keyed-assert
+  migration to the `Result` path.
+- **6** — subproblem hierarchy: a self-solving subsystem as an opaque `Y=F(X)` node, and transient
+  inner solves re-entered against a compiled plan instead of recompiled per step.
+
 ---
 
 # PART VI — Parallel problem contexts (analysis)

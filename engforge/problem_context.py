@@ -126,6 +126,7 @@ dflt_parse_kw = dict(
     save_on_exit=False,
     enter_refresh=True,
     run_config=None,
+    cycle_check=None,
 )
 # can be found on session._<parm> or session.<parm>
 root_defined = dict(
@@ -205,7 +206,8 @@ class ProblemExec:
     Represents the execution context for a problem in the system. The ProblemExec class provides a uniform set of options for managing the state of the system and its solvables, establishing the selection of combos or de/active attributes to Solvables. Once once created any further entracnces to ProblemExec will return the same instance until finally the last exit is called.
 
     ## params:
-    -  _problem_id: uuid for subproblems, or True for top level, None means uninitialized
+    -  _problem_id: a unique uuid per context (root or sub); None means uninitialized.
+       Rootness is `is_root` (parent is None), not the id.
 
     """
 
@@ -217,9 +219,17 @@ class ProblemExec:
     # this class, wide, dont redefine it pls
     problems_dict = weakref.WeakValueDictionary()
 
+    # stack of active roots below the current one (process-wide). `.session` is
+    # the top; entering a new root pushes the previous, exiting pops it back, so
+    # roots nest LIFO instead of a later root clobbering an earlier one.
+    _root_stack = []
+
     system: "System"
     session: "ProblemExec"
     session_id = None
+
+    # the enclosing context (None for a root); set in __init__
+    parent = None
 
     # problem state / per level
     problem_id = None
@@ -276,16 +286,15 @@ class ProblemExec:
         This is a special method that is called when an attribute is not found in the usual places, like when interior contexts (anything not the root (session_id=True)) are created that dont have the top level's attributes. some attributes will look to the parent session
         """
 
-        # interior context lookup (when in active context, ie session exists)
-        if hasattr(self.class_cache, "session") and name in root_possible:
-            # revert to the parent session
-            if self.session_id != True and name.startswith("_"):
-                # self.info(f'get parent private {name}')
-                return getattr(self.class_cache.session, name)
-
+        # interior contexts resolve the shared root_possible names from their
+        # OWN root (parent chain), not the process-global session. `parent` has
+        # a class default so this never recurses through __getattr__.
+        if self.parent is not None and name in root_possible:
+            root = self.root
+            if name.startswith("_"):
+                return getattr(root, name)
             elif name in root_defined:
-                # self.info(f'get parent public {name}')
-                return getattr(self.class_cache.session, "_" + name)
+                return getattr(root, "_" + name)
 
         if name in root_defined:  # public interface
             # self.info(f'get root fallback {name}')
@@ -357,6 +366,12 @@ class ProblemExec:
         if kw_dict and "level_name" in kw_dict:
             level_name = kw_dict.pop("level_name").lower()
 
+        # force a NEW independent root even when another is active (multi-tree);
+        # a forced root establishes its own system, so a different system is ok
+        force_root = bool(opts.pop("root", False))
+        if kw_dict and "root" in kw_dict:
+            force_root = bool(kw_dict.pop("root")) or force_root
+
         # solver min-args wrt defaults
         min_kw = None
         if opts and "min_kw" in opts:
@@ -416,8 +431,9 @@ class ProblemExec:
             else:
                 raise IllegalArgument(f"bad dxdt value {dxdt}")
 
-        # Check if there is an existing problem session, else create it
-        if hasattr(self.class_cache, "session"):
+        # Check if there is an existing problem session, else create it.
+        # `force_root` bypasses nesting to start an independent root (multi-tree).
+        if hasattr(self.class_cache, "session") and not force_root:
             # mirror the state of session (exactly)
             copy_vals = {
                 k: v
@@ -426,6 +442,9 @@ class ProblemExec:
             }
             self.__dict__.update(copy_vals)
             self._problem_id = int(uuid.uuid4())
+            # the enclosing active context is this context's parent; the root is
+            # the top of that chain (parent is None). Rootness is `is_root`.
+            self.parent = self.class_cache.session
             self.problems_dict[self._problem_id] = self  # carry that weight
             self.session_id = int(uuid.uuid4())
 
@@ -456,13 +475,14 @@ class ProblemExec:
             # each state request to be reverted, then we need to store the state of each execution context overriding the outer context x_start
             self.set_checkpoint()
 
-        elif ctx_fail_new:
+        elif ctx_fail_new and not force_root:
             raise IllegalArgument(f"no execution context available")
 
         else:
             # add the prob options to the context and establish system
             self.__dict__.update(opt_in)
-            self._problem_id = True  # this is the top level
+            self._problem_id = int(uuid.uuid4())  # unique, even across roots
+            self.parent = None  # root of the problem tree (rootness = is_root)
             self.problems_dict[self._problem_id] = self  # carry that weight
             self._prob_levels = {}
             self._converged = None
@@ -578,6 +598,7 @@ class ProblemExec:
 
         self.refresh_references()
         self._diagnose_missing_targets()
+        self._check_cycles(getattr(self, "cycle_check", None))
 
         # Get solver weights
         self._weights = self._slv_kw.get("weights", None)
@@ -591,6 +612,64 @@ class ProblemExec:
             self.msg(f"established sys context: {self} {self._slv_kw}")
 
     @property
+    def is_root(self) -> bool:
+        """True for the top of a problem tree (no enclosing context)."""
+        return self.parent is None
+
+    @property
+    def root(self) -> "ProblemExec":
+        """the top of this context's parent chain (self if already root)."""
+        node = self
+        while node.parent is not None:
+            node = node.parent
+        return node
+
+    @property
+    def graph(self):
+        """the owned reference graph (dependency DAG) for this problem's system.
+
+        Built lazily and cached on the root. Use `graph.report()` /
+        `graph.cycles()` to inspect update cycles and `graph.layers()` for the
+        feed-forward evaluation order. Report-only — does not change the solve.
+        """
+        sesh = self.sesh
+        g = getattr(sesh, "_graph", None)
+        if g is None:
+            from engforge.problem_graph import ProblemGraph
+
+            g = ProblemGraph(sesh.system)
+            sesh._graph = g
+        return g
+
+    @property
+    def state(self):
+        """the per-root ProblemState (start checkpoint + event-driven dirty
+        set). Created lazily and owned by the root."""
+        sesh = self.sesh
+        ps = getattr(sesh, "_problem_state", None)
+        if ps is None:
+            from engforge.state import ProblemState
+
+            ps = ProblemState(root=sesh, checkpoint=getattr(sesh, "x_state", None))
+            sesh._problem_state = ps
+        return ps
+
+    def _check_cycles(self, mode="warn"):
+        """apply the cycle-check policy once: 'warn' logs each update cycle,
+        'error' raises, anything falsy is a no-op."""
+        if not mode:
+            return
+        cyc = self.graph.cycles()
+        if not cyc:
+            return
+        msg = "update cycle(s) detected: " + "; ".join(
+            " -> ".join(c) + f" -> {c[0]}" for c in cyc
+        )
+        if mode == "error":
+            raise IllegalArgument(msg)
+        self.warning(msg)
+
+    @property
     def sesh(self):
         """caches the property for the session"""
         if hasattr(self, "inst_sesh"):
@@ -599,13 +678,20 @@ class ProblemExec:
         return sesh
 
     def get_sesh(self, sesh=None):
-        """get the session"""
+        """resolve the owning session (root) for this context.
+
+        Resolution follows this context's OWN parent chain (`self.root`) rather
+        than the process-global `class_cache.session`, so it is correct per
+        problem tree. In the single-active-tree world these are the same object;
+        the parent pointer is what lets trees resolve independently."""
         out = sesh
         if not sesh:
-            if hasattr(self.class_cache, "session"):
-                out = self.class_cache.session
-            elif self._problem_id == True:
-                out = self
+            if self.is_root:
+                out = self  # a root owns itself (even if another root is active)
+            elif self.parent is not None:
+                out = self.root  # interior -> its own root via the parent chain
+            elif hasattr(self.class_cache, "session"):
+                out = self.class_cache.session  # safety net (no parent yet)
         if out:
             self.inst_sesh = out
         return out
@@ -739,6 +825,8 @@ class ProblemExec:
         for evt in (events.SLOT_CHANGED, events.COLLECTION_CHANGED):
             events.bus.on(evt, self._on_structural_change)
             subs.append((evt, self._on_structural_change))
+        # the per-root ProblemState records value changes for its lifetime
+        self.state.subscribe()
 
     def _unsubscribe_structural_events(self):
         from engforge import events
@@ -749,6 +837,9 @@ class ProblemExec:
             except Exception:
                 pass
         self._event_subs = None
+        ps = getattr(self, "_problem_state", None)
+        if ps is not None:
+            ps.unsubscribe()
 
     def min_refresh(self, sesh=None):
         """what things need to be refreshed per execution, this is important whenever items are replaced"""
@@ -859,13 +950,12 @@ class ProblemExec:
             # global level number
 
             self.class_cache.level_number += 1
-            self.class_cache.session._prob_levels[self.level_name] = self
+            self.root._prob_levels[self.level_name] = self
 
-            return self.class_cache.session  # appear as top
+            return self.root  # appear as top (this context's own root)
 
-        # return New
-        self.class_cache.session = self
-        self.class_cache.level_number = 0
+        # return New — become the active root (pushing any prior active root)
+        self._activate_root()
 
         # EVENTS: the root session listens for STRUCTURAL change (a slot's
         # component swapped, a collection member set/appended) for its
@@ -946,11 +1036,10 @@ class ProblemExec:
                     ext = True  # top override
 
                 elif self.class_cache.session is self and not ext:
-                    # never ever leave the top level without deleting the session
-                    self.class_cache.level_number = 0
+                    # never ever leave the top level without releasing the session
                     if type(self.problems_dict) is not dict:
                         self.problems_dict.pop(self._problem_id, None)
-                    del self.class_cache.session
+                    self._deactivate_root()
                     raise KeyError(f"cant exit to level! {exc_value.level} not found!!")
 
             else:
@@ -1096,20 +1185,36 @@ class ProblemExec:
         elif self.log_level < 15:
             self.warning(f"no data saved, nothing changed")
 
+    def _activate_root(self):
+        """make this context the active root, pushing any prior active root."""
+        cc = self.class_cache
+        prev = getattr(cc, "session", None)
+        if prev is not None and prev is not self:
+            cc._root_stack.append(prev)
+        cc.session = self
+        cc.level_number = 0
+
+    def _deactivate_root(self):
+        """restore the previously-active root (LIFO), or clear if none left."""
+        cc = self.class_cache
+        cc.level_number = 0
+        if cc._root_stack:
+            cc.session = cc._root_stack.pop()
+        elif hasattr(cc, "session"):
+            del cc.session
+
     def clean_context(self):
         if hasattr(self.class_cache, "session") and self.class_cache.session is self:
             if self.log_level <= 8:
                 self.debug(f"closing execution session")
-            self.class_cache.level_number = 0
             self._unsubscribe_structural_events()
-            del self.class_cache.session
+            self._deactivate_root()
         elif hasattr(self.class_cache, "session"):
             # global level number
             self.class_cache.level_number -= 1
 
-        # if we are the top level, then we mark the session runtime/messages.
-        # root context records the run timing
-        if self._problem_id is True:
+        # the root context records the run timing
+        if self.is_root:
             self._run_end = datetime.datetime.now()
             self._run_time = self._run_end - self._run_start
             if self.log_level <= 10:
@@ -1446,7 +1551,7 @@ class ProblemExec:
             # no declared objective: the solve only needs to satisfy the
             # constraints, so the objective is constant — any feasible point is
             # acceptable and the free variables are left where they are.
-            if self._problem_id is True:
+            if self.is_root:
                 self.info(f"no objective; solving for feasibility only: {Xss}")
 
             def feasibility(sys, prob) -> float:

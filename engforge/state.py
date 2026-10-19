@@ -1,6 +1,14 @@
-"""SystemState — a typed, copyable snapshot of a system's settable refs plus
-the episode clock. Four operations: capture / apply / updated / copy. Episodes
-(a transient, a sweep point, a solver attempt) bracket themselves with one.
+"""State objects for a problem.
+
+SystemState — a typed, copyable snapshot of a system's settable refs plus the
+episode clock (capture / apply / updated / copy); episodes bracket themselves
+with one.
+
+ProblemState — the per-root record of a problem's mutable state: the start
+checkpoint (a SystemState) and an event-driven set of changed component
+attributes since the last clear. It observes change events while its root is
+active, giving an explicit, per-tree answer to "what changed" instead of the
+tree-walking `anything_changed` flag.
 """
 
 from engforge.system_reference import Ref
@@ -94,3 +102,60 @@ class SystemState:
 
     def __repr__(self):
         return f"SystemState({len(self.values)} refs, t={self.time})"
+
+
+class ProblemState:
+    """Per-root mutable-state record for a problem.
+
+    Holds the start checkpoint (a ``SystemState``) and, while subscribed, an
+    event-driven set of ``(component, attr)`` pairs that have changed since the
+    last ``clear()``. This is the explicit, per-tree successor to the
+    tree-walking ``anything_changed`` flag — additive for now (it records
+    changes; it does not yet gate caching).
+    """
+
+    __slots__ = ("root", "checkpoint", "_dirty", "_listener")
+
+    def __init__(self, root=None, checkpoint: "SystemState" = None):
+        self.root = root
+        self.checkpoint = checkpoint
+        self._dirty = set()  # {(id(component), attr_name)}
+        self._listener = None
+
+    # --- change tracking (event-driven) --------------------------------------
+    def _on_value_changed(self, instance, name, old, new):
+        self._dirty.add((id(instance), name))
+
+    def subscribe(self):
+        """start recording value changes (idempotent)."""
+        if self._listener is not None:
+            return
+        from engforge import events
+
+        self._listener = self._on_value_changed
+        events.bus.on(events.VALUE_CHANGED, self._listener)
+
+    def unsubscribe(self):
+        from engforge import events
+
+        if self._listener is not None:
+            try:
+                events.bus.remove_listener(events.VALUE_CHANGED, self._listener)
+            except Exception:
+                pass
+            self._listener = None
+
+    def clear(self):
+        self._dirty.clear()
+
+    @property
+    def dirty(self) -> set:
+        return self._dirty
+
+    def is_dirty(self, instance, name=None) -> bool:
+        if name is not None:
+            return (id(instance), name) in self._dirty
+        return any(iid == id(instance) for iid, _ in self._dirty)
+
+    def __repr__(self):
+        return f"ProblemState({len(self._dirty)} dirty)"

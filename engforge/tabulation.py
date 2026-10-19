@@ -235,8 +235,31 @@ class TabulationMixin(SolveableMixin, DataframeMixin):
         return __system_properties
 
     @classmethod
+    def cls_property_dependencies(cls):
+        """{property_name: set(self-read chains)} for this class — the static
+        dependency structure of each @system_property getter.
+
+        Scanned from bytecode ONCE per class and cached on the class, so the
+        problem graph is assembled per run without re-scanning. Computed at
+        class-compile (pre_compile), i.e. at startup."""
+        key = f"_{cls.__name__}_prop_deps"
+        cached = cls.__dict__.get(key)
+        if cached is not None:
+            return cached
+        from engforge.problem_graph import read_chains
+
+        out = {}
+        for pname, prop in cls.system_properties_classdef().items():
+            fget = getattr(prop, "fget", None)
+            out[pname] = read_chains(fget) if fget is not None else set()
+        setattr(cls, key, out)
+        return out
+
+    @classmethod
     def pre_compile(cls):
-        """class compile hook: a stochastic system_property forces always-save."""
+        """class compile hook (startup): cache the static property dependency
+        structure, and force always-save if any @system_property is stochastic."""
+        cls.cls_property_dependencies()  # scan + cache the dep graph structure
         if any([v.stochastic for k, v in cls.system_properties_classdef(True).items()]):
             log.info(f"setting always save on {cls.__name__}")
             cls._always_save_data = True
