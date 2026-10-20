@@ -24,6 +24,10 @@ from `sandbox/cycles/run_probes.py` (P-A … P-H).*
 | **VII** | **The ref space: where the DAG meets the solver matrix** | **measurement + prototype; 4 cache fixes landed** |
 | VIII | test & evaluation strategy | design |
 | IX | the compiled-graph engine design | design |
+| **X** | **worst-case stress tests & core purpose** — MPC-in-transient, CFD/FEA black boxes | **critical analysis** |
+
+*Companion: [`SCALING.md`](SCALING.md) — parallel execution (measured feasibility, Ray mapping,
+executor seam), the size problem, and the cloud commercial analysis.*
 
 ---
 
@@ -1447,3 +1451,152 @@ matrix (10 tests); deep-scoping component-solver resolution; performance budgets
 - pint performance notes: https://pint.readthedocs.io/en/stable/advanced/performance.html
 - Cellier & Kofman, *Continuous System Simulation*, Springer 2006 (tearing, causalization).
 - Baharev, Schichl, Neumaier, *Tearing systems of nonlinear equations I/II*.
+
+---
+
+# PART X — Worst-case stress tests & the core purpose (critical analysis)
+
+*What is this framework actually FOR, and do the hardest problems validate or break the redesign?
+Two worst cases, traced honestly through the architecture — one nested (MPC on a transient with its
+own optimal control), one opaque (a component wrapping a CFD/FEA solve, e.g. aeroelasticity). The
+point is not to cheerlead the design; it is to find where "everything is a Component, Y=F(X)" strains
+and to name the few primitives that would carry it across.*
+
+## X.1 The core purpose, sharpened
+
+engforge's value is **orchestration of coupled solves over Y=F(X) nodes** — composition, selection
+(combos), state/episode management, and tabulated results around the solve — NOT being a CFD/FEA/ODE
+engine itself. The sharpest statement of the 1.0 north star: *a node may be a closed-form property, a
+child Problem with its own plan, or an opaque black box — and the framework schedules, couples,
+differentiates, and records them uniformly.* Every hard case below is a test of that sentence. The
+recurring discipline: **wrap, don't reimplement**, and keep the escape hatches that make wrapping
+possible few, explicit, and bounded — so the common pure-Y=F(X) case never pays for them.
+
+## X.2 Worst case A — MPC on a transient with internal optimal control
+
+The shape is a four-deep cycle-alphabet composition: **MARCH** the real plant in time; at each
+control interval **SOLVE** the controller's optimal-control problem; whose every objective evaluation
+**MARCH**es an internal prediction model over a horizon; which may itself **SOLVE** per step. So
+`MARCH( SOLVE( MARCH( … ) ) )`.
+
+**What the redesign already fits.** The per-root Problem tree is the natural spine: the plant is a
+root; the MPC is a child Problem with its *own* objective (tracking cost) and its *own* unknowns
+(the control trajectory); the horizon prediction is an isolated **episode** (`SystemState`
+capture→evolve→apply) that must not mutate the plant. The ratified routing principle — *a child
+branches from the root's state at entry, overlays only its own inputs, derives its own scope* — is
+exactly the MPC-from-current-plant-state semantics. The prediction model is usually a *different*
+(reduced/linear) system, which `root=True` + a distinct system already supports (two trees,
+Part V.N). Combos re-scope the controller vs the plant with no new concept.
+
+**Where it strains — the real gaps.**
+- **Horizon as a decision variable.** The input matrix and `Xref` are *point*-based; MPC optimizes a
+  control *trajectory* (N steps). This is the time-expanded group of Part IX §10 — not yet built.
+  Without it the horizon has to be faked as N replicated scalar vars, which the naming authority can
+  express but the solver has no trajectory-aware structure for. **Addition needed: trajectory /
+  time-expanded decision vectors as a first-class axis.**
+- **Clock isolation is a hard prerequisite, and currently a no-op.** `SystemState.apply(restore_time=
+  True)` only restores `sesh._time`; the system-clock write is a placeholder pending Stage 4's
+  writable clock. MPC *requires* the inner horizon clock to advance independently and the plant clock
+  to restore exactly — so **Stage 4 (ProblemState owns the clock) is a blocking dependency**, not a
+  nicety.
+- **Cost.** Each controller objective eval is an entire transient. The per-eval context storm
+  (Stage 2b) and recompile-per-timestep (Stage 6/M9) would make this quadratically wasteful; the
+  **persistent compiled plan + warm starts** (structure-key cache, M4/M8, seeded from the prior
+  solve) is what turns "re-solve every control step" from intractable to routine. Derivatives through
+  a trajectory by finite difference are O(N·horizon) sims — adjoint/sensitivity (far-future M6) is
+  the only real answer at scale; until then MPC is feasible only for small horizons.
+
+**Verdict:** the architecture *shape* is right (nested Problems + episodes + per-tree state), but MPC
+exposes two concrete must-haves it does not yet have: a trajectory decision axis and real clock
+isolation. Both are already on the roadmap (§10, Stage 4) — MPC is the forcing function that makes
+them non-optional rather than nice-to-have.
+
+## X.3 Worst case B — a black-box component wrapping CFD/FEA (aeroelasticity)
+
+A component whose properties (lift, deflection, stress) are produced by an expensive internal/external
+field solve, not a closed-form expression; aeroelasticity couples an aero black box and a structural
+black box in a fixed point (deflection ↔ load).
+
+**What the redesign already fits.** This *is* Stage 6's "subsystem as an opaque Y=F(X) node": the
+component solves internally and exposes only aggregate properties; the parent sees a black box. The
+aero↔structure fixed point is a cycle — and the owned graph's SCC detection (Part VII / Stage 3a,
+*landed*) is precisely the tool that finds it and flags whether a solver covers it. The graph's
+"unknown → depends on everything" fallback already makes an unscannable body *sound* (over-covered,
+never under-covered).
+
+**Where it strains — the real gaps, and the single biggest removal.**
+- **Dependency declaration for opaque bodies.** A static bytecode scan cannot see inside an external
+  CFD call, so the node collapses to "depends on everything" — sound but sparsity-destroying, which
+  defeats the whole graph. **Addition needed:** `@system_property(depends=[...], opaque=True)` so a
+  black box declares its true inputs (`lift` depends on `{aoa, mach, mesh}`), restoring a sparse,
+  correct graph. `@system_property` has no such option today.
+- **State that lives outside engforge.** A CFD solver owns a mesh, a solution field, convergence
+  history — state not in engforge fields. engforge's revert/episode model assumes it can snapshot and
+  restore *all* state through refs; an external black box breaks that assumption outright. **Addition
+  needed:** opaque-state checkpoint hooks (`capture_state()` / `apply_state()` the component can
+  override) so `SystemState`/`ProblemState` delegate the part they cannot see — or a contract that
+  the wrapper is pure-per-eval (re-init from inputs). Without this, episodes and revert silently
+  corrupt external solver state.
+- **Per-ref dirty invalidation is a prerequisite, not an optimization.** A CFD eval costs minutes;
+  the class-coarse `anything_changed` re-runs it on *any* change anywhere in the tree — catastrophic.
+  The black box is the case that makes **Stage 4's per-ref dirty-set replacing the tree-walk flag the
+  most important *removal* in the plan**: the CFD must re-run only when its own declared inputs are
+  dirty.
+- **Field outputs.** CFD/FEA produce arrays/meshes; `@system_property` and tabulation assume scalar
+  (int/float/str) outputs. Carrying vector/array-valued refs is a genuine gap (the "continuum/cells"
+  direction deliberately deferred). Aggregate scalars (total lift, max stress) fit today; full field
+  coupling does not.
+- **Derivatives through the box.** Shape-optimizing against a CFD objective needs a Jacobian the
+  framework cannot autodiff. **Addition needed:** a hook for a node to *provide* its derivative
+  (adjoint from the solver, analytic from a reduced model), generalizing M6's `check_partials`; else
+  accept finite-difference cost.
+
+**Verdict:** the graph + opaque-node model accommodates the black box *if and only if* four bounded
+escape hatches exist — declare-deps, declare-state-capture, provide-derivatives, and (for fields)
+vector refs — and the dirty-set removal lands. Reimplementing CFD/FEA as engforge continuum cells is
+the wrong path (rejected earlier, correctly); the win is orchestration *around* the solver.
+
+## X.4 Consolidated: additions / removals / reorganizations these demand
+
+**Add (as few, explicit, bounded primitives — escape hatches, not a new ontology):**
+1. `@system_property(depends=[...], opaque=True)` — declared dependencies for unscannable bodies
+   (both cases). The highest-leverage single addition.
+2. Opaque-state checkpoint hooks (`capture_state`/`apply_state`) — delegate the state the framework
+   cannot snapshot (black box).
+3. Component-provided derivatives — a node supplies its Jacobian (CFD adjoint, reduced-model analytic)
+   instead of FD (both cases, at scale).
+4. Trajectory / time-expanded decision variables — optimize over a control horizon, not a point (MPC).
+5. Persistent compiled plan + warm starts (structure-key cache, M4/M8) — reuse across per-step /
+   per-eval re-solves (both cases; the difference between intractable and routine).
+6. Array/vector-valued refs — field outputs (black box; the deferred continuum direction).
+
+**Remove (these actively block the hard cases):**
+1. The tree-walk `anything_changed` → per-ref dirty-set (Stage 4). *The* blocker for expensive black
+   boxes.
+2. The per-eval context storm → Ref-direct hot path (Stage 2b). Death when an eval is a CFD run or a
+   horizon sim.
+3. Recompile-per-timestep in transients → persistent plan (Stage 6/M9). MPC cannot afford it.
+4. The scalar-only tabulation assumption → vector refs. Blocks field outputs.
+
+**Reorganize:**
+1. **A node may itself be a Problem.** Formalize "opaque node owns a child Problem with its own
+   compiled plan" — the MPC controller and the CFD wrapper are the same pattern (a Problem inside a
+   node), generalizing Stage 6 beyond mere self-solve.
+2. **The graph is the coupling spine, not a report.** Promote 3a (report-only, landed) to the
+   execution substrate (3b/M4/M5): SCC → block solver for the aero↔structure fixed point; layers →
+   evaluation order.
+
+## X.5 Honest caveats — the purity tension
+
+Every escape hatch above is a crack in the "pure Y=F(X) refs" ideal: external state is not a field,
+field outputs are not scalars, an opaque F is not scannable, a trajectory is not a point. The
+redesign *can* carry these, but the discipline is existential: keep the hatches **narrow and
+declarative** (declare your deps, declare how to checkpoint, provide your Jacobian) so the 95% pure
+case never pays, and the black box is a bounded, explicit exception — not a license for every
+component to go opaque. The failure mode to avoid is the hatches metastasizing until "Y=F(X)" is a
+fiction and the framework is an untyped callback soup. The test for any future addition here: *does it
+stay an opt-in boundary primitive, or does it leak complexity into the common case?* If the latter,
+it does not belong. These two worst cases are worth building for precisely because, done with that
+discipline, a framework that can *schedule and differentiate coupled black-box and self-solving nodes
+uniformly* is something essentially no open Python tool offers — that is the high-impact prize, and
+also the reason to be ruthless about scope.
